@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Implementation-Vendor: Sanxing Electric, Inc.
+Implementation-Title: sesame-bootstrap
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: org.sanxing.sesame
+Specification-Vendor: Sanxing Electric, Inc.
+Build-Jdk: 1.6.0_37
+Built-By: Administrator
+Created-By: Maven Integration for Eclipse
+Specification-Title: sesame-bootstrap
+Specification-Version: 0.0.1-SNAPSHOT
+
