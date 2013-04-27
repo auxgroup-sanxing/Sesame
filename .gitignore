@@ -28,6 +28,8 @@ local.properties
 # PDT-specific
 .buildpath
 
+target/
+
 
 #################
 ## Visual Studio
@@ -161,10 +163,3 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
-
-
-#############
-## Maven
-#############
-
-target
