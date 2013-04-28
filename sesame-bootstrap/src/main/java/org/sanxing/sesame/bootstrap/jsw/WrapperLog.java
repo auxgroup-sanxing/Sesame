@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2013 Sanxing Electric, Inc.
+ * All Rights Reserved.
+ */
 package org.sanxing.sesame.bootstrap.jsw;
 
 import org.tanukisoftware.wrapper.WrapperManager;
@@ -12,8 +16,6 @@ import static org.tanukisoftware.wrapper.WrapperManager.WRAPPER_LOG_LEVEL_WARN;
 
 /**
  * Helper to emit messages via the JSW wrapper log stream.
- *
- * @since 2.1
  */
 public class WrapperLog
 {

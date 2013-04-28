@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2013 Sanxing Electric, Inc.
+ * All Rights Reserved.
+ */
 package org.sanxing.sesame.bootstrap.jsw;
 
 import org.sanxing.sesame.bootstrap.ShutdownHelper.ShutdownDelegate;

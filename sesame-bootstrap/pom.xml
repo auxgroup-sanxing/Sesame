@@ -33,5 +33,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.sanxing.sesame</groupId>
+      <artifactId>sesame-test-common</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 </project>

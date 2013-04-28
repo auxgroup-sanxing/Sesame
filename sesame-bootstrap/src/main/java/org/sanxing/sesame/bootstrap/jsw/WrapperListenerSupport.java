@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2013 Sanxing Electric, Inc.
+ * All Rights Reserved.
+ */
 package org.sanxing.sesame.bootstrap.jsw;
 
 import org.slf4j.Logger;
@@ -8,8 +12,6 @@ import java.util.Arrays;
 
 /**
  * Support for {@link WrapperListener} implementations.
- *
- * @since 2.1
  */
 public abstract class WrapperListenerSupport
     implements WrapperListener
