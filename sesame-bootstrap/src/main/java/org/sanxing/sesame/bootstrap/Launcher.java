@@ -25,6 +25,7 @@ import org.sonatype.sisu.jetty.Jetty8;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Map;
@@ -76,6 +77,11 @@ public class Launcher
         }
 
         AppContext context = createAppContext();
+        
+		Class Platform = Launcher.class.getClassLoader()
+				.loadClass("com.sanxing.sesame.platform.Platform");
+		Method Startup = Platform.getMethod("startup", new Class[] { AppContext.class });
+		Startup.invoke(Platform, new Object[] { context });
 
         server = new Jetty8(new File(args[0]), context);
 

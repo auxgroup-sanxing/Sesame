@@ -107,6 +107,8 @@
   
   <modules>
   	<module>sesame-bootstrap</module>
+  	<module>sesame-core</module>
+  	<module>sesame-util</module>
   </modules>
 
   <dependencyManagement>
@@ -754,7 +756,7 @@
       <dependency>
         <groupId>org.sanxing.sesame</groupId>
         <artifactId>sesame-test-common</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${sesame.version}</version>
       </dependency>
 
       <dependency>
@@ -806,6 +808,31 @@
       </dependency>
 
       <!-- INTERNAL -->
+      <dependency>
+      	<groupId>org.eclipse.jetty.orbit</groupId>
+      	<artifactId>javax.transaction</artifactId>
+      	<version>1.1.1.v201105210645</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.jdom</groupId>
+      	<artifactId>jdom</artifactId>
+      	<version>2.0.2</version>
+      </dependency>
+      <dependency>
+      	<groupId>opensymphony</groupId>
+      	<artifactId>oscache</artifactId>
+      	<version>2.4</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.sanxing.sesame</groupId>
+      	<artifactId>sesame-util</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.sanxing.sesame</groupId>
+      	<artifactId>sesame-core</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
