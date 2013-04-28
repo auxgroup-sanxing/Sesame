@@ -36,7 +36,7 @@ import static org.sanxing.sesame.bootstrap.monitor.KeepAliveThread.KEEP_ALIVE_PO
 import static org.sanxing.sesame.bootstrap.monitor.KeepAliveThread.KEEP_ALIVE_TIMEOUT;
 
 /**
- * Sesame bootstrap launcher.
+ * sesame bootstrap launcher.
  */
 public class Launcher
 {
