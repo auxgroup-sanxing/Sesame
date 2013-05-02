@@ -3,7 +3,7 @@ package com.sanxing.sesame.jmx.mbean;
 import com.sanxing.sesame.jmx.mbean.admin.ClusterEvent;
 import com.sanxing.sesame.jmx.mbean.admin.ServerInfo;
 import com.sanxing.sesame.core.BaseServer;
-import com.sanxing.sesame.core.Environment;
+import com.sanxing.sesame.core.Env;
 import com.sanxing.sesame.core.Platform;
 import com.jezhumble.javasysmon.CpuTimes;
 import com.jezhumble.javasysmon.JavaSysMon;

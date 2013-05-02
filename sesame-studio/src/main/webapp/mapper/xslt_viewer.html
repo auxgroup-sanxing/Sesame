@@ -1,0 +1,121 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>转换编辑器</title>
+
+<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
+<script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
+
+<!-- Sets the basepath for the library if not in same directory -->
+<script type="text/javascript">
+	mxBasePath = '../package/graph/';
+	Ext.BLANK_IMAGE_URL='../images/s.gif';
+</script>
+
+<!-- Loads and initiaizes the library -->
+<script type="text/javascript" src="../package/graph/mxClient.js.gz"></script>
+<script type="text/javascript">
+	if (typeof(mxClient) == 'undefined')
+	{
+		if (navigator.appName.toUpperCase() == 'MICROSOFT INTERNET EXPLORER')
+		{
+			document.write('<script src="../package/graph/js/mxClient.js"></'+'script>');
+		}
+		else
+		{
+			var script = document.createElement('script');
+			
+			script.setAttribute('type', 'text/javascript');
+			script.setAttribute('src', '../package/graph/js/mxClient.js');
+			var head = document.getElementsByTagName('head')[0];
+	   		head.appendChild(script);
+	   	}
+	}
+</script>
+
+<link rel="stylesheet" type="text/css" href="css/grapheditor.css" />
+
+<style type="text/css">
+.rtl-tree {
+	direction: rtl;
+}
+
+.rtl-tree .x-tree-elbow {
+	background-image: url('images/tree/elbow.gif');
+}
+
+.rtl-tree .x-tree-elbow-line {
+	background-image: url('images/tree/elbow-line.gif');
+}
+
+.rtl-tree .x-tree-elbow-minus {
+	background-image: url('images/tree/elbow-minus.gif');
+}
+
+.rtl-tree .x-tree-elbow-plus {
+	background-image: url('images/tree/elbow-plus.gif');
+}
+
+.rtl-tree .x-tree-elbow-end {
+	background-image: url('images/tree/elbow-end.gif');
+}
+
+.rtl-tree .x-tree-elbow-end-minus {
+	background-image: url('images/tree/elbow-end-minus.gif');
+}
+
+.rtl-tree .x-tree-elbow-end-plus {
+	background-image: url('images/tree/elbow-end-plus.gif');
+}
+
+.line-start {
+	background-image: url('../images/horz_line.gif');
+	background-position: center;
+	background-repeat: repeat-x;
+	background-color: white;
+}
+
+.line-start span, .line-start img, .line-start a {
+	background-color: inherit !important;
+}
+	
+.line-end {
+	background-image:url('../images/horz_line.gif');
+	background-position: center;
+	background-repeat: repeat-x;
+	background-color: white;
+}
+
+.line-end span, .line-end img, .line-end a {
+	background-color: inherit !important;
+}
+	
+.line-end .endpoint {
+	height: 100%;
+	background-image: url('../images/right_arrow.gif');
+	background-position: left center;
+	background-repeat: no-repeat;
+}
+
+</style>
+
+<script type="text/javascript" src="xslt_viewer.js"></script>
+<script type="text/javascript" src="js/MainPanel.js"></script>
+<script type="text/javascript" src="js/LibraryPanel.js"></script>
+
+<script type="text/javascript">
+	// Replaces the built-in alert dialog with ExtJs message dialog (can't
+	// replace confirm and prompt as they are callback-based and we require
+	// a synchronous call with a return value).
+	mxUtils.alert = function(message)
+	{
+		Ext.example.msg(message, '', '');
+	};
+</script>
+
+</head>
+<body onload="main();">
+<div id="header"><div style="float:right;margin:5px;" class="x-small-editor"></div></div>
+</body>
+</html>

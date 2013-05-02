@@ -28,6 +28,9 @@ public class AdminServer extends BaseServer {
 				JMXServiceURL managedServerURL = Platform
 						.getJmxServiceURLBuilder()
 						.getJMXServiceURLByServerName(serverName);
+				if (LOG.isDebugEnabled()) {
+					LOG.debug(managedServerURL.toString());
+				}
 				Map environment = new HashMap();
 				environment.put("java.naming.factory.initial",
 						"com.sun.jndi.rmi.registry.RegistryContextFactory");
@@ -52,7 +55,7 @@ public class AdminServer extends BaseServer {
 			try {
 				connector.close();
 			} catch (IOException e) {
-				LOG.error(e.getMessage(), e);
+				LOG.error(e.getMessage());
 			}
 		}
 	}

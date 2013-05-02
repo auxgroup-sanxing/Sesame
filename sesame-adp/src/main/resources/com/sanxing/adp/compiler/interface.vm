@@ -1,0 +1,48 @@
+package $packageName;
+
+import com.sanxing.adp.api.ResultHolder;
+import com.sanxing.sesame.exceptions.AppException;
+
+public interface ${className} {
+
+#foreach($operation in  ${operations} )
+
+#if(${operation.void})
+#set($index=0)
+/**
+* Description: ${operation.description}
+*/
+public void ${operation.operationName}(
+
+#foreach($param in ${operation.params})
+#set($index=$index+1)
+${param.javaType} ${param.name} #if($index < ${operation.getMethodParamCount()}) , #end
+#end
+#foreach($param in ${operation.results})
+#set($index=$index+1)
+ResultHolder<${param.javaType}> result_${param.name} #if($index < ${operation.getMethodParamCount()}) , #end
+#end
+
+##);   ## end of is void
+#else
+
+#set($index=0)
+/**
+* Description: ${operation.description}
+*/
+public  ${operation.result.javaType} ${operation.operationName}(
+#foreach($param in ${operation.params})
+#set($index=$index+1)
+${param.javaType} ${param.name}#if($index < ${operation.getMethodParamCount()}) , #end
+#end
+
+#end
+
+#if(${operation.faults.size()}>0) ) throws #foreach($param in ${operation.faults})${param.name} #end,AppException;
+#else
+) throws AppException;
+#end
+
+#end
+
+}

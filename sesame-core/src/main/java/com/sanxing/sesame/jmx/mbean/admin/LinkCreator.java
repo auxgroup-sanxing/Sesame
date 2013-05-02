@@ -29,7 +29,7 @@ public class LinkCreator implements LinkCreatorMBean {
 			JMXServiceURL managedServerURL = Platform.getJmxServiceURLBuilder()
 					.getJMXServiceURLByServerName(serverName);
 			if (LOG.isDebugEnabled())
-				LOG.debug(managedServerURL);
+				LOG.debug(managedServerURL.toString());
 			JMXConnector managedServerConnector = this.admin
 					.getJMXConnectorByServer(serverName);
 			MBeanServerConnection managedServerCon = managedServerConnector

@@ -1,0 +1,33 @@
+[{
+	text: "1号主机",
+	allowDrag: false,
+	leaf: false,
+	children: [{
+		text: '服务调用',
+		iconCls: 'palette_control_send_recv',
+		leaf: true
+		},
+		{
+		text: '主机更新',
+		iconCls: 'palette_control_send_recv',
+		leaf: true
+		}
+	]
+},
+{
+	text: '储蓄账户余额查询',
+	iconCls: 'palette_control_send_recv',
+	options: {"service-name":"trans", "interfaceName":"intf", "operation-name":"opppppp"},
+	leaf: true
+},
+{
+	text: '信用卡余额查询',
+	iconCls: 'palette_control_send_recv',
+	options: {"service-name":"trans", "interfaceName":"intf", "operation-name":"opppppp"},
+	leaf: true
+},
+{
+	text: '转帐',
+	iconCls: 'palette_control_send_recv',
+	leaf: true
+}]

@@ -2,7 +2,7 @@ package com.sanxing.sesame.core.api;
 
 import com.sanxing.sesame.classloader.JarFileClassLoader;
 import com.sanxing.sesame.core.BaseServer;
-import com.sanxing.sesame.core.Environment;
+import com.sanxing.sesame.core.Env;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ public class ContainerContext {
 	private static Map<String, ContainerContext> instances = new HashMap();
 	private MBeanServer mbeanServer;
 	private Map<Object, Object> context = new HashMap();
-	private Environment env;
+	private Env env;
 	private InitialContext serverContext;
 	private String containerName;
 	private ClassLoader containerCLassLoader = null;
@@ -29,7 +29,7 @@ public class ContainerContext {
 		return answer;
 	}
 
-	public ContainerContext(String containerName, Environment env,
+	public ContainerContext(String containerName, Env env,
 			InitialContext serverContext, MBeanServer mbeanServer,
 			BaseServer _server) {
 		this.containerName = containerName;
@@ -59,7 +59,7 @@ public class ContainerContext {
 		return this.context.get(key);
 	}
 
-	public Environment getEnvironment() {
+	public Env getEnv() {
 		return this.env;
 	}
 

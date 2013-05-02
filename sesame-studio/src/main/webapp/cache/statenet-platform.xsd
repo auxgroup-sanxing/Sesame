@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.sanxing.com/statenet/" targetNamespace="http://www.sanxing.com/statenet/" elementFormDefault="qualified" attributeFormDefault="unqualified">
+  <annotation>
+    <documentation>测试</documentation>
+  </annotation>
+  <element name="binding" type="string" />
+</schema>
+

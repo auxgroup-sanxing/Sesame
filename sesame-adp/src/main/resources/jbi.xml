@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi">
+	<component type="service-engine">
+		<identification>
+			<name>adp-ec</name>
+			<description>Java程序开发引擎组件</description>
+		</identification>
+		<component-class-name description="none">com.sanxing.adp.ADPEngine</component-class-name>
+		<component-class-path>
+			<path-element></path-element>
+			<path-element></path-element>
+		</component-class-path>
+		<bootstrap-class-name>com.sanxing.adp.BootstrapImpl</bootstrap-class-name>
+		<bootstrap-class-path>
+			<path-element></path-element>
+		</bootstrap-class-path>
+	</component>
+</jbi>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+<prefs>
+  <commandServer hostname="localhost" port="2007" timeout="50000" />
+  <jmx-server serviceUrl="service:jmx:rmi:///jndi/rmi://localhost:2099/admin">
+    <user>user</user>
+    <passwd>pass</passwd>
+  </jmx-server>
+  <database>
+    <connection name="oracle" driver="com.oracle.jdbc.Driver" password="statenet" user="statenet" url="jdbc:oracle:thin:@127.0.0.1:1521:sxdb" />
+    <connection name="statenet" default="default" datasource="SN_DATASOURCE" />
+  </database>
+  <scm>
+    <repository url="file:///F:/svn/trunk" />
+  </scm>
+</prefs>
+

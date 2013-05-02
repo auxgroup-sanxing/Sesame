@@ -1,0 +1,37 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.sanxing.sesame</groupId>
+    <artifactId>sesame</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>sesame-sdk</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.servicemix.specs</groupId>
+  		<artifactId>
+  			org.apache.servicemix.specs.jbi-api-1.0
+  		</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.sanxing.sesame</groupId>
+  		<artifactId>sesame-util</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-beanutils</groupId>
+  		<artifactId>commons-beanutils-core</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>wsdl4j</groupId>
+  		<artifactId>wsdl4j</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>org.apache.ws.commons.schema</groupId>
+  		<artifactId>XmlSchema</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>commons-logging</groupId>
+  		<artifactId>commons-logging</artifactId>
+  	</dependency>
+  </dependencies>
+</project>

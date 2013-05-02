@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Studio>
+		<module class="com.sanxing.ads.auth.StudioLoginModule" flag="required" debug="false"></module>
+	</Studio>
+</config>

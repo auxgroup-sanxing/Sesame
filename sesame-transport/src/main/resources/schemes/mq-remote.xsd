@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://framework.statenet.org/bc/" xmlns:tns="http://framework.statenet.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+	<annotation>
+	  <documentation>mq-remote 参数</documentation>
+	</annotation>
+	<element name="properties">
+        <annotation>
+           	<appinfo>
+           		<xtype>fieldset</xtype>
+           		<title>参数</title>
+           		<layout>column</layout>
+           		<border>true</border>
+           		<labelWidth>130</labelWidth>
+           	</appinfo>
+        </annotation>
+        <complexType>
+			<sequence>
+				<element name="column1">
+                 <annotation>
+                 	<appinfo>
+                 		<border>false</border>
+                 		<bodyStyle>padding-right:5px;</bodyStyle>
+                 		<columnWidth>0.5</columnWidth>
+           		        <labelWidth>130</labelWidth>
+                 	</appinfo>
+                 </annotation>
+					<complexType>
+						<sequence>
+							<element name="initialContextFactoryName" type="string">
+								<annotation>
+									<documentation>初始上下文工厂类名</documentation>
+								</annotation>
+							</element>
+							<element name="connectionFactoryBindingName" type="string">
+								<annotation>
+									<documentation>连接工厂绑定名</documentation>
+								</annotation>
+							</element>
+								<element name="responseQBindingName" type="string">
+								<annotation>
+									<documentation>响应队列绑定名</documentation>
+								</annotation>
+							</element>
+							<element name="username" type="string">
+								<annotation>
+									<documentation>用户名</documentation>
+								</annotation>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+				<element name="column2">
+                 <annotation>
+                 	<appinfo>
+                 		<border>false</border>
+                 		<bodyStyle>padding-left:5px;</bodyStyle>
+                 		<columnWidth>0.5</columnWidth>
+           		        <labelWidth>130</labelWidth>
+                 	</appinfo>
+                 </annotation>
+					<complexType>
+						<sequence>
+						<element name="providerURL" type="string">
+								<annotation>
+									<documentation>providerURL</documentation>
+								</annotation>
+							</element>
+							<element name="requestQBindingName" type="string">
+								<annotation>
+									<documentation>请求队列绑定名</documentation>
+								</annotation>
+							</element>
+							<element name="password" type="unsignedInt">
+								<annotation>
+									<documentation>密码</documentation>
+									<appinfo>
+										<inputType>password</inputType>
+									</appinfo>
+								</annotation>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

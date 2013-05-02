@@ -16,7 +16,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
-  <groupId>org.sanxing.sesame</groupId>
+  <groupId>com.sanxing.sesame</groupId>
   <artifactId>sesame</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
@@ -100,7 +100,7 @@
     <goodies.version>1.6.1</goodies.version>
     <metrics.version>2.2.0</metrics.version>
 
-    <it.sesame.bundle.groupId>org.sanxing.sesame</it.sesame.bundle.groupId>
+    <it.sesame.bundle.groupId>com.sanxing.sesame</it.sesame.bundle.groupId>
     <it.sesame.bundle.artifactId>sesame-distribution</it.sesame.bundle.artifactId>
     <it.sesame.bundle.version>${project.version}</it.sesame.bundle.version>
   </properties>
@@ -109,6 +109,17 @@
   	<module>sesame-bootstrap</module>
   	<module>sesame-core</module>
   	<module>sesame-util</module>
+  	<module>sesame-sdk</module>
+  	<module>sesame-transport</module>
+  	<module>sesame-binding</module>
+  	<module>sesame-logging</module>
+  	<module>sesame-jdbc</module>
+  	<module>sesame-runtime</module>
+  	<module>sesame-container</module>
+  	<module>sesame-process</module>
+  	<module>sesame-codec</module>
+  	<module>sesame-adp</module>
+  	<module>sesame-studio</module>
   </modules>
 
   <dependencyManagement>
@@ -415,7 +426,7 @@
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils-core</artifactId>
-        <version>1.8.3-SONATYPE</version>
+        <version>1.8.3</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
@@ -634,7 +645,7 @@
       <dependency>
         <groupId>commons-httpclient</groupId>
         <artifactId>commons-httpclient</artifactId>
-        <version>3.1.SONATYPE</version>
+        <version>3.1</version>
         <exclusions>
           <exclusion>
             <groupId>commons-logging</groupId>
@@ -754,7 +765,7 @@
       </dependency>
 
       <dependency>
-        <groupId>org.sanxing.sesame</groupId>
+        <groupId>com.sanxing.sesame</groupId>
         <artifactId>sesame-test-common</artifactId>
         <version>${sesame.version}</version>
       </dependency>
@@ -824,14 +835,196 @@
       	<version>2.4</version>
       </dependency>
       <dependency>
-      	<groupId>org.sanxing.sesame</groupId>
+      	<groupId>com.sanxing.sesame</groupId>
       	<artifactId>sesame-util</artifactId>
       	<version>${sesame.version}</version>
       </dependency>
       <dependency>
-      	<groupId>org.sanxing.sesame</groupId>
+      	<groupId>com.sanxing.sesame</groupId>
       	<artifactId>sesame-core</artifactId>
       	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-jdbc</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-binding</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-logging</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-sdk</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-transport</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-container</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-runtime</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-process</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-codec</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-adp</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.activemq</groupId>
+      	<artifactId>activemq-core</artifactId>
+      	<version>5.5.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>commons-dbcp</groupId>
+      	<artifactId>commons-dbcp</artifactId>
+      	<version>1.2.2</version>
+      </dependency>
+      <dependency>
+      	<groupId>dom4j</groupId>
+      	<artifactId>dom4j</artifactId>
+      	<version>1.6.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.codehaus.btm</groupId>
+      	<artifactId>btm</artifactId>
+      	<version>2.0.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>simple-jndi</groupId>
+      	<artifactId>simple-jndi</artifactId>
+      	<version>0.11.4.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>javasysmon</groupId>
+      	<artifactId>javasysmon</artifactId>
+      	<version>0.3.2</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.servicemix.specs</groupId>
+      	<artifactId>
+      		org.apache.servicemix.specs.jbi-api-1.0
+      	</artifactId>
+      	<version>2.2.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>wsdl4j</groupId>
+      	<artifactId>wsdl4j</artifactId>
+      	<version>1.6.3</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.ws.commons.schema</groupId>
+      	<artifactId>XmlSchema</artifactId>
+      	<version>1.4.7</version>
+      </dependency>
+      <dependency>
+      	<groupId>commons-logging</groupId>
+      	<artifactId>commons-logging</artifactId>
+      	<version>1.1.2</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.lucene</groupId>
+      	<artifactId>lucene-core</artifactId>
+      	<version>3.0.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.lucene</groupId>
+      	<artifactId>lucene-analyzers</artifactId>
+      	<version>3.0.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.lucene</groupId>
+      	<artifactId>lucene-smartcn</artifactId>
+      	<version>3.0.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.geronimo.specs</groupId>
+      	<artifactId>geronimo-jms_1.1_spec</artifactId>
+      	<version>1.1.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>javax.activation</groupId>
+      	<artifactId>activation</artifactId>
+      	<version>1.1.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>commons-net</groupId>
+      	<artifactId>commons-net</artifactId>
+      	<version>3.2</version>
+      </dependency>
+      <dependency>
+      	<groupId>javax.mail</groupId>
+      	<artifactId>mail</artifactId>
+      	<version>1.4.7</version>
+      </dependency>
+      <dependency>
+      	<groupId>opensymphony</groupId>
+      	<artifactId>quartz</artifactId>
+      	<version>1.6.3</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.commons</groupId>
+      	<artifactId>commons-vfs2</artifactId>
+      	<version>2.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>bsh</groupId>
+      	<artifactId>bsh</artifactId>
+      	<version>2.0b4</version>
+      </dependency>
+      <dependency>
+      	<groupId>jaxen</groupId>
+      	<artifactId>jaxen</artifactId>
+      	<version>1.1.4</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.json</groupId>
+      	<artifactId>json</artifactId>
+      	<version>20090211</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.ant</groupId>
+      	<artifactId>ant</artifactId>
+      	<version>1.9.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>javax.xml.bind</groupId>
+      	<artifactId>jaxb-api</artifactId>
+      	<version>2.2.7</version>
+      </dependency>
+      <dependency>
+      	<groupId>javax.xml.bind</groupId>
+      	<artifactId>jaxb-impl</artifactId>
+      	<version>2.2.7</version>
+      </dependency>
+      <dependency>
+      	<groupId>javax.xml.bind</groupId>
+      	<artifactId>jaxb-xjc</artifactId>
+      	<version>2.2.7</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -931,6 +1124,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.0</version>
           <configuration>
             <source>1.6</source>
             <target>1.6</target>
@@ -1522,7 +1716,8 @@
           <serverId>${sesameSnapshotId}</serverId>
         </configuration>
       </plugin>
-      <plugin>
+<!--
+       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
@@ -1536,6 +1731,7 @@
           </execution>
         </executions>
       </plugin>
+ -->
     </plugins>
   </build>
 

@@ -8,13 +8,13 @@ import com.sanxing.sesame.jmx.mbean.admin.ClusterEvent;
 import com.sanxing.sesame.jmx.mbean.admin.ContainerInfo;
 import com.sanxing.sesame.jmx.mbean.admin.ServerInfo;
 import com.sanxing.sesame.jmx.mbean.managed.FileClient;
-import com.sanxing.sesame.platform.api.Container;
-import com.sanxing.sesame.platform.api.ContainerContext;
-import com.sanxing.sesame.platform.api.MBeanHelper;
-import com.sanxing.sesame.platform.jdbc.DataSourceInfo;
-import com.sanxing.sesame.platform.jdbc.DataSourceProvider;
-import com.sanxing.sesame.platform.jms.JMSProvider;
-import com.sanxing.sesame.platform.listener.ClusterListener;
+import com.sanxing.sesame.core.api.Container;
+import com.sanxing.sesame.core.api.ContainerContext;
+import com.sanxing.sesame.core.api.MBeanHelper;
+import com.sanxing.sesame.core.jdbc.DataSourceInfo;
+import com.sanxing.sesame.core.jdbc.DataSourceProvider;
+import com.sanxing.sesame.core.jms.JMSProvider;
+import com.sanxing.sesame.core.listener.ClusterListener;
 import com.sanxing.sesame.util.SystemProperties;
 import java.io.File;
 import java.util.LinkedList;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.jdom2.Element;
 
 public class BaseServer {
-	private static Logger LOG = Logger.getLogger(BaseServer.class);
+	private static Logger LOG = LoggerFactory.getLogger(BaseServer.class);
 
 	private List<ClusterListener> listeners = new LinkedList();
 
@@ -49,8 +49,8 @@ public class BaseServer {
 	protected JMSProvider getJmsProvider() {
 		if (this.jmsProvider == null) {
 			String providerClazz = SystemProperties.get(
-					"com.sanxing.sesame.platform.jms.provider",
-					"com.sanxing.sesame.platform.jms.ActiveMQJMSProvider");
+					"com.sanxing.sesame.core.jms.provider",
+					"com.sanxing.sesame.core.jms.ActiveMQJMSProvider");
 			try {
 				this.jmsProvider = ((JMSProvider) Class.forName(providerClazz)
 						.newInstance());
@@ -70,13 +70,13 @@ public class BaseServer {
 			int transactionManagerType) {
 		String providerClazz = null;
 		if (transactionManagerType == 1)
-			providerClazz = "com.sanxing.sesame.platform.jdbc.STMProvider";
+			providerClazz = "com.sanxing.sesame.core.jdbc.STMProvider";
 		else if (transactionManagerType == 2)
-			providerClazz = "com.sanxing.sesame.platform.jdbc.BTMProvider";
+			providerClazz = "com.sanxing.sesame.core.jdbc.BTMProvider";
 		else
 			providerClazz = SystemProperties.get(
-					"com.sanxing.sesame.platform.jdbc.datasource.provider",
-					"com.sanxing.sesame.platform.jdbc.DBCPProvider");
+					"com.sanxing.sesame.core.jdbc.datasource.provider",
+					"com.sanxing.sesame.core.jdbc.DBCPProvider");
 		try {
 			this.datasourceProvider = ((DataSourceProvider) Thread
 					.currentThread().getContextClassLoader()

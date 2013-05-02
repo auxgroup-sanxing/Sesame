@@ -2,7 +2,7 @@ package com.sanxing.sesame.jmx.mbean.admin;
 
 import com.sanxing.sesame.jmx.mbean.ServerManagerMBean;
 import com.sanxing.sesame.core.AdminServer;
-import com.sanxing.sesame.core.Environment;
+import com.sanxing.sesame.core.Env;
 import com.sanxing.sesame.core.ManagedServer;
 import com.sanxing.sesame.core.Platform;
 import com.sanxing.sesame.core.api.MBeanHelper;

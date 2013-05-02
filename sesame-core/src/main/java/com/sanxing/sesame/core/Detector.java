@@ -27,29 +27,29 @@ public class Detector {
 	public static String getServerId() {
 		if (_serverId == null) {
 			if (isGeronimo()) {
-				_serverId = GERONIMO_ID;
+				_serverId = "geronimo";
 			} else if (isGlassfish()) {
-				_serverId = GLASSFISH_ID;
+				_serverId = "glassfish";
 			} else if (isJBoss()) {
-				_serverId = JBOSS_ID;
+				_serverId = "jboss";
 			} else if (isJOnAS()) {
-				_serverId = JONAS_ID;
+				_serverId = "jonas";
 			} else if (isOC4J()) {
-				_serverId = OC4J_ID;
+				_serverId = "oc4j";
 			} else if (isResin()) {
-				_serverId = RESIN_ID;
+				_serverId = "resin";
 			} else if (isWebLogic()) {
-				_serverId = WEBLOGIC_ID;
+				_serverId = "weblogic";
 			} else if (isWebSphere()) {
-				_serverId = WEBSPHERE_ID;
+				_serverId = "websphere";
 			}
 
 			if (isJetty()) {
 				if (_serverId == null) {
-					_serverId = JETTY_ID;
+					_serverId = "jetty";
 				}
 			} else if ((isTomcat()) && (_serverId == null)) {
-				_serverId = TOMCAT_ID;
+				_serverId = "tomcat";
 			}
 
 			if (_serverId == null) {

@@ -1,0 +1,14 @@
+package $packageName;
+        
+import com.sanxing.sesame.exceptions.AppException;
+
+public class ${className} extends AppException {
+
+#foreach($field in  ${fields} )
+
+
+public ${field.javaType} ${field.fieldName} ;
+
+#end
+
+}

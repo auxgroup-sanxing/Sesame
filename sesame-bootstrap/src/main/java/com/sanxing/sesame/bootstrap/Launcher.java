@@ -71,17 +71,19 @@ public class Launcher
     }
 
     public Integer start(final String[] args) throws Exception {
-        if (args.length != 1) {
+        if (args.length == 0) {
             log.error("Missing Jetty configuration file parameter");
             return 1; // exit
         }
 
         AppContext context = createAppContext();
         
-		Class Platform = Launcher.class.getClassLoader()
-				.loadClass("com.sanxing.sesame.platform.Platform");
-		Method Startup = Platform.getMethod("startup", new Class[] { AppContext.class });
-		Startup.invoke(Platform, new Object[] { context });
+        for (int i = 1; i < args.length; i++) {
+        	log.debug(args[i]);
+    		Class clazz = Launcher.class.getClassLoader().loadClass(args[i]);
+    		Method main = clazz.getMethod("main", String[].class);
+    		main.invoke(clazz, new Object[]{new String[0]});
+        }
 
         server = new Jetty8(new File(args[0]), context);
 

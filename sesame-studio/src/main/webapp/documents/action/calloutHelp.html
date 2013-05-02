@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<title>对外调用Action配置帮助文档</title>
+<link rel="stylesheet" type="text/css" href="css/helpdoc.css" media="all" />
+</head>
+<body>
+	<div id="wrapper">
+		<div id="maincontent">
+			<h1>对外调用Action配置帮助文档</h1>
+			<h1>功能说明</h1>
+			<div>
+				<td>调用其他已经定义好的流程服务</td>
+			</div>
+			<div class="example">
+				<h2>配置实例如下图所示 </h2>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout1.jpg"/></p>
+				<td>请求变量就是调用服务中的request，可以指定自己流程的某个变量，响应变量就是输出的XML报文了。</td><br />
+				<td>XSLT标签内形成的文档将实现把流程中的变量装进callout组件中去。</td><br />
+				<td>重组标签是形成xslt文档的一个有效协助。（但目前还不支持从xslt转化为可视化的形式。）</td><br />
+				<td>只支持从可视化的方式转化为XSLT。标签顶部有各种的函数以及方法可用。</<td>
+				</td>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout2.jpg"/></p>
+				<td>上图形成的xslt文档如下：</td>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout3.jpg"/></p>
+				<td>如果有其他个性化需求可以在XSLT直接修改以达到目的。</td>
+				<td>模拟应答选项是为了黑盒测试而选择的，可以有正确应答，错误应答。</td>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout4.jpg"/></p>
+				<td>错误应答还依赖于消息界面上的故障消息</td>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout5.jpg"/></p>
+				<td>可以定义报文的格式。可以定义多个错误应答的故障信息。以便于调试。</td>
+			</div>
+			
+			<div>
+				<h2>配置项说明</h2>
+				<table class="dataintable">
+					<tbody>
+						<tr>
+							<th>配置项</th>
+							<th>描述</th>
+						</tr>
+						<tr>
+							<td>超时(秒)</td>
+							<td>超时时间参数</td>
+						</tr>
+						<tr>
+							<td>请求变量</td>
+							<td>对外调用外部服务时发送的请求变量</td>
+						</tr>
+						<tr>
+							<td>响应变量</td>
+							<td>对外调用外部服务时接受的响应变量</td>
+						</tr>
+					</tbody>
+				</table>
+		</div>
+	
+		<h1>Callout组件中的异常处理</h1>
+			<div>
+				<td>异常处理是服务的健壮性以及连续性的重要保证，一个完整的服务应该把一些常见的异常做相应的处理并告知给用户。</td><br />
+				<td>尤其是遇见一些账务方面的问题，合理的冲正更是显得非常重要。右键单击callout组件可以添加异常处理模块。
+				</td>
+				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/callout6.jpg"/></p>
+				<td>打开异常处理的编辑页面可以看到</td><br/>
+				<td>异常捕获的错误码，就是对外服务返回的状态码，反映交易是否成功,如果失败会返回错误码.(一般在./stream/errcode字段)异常就是根据这个错误码来捕获的。</td><br/>
+				<td>抛出给不同的级别可以根据冲正的需要来选择。例如此组件发生异常，需要和上级一起冲正就选择抛给上级。</td><br/>
+				<td>超时处理其实是一种特殊的异常处理。错误码是timeout。</td>
+			</div>	
+		
+	</div>
+	
+	</div>
+</body>
+</html>

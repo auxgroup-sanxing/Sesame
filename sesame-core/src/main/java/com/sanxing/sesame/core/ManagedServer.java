@@ -8,9 +8,6 @@ import com.sanxing.sesame.core.event.ServerJoinEvent;
 import com.sanxing.sesame.core.listener.join.ServerJoinListener;
 import com.sanxing.sesame.util.GetterUtil;
 import com.sanxing.sesame.util.SystemProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
@@ -28,6 +25,8 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ManagedServer extends BaseServer {
 	private Logger LOG = LoggerFactory.getLogger(ManagedServer.class);

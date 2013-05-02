@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://framework.statenet.org/bc/" xmlns:tns="http://framework.statenet.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+	<annotation>
+	  <documentation>file 组件</documentation>
+	</annotation>
+	<element name="properties">
+        <annotation>
+           	<appinfo>
+           		<xtype>fieldset</xtype>
+           		<title>参数</title>
+           		<layout>column</layout>
+           		<border>true</border>
+           		<labelWidth>130</labelWidth>
+           	</appinfo>
+        </annotation>
+        <complexType>
+			<sequence>
+				<element name="column1">
+                 <annotation>
+                 	<appinfo>
+                 		<border>false</border>
+                 		<bodyStyle>padding-right:5px;</bodyStyle>
+                 		<columnWidth>0.5</columnWidth>
+           		        <labelWidth>130</labelWidth>
+                 	</appinfo>
+                 </annotation>
+					<complexType>
+						<sequence>
+							<element name="buffer_size" type="unsignedInt">
+								<annotation>
+									<documentation>缓冲区大小</documentation>
+									<appinfo>
+										<value>1024</value>
+									</appinfo>
+								</annotation>
+							</element>
+							<element name="readLine">
+								<annotation>
+									<documentation>是否一行是一个交易</documentation>
+									<appinfo>
+										<editable>false</editable>
+										<forceSelection>false</forceSelection>
+										<value>false</value>
+									</appinfo>
+								</annotation>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="true"></enumeration>
+										<enumeration value="false"></enumeration>
+									</restriction>
+								</simpleType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+				<element name="column2">
+                 <annotation>
+                 	<appinfo>
+                 		<border>false</border>
+                 		<bodyStyle>padding-left:5px;</bodyStyle>
+                 		<columnWidth>0.5</columnWidth>
+           		        <labelWidth>130</labelWidth>
+                 	</appinfo>
+                 </annotation>
+					<complexType>
+						<sequence>
+							<element name="encoding">
+								<annotation>
+									<documentation>字符集</documentation>
+									<appinfo>
+										<editable>true</editable>
+										<forceSelection>false</forceSelection>
+										<value>GBK</value>
+									</appinfo>
+								</annotation>
+								<simpleType><restriction base="string">
+									<enumeration value="GBK"></enumeration>
+									<enumeration value="UTF-8"></enumeration>
+									<enumeration value="ISO8859-1"></enumeration>
+								</restriction></simpleType>
+							</element>
+							<element name="setContextAction">
+								<annotation>
+									<documentation>是否设置交易码</documentation>
+									<appinfo>
+										<editable>false</editable>
+										<forceSelection>false</forceSelection>
+										<value>true</value>
+									</appinfo>
+								</annotation>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="true"></enumeration>
+										<enumeration value="false"></enumeration>
+									</restriction>
+								</simpleType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

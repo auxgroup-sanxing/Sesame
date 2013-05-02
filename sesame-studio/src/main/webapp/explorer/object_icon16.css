@@ -1,0 +1,86 @@
+.x-tree-node .x-tree-node-inline-icon {
+	background-image: url('../images/obj16/file_obj.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.x-icon- {
+	background-image: url('../images/obj16/file_obj.gif') !important;
+}
+
+.x-icon-class {
+	background-image: url('../images/obj16/classf_obj.gif') !important;
+}
+
+.x-icon-folder {
+	background-image: url('../images/obj16/fldr_obj.gif') !important;
+}
+
+.x-icon-gif {
+	background-image: url('../images/obj16/picture.png') !important;
+}
+
+.x-icon-jar {
+	background-image: url('../images/obj16/jar_obj.gif') !important;
+	background-position: center center !important;
+	background-repeat: no-repeat;
+}
+
+.x-icon-java {
+	background-image: url('../images/obj16/jcu_resource_obj.gif') !important;
+	background-position: center center !important;
+	background-repeat: no-repeat;
+}
+
+.x-icon-jpeg, .x-icon-jpg {
+	background-image: url('../images/obj16/picture.png') !important;
+}
+
+.x-icon-MF {
+	background-image: url('../images/obj16/file_obj.gif') !important;
+}
+
+.x-icon-newpro {
+	background-image: url('../images/tool16/new_wiz.gif') !important;
+}
+
+.x-icon-project {
+	background-image: url('../desktop/images/bogus.png') !important;
+}
+
+.x-icon-properties {
+	background-image: url('../images/obj16/file_obj.gif') !important;
+	background-position: center center !important;
+	background-repeat: no-repeat;
+}
+
+.x-icon-rar {
+	background-image: url('../images/obj16/rar.gif') !important;
+}
+
+.x-icon-repo {
+	background-image: url('../images/obj16/repository_rep.gif') !important;
+}
+
+.x-icon-txt {
+	background-image: url('../images/obj16/file_obj.gif') !important;
+}
+
+.x-icon-xml {
+	background-image: url('../images/obj16/xml_file.gif') !important;
+}
+
+.x-icon-xsd {
+	background-image: url('../images/obj16/schema_file.gif') !important;
+	background-position: center center !important;
+	background-repeat: no-repeat;
+}
+
+.x-icon-wsdl {
+	background-image: url('../images/obj16/wsdl_file.gif') !important;
+}
+
+.x-icon-zip {
+	background-image: url('../images/obj16/zip.png') !important;
+}
+
