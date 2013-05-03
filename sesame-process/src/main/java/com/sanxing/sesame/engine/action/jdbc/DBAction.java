@@ -5,7 +5,6 @@ import com.sanxing.sesame.engine.action.ActionException;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +15,6 @@ import javax.naming.Context;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
-import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jdom.Element;
@@ -115,37 +113,5 @@ public class DBAction extends AbstractAction {
 					paramEl.getChildText(param, paramEl.getNamespace()));
 		}
 		return stmt;
-	}
-
-	public static void main(String[] args) {
-		Connection conn = makeNewConnection();
-		Element paramEl = new Element("params");
-		paramEl.addContent(new Element("f1").setText("001"));
-		String sql = "SELECT * FROM inquiry WHERE bankcard=':f1' AND f2=:f2 OR f3=:f3";
-		try {
-			PreparedStatement stmt = prepareStmt(conn, sql, paramEl);
-
-			ResultSet rs = stmt.executeQuery();
-			rs.next();
-			System.out.println(rs.getString(1));
-		} catch (SQLException e) {
-			e.getErrorCode();
-			e.printStackTrace();
-		}
-	}
-
-	private static Connection makeNewConnection() {
-		BasicDataSource datasource = null;
-
-		datasource = new BasicDataSource();
-		datasource.setDriverClassName("com.mysql.jdbc.Driver");
-		datasource.setUrl("jdbc:mysql://localhost:3306/amc");
-		datasource.setUsername("root");
-		datasource.setPassword("");
-		try {
-			return datasource.getConnection();
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
-		}
 	}
 }

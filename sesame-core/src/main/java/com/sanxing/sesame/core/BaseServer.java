@@ -233,11 +233,6 @@ public class BaseServer {
 		jbi.setName("jbi");
 		regsiterContainer(jbi);
 
-		ContainerInfo webapps = new ContainerInfo();
-		webapps.setContainerClazz("com.sanxing.sesame.runtime.WebAppContainer");
-		webapps.setName("webapps");
-		regsiterContainer(webapps);
-
 		ClassLoader serverClassLoader = Thread.currentThread()
 				.getContextClassLoader();
 

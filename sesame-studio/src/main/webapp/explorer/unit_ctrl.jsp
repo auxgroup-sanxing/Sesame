@@ -98,15 +98,15 @@ private void alterNamespace(Definition wsdlDef, String targetNamespace) {
 }
 
 private org.w3c.dom.Element createRoute(org.w3c.dom.Document document, String serviceName, String intfName, String operaName){
-	org.w3c.dom.Element routeEl = document.createElementNS(Namespaces.STATENET, "route");
+	org.w3c.dom.Element routeEl = document.createElementNS(Namespaces.SESAME, "route");
 	routeEl.setPrefix("sn");
-	org.w3c.dom.Element el = document.createElementNS(Namespaces.STATENET, "service-name");
+	org.w3c.dom.Element el = document.createElementNS(Namespaces.SESAME, "service-name");
 	el.appendChild(document.createTextNode(serviceName));
 	routeEl.appendChild(el);
-	el = document.createElementNS(Namespaces.STATENET, "interface-name");
+	el = document.createElementNS(Namespaces.SESAME, "interface-name");
 	el.appendChild(document.createTextNode(intfName));
 	routeEl.appendChild(el);
-	el = document.createElementNS(Namespaces.STATENET, "operation-name");
+	el = document.createElementNS(Namespaces.SESAME, "operation-name");
 	el.appendChild(document.createTextNode(operaName));
 	routeEl.appendChild(el);
    	return routeEl;
@@ -310,7 +310,7 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 				//绑定服务单元
 				Element endpointEl = new Element("endpoint");
 				endpointEl.setAttribute("name", port.getName());
-				QName attExt = (QName)port.getExtensionAttribute(new QName(Namespaces.STATENET, "location"));
+				QName attExt = (QName)port.getExtensionAttribute(new QName(Namespaces.SESAME, "location"));
 				endpointEl.setAttribute("location", attExt!=null ? attExt.getLocalPart() : "");
 				List<?> extList = port.getExtensibilityElements();
 				if (extList.size() > 0) {
@@ -587,7 +587,7 @@ public String createOpera(HttpServletRequest request, HttpServletResponse respon
 			if (servicesEl == null)
 				servicesEl = jbiRoot.addElement("services");
 		
-			Dom4jUtil.addNamespace(servicesEl, "sn", Namespaces.STATENET);
+			Dom4jUtil.addNamespace(servicesEl, "sn", Namespaces.SESAME);
 			org.dom4j.Element newLink = servicesEl.addElement("sn:link");
 			newLink.addAttribute("operation-name", oper);
 			org.dom4j.Element sqlEl = newLink.addElement("sql-text");
@@ -1058,7 +1058,7 @@ public String modifyOpera(HttpServletRequest request, HttpServletResponse respon
 		
 		org.dom4j.Element link = 
 			(org.dom4j.Element)servicesEl.selectSingleNode("//*[local-name()='link'][@operation-name='"+ oper + "']");
-		Dom4jUtil.addNamespace(servicesEl, "sn", Namespaces.STATENET);
+		Dom4jUtil.addNamespace(servicesEl, "sn", Namespaces.SESAME);
 		if (link == null) {
 			org.dom4j.Element newLink = servicesEl.addElement("sn:link");
 			newLink.addAttribute("operation-name", newOpera);
@@ -1359,7 +1359,7 @@ public String saveBinding(HttpServletRequest request, HttpServletResponse respon
 	org.w3c.dom.Element attEl = (org.w3c.dom.Element)unitEl.getElementsByTagName("attributes").item(0);
 	String targetNamespace = attEl.getAttribute("namespace");
 	wsdlDef.addNamespace("tns", targetNamespace);
-	wsdlDef.addNamespace("sn", Namespaces.STATENET);
+	wsdlDef.addNamespace("sn", Namespaces.SESAME);
 	wsdlDef.addNamespace("xs", Namespaces.XSD);
 	wsdlDef.addNamespace("soap", Namespaces.SOAP_NAMESPACE);
 	wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);
@@ -1559,7 +1559,7 @@ public String saveInternal(HttpServletRequest request, HttpServletResponse respo
 			servicesEl = jbiRoot.addElement("services");
 		
 		servicesEl.addAttribute("binding-component", "false");
-		servicesEl.addAttribute(new org.dom4j.QName("datasource", new org.dom4j.Namespace("sn", Namespaces.STATENET)), dsn);
+		servicesEl.addAttribute(new org.dom4j.QName("datasource", new org.dom4j.Namespace("sn", Namespaces.SESAME)), dsn);
 		Dom4jUtil.saveFile(jbiFile);
 	}
 	
@@ -1567,7 +1567,7 @@ public String saveInternal(HttpServletRequest request, HttpServletResponse respo
 	Definition wsdlDef = reader.readWSDL(new WSDLLocatorImpl(unitFile, true));
 	
 	wsdlDef.addNamespace("tns", targetNamespace);
-	wsdlDef.addNamespace("sn", Namespaces.STATENET);
+	wsdlDef.addNamespace("sn", Namespaces.SESAME);
 	wsdlDef.addNamespace("xs", Namespaces.XSD);
 	wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);
 	wsdlDef.setQName(new QName(targetNamespace, unitFolder.getName()));
@@ -1651,7 +1651,7 @@ public String saveInternal(HttpServletRequest request, HttpServletResponse respo
 		bindingExt = new UnknownExtensibilityElement();
 		binding.addExtensibilityElement(bindingExt);
 	}
-	org.w3c.dom.Element paramsEl = document.createElementNS(Namespaces.STATENET, "params");
+	org.w3c.dom.Element paramsEl = document.createElementNS(Namespaces.SESAME, "params");
 	paramsEl.setPrefix("sn");
 	bindingExt.setElement(paramsEl);
 	bindingExt.setElementType(new QName(paramsEl.getNamespaceURI(), paramsEl.getLocalName()));

@@ -33,5 +33,9 @@
   		<groupId>commons-logging</groupId>
   		<artifactId>commons-logging</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>xerces</groupId>
+  		<artifactId>xercesImpl</artifactId>
+  	</dependency>
   </dependencies>
 </project>

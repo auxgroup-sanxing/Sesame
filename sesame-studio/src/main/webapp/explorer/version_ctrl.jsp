@@ -15,7 +15,7 @@
 
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
-<%!//private static Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.STATENET);
+<%!//private static Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.SESAME);
 	
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	

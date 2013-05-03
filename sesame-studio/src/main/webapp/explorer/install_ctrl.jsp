@@ -35,7 +35,7 @@
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!private static final Namespace XMLNS_ART = Namespace.getNamespace("sn",
-			Namespaces.STATENET);
+			Namespaces.SESAME);
 
 	private static final String REV_WORKING = "working";
 	private static final String REV_HEAD = "head";
@@ -65,7 +65,7 @@
 
 	private Document createLibDescriptor(String version) throws IOException {
 		Namespace xmlns = Namespace.getNamespace(Namespaces.JBI);
-		Namespace xmlns_art = Namespace.getNamespace("sn", Namespaces.STATENET);
+		Namespace xmlns_art = Namespace.getNamespace("sn", Namespaces.SESAME);
 		Element rootEl = new Element("jbi", xmlns);
 		rootEl.setAttribute("version", "1.0");
 		rootEl.addNamespaceDeclaration(xmlns_art);

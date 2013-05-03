@@ -208,7 +208,7 @@ public String generateSchemaUI(HttpServletRequest request, HttpServletResponse r
 				}
 				
 				// 读取unit.wsdl文件sn:binding子元素
-				org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.STATENET);
+				org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.SESAME);
 				File wsdlPath = new File(unitFolder, "unit.wsdl");
 				Dom4jUtil.initDocument(wsdlPath);
 				org.dom4j.Element root = Dom4jUtil.getRootEl();
@@ -353,7 +353,7 @@ public String loadOperations(HttpServletRequest request, HttpServletResponse res
 		// server unit.wsdl文件路径
 		File wsdlPath = new File(unitFolder, "unit.wsdl");
 
-		org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.STATENET);
+		org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.SESAME);
 		org.dom4j.Namespace xmlns_soap=org.dom4j.Namespace.get("soap", Namespaces.SOAP_NAMESPACE);
 		Dom4jUtil.initDocument(wsdlPath);
 
@@ -1018,7 +1018,7 @@ public String saveParams(HttpServletRequest request, HttpServletResponse respons
 	org.dom4j.Element wsdlDef = Dom4jUtil.getRootEl();
 	
 	Dom4jUtil.addNamespace(wsdlDef, "tns", namespace);
-	Dom4jUtil.addNamespace(wsdlDef, "sn", Namespaces.STATENET);
+	Dom4jUtil.addNamespace(wsdlDef, "sn", Namespaces.SESAME);
 	Dom4jUtil.addNamespace(wsdlDef, "xs", Namespaces.XSD);
 	Dom4jUtil.addNamespace(wsdlDef, "soap", Namespaces.SOAP_NAMESPACE);
 	Dom4jUtil.addNamespace(wsdlDef, "", Namespaces.WSDL1_NAMESPACE);
@@ -1078,7 +1078,7 @@ public String saveBindings(HttpServletRequest request, HttpServletResponse respo
 	File unitFolder = Configuration.getWorkspaceFile(unit);
 	File wsdlPath = new File(unitFolder, "unit.wsdl");
 	
-	org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.STATENET);
+	org.dom4j.Namespace xmlns_art=org.dom4j.Namespace.get("sn", Namespaces.SESAME);
 	
 	Dom4jUtil.initDocument(wsdlPath);
 	org.dom4j.Element root = Dom4jUtil.getRootEl();
@@ -1175,7 +1175,7 @@ public String saveBindings(HttpServletRequest request, HttpServletResponse respo
 					org.dom4j.Element child = Dom4jUtil.createEl(el, "port");
 					child.addAttribute("name", endPointName);
 					child.addAttribute("binding", "tns:" + newName);
-					child.addAttribute(new QName("style", org.dom4j.Namespace.get("sn", Namespaces.STATENET)), 
+					child.addAttribute(new QName("style", org.dom4j.Namespace.get("sn", Namespaces.SESAME)), 
 							unit.indexOf("/client/") > -1 ? "remote" : "local");
 					
 					org.dom4j.Element addressEl = Dom4jUtil.createEl(child, "soap:address");

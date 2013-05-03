@@ -3,7 +3,7 @@ package com.sanxing.sesame.logging.constants;
 public abstract interface LogConfig {
 	public static final String STATENET_MONITOR_ON_PROPERTY_NAME = "sesame.logging.monitor";
 	public static final String STATENET_MONITOR_DATASOURCE_PROPERTY_NAME = "sesame.logging.monitor.datasource.name";
-	public static final String STATENET_MONITOR_DATASOURCE_DEFAULT = "stm-datasource";
+	public static final String STATENET_MONITOR_DATASOURCE_DEFAULT = "SN_DATASOURCE";
 	public static final String STATENET_MONITOR_JMS_PROPERTY_NAME = "sesame.logging.monitor.jms.name";
 	public static final String STATENET_MONITOR_JMS_DEFAULT = "LOGTOPIC";
 	public static final String STATENET_QUEUE_CONSUMERS_PROPERTY_NAME = "sesame.logging.monitor.consumers";

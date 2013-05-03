@@ -70,7 +70,7 @@ try
 	
 	Element rootEl = document.getRootElement();
 	Namespace xmlns_jbi = rootEl.getNamespace();
-	Namespace xmlns_art = Namespace.getNamespace("sn", Namespaces.STATENET);
+	Namespace xmlns_art = Namespace.getNamespace("sn", Namespaces.SESAME);
 	Element compEl = rootEl.getChild("component", rootEl.getNamespace());
 	if (compEl != null) {
 		String componentType = compEl.getAttributeValue("type", "");

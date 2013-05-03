@@ -31,5 +31,9 @@
   		<groupId>org.apache.lucene</groupId>
   		<artifactId>lucene-core</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>xerces</groupId>
+  		<artifactId>xercesImpl</artifactId>
+  	</dependency>
   </dependencies>
 </project>

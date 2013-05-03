@@ -37,7 +37,7 @@ public class BusinesSerial {
 		long serial = 0L;
 		try {
 			DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup(
-					"sesame_datasource");
+					"SN_DATASOURCE");
 			con = ds.getConnection();
 			state = con.createStatement();
 			set = state
@@ -85,7 +85,7 @@ public class BusinesSerial {
 		Statement state = null;
 		try {
 			DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup(
-					"sesame_datasource");
+					"SN_DATASOURCE");
 			con = ds.getConnection();
 			con.setAutoCommit(true);
 			state = con.createStatement();

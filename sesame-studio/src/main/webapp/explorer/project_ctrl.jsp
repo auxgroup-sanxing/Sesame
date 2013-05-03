@@ -32,7 +32,7 @@
 
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
-<%!private static final Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.STATENET);
+<%!private static final Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.SESAME);
 
 	private static final String REV_WORKING	= "working";
 	private static final String REV_HEAD	= "head";
@@ -546,7 +546,7 @@
 			Definition wsdlDef = WSDLUtil.newDefinition();
 			String targetNamespace = request.getParameter("namespace");
 			wsdlDef.addNamespace("tns", targetNamespace);
-			wsdlDef.addNamespace("sn", Namespaces.STATENET);
+			wsdlDef.addNamespace("sn", Namespaces.SESAME);
 			wsdlDef.addNamespace("xs", Namespaces.XSD);
 			wsdlDef.addNamespace("soap", Namespaces.SOAP_NAMESPACE);
 			wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);
@@ -622,7 +622,7 @@
 		Definition wsdlDef = WSDLUtil.newDefinition();
 		String targetNamespace = request.getParameter("namespace");
 		wsdlDef.addNamespace("tns", targetNamespace);
-		wsdlDef.addNamespace("sn", Namespaces.STATENET);
+		wsdlDef.addNamespace("sn", Namespaces.SESAME);
 		wsdlDef.addNamespace("xs", Namespaces.XSD);
 		wsdlDef.addNamespace("soap", Namespaces.SOAP_NAMESPACE);
 		wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);
@@ -695,7 +695,7 @@
 		Definition wsdlDef = WSDLUtil.newDefinition();
 		String targetNamespace = request.getParameter("namespace");
 		wsdlDef.addNamespace("tns", targetNamespace);
-		wsdlDef.addNamespace("sn", Namespaces.STATENET);
+		wsdlDef.addNamespace("sn", Namespaces.SESAME);
 		wsdlDef.addNamespace("xs", Namespaces.XSD);
 		wsdlDef.addNamespace("soap", Namespaces.SOAP_NAMESPACE);
 		wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);
@@ -768,7 +768,7 @@
 				
 				UnknownExtensibilityElement bindingExt = new UnknownExtensibilityElement();
 				binding.addExtensibilityElement(bindingExt);
-				org.w3c.dom.Element bindEl = document.createElementNS(Namespaces.STATENET, "binding");
+				org.w3c.dom.Element bindEl = document.createElementNS(Namespaces.SESAME, "binding");
 				bindEl.setPrefix("sn");
 				bindEl.setAttribute("component-name", compName);
 				bindEl.setAttribute("transport", "");
@@ -1001,7 +1001,7 @@
 		Definition wsdlDef = WSDLUtil.newDefinition();
 		String targetNamespace = request.getParameter("namespace");
 		wsdlDef.addNamespace("tns", targetNamespace);
-		wsdlDef.addNamespace("sn", Namespaces.STATENET);
+		wsdlDef.addNamespace("sn", Namespaces.SESAME);
 		wsdlDef.addNamespace("xs", Namespaces.XSD);
 		wsdlDef.addNamespace("soap", Namespaces.SOAP_NAMESPACE);
 		wsdlDef.addNamespace("", Namespaces.WSDL1_NAMESPACE);

@@ -515,7 +515,7 @@ public String addPublicIntf(HttpServletRequest request, HttpServletResponse resp
 	String project = unit.replaceAll("\\/.*", "/");
 	String intf =  request.getParameter("intf");
 	String intfpath = "../../intf/" + intf;
-	String importNs = Namespaces.STATENET_PROJECT + project + "intf/" + intf;
+	String importNs = Namespaces.SESAME_PROJECT + project + "intf/" + intf;
 	
 	boolean used = false;
 	File unitFolder = Configuration.getWorkspaceFile(unit);

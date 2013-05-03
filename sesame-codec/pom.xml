@@ -23,5 +23,9 @@
   		<groupId>com.sanxing.sesame</groupId>
   		<artifactId>sesame-binding</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>xerces</groupId>
+  		<artifactId>xercesImpl</artifactId>
+  	</dependency>
   </dependencies>
 </project>

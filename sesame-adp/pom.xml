@@ -39,5 +39,9 @@
   		<groupId>com.sanxing.sesame</groupId>
   		<artifactId>sesame-sdk</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>xerces</groupId>
+  		<artifactId>xercesImpl</artifactId>
+  	</dependency>
   </dependencies>
 </project>

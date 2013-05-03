@@ -690,7 +690,7 @@ public String createOpera(HttpServletRequest request, HttpServletResponse respon
 		File jbiPath = new File(unitFolder, "jbi.xml");
 		Dom4jUtil.initDocument(jbiPath);
 		org.dom4j.Element root = Dom4jUtil.JBI.getRoot();
-		Dom4jUtil.addNamespace(root, "sn", Namespaces.STATENET);
+		Dom4jUtil.addNamespace(root, "sn", Namespaces.SESAME);
 		
 		org.dom4j.Element service = Dom4jUtil.JBI.getServices();
 		org.dom4j.Element newLink = service.addElement("sn:link");
@@ -849,7 +849,7 @@ public String modifyOpera(HttpServletRequest request, HttpServletResponse respon
 			(org.dom4j.Element)service.selectSingleNode("//*[local-name()='link'][@operation-name='"+ oldOper + "']");
 		if (link == null) {
 			org.dom4j.Element services = Dom4jUtil.JBI.getServices();
-			Dom4jUtil.addNamespace(services, "sn", Namespaces.STATENET);
+			Dom4jUtil.addNamespace(services, "sn", Namespaces.SESAME);
 			
 			org.dom4j.Element newLink = services.addElement("sn:link");
 			newLink.addAttribute("service-unit", serviceUnit);
@@ -1166,7 +1166,7 @@ public String saveBinding(HttpServletRequest request, HttpServletResponse respon
 		soapAddr.setLocationURI(bindingObj.getString("address"));
 		soapAddr.setRequired(true);
 		port.addExtensibilityElement(soapAddr);
-		port.setExtensionAttribute(new QName(Namespaces.STATENET, "style"), "local");
+		port.setExtensionAttribute(new QName(Namespaces.SESAME, "style"), "local");
 		service.addPort(port);
 	}
 
@@ -1208,7 +1208,7 @@ public String saveParams(HttpServletRequest request, HttpServletResponse respons
 	org.dom4j.Element wsdlDef = Dom4jUtil.getRootEl();
 	
 	Dom4jUtil.addNamespace(wsdlDef, "tns", namespace);
-	Dom4jUtil.addNamespace(wsdlDef, "sn", Namespaces.STATENET);
+	Dom4jUtil.addNamespace(wsdlDef, "sn", Namespaces.SESAME);
 	Dom4jUtil.addNamespace(wsdlDef, "xs", Namespaces.XSD);
 	Dom4jUtil.addNamespace(wsdlDef, "soap", Namespaces.SOAP_NAMESPACE);
 	Dom4jUtil.addNamespace(wsdlDef, "", Namespaces.WSDL1_NAMESPACE);

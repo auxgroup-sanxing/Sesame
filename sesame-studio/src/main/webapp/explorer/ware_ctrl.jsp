@@ -33,7 +33,7 @@
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!
-	private static final Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.STATENET);
+	private static final Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.SESAME);
 
 	private static final String REV_WORKING	= "working";
 	private static final String REV_HEAD	= "head";
