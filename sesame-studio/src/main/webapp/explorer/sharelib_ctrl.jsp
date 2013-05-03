@@ -1,20 +1,20 @@
 <%@page import="java.net.URLDecoder"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
-<%@page import="com.sanxing.statenet.sharelib.ShareLibManager"%>
+<%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 <%!
-private final Logger logger = Logger.getLogger(this.getClass());
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 private static final long SIZE_BT=1024L;
 private static final long SIZE_KB=SIZE_BT*1024L;

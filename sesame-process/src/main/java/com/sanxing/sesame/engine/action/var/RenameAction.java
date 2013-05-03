@@ -5,8 +5,8 @@ import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import java.util.List;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
+import org.jdom.Attribute;
+import org.jdom.Element;
 
 public class RenameAction extends AbstractAction implements Constant {
 	String varName;

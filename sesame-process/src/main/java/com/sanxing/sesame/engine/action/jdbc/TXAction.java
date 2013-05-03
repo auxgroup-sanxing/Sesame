@@ -9,7 +9,7 @@ import com.sanxing.sesame.engine.context.DataContext;
 import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class TXAction extends AbstractAction {
 	public static final Logger LOG = LoggerFactory.getLogger(TXAction.class);

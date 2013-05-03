@@ -5,7 +5,7 @@ import com.sanxing.sesame.engine.action.ActionUtil;
 import com.sanxing.sesame.engine.context.DataContext;
 import java.util.Iterator;
 import java.util.List;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class GroupAction extends AbstractAction {
 	Element config;

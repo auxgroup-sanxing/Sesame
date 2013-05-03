@@ -7,9 +7,9 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import java.util.Iterator;
 import java.util.List;
-import org.jdom2.Attribute;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+import org.jdom.Attribute;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 public class NamespaceAction extends AbstractAction implements Constant {
 	private String method;

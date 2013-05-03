@@ -1,7 +1,7 @@
 package com.sanxing.sesame.engine.action;
 
 import com.sanxing.sesame.engine.context.DataContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public abstract interface Action {
 	public abstract String getName();

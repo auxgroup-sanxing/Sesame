@@ -5,10 +5,10 @@ import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import java.util.List;
-import org.jdom2.Attribute;
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 public class DeleteAction extends AbstractAction implements Constant {
 	String varName;

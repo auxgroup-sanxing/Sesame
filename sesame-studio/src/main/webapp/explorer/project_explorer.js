@@ -1038,7 +1038,7 @@ getProjectWizard : function(options){
 						listeners: {
 							change: function(field, newVal, oldVal){
 								var field = this.ownerCt.getForm().findField('namespace');
-								if (field.getValue()=='') field.setValue('http://www.statenet.org/projects/'+newVal);
+								if (field.getValue()=='') field.setValue('http://www.sesame.org/projects/'+newVal);
 							}
 						}
 				    },{

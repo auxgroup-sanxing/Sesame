@@ -36,12 +36,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.output.XMLOutputter;
-import org.jdom2.transform.JDOMSource;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
 
 public class ADPEngine extends EngineComponent implements ServiceUnitManager {
 	private ADPServer server = new ADPServer();

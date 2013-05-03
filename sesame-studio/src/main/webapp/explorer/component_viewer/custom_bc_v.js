@@ -82,7 +82,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.binding.AdapterComponent']
+					store: ['com.sanxing.sesame.binding.AdapterComponent']
 				}],
 				tools: [{
 					id: 'plus',
@@ -132,7 +132,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.binding.BootstrapImpl']
+					store: ['com.sanxing.sesame.binding.BootstrapImpl']
 				}],
 				tools: [{
 					id: 'plus',

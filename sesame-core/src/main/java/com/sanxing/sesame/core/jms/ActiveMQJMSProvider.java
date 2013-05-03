@@ -27,7 +27,7 @@ import org.apache.activemq.usage.MemoryUsage;
 import org.apache.activemq.usage.SystemUsage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ActiveMQJMSProvider implements JMSProvider {
 	private static Logger LOG = LoggerFactory.getLogger(ActiveMQJMSProvider.class);

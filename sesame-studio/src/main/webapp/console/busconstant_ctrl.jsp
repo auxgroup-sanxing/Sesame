@@ -1,21 +1,21 @@
 <%@page import="org.json.JSONObject"%>
 <%@page import="org.json.JSONArray"%>
 <%@page import="java.net.URLDecoder"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.jdom.Element"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.xpath.*" %>
-<%@page import="com.sanxing.ads.utils.CommonUtil"%>
+<%@page import="com.sanxing.studio.utils.CommonUtil"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="org.jdom.Document"%>
-<%@page import="com.sanxing.statenet.component.params.AppParameters"%>
-<%@page import="com.sanxing.statenet.component.params.Parameter"%>
+<%@page import="com.sanxing.sesame.component.params.AppParameters"%>
+<%@page import="com.sanxing.sesame.component.params.Parameter"%>
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 <%! 
-private final Logger logger = Logger.getLogger(this.getClass());
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 public String loadAppParameters(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	JSONArray items = new JSONArray();

@@ -1,7 +1,7 @@
 package com.sanxing.sesame.core.jms;
 
 import java.io.Serializable;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class JMSResourceEntry implements Serializable {
 	private static final long serialVersionUID = 2031634080016834510L;

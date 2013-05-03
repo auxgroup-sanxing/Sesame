@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class TryCatchAction extends AbstractAction implements Constant {
 	private Element actionEl;

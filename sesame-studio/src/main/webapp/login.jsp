@@ -1,10 +1,10 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
 
 <html>
 <head>
-<title>Statenet Development Studio</title>
+<title>Sesame Development Studio</title>
 
 <META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <META http-equiv="Pragma" content="no-cache"/>
@@ -30,7 +30,7 @@
 	Ext.BLANK_IMAGE_URL="ext-Ajax/resources/images/default/s.gif";
 
 	var contextPath = '<%=request.getContextPath()%>';
-	var realm = 'Statenet Studio';
+	var realm = 'Sesame Studio';
 	var nonce = '<%=session.getId().toLowerCase()%>';
 	var qop = 'auth';
 	var nc = '00000001';

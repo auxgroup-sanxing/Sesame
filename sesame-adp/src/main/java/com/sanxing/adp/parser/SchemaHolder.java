@@ -23,17 +23,17 @@ import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaExternal;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaObjectTable;
-import org.jdom2.Document;
-import org.jdom2.Namespace;
-import org.jdom2.input.DOMBuilder;
-import org.jdom2.transform.JDOMSource;
+import org.jdom.Document;
+import org.jdom.Namespace;
+import org.jdom.input.DOMBuilder;
+import org.jdom.transform.JDOMSource;
 
 public class SchemaHolder {
 	Definition def;
 	private XmlSchema schema;
 	private Map<QName, XmlSchemaElement> types = new HashMap();
 	private Map declaredNamespaces;
-	private List<org.jdom2.Element> jdomSchemaElements = new LinkedList();
+	private List<org.jdom.Element> jdomSchemaElements = new LinkedList();
 	private String targetDir;
 	private static Logger LOG = LoggerFactory.getLogger(SchemaHolder.class);
 
@@ -62,7 +62,7 @@ public class SchemaHolder {
 				w3cSchemaElement = ((SchemaImpl) schemaElement).getElement();
 				if (w3cSchemaElement != null) {
 					DOMBuilder domBuilder = new DOMBuilder();
-					org.jdom2.Element jdomSchemaElement = domBuilder
+					org.jdom.Element jdomSchemaElement = domBuilder
 							.build(w3cSchemaElement);
 					jdom2Schema(jdomSchemaElement);
 				}
@@ -87,7 +87,7 @@ public class SchemaHolder {
 		}
 	}
 
-	private void jdom2Schema(org.jdom2.Element schemaElement) throws Exception {
+	private void jdom2Schema(org.jdom.Element schemaElement) throws Exception {
 		if ((this.declaredNamespaces != null)
 				&& (!(this.declaredNamespaces.isEmpty()))) {
 			Iterator nsIter = this.declaredNamespaces.keySet().iterator();
@@ -112,7 +112,7 @@ public class SchemaHolder {
 		parseSchema(this.schema);
 	}
 
-	public List<org.jdom2.Element> getSchemaJDOMElements() {
+	public List<org.jdom.Element> getSchemaJDOMElements() {
 		return this.jdomSchemaElements;
 	}
 

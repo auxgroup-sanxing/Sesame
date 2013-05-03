@@ -1,8 +1,8 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="java.io.File"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.sql.*"%>
@@ -13,10 +13,10 @@
 <%@page import="org.jdom.*"%>
 <%@page import="org.jdom.xpath.XPath"%>
 
-<%@page import="com.sanxing.ads.*" %>
-<%@page import="com.sanxing.ads.auth.*" %>
-<%@page import="com.sanxing.ads.utils.*" %>
-<%@page import="com.sanxing.ads.action.UserAction"%><html>
+<%@page import="com.sanxing.studio.*" %>
+<%@page import="com.sanxing.studio.auth.*" %>
+<%@page import="com.sanxing.studio.utils.*" %>
+<%@page import="com.sanxing.studio.action.UserAction"%><html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>用户管理</title>

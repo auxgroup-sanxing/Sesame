@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class SUParameters extends HashMap<String, Parameter> {
 	private static final long serialVersionUID = -351643054831856629L;

@@ -12,9 +12,9 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaSequence;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.jdom2.Document;
-import org.jdom2.Namespace;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.Namespace;
+import org.jdom.xpath.XPath;
 import org.w3c.dom.NodeList;
 
 public class CodecUtil {
@@ -137,16 +137,16 @@ public class CodecUtil {
 		return result;
 	}
 
-	public static org.jdom2.Element getComplexType(Document schemaDoc)
+	public static org.jdom.Element getComplexType(Document schemaDoc)
 			throws FormatException {
-		org.jdom2.Element root = schemaDoc.getRootElement();
+		org.jdom.Element root = schemaDoc.getRootElement();
 		Namespace ns = root.getNamespace();
-		org.jdom2.Element request;
+		org.jdom.Element request;
 		XPath xpath;
 		try {
 			xpath = XPath.newInstance("xsd:element[@name='request']");
 			xpath.addNamespace("xsd", ns.getURI());
-			request = (org.jdom2.Element) xpath.selectSingleNode(root);
+			request = (org.jdom.Element) xpath.selectSingleNode(root);
 			if (request == null)
 				throw new FormatException("");
 		} catch (Exception e) {

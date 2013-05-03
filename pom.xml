@@ -120,6 +120,7 @@
   	<module>sesame-codec</module>
   	<module>sesame-adp</module>
   	<module>sesame-studio</module>
+  	<module>sesame-all</module>
   </modules>
 
   <dependencyManagement>
@@ -182,6 +183,11 @@
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-jsp</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-security</artifactId>
         <version>${jetty.version}</version>
       </dependency>
@@ -235,6 +241,42 @@
         <artifactId>jetty-rewrite</artifactId>
         <version>${jetty.version}</version>
       </dependency>
+      
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.aggregate</groupId>
+	  		<artifactId>jetty-all</artifactId>
+	  		<version>${jetty.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>org.apache.jasper.glassfish</artifactId>
+	  		<version>2.2.2.v201112011158</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>javax.servlet.jsp.jstl</artifactId>
+	  		<version>1.2.0.v201105211821</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>javax.el</artifactId>
+	  		<version>2.2.0.v201108011116</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>org.apache.taglibs.standard.glassfish</artifactId>
+	  		<version>1.2.0.v201112081803</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>com.sun.el</artifactId>
+	  		<version>2.2.0.v201108011116</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>org.eclipse.jetty.orbit</groupId>
+	  		<artifactId>org.eclipse.jdt.core</artifactId>
+	  		<version>3.7.1</version>
+	  	</dependency>
 
       <dependency>
         <groupId>org.sonatype.plexus</groupId>
@@ -827,7 +869,7 @@
       <dependency>
       	<groupId>org.jdom</groupId>
       	<artifactId>jdom</artifactId>
-      	<version>2.0.2</version>
+      	<version>1.1.1</version>
       </dependency>
       <dependency>
       	<groupId>opensymphony</groupId>
@@ -837,6 +879,11 @@
       <dependency>
       	<groupId>com.sanxing.sesame</groupId>
       	<artifactId>sesame-util</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-bootstrap</artifactId>
       	<version>${sesame.version}</version>
       </dependency>
       <dependency>
@@ -895,9 +942,20 @@
       	<version>${sesame.version}</version>
       </dependency>
       <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>sesame-studio</artifactId>
+      	<version>${sesame.version}</version>
+      	<type>war</type>
+      </dependency>
+      <dependency>
+      	<groupId>com.sanxing.sesame.aggregate</groupId>
+      	<artifactId>sesame-all</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
       	<groupId>org.apache.activemq</groupId>
       	<artifactId>activemq-core</artifactId>
-      	<version>5.5.1</version>
+      	<version>5.7.0</version>
       </dependency>
       <dependency>
       	<groupId>commons-dbcp</groupId>
@@ -1026,6 +1084,36 @@
       	<artifactId>jaxb-xjc</artifactId>
       	<version>2.2.7</version>
       </dependency>
+      <dependency>
+      	<groupId>antlr</groupId>
+      	<artifactId>antlr</artifactId>
+      	<version>2.7.7</version>
+      </dependency>
+      <dependency>
+      	<groupId>commons-fileupload</groupId>
+      	<artifactId>commons-fileupload</artifactId>
+      	<version>1.3</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.java2html</groupId>
+      	<artifactId>j2h</artifactId>
+      	<version>1.5.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.apache.poi</groupId>
+      	<artifactId>poi</artifactId>
+      	<version>3.9</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.lowagie</groupId>
+      	<artifactId>itext</artifactId>
+      	<version>2.1.0</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.tmatesoft.svnkit</groupId>
+      	<artifactId>svnkit</artifactId>
+      	<version>1.7.8</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1133,7 +1221,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-dependency-plugin</artifactId>
-          <version>2.5.1</version>
+          <version>2.7</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1544,14 +1632,14 @@
                     You probably added a dependency that is missing the exclusions.
                   </message>
                 </bannedDependencies>
-                <bannedDependencies>
+<!--                 <bannedDependencies>
                   <excludes>
                     <exclude>commons-logging:*</exclude>
                   </excludes>
                   <message>commons-logging conflicts with slf4j. You probably added a dependency that is missing the exclusions.
                   </message>
                 </bannedDependencies>
-                <bannedDependencies>
+ -->                <bannedDependencies>
                   <excludes>
                     <exclude>commons-vfs:commons-vfs</exclude>
                   </excludes>
@@ -1592,7 +1680,7 @@
                   </excludes>
                   <message>commons-beanutils includes commons-collections. use commons-beanutils-core instead</message>
                 </bannedDependencies>
-                <bannedDependencies>
+<!--                 <bannedDependencies>
                   <excludes>
                     <exclude>*:activation</exclude>
                     <exclude>*:stax-api</exclude>
@@ -1601,7 +1689,7 @@
                   </excludes>
                   <message>xml apis got banned since they are already included on java 6</message>
                 </bannedDependencies>
-                <bannedDependencies>
+ -->                <bannedDependencies>
                   <excludes>
                     <exclude>org.sonatype.aether:*:1.8</exclude>
                   </excludes>
@@ -1914,7 +2002,7 @@
                         <artifactId>maven-dependency-plugin</artifactId>
                         <versionRange>[2.0,)</versionRange>
                         <goals>
-                          <goal>unpack</goal>
+			              <goal>unpack-dependencies</goal>
                         </goals>
                       </pluginExecutionFilter>
                       <action>

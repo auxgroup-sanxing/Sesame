@@ -19,8 +19,8 @@ import javax.transaction.TransactionManager;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
-import org.jdom2.input.DOMBuilder;
+import org.jdom.Element;
+import org.jdom.input.DOMBuilder;
 
 public class DBAction extends AbstractAction {
 	private static Logger LOG = LoggerFactory.getLogger(DBAction.class);
@@ -54,7 +54,7 @@ public class DBAction extends AbstractAction {
 				PreparedStatement stmt = prepareStmt(conn, sql, paramEl);
 				ResultSet set = stmt.executeQuery();
 				org.w3c.dom.Document doc = RS2DOM.ResultSet2DOM(set);
-				org.jdom2.Document jdomDoc = new DOMBuilder().build(doc);
+				org.jdom.Document jdomDoc = new DOMBuilder().build(doc);
 				Element jdomEle = jdomDoc.getRootElement();
 				Variable result = new Variable(jdomEle, 0);
 				messageCtx.addVariable(toVar, result);

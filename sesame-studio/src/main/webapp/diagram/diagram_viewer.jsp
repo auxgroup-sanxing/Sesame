@@ -1,12 +1,12 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@page import="java.util.*,  java.io.*"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*,com.sanxing.ads.team.svn.*,com.sanxing.ads.team.*"%>
-<%@page import="com.sanxing.statenet.engine.ExecutionEnv"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page import="com.sanxing.sesame.engine.ExecutionEnv"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
 <%@page import="org.json.*"%>
 <%!
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 %>
 <%
 	String service = request.getParameter("service");

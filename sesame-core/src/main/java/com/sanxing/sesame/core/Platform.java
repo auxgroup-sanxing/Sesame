@@ -50,6 +50,11 @@ public class Platform {
 		parsePropertyFile(new File(System.getProperty("SESAME_HOME"),
 				"conf/sesame.properties"));
 
+		Console.echo(System.getProperty("sesame.echo", "on").equals("on"));
+
+		System.setOut(Console.out);
+		System.setErr(Console.err);
+		
 		validateLicense();
 
 		LOG = LoggerFactory.getLogger(Platform.class);
@@ -110,12 +115,20 @@ public class Platform {
 			MBeanHelper.registerMBean(this.server.getMBeanServer(),
 					coreManager,
 					MBeanHelper.getPlatformMBeanName("core-manager"));
+			Console.echo("");
+			Console.echo("--------------------------------------------------------------------------------");
+			Console.echo("Statenet server (" + this.server.getName() + ") started");
+			Console.echo("--------------------------------------------------------------------------------");
 		} catch (Exception e) {
 			LOG.error("Start server err", e);
 		}
 	}
 
 	private void stop() {
+		Console.echo("");
+		Console.echo("--------------------------------------------------------------------------------");
+		Console.echo("Shuting down " + this.server.getName() + "...");
+		Console.echo("--------------------------------------------------------------------------------");
 		this.server.shutdown();
 		try {
 			MBeanServer mbeanServer = this.server.getMBeanServer();
@@ -152,6 +165,10 @@ public class Platform {
 				LOG.error(e.getMessage(), e);
 			}
 		}
+		
+		Console.echo("--------------------------------------------------------------------------------");
+		Console.echo("Statenet server (" + this.server.getName() + ") shutdown complete");
+		Console.echo("--------------------------------------------------------------------------------");
 	}
 
 	private void addShutdownHook() {

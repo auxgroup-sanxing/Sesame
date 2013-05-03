@@ -1,8 +1,8 @@
-package com.sanxing.statenet.test;
+package com.sanxing.sesame.test;
 
-import com.sanxing.ads.utils.SchemaUtil;
-import com.sanxing.statenet.component.ClientComponent;
-import com.sanxing.statenet.util.JdomUtil;
+import com.sanxing.studio.utils.SchemaUtil;
+import com.sanxing.sesame.component.ClientComponent;
+import com.sanxing.sesame.util.JdomUtil;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
@@ -30,7 +30,8 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.jdom.Document;
@@ -43,7 +44,7 @@ public class UnitTest {
 	private String serviceUnitRoot;
 	private String operationName;
 	private Definition definition;
-	private static Logger LOG = Logger.getLogger(UnitTest.class);
+	private static Logger LOG = LoggerFactory.getLogger(UnitTest.class);
 
 	public UnitTest(String serviceUnitRoot, String operationName) {
 		this.operationName = operationName;
@@ -142,7 +143,7 @@ public class UnitTest {
 			MessageExchange exchange = test_ac.getExchangeFactory()
 					.createInOutExchange();
 			Long serial = Long.valueOf(DummySequencer.getSerial());
-			exchange.setProperty("statenet.exchange.platform.serial", serial);
+			exchange.setProperty("sesame.exchange.platform.serial", serial);
 			exchange.setService(serviceName);
 			exchange.setInterfaceName(interfaceName);
 			exchange.setOperation(new QName(this.operationName));

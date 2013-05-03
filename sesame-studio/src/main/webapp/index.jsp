@@ -2,8 +2,8 @@
 <%@page import="java.util.*"%>
 <%@page import="javax.security.auth.*" %>
 <%@page import="org.json.*"%>
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.auth.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.auth.*"%>
 <%
 Subject subject = Authentication.getSubject();
 Set<StudioPrincipal> principals;

@@ -80,7 +80,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.binding.AdapterComponent']
+					store: ['com.sanxing.sesame.binding.AdapterComponent']
 				}],
 				tools: [{
 					id: 'plus',
@@ -131,7 +131,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.binding.BootstrapImpl']
+					store: ['com.sanxing.sesame.binding.BootstrapImpl']
 				}],
 				listeners: {
 					render: function(c) {
@@ -477,7 +477,7 @@ return {
 						xtype: 'combo',
 						triggerAction:'all',
 						forceSelection:false, editable:true,
-						store: ['com.sanxing.statenet.codec.impl.EncodeFSV', 'com.sanxing.statenet.codec.impl.EncodeXML']
+						store: ['com.sanxing.sesame.codec.impl.EncodeFSV', 'com.sanxing.sesame.codec.impl.EncodeXML']
 			        }]
 				},{
 					xtype: 'form',
@@ -499,7 +499,7 @@ return {
 						xtype: 'combo',
 						triggerAction:'all',
 						forceSelection:false, editable:true,
-						store: ['com.sanxing.statenet.codec.impl.DecodeFSV', 'com.sanxing.statenet.codec.impl.DecodeXML']
+						store: ['com.sanxing.sesame.codec.impl.DecodeFSV', 'com.sanxing.sesame.codec.impl.DecodeXML']
 			        }]
 				}]
 			},{

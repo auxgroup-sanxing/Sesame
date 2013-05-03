@@ -1,6 +1,6 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" errorPage="../exception.jsp"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.action.SQLExplorer"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.action.SQLExplorer"%>
 <%@page import="org.json.*"%>
 <%
 	String tableName = request.getParameter("table");

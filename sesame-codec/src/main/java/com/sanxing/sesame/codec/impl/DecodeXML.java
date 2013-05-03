@@ -5,7 +5,7 @@ import com.sanxing.sesame.binding.codec.Decoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLResult;
 import java.io.InputStream;
-import org.jdom2.input.SAXBuilder;
+import org.jdom.input.SAXBuilder;
 
 public class DecodeXML implements Decoder {
 	private ThreadLocal<SAXBuilder> localBuilder = new ThreadLocal();

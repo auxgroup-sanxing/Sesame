@@ -15,21 +15,21 @@
 <%@page import="com.ibm.wsdl.extensions.schema.*" %>
 <%@page import="com.ibm.wsdl.extensions.soap.*"%>
 
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.emu.*"%>
-<%@page import="com.sanxing.ads.team.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.emu.*"%>
+<%@page import="com.sanxing.studio.team.*"%>
 
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="javax.management.*,javax.management.remote.*" %>
 <%@page import="java.util.concurrent.*"%>
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProjectBuilder"%>
-<%@page import="com.sanxing.statenet.sharelib.ShareLibManager"%>
-<%@page import="com.sanxing.statenet.platform.Platform"%>
+<%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
+<%@page import="com.sanxing.sesame.core.Platform"%>
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!
@@ -38,7 +38,7 @@
 	private static final String REV_WORKING	= "working";
 	private static final String REV_HEAD	= "head";
 	
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private MBeanServer mserver = null;
 	

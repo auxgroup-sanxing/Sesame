@@ -12,8 +12,8 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import org.jdom2.Document;
-import org.jdom2.input.SAXBuilder;
+import org.jdom.Document;
+import org.jdom.input.SAXBuilder;
 
 public class Utils {
 	public static String dateToDateShort(java.util.Date date) {

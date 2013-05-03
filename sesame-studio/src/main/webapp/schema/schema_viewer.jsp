@@ -1,9 +1,9 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@page import="java.util.*, java.io.*"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*,com.sanxing.ads.team.svn.*,com.sanxing.ads.team.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%!
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 %>
 <%
 String schema = request.getParameter("schema");

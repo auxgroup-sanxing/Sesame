@@ -1,6 +1,6 @@
-<%@page import="org.apache.log4j.Logger"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*,com.sanxing.ads.team.svn.*,com.sanxing.ads.team.*"%>
-<%@page import="com.sanxing.statenet.jaxp.*"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page import="com.sanxing.sesame.jaxp.*"%>
 <%@page import="com.ibm.wsdl.ImportImpl"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.json.*"%>
@@ -16,12 +16,12 @@
 <%@page import="javax.wsdl.extensions.soap.*"%>
 <%@page import="javax.wsdl.extensions.schema.*"%>
 <%@page import="com.ibm.wsdl.extensions.schema.*" %>
-<%@page import="com.sanxing.ads.IllegalNameException"%>
+<%@page import="com.sanxing.studio.IllegalNameException"%>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="org.xml.sax.InputSource"%>
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 
-<%!private final Logger logger = Logger.getLogger(this.getClass());
+<%!private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 private WSDLReader getWSDLReader() throws WSDLException {
 	WSDLFactory factory = WSDLFactory.newInstance();

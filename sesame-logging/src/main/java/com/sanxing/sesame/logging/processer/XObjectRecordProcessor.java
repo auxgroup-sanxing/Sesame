@@ -7,8 +7,8 @@ import com.sanxing.sesame.logging.handlers.LuceneHandler;
 import com.sanxing.sesame.logging.util.Utils;
 import java.util.Date;
 import java.util.List;
-import org.jdom2.Document;
-import org.jdom2.output.XMLOutputter;
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
 
 public class XObjectRecordProcessor extends RecordProcessor {
 	public LogBean parse(Object o) {

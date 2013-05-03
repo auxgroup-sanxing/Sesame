@@ -42,13 +42,13 @@ import javax.xml.transform.stream.StreamSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.Namespace;
-import org.jdom2.transform.JDOMResult;
-import org.jdom2.transform.JDOMSource;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.Namespace;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
 
 public class CalloutAction extends AbstractAction {
 	private static final String SEND_TIME = null;

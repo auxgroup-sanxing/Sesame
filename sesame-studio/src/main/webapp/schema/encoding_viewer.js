@@ -2729,7 +2729,7 @@ return {
 						a.xmlns = rootEl.getAttribute('xmlns:xs');
 						a.targetNamespace= rootEl.getAttribute('targetNamespace')||targetNamespace;
 						if (!a.xmlns) a.xmlns = "http://www.w3.org/2001/XMLSchema";
-						if (!a.targetNamespace) a.targetNamespace = "http://framework.statenet.org/server/";
+						if (!a.targetNamespace) a.targetNamespace = "http://framework.sesame.org/server/";
 						
 						Loader.root = rootNode;
 						Loader.directives = directives;

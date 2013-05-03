@@ -3,7 +3,7 @@ package com.sanxing.sesame.engine.action.flow;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.context.DataContext;
 import java.io.PrintStream;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ForkAction extends AbstractAction {
 	Element config;

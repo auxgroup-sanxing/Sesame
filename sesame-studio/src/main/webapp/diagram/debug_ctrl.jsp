@@ -1,19 +1,19 @@
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 <%@page import="java.net.URLDecoder"%>
 <%@page import="javax.xml.transform.dom.DOMSource"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="org.jdom.*"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
-<%@page import="com.sanxing.statenet.engine.*"%>
-<%@page import="com.sanxing.statenet.engine.context.*"%>
-<%@page import="com.sanxing.statenet.test.DummySequencer"%>
+<%@page import="com.sanxing.sesame.engine.*"%>
+<%@page import="com.sanxing.sesame.engine.context.*"%>
+<%@page import="com.sanxing.sesame.test.DummySequencer"%>
 <%!
-private Logger logger = Logger.getLogger(this.getClass());
+private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
 private File getComponentRoot(File flowFile) throws IOException, JDOMException {
@@ -71,8 +71,8 @@ public String startDebug(HttpServletRequest request, HttpServletResponse respons
 		    if (ec == null) {
 				ec = new ExecutionContext("testFlow");
 				ec.put(ExecutionEnv.SERIAL_NUMBER, DummySequencer.getSerial());
-				ec.put(com.sanxing.statenet.engine.component.Constants.SERVICE_NAME, suName);
-				ec.put(com.sanxing.statenet.engine.component.Constants.OPERATION_NAME, operaName);
+				ec.put(com.sanxing.sesame.engine.component.Constants.SERVICE_NAME, suName);
+				ec.put(com.sanxing.sesame.engine.component.Constants.OPERATION_NAME, operaName);
 				session.setAttribute("context", ec);
 		    }
 		    ec.getDataContext().addVariable("request", new Variable(requestData, Variable.ELEMENT));

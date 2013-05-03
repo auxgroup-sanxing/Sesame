@@ -12,7 +12,7 @@ import javax.xml.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Namespace;
+import org.jdom.Namespace;
 
 public class XJUtil {
 	public static final String STR_XSNS = "http://schemas.xmlsoap.org/soap/envelope/";

@@ -5,8 +5,8 @@ import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import java.util.List;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 public class RemoveNSAction extends AbstractAction implements Constant {
 	String targetVarName;

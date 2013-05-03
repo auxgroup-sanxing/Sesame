@@ -17,13 +17,13 @@ import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.transform.JDOMSource;
-import org.jdom2.transform.XSLTransformException;
-import org.jdom2.transform.XSLTransformer;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.input.SAXBuilder;
+import org.jdom.transform.JDOMSource;
+import org.jdom.transform.XSLTransformException;
+import org.jdom.transform.XSLTransformer;
 
 public class TransformerManager {
 	private static Map<Object, XSLTransformer> transformerCache = new Hashtable();

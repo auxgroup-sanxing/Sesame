@@ -49,11 +49,11 @@ import org.slf4j.MDC;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.dom4j.io.DOMWriter;
 import org.dom4j.io.DocumentResult;
-import org.jdom2.JDOMException;
-import org.jdom2.input.DOMBuilder;
-import org.jdom2.transform.JDOMResult;
-import org.jdom2.transform.JDOMSource;
-import org.jdom2.xpath.XPath;
+import org.jdom.JDOMException;
+import org.jdom.input.DOMBuilder;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
 import org.w3c.dom.Element;
 
 public class DefaultBinding implements Binding {
@@ -255,7 +255,7 @@ public class DefaultBinding implements Binding {
 		}
 
 		if ((context.getAction() == null) && (this.txCode_xpath != null)) {
-			org.jdom2.Document request;
+			org.jdom.Document request;
 			if (context.getSource() instanceof XMLSource) {
 				XMLSource content = (XMLSource) context.getSource();
 				request = content.getJDOMDocument();
@@ -317,7 +317,7 @@ public class DefaultBinding implements Binding {
 		}
 
 		if (this.status_xpath != null) {
-			org.jdom2.Document response;
+			org.jdom.Document response;
 			if (context.getResult() instanceof XMLResult) {
 				XMLResult content = (XMLResult) context.getResult();
 				response = content.getJDOMDocument();
@@ -338,7 +338,7 @@ public class DefaultBinding implements Binding {
 							response = new DOMBuilder().build(writer
 									.write(content.getDocument()));
 						} else {
-							response = new org.jdom2.Document();
+							response = new org.jdom.Document();
 						}
 					}
 				}

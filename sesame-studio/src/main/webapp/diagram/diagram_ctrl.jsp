@@ -1,4 +1,4 @@
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*,com.sanxing.ads.team.svn.*,com.sanxing.ads.team.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="org.xml.sax.InputSource"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
@@ -7,7 +7,7 @@
 <%@page import="javax.xml.xpath.*"%>
 <%@page import="javax.wsdl.*"%>
 <%@page import="javax.wsdl.xml.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.apache.ws.commons.schema.*"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
 <%@page import="org.json.*"%>
@@ -17,7 +17,7 @@
 
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 
-<%!private Logger logger = Logger.getLogger(this.getClass());
+<%!private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 /*
 private XPathFactory xfactory = XPathFactory.newInstance();

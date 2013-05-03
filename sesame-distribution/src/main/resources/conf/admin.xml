@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<server>
+  <server-name>admin</server-name>
+  <IP>127.0.0.1</IP>
+  <admin>true</admin>
+  <jms>
+    <app-info>
+      <activemq-broker-port>9999</activemq-broker-port>
+    </app-info>
+  </jms>
+  <jdbc>
+    <datasource>
+      <jndi-name>SN_DATASOURCE</jndi-name>
+      <transaction>true</transaction>
+      <app-info>
+        <driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
+        <username>statenet_test</username>
+        <initial-size>30</initial-size>
+        <password>statenet</password>
+        <max-idle>30</max-idle>
+        <max-wait>100</max-wait>
+        <max-active>30</max-active>
+        <url>jdbc:oracle:thin:@10.2.231.210:1521:sxsoft</url>
+      </app-info>
+    </datasource>
+  </jdbc>
+  <thread-pools>
+    <thread-pool id="services.registry">
+      <core-pool-size>10</core-pool-size>
+      <keep-alive-time>10</keep-alive-time>
+      <max-pool-size>20</max-pool-size>
+      <queue-size>10000</queue-size>
+      <shutdown-delay>100</shutdown-delay>
+    </thread-pool>
+    <thread-pool id="transports">
+      <core-pool-size>10</core-pool-size>
+      <keep-alive-time>10</keep-alive-time>
+      <max-pool-size>20</max-pool-size>
+      <queue-size>10000</queue-size>
+      <shutdown-delay>100</shutdown-delay>
+    </thread-pool>
+  </thread-pools>
+  <containers />
+  <transaction-manager>STM</transaction-manager>
+</server>
+

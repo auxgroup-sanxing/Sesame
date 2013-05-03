@@ -1,21 +1,21 @@
 
-<%@page import="com.sanxing.statenet.logging.lucene.LuceneColumn"%><%@page import="org.apache.log4j.Logger"%>
+<%@page import="com.sanxing.sesame.logging.lucene.LuceneColumn"%><%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.json.*" %>
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.statenet.logging.monitor.*"%>
-<%@page import="com.sanxing.statenet.logging.dao.LogBean"%>
-<%@page import="com.sanxing.statenet.dao.data.PageInfo"%>
-<%@page import="com.sanxing.statenet.logging.lucene.LuceneSearcher"%>
-<%@page import="com.sanxing.statenet.logging.lucene.LuceneRecord"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.sesame.logging.monitor.*"%>
+<%@page import="com.sanxing.sesame.logging.dao.LogBean"%>
+<%@page import="com.sanxing.sesame.dao.data.PageInfo"%>
+<%@page import="com.sanxing.sesame.logging.lucene.LuceneSearcher"%>
+<%@page import="com.sanxing.sesame.logging.lucene.LuceneRecord"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!
-private final Logger logger = Logger.getLogger(this.getClass());
-private StatenetMonitor am = new StatenetMonitor();
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
+private SesameMonitor am = new SesameMonitor();
 
 // 获取交易信息
 public String getTransactionInfo(HttpServletRequest request,HttpServletResponse response) throws Exception {
@@ -226,7 +226,7 @@ private String FormatXml(String source) {
 %>
 
 <%
-	Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 	String operation = request.getParameter("operation");
 	WebServletResponse responseWrapper = new WebServletResponse(response);
 	

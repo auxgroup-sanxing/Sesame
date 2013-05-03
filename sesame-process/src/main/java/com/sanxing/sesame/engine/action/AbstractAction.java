@@ -20,10 +20,10 @@ import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.VariableContext;
 import org.jaxen.XPath;
 import org.jaxen.jdom.JDOMXPath;
-import org.jdom2.Attribute;
-import org.jdom2.CDATA;
-import org.jdom2.Element;
-import org.jdom2.Text;
+import org.jdom.Attribute;
+import org.jdom.CDATA;
+import org.jdom.Element;
+import org.jdom.Text;
 
 public abstract class AbstractAction implements Action {
 	static final Logger LOG = LoggerFactory.getLogger(AbstractAction.class);

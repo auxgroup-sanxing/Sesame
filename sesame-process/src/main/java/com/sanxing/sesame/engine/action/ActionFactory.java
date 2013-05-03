@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ActionFactory {
 	static Map<String, Class<?>> actionNameMap = new HashMap();

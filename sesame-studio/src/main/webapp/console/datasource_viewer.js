@@ -3,7 +3,7 @@ Ext.BLANK_IMAGE_URL='../images/s.gif';
 
 var descArray = [
 	'BTM(Bitronix Transaction Manager)是一个开源的事务管理器,它完全实现了JTA 1.0.1B标准,可以很好的支持JDBC和JMS两种资源.', 
-	'ATM(Statenet Transaction Manager)是statenet平台内部提供的事务管理器,相比 BTM,目前只支持单数据源的JDBC资源,且数据源的JNDI名称必须为atm-atasource.',
+	'STM(Sesame Transaction Manager)是sesame平台内部提供的事务管理器,相比 BTM,目前只支持单数据源的JDBC资源,且数据源的JNDI名称必须为stm-datasource.',
 	''
 ];
 
@@ -97,7 +97,7 @@ var Viewer = function(){
 				forceSelection: true,
 				store: new Ext.data.ArrayStore({
 		           fields: ['text', 'value'],
-		           data : [['不使用', ''], ['Bitronix事务管理器', 'BTM'], ['Statenet事务管理器', 'ATM']]
+		           data : [['不使用', ''], ['Bitronix事务管理器', 'BTM'], ['Sesame事务管理器', 'STM']]
 			    }),
 				triggerAction: 'all', editable: false,
 				mode: 'local',
@@ -111,14 +111,14 @@ var Viewer = function(){
 							case 'BTM':
 								desc.setValue(descArray[0]);
 								break;
-							case 'ATM':
+							case 'STM':
 								desc.setValue(descArray[1]);
 								break;
 							default:
 								desc.setValue(descArray[2]);
 								break;
 						}
-						_this.atmSelected = (value == 'ATM') ? true:false;
+						_this.atmSelected = (value == 'STM') ? true:false;
 					}
 				}
 			});

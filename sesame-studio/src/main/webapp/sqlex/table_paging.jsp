@@ -1,6 +1,6 @@
 <%@page language="java" contentType="text/html; charset=utf-8" errorPage="../exception.jsp"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.action.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.action.*"%>
 <%@page import="java.io.File"%>
 <%@page import="java.util.*"%>
 <%@page import="org.jdom.*"%>

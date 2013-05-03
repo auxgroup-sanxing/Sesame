@@ -1,4 +1,4 @@
-package com.sanxing.statenet.sharelib;
+package com.sanxing.sesame.sharelib;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +28,7 @@ public class ShareLibManager {
 	private List<String> pathElements = new LinkedList();
 
 	String template = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
-					  "<jbi version=\"1.0\" xmlns=\"http://java.sun.com/xml/ns/jbi\" xmlns:sn=\"http://www.sanxing.com/ns/statenet\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
+					  "<jbi version=\"1.0\" xmlns=\"http://java.sun.com/xml/ns/jbi\" xmlns:sn=\"http://www.sanxing.com/ns/sesame\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n" +
 					  "    <shared-library  classs-loader-delegation=\"parent-first\" version=\"1.0\">\n" +
 					  "        <identification>\n" +
 					  "            <name></name>\n" +
@@ -110,7 +110,7 @@ public class ShareLibManager {
 			}
 			this.callbackClazz = eleShareLib
 					.getChildTextNormalize("callback-class", Namespace
-							.getNamespace("http://www.sanxing.com/ns/statenet"));
+							.getNamespace("http://www.sanxing.com/ns/sesame"));
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -161,7 +161,7 @@ public class ShareLibManager {
 			}
 			if (!(this.callbackClazz.equals(""))) {
 				Element pathElement = new Element("callback-class",
-						"http://www.sanxing.com/ns/statenet");
+						"http://www.sanxing.com/ns/sesame");
 
 				pathElement.setText(this.callbackClazz);
 				eleShareLib.addContent(pathElement);

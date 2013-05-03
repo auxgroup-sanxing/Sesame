@@ -16,9 +16,9 @@ import javax.xml.bind.Marshaller;
 import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.transform.JDOMResult;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.transform.JDOMResult;
 
 public class ADPServer {
 	static Logger LOG = LoggerFactory.getLogger(ADPServer.class);

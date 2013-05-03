@@ -6,7 +6,7 @@ import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.context.VariableFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class AssignAction extends AbstractAction implements Constant {
 	String targetVarName;

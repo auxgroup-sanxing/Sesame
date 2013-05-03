@@ -1,10 +1,10 @@
-<%@page import="com.sanxing.statenet.test.UnitTest"%>
+<%@page import="com.sanxing.sesame.test.UnitTest"%>
 <%@page language="java" contentType="text/xml; charset=utf-8"%>
-<%@page import="com.sanxing.ads.Configuration"%>
-<%@page import="com.sanxing.ads.utils.*,com.sanxing.ads.team.svn.*,com.sanxing.ads.team.*,com.sanxing.ads.*"%>
+<%@page import="com.sanxing.studio.Configuration"%>
+<%@page import="com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*,com.sanxing.studio.*"%>
 <%@page import="java.io.*, java.util.*, java.util.regex.*"%>
 <%@page import="java.lang.reflect.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.apache.ws.commons.schema.*"%>
 <%@page import="org.apache.ws.commons.schema.utils.*"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
@@ -13,7 +13,7 @@
 <%@page import="org.xml.sax.InputSource"%>
 
 <%!
-private Logger logger = Logger.getLogger(this.getClass());
+private Logger logger = LoggerFactory.getLogger(this.getClass());
 private File getWorkareaFile(String filePath) {
 	return Configuration.getWorkspaceFile(filePath);
 }
@@ -544,7 +544,7 @@ public String listFiles(HttpServletRequest request, HttpServletResponse response
 %>
 
 <%
-Logger logger = Logger.getLogger(this.getClass());
+Logger logger = LoggerFactory.getLogger(this.getClass());
 
 String operation = request.getParameter("operation");
 if (operation != null) {

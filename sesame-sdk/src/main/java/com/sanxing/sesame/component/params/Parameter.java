@@ -1,6 +1,6 @@
 package com.sanxing.sesame.component.params;
 
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class Parameter {
 	public static int PARAM_TYPE_INT = 0;

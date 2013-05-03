@@ -1,7 +1,7 @@
 package com.sanxing.sesame.codec.impl.validate;
 
 import com.sanxing.sesame.binding.codec.FormatException;
-import org.jdom2.Namespace;
+import org.jdom.Namespace;
 import org.w3c.dom.NodeList;
 
 public class ValidateVFormat8583 {
@@ -13,12 +13,12 @@ public class ValidateVFormat8583 {
 	private int headRadix = 10;
 	private int id = 0;
 
-	public ValidateVFormat8583(org.jdom2.Element element,
-			org.jdom2.Element format, Namespace xsd) throws FormatException {
+	public ValidateVFormat8583(org.jdom.Element element,
+			org.jdom.Element format, Namespace xsd) throws FormatException {
 		String elementName = element.getAttributeValue("name");
 
 		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		org.jdom2.Element head = format.getChild("head", xsd);
+		org.jdom.Element head = format.getChild("head", xsd);
 		if (head == null)
 			throw new FormatException("element:[" + elementName
 					+ "],element format,do not define child element[head]!");
@@ -49,9 +49,9 @@ public class ValidateVFormat8583 {
 	}
 
 	public ValidateVFormat8583(String elementName, String type,
-			org.jdom2.Element format, Namespace xsd) throws FormatException {
+			org.jdom.Element format, Namespace xsd) throws FormatException {
 		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		org.jdom2.Element head = format.getChild("head", xsd);
+		org.jdom.Element head = format.getChild("head", xsd);
 		if (head == null)
 			throw new FormatException("element:[" + elementName
 					+ "],element format,do not define child element[head]!");

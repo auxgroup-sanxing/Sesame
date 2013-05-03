@@ -37,7 +37,7 @@ public class BeanShellContext {
 			LOG.debug("static import................");
 			this.interpreter
 					.eval("importCommands(\"com.sanxing.sesame.engine.action.beanshell.func\");");
-			this.interpreter.eval("import org.jdom2.* ;");
+			this.interpreter.eval("import org.jdom.* ;");
 		} catch (EvalError e) {
 			e.printStackTrace();
 		}

@@ -1,8 +1,8 @@
-<%@page import="com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*, java.util.*, java.util.regex.*"%>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*, org.jdom.filter.Filter"%>
 <%@page import="org.json.*"%>
-<%@page import="com.sanxing.ads.*" %>
+<%@page import="com.sanxing.studio.*" %>
 <%@page language="java" contentType="text/json; charset=utf-8"%>
 <%!
 private File getWorkareaFile(String path)

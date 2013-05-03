@@ -2,7 +2,7 @@ package com.sanxing.sesame.engine.action.cutpoint;
 
 import com.sanxing.sesame.engine.action.Action;
 import com.sanxing.sesame.engine.context.DataContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public abstract interface ActionCutpoint {
 	public abstract void beforeInit(Element paramElement);

@@ -23,10 +23,10 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.jdom2.Document;
+import org.jdom.Document;
 
 public class Encode8583 implements Encoder {
-	public void encode(org.jdom2.Element xmlElement,
+	public void encode(org.jdom.Element xmlElement,
 			XmlSchemaElement xsdElement, OutputStream output,
 			String encodeCharset) throws FormatException {
 		if (xmlElement == null)
@@ -41,7 +41,7 @@ public class Encode8583 implements Encoder {
 	}
 
 	private void encodeMessage(XmlSchemaType xsdType,
-			org.jdom2.Element xmlElement, OutputStream output,
+			org.jdom.Element xmlElement, OutputStream output,
 			String encodeCharset) throws FormatException {
 		try {
 			Iterator iterator = CodecUtil.getElements(xsdType);
@@ -100,7 +100,7 @@ public class Encode8583 implements Encoder {
 		}
 	}
 
-	private void encodeBitSet(org.jdom2.Element xmlElement, Iterator tempIter,
+	private void encodeBitSet(org.jdom.Element xmlElement, Iterator tempIter,
 			BitSet bs) throws FormatException {
 		while (tempIter.hasNext())
 			try {

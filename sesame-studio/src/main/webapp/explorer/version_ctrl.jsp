@@ -1,14 +1,14 @@
-<%@page import="com.sanxing.statenet.pwd.PasswordTool"%>
+<%@page import="com.sanxing.sesame.pwd.PasswordTool"%>
 <%@page import="java.io.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.util.*,java.util.jar.*,java.util.regex.*"%>
 <%@page import="java.util.zip.*"%>
 
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.team.*"%>
-<%@page import="com.sanxing.ads.team.svn.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.team.*"%>
+<%@page import="com.sanxing.studio.team.svn.*"%>
 
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*"%>
 <%@page import="org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
@@ -17,7 +17,7 @@
 
 <%!//private static Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.STATENET);
 	
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	private String getProject(String path) {
 		int n = path.indexOf("/");
@@ -45,7 +45,7 @@
 		properties.setProperty("0", comment);
 		OutputStream output = new FileOutputStream(file);
 		try {
-			properties.store(output, "statenet-studio");
+			properties.store(output, "sesame-studio");
 		}
 		finally {
 			output.close();

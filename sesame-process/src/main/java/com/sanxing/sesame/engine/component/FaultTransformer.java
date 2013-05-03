@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Document;
-import org.jdom2.Element;
+import org.jdom.Document;
+import org.jdom.Element;
 
 public class FaultTransformer {
 	private static Logger LOG = LoggerFactory.getLogger(FaultTransformer.class);

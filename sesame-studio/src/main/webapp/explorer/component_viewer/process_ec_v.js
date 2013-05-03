@@ -99,7 +99,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.engine.flow.ProcessEngine']
+					store: ['com.sanxing.sesame.engine.flow.ProcessEngine']
 				}],
 				tools: [{
 					id: 'plus',
@@ -150,7 +150,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.statenet.engine.flow.BootstrapImpl']
+					store: ['com.sanxing.sesame.engine.flow.BootstrapImpl']
 				}],
 				tools: [{
 					id: 'plus',

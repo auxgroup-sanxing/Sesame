@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<managed-servers>
+  <server>
+    <server-name>server1</server-name>
+    <IP>0.0.0.0</IP>
+    <admin>false</admin>
+    <jms>
+      <app-info>
+        <activemq-broker-port>7771</activemq-broker-port>
+      </app-info>
+    </jms>
+    <jdbc />
+    <containers />
+  </server>
+  <!--server 2-->
+  <server>
+    <server-name>server2</server-name>
+    <IP>0.0.0.0</IP>
+    <admin>false</admin>
+    <jms>
+      <app-info>
+        <activemq-broker-port>7772</activemq-broker-port>
+      </app-info>
+    </jms>
+    <jdbc />
+    <containers />
+  </server>
+</managed-servers>
+

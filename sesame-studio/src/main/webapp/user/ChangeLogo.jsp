@@ -2,9 +2,9 @@
 <%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 
 <%@page import="org.json.*"%>
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.auth.*" %>
-<%@page import="com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.auth.*" %>
+<%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="java.security.*" %>
 <%@page import="java.security.interfaces.*" %>
 <%@page import="java.net.URLEncoder"%>

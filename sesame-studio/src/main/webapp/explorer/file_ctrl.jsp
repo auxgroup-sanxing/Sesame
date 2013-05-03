@@ -4,9 +4,9 @@
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.util.*,java.util.jar.*,java.util.regex.*"%>
 
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.team.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.team.*"%>
 
 <%@page import="org.json.*"%>
 

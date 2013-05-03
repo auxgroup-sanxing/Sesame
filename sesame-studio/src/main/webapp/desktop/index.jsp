@@ -3,9 +3,9 @@
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="javax.security.auth.*" %>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
-<%@page import="com.sanxing.ads.*" %>
-<%@page import="com.sanxing.ads.auth.*" %>
-<%@page import="com.sanxing.ads.utils.*" %>
+<%@page import="com.sanxing.studio.*" %>
+<%@page import="com.sanxing.studio.auth.*" %>
+<%@page import="com.sanxing.studio.utils.*" %>
 
 <%
 JSONObject currUser = null;

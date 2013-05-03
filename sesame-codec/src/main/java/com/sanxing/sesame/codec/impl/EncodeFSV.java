@@ -34,10 +34,10 @@ import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaObjectTable;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
+import org.jdom.xpath.XPath;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -98,7 +98,7 @@ public class EncodeFSV implements Encoder {
 		}
 	}
 
-	public void encode(org.jdom2.Element xmlElement, XmlSchema schemaElement,
+	public void encode(org.jdom.Element xmlElement, XmlSchema schemaElement,
 			OutputStream output, String encodeCharset) throws FormatException {
 		if (xmlElement == null)
 			throw new FormatException("the source message root is null!");
@@ -116,7 +116,7 @@ public class EncodeFSV implements Encoder {
 	}
 
 	protected void encodeMessage(Iterator elements,
-			org.jdom2.Element xmlElement, OutputStream output,
+			org.jdom.Element xmlElement, OutputStream output,
 			String encodeCharset, XmlSchema schema) throws FormatException {
 		try {
 			while (elements.hasNext()) {
@@ -252,7 +252,7 @@ public class EncodeFSV implements Encoder {
 				}
 				if ((type instanceof XmlSchemaComplexType)
 						&& (element.getSchemaType().getName() != null)) {
-					org.jdom2.Element xmlElementChild = xmlElement
+					org.jdom.Element xmlElementChild = xmlElement
 							.getChild(elementName);
 					if (xmlElementChild == null) {
 						throw new FormatException(
@@ -298,7 +298,7 @@ public class EncodeFSV implements Encoder {
 												+ element.getName()
 												+ "],element occurs,do not define the attribute[ref] or it has no value!");
 							}
-							org.jdom2.Element xmlChild = xmlElement
+							org.jdom.Element xmlChild = xmlElement
 									.getChild(elementName);
 							if (xmlChild == null)
 								throw new FormatException(
@@ -306,8 +306,8 @@ public class EncodeFSV implements Encoder {
 												+ elementName
 												+ "] of element:[" + xmlElement
 												+ "]!");
-							org.jdom2.Element repeat_num = null;
-							repeat_num = (org.jdom2.Element) XPath
+							org.jdom.Element repeat_num = null;
+							repeat_num = (org.jdom.Element) XPath
 									.selectSingleNode(
 											xmlChild.getParentElement(), path);
 							if (repeat_num == null) {
@@ -322,7 +322,7 @@ public class EncodeFSV implements Encoder {
 						}
 					}
 					for (int i = 0; i < loopNum; ++i) {
-						org.jdom2.Element xmlElementChild = (org.jdom2.Element) xmlElement
+						org.jdom.Element xmlElementChild = (org.jdom.Element) xmlElement
 								.getChildren(elementName).get(i);
 						if (xmlElementChild == null)
 							throw new FormatException(

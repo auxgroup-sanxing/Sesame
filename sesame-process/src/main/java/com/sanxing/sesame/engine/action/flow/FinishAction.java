@@ -3,7 +3,7 @@ package com.sanxing.sesame.engine.action.flow;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class FinishAction extends AbstractAction {
 	public boolean isRollbackable() {

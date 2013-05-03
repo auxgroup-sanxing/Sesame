@@ -4,9 +4,9 @@ import com.sanxing.sesame.binding.codec.BinaryResult;
 import com.sanxing.sesame.binding.codec.Encoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLSource;
-import org.jdom2.Document;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
+import org.jdom.Document;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 public class EncodeXML implements Encoder {
 	private static XMLOutputter outputter = new XMLOutputter();

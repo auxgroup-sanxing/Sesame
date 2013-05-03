@@ -8,7 +8,7 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import java.util.Iterator;
 import java.util.List;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ForEachAction extends AbstractAction implements Constant {
 	String varName;

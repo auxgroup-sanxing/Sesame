@@ -1,5 +1,5 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.regex.*"%>
 <%@page import="org.json.*"%>

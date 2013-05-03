@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>bundle</id>
+
+  <formats>
+    <format>tar.gz</format>
+    <format>zip</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>${assembly-directory}</directory>
+      <outputDirectory>${project.build.finalName}</outputDirectory>
+      <includes>
+        <include>**</include>
+      </includes>
+      <excludes>
+        <exclude>**/META-INF/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>${project.build.finalName}/studio</outputDirectory>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useStrictFiltering>true</useStrictFiltering>
+      <fileMode>0644</fileMode>
+      <directoryMode>0755</directoryMode>
+      <includes>
+        <include>*:sesame-studio:war</include>
+      </includes>
+      <unpack>true</unpack>
+    </dependencySet>
+  </dependencySets>
+  
+</assembly>

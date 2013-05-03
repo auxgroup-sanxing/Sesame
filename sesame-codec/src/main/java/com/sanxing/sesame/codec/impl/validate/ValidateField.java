@@ -1,7 +1,7 @@
 package com.sanxing.sesame.codec.impl.validate;
 
 import com.sanxing.sesame.binding.codec.FormatException;
-import org.jdom2.DataConversionException;
+import org.jdom.DataConversionException;
 
 public class ValidateField {
 	public static String validateAlign(String elementName, String align)

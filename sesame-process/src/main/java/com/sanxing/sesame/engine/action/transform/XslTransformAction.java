@@ -12,11 +12,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.transform.JDOMResult;
-import org.jdom2.transform.JDOMSource;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
 
 public class XslTransformAction extends AbstractAction {
 	private String xsltPath;

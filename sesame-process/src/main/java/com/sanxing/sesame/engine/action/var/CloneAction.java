@@ -4,7 +4,7 @@ import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class CloneAction extends AbstractAction implements Constant {
 	String targetVarName;

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<locations>
+	<location name="localhost" url="tcp://127.0.0.1">
+	    <column1>
+	      <timeount>30</timeount>
+	      <buffer_size>4096</buffer_size>
+	      <len_encoding>0</len_encoding>
+	      <recv_len_begin>0</recv_len_begin>
+	      <send_len_begin>0</send_len_begin>
+	      <len_align>L</len_align>
+	    </column1>
+	    <column2>
+	      <interval>10</interval>
+	      <encoding>GBK</encoding>
+	      <len_include>I</len_include>
+	      <recv_len_end>4</recv_len_end>
+	      <send_len_end>4</send_len_end>
+	      <len_fill>21</len_fill>
+	    </column2>
+	</location>
+</locations>

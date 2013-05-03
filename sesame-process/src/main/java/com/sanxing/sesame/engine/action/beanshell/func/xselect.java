@@ -6,10 +6,10 @@ import bsh.Interpreter;
 import com.sanxing.sesame.engine.action.beanshell.BeanShellAction;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import org.jdom2.Attribute;
-import org.jdom2.CDATA;
-import org.jdom2.Element;
-import org.jdom2.Text;
+import org.jdom.Attribute;
+import org.jdom.CDATA;
+import org.jdom.Element;
+import org.jdom.Text;
 
 public class xselect {
 	public static Object invoke(Interpreter env, CallStack callstack,

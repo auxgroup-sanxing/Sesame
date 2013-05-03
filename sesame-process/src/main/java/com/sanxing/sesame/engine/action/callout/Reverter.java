@@ -28,7 +28,7 @@ import javax.xml.transform.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.jaxen.NamespaceContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class Reverter {
 	private static Logger LOG = LoggerFactory.getLogger(Reverter.class);

@@ -3,7 +3,7 @@ package com.sanxing.sesame.engine.action.flow.exceptions;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.exceptions.AppException;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ThrowAction extends AbstractAction {
 	private String exceptionKey;

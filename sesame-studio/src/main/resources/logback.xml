@@ -20,7 +20,7 @@
     </rollingPolicy>
   </appender>
 
-  <logger name="com.sanxing.ads" level="DEBUG" />
+  <logger name="com.sanxing.studio" level="DEBUG" />
   
   <root level="${root.level}">
     <appender-ref ref="console" />

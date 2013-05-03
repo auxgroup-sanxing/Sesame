@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class OperationParameters extends HashMap<String, Parameter> {
 	private String operationName;

@@ -3,7 +3,7 @@ package com.sanxing.sesame.core.jms;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class JMSServiceInfo implements Serializable {
 	private static final long serialVersionUID = 473082292433341293L;

@@ -1,5 +1,5 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.ads.PublicConsts"%>
+<%@page import="com.sanxing.studio.PublicConsts"%>
 <%@page import="javax.security.auth.login.*" %>
 <% 
 HttpSession sess = request.getSession();

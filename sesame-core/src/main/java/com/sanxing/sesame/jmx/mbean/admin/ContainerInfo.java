@@ -1,7 +1,7 @@
 package com.sanxing.sesame.jmx.mbean.admin;
 
 import java.io.Serializable;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ContainerInfo implements Serializable {
 	private static final long serialVersionUID = 1L;

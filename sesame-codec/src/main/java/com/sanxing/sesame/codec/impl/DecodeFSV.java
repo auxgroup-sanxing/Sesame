@@ -31,10 +31,10 @@ import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaObjectCollection;
 import org.apache.ws.commons.schema.XmlSchemaSimpleType;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.jdom2.Document;
-import org.jdom2.JDOMException;
-import org.jdom2.transform.JDOMSource;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
 import org.w3c.dom.NodeList;
 
 public class DecodeFSV implements Decoder {
@@ -60,7 +60,7 @@ public class DecodeFSV implements Decoder {
 		this.typeList.add("byte");
 	}
 
-	public org.jdom2.Element decode(byte[] message, int length, String charset,
+	public org.jdom.Element decode(byte[] message, int length, String charset,
 			XmlSchemaElement schemaElement, XmlSchema schema)
 			throws FormatException {
 		if (length > message.length)
@@ -70,7 +70,7 @@ public class DecodeFSV implements Decoder {
 		ByteBuffer msgBuf = ByteBuffer.wrap(message);
 
 		msgBuf.limit(length);
-		org.jdom2.Element root = null;
+		org.jdom.Element root = null;
 		try {
 			if (schemaElement == null)
 				throw new FormatException("schema is null!");
@@ -79,7 +79,7 @@ public class DecodeFSV implements Decoder {
 				throw new FormatException(
 						"in xsdDoc,can not find the child element:[complexType]");
 			}
-			root = new org.jdom2.Element(schemaElement.getName());
+			root = new org.jdom.Element(schemaElement.getName());
 
 			Iterator elements = CodecUtil.getElements(xsdType);
 			decodeMessage(msgBuf, elements, charset, root, schema);
@@ -103,7 +103,7 @@ public class DecodeFSV implements Decoder {
 	}
 
 	protected void decodeMessage(ByteBuffer message, Iterator<?> elements,
-			String charset, org.jdom2.Element elementMessage, XmlSchema schema)
+			String charset, org.jdom.Element elementMessage, XmlSchema schema)
 			throws FormatException {
 		try {
 			while (elements.hasNext()) {
@@ -114,7 +114,7 @@ public class DecodeFSV implements Decoder {
 				}
 				LOG.debug("elementName=" + elementName);
 
-				org.jdom2.Element childOfElementMessage = new org.jdom2.Element(
+				org.jdom.Element childOfElementMessage = new org.jdom.Element(
 						elementName);
 
 				XmlSchemaType xsType = null;
@@ -234,7 +234,7 @@ public class DecodeFSV implements Decoder {
 										"element:["
 												+ element.getName()
 												+ "],element occurs,do not define the attribute[ref] or it has no value!");
-							org.jdom2.Element repeat_num = (org.jdom2.Element) XPath
+							org.jdom.Element repeat_num = (org.jdom.Element) XPath
 									.selectSingleNode(elementMessage, path);
 
 							if (repeat_num == null)
@@ -250,13 +250,13 @@ public class DecodeFSV implements Decoder {
 												+ repeat_num.getName()
 												+ "]'s value is invalid");
 							if (loopNum == 0) {
-								org.jdom2.Element detail = new org.jdom2.Element(
+								org.jdom.Element detail = new org.jdom.Element(
 										elementName);
 								elementMessage.addContent(detail);
 							}
 						}
 						for (int i = 0; i < loopNum; ++i) {
-							org.jdom2.Element detail = new org.jdom2.Element(
+							org.jdom.Element detail = new org.jdom.Element(
 									elementName);
 							elementMessage.addContent(detail);
 							decodeMessage(message,
@@ -278,8 +278,8 @@ public class DecodeFSV implements Decoder {
 	}
 
 	public void decodeVField(ByteBuffer message, String charset,
-			org.jdom2.Element elementMessage, String elementName,
-			org.jdom2.Element childOfElementMessage, String type,
+			org.jdom.Element elementMessage, String elementName,
+			org.jdom.Element childOfElementMessage, String type,
 			ValidateVFormat vVFormat) throws FormatException {
 		int headLength = vVFormat.getHeadLength();
 
@@ -289,7 +289,7 @@ public class DecodeFSV implements Decoder {
 
 		int headRadix = vVFormat.getHeadRadix();
 
-		org.jdom2.Element tempElement = new org.jdom2.Element(elementName);
+		org.jdom.Element tempElement = new org.jdom.Element(elementName);
 		decodeHead(message, charset, tempElement, headRadix, headLength,
 				headBlank, headAlign);
 		String lengthString = tempElement.getValue();
@@ -368,7 +368,7 @@ public class DecodeFSV implements Decoder {
 	}
 
 	private void decodeSeparator(ByteBuffer message,
-			org.jdom2.Element childOfElementMessage, org.w3c.dom.Element format,
+			org.jdom.Element childOfElementMessage, org.w3c.dom.Element format,
 			String charset, String elementName) throws FormatException {
 		boolean flage = true;
 		try {
@@ -487,7 +487,7 @@ public class DecodeFSV implements Decoder {
 	}
 
 	private void decodeNumber(ByteBuffer message,
-			org.jdom2.Element childOfElementMessage, String endian, String type)
+			org.jdom.Element childOfElementMessage, String endian, String type)
 			throws FormatException {
 		if (type.equals("int")) {
 			int len = 4;
@@ -574,7 +574,7 @@ public class DecodeFSV implements Decoder {
 	}
 
 	public void decodeHead(ByteBuffer message, String charset,
-			org.jdom2.Element childOfElementMessage, int headRadix,
+			org.jdom.Element childOfElementMessage, int headRadix,
 			int headLength, int headBlank, String headAlign)
 			throws FormatException {
 		byte[] temp = new byte[headLength];
@@ -594,7 +594,7 @@ public class DecodeFSV implements Decoder {
 	}
 
 	private void decodeNonNumber(ByteBuffer message, String charset,
-			org.jdom2.Element childOfElementMessage, String type, int length,
+			org.jdom.Element childOfElementMessage, String type, int length,
 			int blank, String align) throws FormatException {
 		byte[] temp = new byte[length];
 		message.get(temp);
@@ -626,7 +626,7 @@ public class DecodeFSV implements Decoder {
 			int length = stream.available();
 			byte[] bytes = new byte[length];
 			stream.read(bytes);
-			org.jdom2.Element element = decode(bytes, length, charset, schemaEl,
+			org.jdom.Element element = decode(bytes, length, charset, schemaEl,
 					schema);
 			element.detach();
 
@@ -647,7 +647,7 @@ public class DecodeFSV implements Decoder {
 			int length = input.available();
 			byte[] bytes = new byte[length];
 			input.read(bytes);
-			org.jdom2.Element element = decode(bytes, length, charset, schemaEl,
+			org.jdom.Element element = decode(bytes, length, charset, schemaEl,
 					schema);
 			element.detach();
 

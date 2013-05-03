@@ -3,9 +3,9 @@ package com.sanxing.sesame.core.jdbc;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.StringWriter;
-import org.jdom2.Element;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
+import org.jdom.Element;
+import org.jdom.output.Format;
+import org.jdom.output.XMLOutputter;
 
 public class DataSourceInfo implements Serializable {
 	private static final long serialVersionUID = 4645521835991105237L;

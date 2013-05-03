@@ -5,9 +5,9 @@ import com.sanxing.sesame.binding.codec.Encoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLSource;
 import java.util.List;
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
+import org.jdom.Attribute;
+import org.jdom.Document;
+import org.jdom.Element;
 import org.json.JSONException;
 import org.json.JSONObject;
 

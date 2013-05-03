@@ -6,10 +6,10 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import org.jdom2.Document;
-import org.jdom2.output.XMLOutputter;
-import org.jdom2.transform.JDOMResult;
-import org.jdom2.transform.JDOMSource;
+import org.jdom.Document;
+import org.jdom.output.XMLOutputter;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
 
 public class XObjectRecord extends LogRecord {
 	private static final long serialVersionUID = -8558705391039405674L;

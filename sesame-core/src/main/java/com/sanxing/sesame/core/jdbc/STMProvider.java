@@ -8,7 +8,7 @@ import javax.naming.NameNotFoundException;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class STMProvider implements DataSourceProvider {
 	private static final Logger LOG = LoggerFactory.getLogger(STMProvider.class);

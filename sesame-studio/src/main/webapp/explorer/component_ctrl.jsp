@@ -1,14 +1,14 @@
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 
 <%@page import="org.jdom.xpath.XPath"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.statenet.transport.Protocols"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.sesame.transport.Protocols"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*"%>
 <%@page import="java.util.jar.*"%>
 <%@page import="java.util.zip.*"%>
 <%@page import="java.lang.reflect.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*"%>
 <%@page import="org.json.*"%>
 
@@ -422,7 +422,7 @@ public String loadStatus(HttpServletRequest request, HttpServletResponse respons
 	String component = request.getParameter("component");
 
 	JSONArray items = new JSONArray();
-	Namespace artNS = Namespace.getNamespace("sn", Namespaces.STATENET);
+	Namespace artNS = Namespace.getNamespace("sn", Namespaces.SESAME);
 	File compBundle = Application.getWarehouseFile(component);
 	if (!compBundle.exists()) {
 		throw new Exception("找不到指定的组件包: "+compBundle.getCanonicalPath());
@@ -1156,7 +1156,7 @@ public String loadScriptionPkg(HttpServletRequest request, HttpServletResponse r
 %>
 
 <%
-Logger logger = Logger.getLogger(this.getClass());
+Logger logger = LoggerFactory.getLogger(this.getClass());
 String operation = request.getParameter("operation");
 WebServletResponse responseWrapper = new WebServletResponse(response);
 

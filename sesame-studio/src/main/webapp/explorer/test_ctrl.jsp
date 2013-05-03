@@ -1,11 +1,11 @@
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.emu.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.emu.*"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.sql.*"%>
 <%@page import="java.text.SimpleDateFormat"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 
@@ -672,7 +672,7 @@ public String stop(HttpServletRequest request, HttpServletResponse response) thr
 %>
 
 <%
-Logger logger = Logger.getLogger(this.getClass());
+Logger logger = LoggerFactory.getLogger(this.getClass());
 String operation = request.getParameter("operation");
 WebServletResponse responseWrapper = new WebServletResponse(response);
 

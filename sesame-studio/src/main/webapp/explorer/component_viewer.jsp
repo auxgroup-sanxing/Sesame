@@ -1,13 +1,13 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.statenet.transport.Protocols"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.sesame.transport.Protocols"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
 <%!
-private final Logger logger = Logger.getLogger(this.getClass());
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 private String getDocumentation(Element element)
 {
@@ -83,11 +83,11 @@ try
 		
 		String componentClass = compEl.getChildText("component-class-name", xmlns_jbi);
 		if (componentClass!=null) {
-			if (componentClass.equals("com.sanxing.statenet.binding.AdapterComponent"))
+			if (componentClass.equals("com.sanxing.sesame.binding.AdapterComponent"))
 				script = "component_viewer/adapter_bc_v.js";
 			else if (componentClass.endsWith("ProcessEngine"))
 				script = "component_viewer/process_ec_v.js";
-			else if (componentClass.equals("com.sanxing.statenet.binding.unionpay.UnionpayComponent"))
+			else if (componentClass.equals("com.sanxing.sesame.binding.unionpay.UnionpayComponent"))
 				script = "component_viewer/unionpay_bc_v.js";
 			else if (componentClass.equals("com.sanxing.adp.ADPEngine"))
 				script = "component_viewer/adp_ec_v.js";

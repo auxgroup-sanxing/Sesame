@@ -1,5 +1,5 @@
-<%@page import="com.sanxing.statenet.pwd.PasswordTool"%>
-<%@page import="com.sanxing.ads.IllegalNameException"%>
+<%@page import="com.sanxing.sesame.pwd.PasswordTool"%>
+<%@page import="com.sanxing.studio.IllegalNameException"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.io.*"%>
 <%@page import="java.lang.reflect.*"%>
@@ -17,18 +17,18 @@
 <%@page import="com.ibm.wsdl.extensions.schema.*" %>
 <%@page import="com.ibm.wsdl.extensions.soap.*"%>
 
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.emu.*"%>
-<%@page import="com.sanxing.ads.team.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.emu.*"%>
+<%@page import="com.sanxing.studio.team.*"%>
 
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProjectBuilder"%>
-<%@page import="com.sanxing.statenet.sharelib.ShareLibManager"%>
+<%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
 
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
@@ -37,7 +37,7 @@
 	private static final String REV_WORKING	= "working";
 	private static final String REV_HEAD	= "head";
 	
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private void createUnitDescriptor(File unitFolder, String component, boolean binding) 
 			throws FileNotFoundException,  IOException
@@ -328,11 +328,11 @@
 		String project = request.getParameter("project");
 		JSONArray result = new JSONArray();
 		JSONObject item = new JSONObject();
-		item.put("name", "com.sanxing.ads.emu.TcpServer");
+		item.put("name", "com.sanxing.studio.emu.TcpServer");
 		item.put("label", "Tcp 仿真服务器");
 		result.put(item);
 		item = new JSONObject();
-		item.put("name", "com.sanxing.ads.emu.TcpClient");
+		item.put("name", "com.sanxing.studio.emu.TcpClient");
 		item.put("label", "Tcp 仿真客户端");
 		result.put(item);
 		return new JSONObject().put("items", result).toString();

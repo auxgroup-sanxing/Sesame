@@ -2,7 +2,7 @@ package com.sanxing.sesame.engine;
 
 import org.jaxen.NamespaceContext;
 import org.jaxen.SimpleNamespaceContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class FlowInfo {
 	private SimpleNamespaceContext namespaceCtx = new SimpleNamespaceContext();

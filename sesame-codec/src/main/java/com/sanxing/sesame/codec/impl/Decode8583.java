@@ -23,11 +23,11 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
 import org.apache.ws.commons.schema.XmlSchemaType;
-import org.jdom2.Document;
-import org.jdom2.transform.JDOMSource;
+import org.jdom.Document;
+import org.jdom.transform.JDOMSource;
 
 public class Decode8583 implements Decoder {
-	public org.jdom2.Element decode(byte[] message, int length, String charset,
+	public org.jdom.Element decode(byte[] message, int length, String charset,
 			XmlSchemaElement schemaElement) throws FormatException {
 		if (length > message.length)
 			throw new FormatException(
@@ -35,7 +35,7 @@ public class Decode8583 implements Decoder {
 		ByteBuffer msgBuf = ByteBuffer.wrap(message);
 
 		msgBuf.limit(length);
-		org.jdom2.Element root = null;
+		org.jdom.Element root = null;
 		try {
 			if (schemaElement == null)
 				throw new FormatException(
@@ -45,7 +45,7 @@ public class Decode8583 implements Decoder {
 				throw new FormatException(
 						"in xsdDoc,can not find the child element:[complexType]");
 			}
-			root = new org.jdom2.Element(schemaElement.getName());
+			root = new org.jdom.Element(schemaElement.getName());
 			decodeMessage(msgBuf, xsdType, charset, root);
 			if (msgBuf.position() != msgBuf.limit())
 				throw new FormatException(
@@ -60,7 +60,7 @@ public class Decode8583 implements Decoder {
 	}
 
 	protected void decodeMessage(ByteBuffer recvBuf, XmlSchemaType schemaType,
-			String charset, org.jdom2.Element root) throws FormatException {
+			String charset, org.jdom.Element root) throws FormatException {
 		try {
 			BitMap bitMap = new BitMap();
 			BitSet bs = BitMap.getBitset(recvBuf);
@@ -73,7 +73,7 @@ public class Decode8583 implements Decoder {
 
 				String elementName = element.getName();
 
-				org.jdom2.Element childOfElementMessage = new org.jdom2.Element(
+				org.jdom.Element childOfElementMessage = new org.jdom.Element(
 						elementName);
 
 				String elementType = element.getSchemaType().getName();
@@ -302,7 +302,7 @@ public class Decode8583 implements Decoder {
 			int length = stream.available();
 			byte[] bytes = new byte[length];
 			stream.read(bytes);
-			org.jdom2.Element element = decode(bytes, length, charset, schemaEl);
+			org.jdom.Element element = decode(bytes, length, charset, schemaEl);
 			element.detach();
 
 			outputResult.setDocument(new Document(element));
@@ -322,7 +322,7 @@ public class Decode8583 implements Decoder {
 			int length = input.available();
 			byte[] bytes = new byte[length];
 			input.read(bytes);
-			org.jdom2.Element element = decode(bytes, length, charset, schemaEl);
+			org.jdom.Element element = decode(bytes, length, charset, schemaEl);
 			element.detach();
 
 			return new JDOMSource(new Document(element));

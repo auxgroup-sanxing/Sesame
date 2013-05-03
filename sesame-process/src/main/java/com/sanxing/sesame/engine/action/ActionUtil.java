@@ -4,7 +4,7 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 import java.util.Iterator;
 import org.jaxen.NamespaceContext;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class ActionUtil {
 	public static void bachInvoke(DataContext ctx, Iterator<?> actions) {

@@ -1,22 +1,22 @@
 
-<%@page import="java.net.URLDecoder"%><%@page import="com.sanxing.ads.*"%>
+<%@page import="java.net.URLDecoder"%><%@page import="com.sanxing.studio.*"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.rmi.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*" %>
 <%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
-<%@page import="com.sanxing.statenet.platform.keymanager.*"%>
+<%@page import="com.sanxing.sesame.core.keymanager.*"%>
 <%@page import="javax.wsdl.*"%>
 <%@page import="javax.wsdl.factory.*"%>
 <%@page import="javax.wsdl.xml.*"%>
-<%@page import=" com.sanxing.ads.search.*"%>
+<%@page import=" com.sanxing.studio.search.*"%>
 <%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!
-private final Logger logger = Logger.getLogger(this.getClass());
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 private String getTextContent(org.w3c.dom.Element element)
 {
@@ -247,7 +247,7 @@ public String searchRecords(HttpServletRequest request,HttpServletResponse respo
 %>
 
 <%
-	Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 	String operation = request.getParameter("operation");
 	WebServletResponse responseWrapper = new WebServletResponse(response);
 	

@@ -25,7 +25,7 @@ constructor : function(config){
 		itemId: 'target-tree',
 		border: false, autoScroll: true, animate: false,
 		enableDD: true, hlDrop: false,
-		//ddGroup: 'statenet-transform-dnd',
+		//ddGroup: 'sesame-transform-dnd',
 		root: new Ext.tree.AsyncTreeNode({
 			text: '目标元素',
 			id: 'ROOT',
@@ -188,7 +188,7 @@ constructor : function(config){
 		width: 200, split: true,
 		cls: 'rtl-tree',
 		enableDrag: true,
-		ddGroup: 'statenet-transform-dnd',
+		ddGroup: 'sesame-transform-dnd',
 		loader: new Ext.tree.TreeLoader({
 			dataUrl: 'diagram_ctrl.jsp',
 			baseParams: {
@@ -527,7 +527,7 @@ constructor : function(config){
 
 getDropConfig : function(){
 	return {
-		ddGroup: 'statenet-transform-dnd',
+		ddGroup: 'sesame-transform-dnd',
 		
 		getDropPoint : function(e, n, dd){
 	        var tn = n.node;

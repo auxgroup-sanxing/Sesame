@@ -12,8 +12,8 @@ import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
-import org.jdom2.transform.JDOMResult;
-import org.jdom2.transform.JDOMSource;
+import org.jdom.transform.JDOMResult;
+import org.jdom.transform.JDOMSource;
 
 public class XMLResult implements Result {
 	private static final TransformerFactory transformerFactory = TransformerFactory
@@ -53,7 +53,7 @@ public class XMLResult implements Result {
 		return ((org.w3c.dom.Document) result.getNode());
 	}
 
-	public org.jdom2.Document getJDOMDocument() throws TransformerException {
+	public org.jdom.Document getJDOMDocument() throws TransformerException {
 		if (this.content instanceof JDOMSource) {
 			return ((JDOMSource) this.content).getDocument();
 		}
@@ -87,7 +87,7 @@ public class XMLResult implements Result {
 		this.content = new DOMSource(document);
 	}
 
-	public void setDocument(org.jdom2.Document document) {
+	public void setDocument(org.jdom.Document document) {
 		this.content = new JDOMSource(document);
 	}
 

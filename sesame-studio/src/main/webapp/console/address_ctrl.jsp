@@ -1,12 +1,12 @@
-<%@page import="com.sanxing.ads.*"%>
-<%@page import="com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.statenet.transport.*"%>
-<%@page import="com.sanxing.statenet.address.*"%>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.sesame.transport.*"%>
+<%@page import="com.sanxing.sesame.address.*"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.net.*"%>
 <%@page import="javax.management.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.xml.sax.InputSource"%>
 <%@page import="org.json.*" %>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
@@ -15,7 +15,7 @@
 
 
 <%!
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private String getSchemeParams(String scheme, String style) throws Exception {
 
@@ -49,8 +49,8 @@
 	public String getLocations(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		JSONArray result = new JSONArray();
 		File bookFile = Configuration.getAddressBookFile();
-		if (!bookFile.exists() && System.getProperty("STATENET_HOME")==null) {
-			throw new FileNotFoundException("地址簿文件不存在: "+bookFile + ", 测试环境请使用-D参数设置STATENET_HOME");
+		if (!bookFile.exists() && System.getProperty("SESAME_HOME")==null) {
+			throw new FileNotFoundException("地址簿文件不存在: "+bookFile + ", 测试环境请使用-D参数设置SESAME_HOME");
 		}
 		
 		SAXReader reader = new SAXReader();
@@ -219,7 +219,7 @@
 	}%>
 
 <%
-	Logger logger = Logger.getLogger(this.getClass());
+	Logger logger = LoggerFactory.getLogger(this.getClass());
 	String operation = request.getParameter("operation");
 	WebServletResponse responseWrapper = new WebServletResponse(response);
 	

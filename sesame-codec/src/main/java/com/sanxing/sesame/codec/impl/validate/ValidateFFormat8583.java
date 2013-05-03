@@ -10,7 +10,7 @@ public class ValidateFFormat8583 {
 	private int compress = 0;
 	private int id = 0;
 
-	public ValidateFFormat8583(org.jdom2.Element element, org.jdom2.Element format)
+	public ValidateFFormat8583(org.jdom.Element element, org.jdom.Element format)
 			throws FormatException {
 		String type = element.getAttributeValue("type");
 		this.id = Integer.parseInt(format.getAttributeValue("id"));
@@ -45,7 +45,7 @@ public class ValidateFFormat8583 {
 		}
 	}
 
-	public ValidateFFormat8583(String elementName, org.jdom2.Element format,
+	public ValidateFFormat8583(String elementName, org.jdom.Element format,
 			String type) throws FormatException {
 		this.id = Integer.parseInt(format.getAttributeValue("id"));
 		if ("string".equals(type)) {

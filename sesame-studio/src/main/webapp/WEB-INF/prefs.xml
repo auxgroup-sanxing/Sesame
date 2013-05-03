@@ -6,7 +6,7 @@
     <passwd>pass</passwd>
   </jmx-server>
   <database>
-    <connection name="oracle" driver="com.oracle.jdbc.Driver" password="statenet" user="statenet" url="jdbc:oracle:thin:@127.0.0.1:1521:sxdb" />
+    <connection name="oracle" driver="com.oracle.jdbc.Driver" password="statenet" user="statenet_test" url="jdbc:oracle:thin:@10.2.231.210:1521:sxsoft" />
     <connection name="statenet" default="default" datasource="SN_DATASOURCE" />
   </database>
   <scm>

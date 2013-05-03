@@ -17,21 +17,21 @@
 <%@page import="com.ibm.wsdl.extensions.schema.*" %>
 <%@page import="com.ibm.wsdl.extensions.soap.*"%>
 
-<%@page import="com.sanxing.ads.*,com.sanxing.ads.utils.*"%>
-<%@page import="com.sanxing.ads.emu.*"%>
-<%@page import="com.sanxing.ads.team.*"%>
-<%@page import="com.sanxing.statenet.jaxp.*"%>
+<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
+<%@page import="com.sanxing.studio.emu.*"%>
+<%@page import="com.sanxing.studio.team.*"%>
+<%@page import="com.sanxing.sesame.jaxp.*"%>
 
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
-<%@page import="org.apache.log4j.Logger"%>
+<%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProjectBuilder"%>
-<%@page import="com.sanxing.statenet.sharelib.ShareLibManager"%>
-<%@page import="com.sanxing.ads.deploy.DirectoryCopy"%>
-<%@page import="com.sanxing.ads.utils.DeployReportUtil"%>
+<%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
+<%@page import="com.sanxing.studio.deploy.DirectoryCopy"%>
+<%@page import="com.sanxing.studio.utils.DeployReportUtil"%>
 <%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
 
 <%!private static final Namespace XMLNS_ART = Namespace.getNamespace("sn",
@@ -40,7 +40,7 @@
 	private static final String REV_WORKING = "working";
 	private static final String REV_HEAD = "head";
 
-	private final Logger log = Logger.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private org.w3c.dom.Element createDocumentationEl(org.w3c.dom.Document doc,
 			String documentation) {
@@ -87,7 +87,7 @@
 		classpathEl.addContent(pathEl);
 
 		Element extentionEl = new Element("callback-class", xmlns_art);
-		extentionEl.setText("com.sanxing.statenet.transport.TransportRegister");
+		extentionEl.setText("com.sanxing.sesame.transport.TransportRegister");
 		libEl.addContent(extentionEl);
 
 		return new Document(rootEl);
@@ -518,7 +518,7 @@
 			try {
 				if (compress == null)
 					zipOut.setLevel(0);
-				zipOut.setComment("Sanxing Statenet Component");
+				zipOut.setComment("Sanxing Sesame Component");
 				for (File file : entry.listFiles())
 					zipUnit(file, "", zipOut);
 			} finally {
@@ -640,7 +640,7 @@
 			try {
 				if (compress == null)
 					zipOut.setLevel(0);
-				zipOut.setComment("Sanxing Statenet Service-Unit");
+				zipOut.setComment("Sanxing Sesame Service-Unit");
 				for (File file : entry.listFiles()) {
 					zipUnit(file, "", zipOut);
 				}
@@ -661,7 +661,7 @@
 		try {
 			if (compress == null)
 				zipOut.setLevel(0);
-			zipOut.setComment("Sanxing Statenet Service-Assembly");
+			zipOut.setComment("Sanxing Sesame Service-Assembly");
 			File entry = new File(buildPath, project + "/META-INF");
 			FileUtil.zip(entry, "", zipOut);
 			for (Iterator<?> entries = zipList.iterator(); entries.hasNext();) {
@@ -699,7 +699,7 @@
 			}
 
 		} else {
-			throw new Exception("Statenet Studio 单独运行时不能使用此功能");
+			throw new Exception("Sesame Studio 单独运行时不能使用此功能");
 		}
 
 		//记录用户的设置
@@ -757,7 +757,7 @@
 			try {
 				if (compress == null)
 					zipOut.setLevel(0);
-				zipOut.setComment("Sanxing Statenet Component");
+				zipOut.setComment("Sanxing Sesame Component");
 				for (File file : entry.listFiles())
 					zipUnit(file, "", zipOut);
 			} finally {
@@ -798,7 +798,7 @@
 			}
 
 		} else {
-			throw new Exception("Statenet Studio 单独运行时不能使用此功能");
+			throw new Exception("Sesame Studio 单独运行时不能使用此功能");
 		}
 		//返回下载链接
 		response.setContentType("text/plain; charset=utf-8");
@@ -843,7 +843,7 @@
 				csum));
 		if (compress == null)
 			zipOut.setLevel(0);
-		zipOut.setComment("Sanxing Statenet Transport lib");
+		zipOut.setComment("Sanxing Sesame Transport lib");
 		//将选择的传输端子打包
 		List<File> zipList = new ArrayList<File>();
 		try {
@@ -898,7 +898,7 @@
 			}
 
 		} else {
-			throw new Exception("Statenet Studio 单独运行时不能使用此功能");
+			throw new Exception("Sesame Studio 单独运行时不能使用此功能");
 		}
 		//返回下载链接
 		response.setContentType("text/plain; charset=utf-8");
@@ -1561,7 +1561,7 @@
 
 				DeployReportUtil dru = new DeployReportUtil(configFolder
 						.getAbsolutePath()
-						+ "/statenetConfig.pdf");
+						+ "/sesameConfig.pdf");
 				dru.buildReport();
 			}
 
@@ -1600,7 +1600,7 @@
 		try {
 			if (compress == null || "off".equals(compress))
 				zipOut.setLevel(0);
-			zipOut.setComment("Sanxing Statenet Service-Unit");
+			zipOut.setComment("Sanxing Sesame Service-Unit");
 			for (File file : sourceFolder.listFiles())
 				zipUnit(file, "", zipOut);
 		} catch (Exception e) {
@@ -1864,7 +1864,7 @@
 
 		} 
 		else {
-			throw new Exception("Statenet Studio 单独运行时不能使用此功能");
+			throw new Exception("Sesame Studio 单独运行时不能使用此功能");
 		}
 		//返回下载链接
 		response.setContentType("text/plain; charset=utf-8");

@@ -6,7 +6,7 @@ import javax.naming.Context;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
+import org.jdom.Element;
 
 public class DBCPProvider implements DataSourceProvider {
 	private static Logger LOG = LoggerFactory.getLogger(DBCPProvider.class);

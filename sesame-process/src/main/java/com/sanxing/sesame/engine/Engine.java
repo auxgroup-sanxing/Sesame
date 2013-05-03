@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
+import org.jdom.Element;
+import org.jdom.Namespace;
 
 public class Engine {
 	static final Logger LOG = LoggerFactory.getLogger(Engine.class);

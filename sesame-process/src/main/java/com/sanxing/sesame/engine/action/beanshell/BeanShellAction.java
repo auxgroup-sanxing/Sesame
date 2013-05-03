@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom2.Element;
-import org.jdom2.Text;
+import org.jdom.Element;
+import org.jdom.Text;
 
 public class BeanShellAction extends AbstractAction {
 	Logger LOG = LoggerFactory.getLogger(BeanShellAction.class);

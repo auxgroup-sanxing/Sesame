@@ -8,11 +8,11 @@ import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.context.VariableFactory;
 import java.util.ArrayList;
 import java.util.List;
-import org.jdom2.Attribute;
-import org.jdom2.Content;
-import org.jdom2.Element;
-import org.jdom2.Namespace;
-import org.jdom2.Text;
+import org.jdom.Attribute;
+import org.jdom.Content;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
 
 public class AppendAction extends AbstractAction implements Constant {
 	String targetVarName;

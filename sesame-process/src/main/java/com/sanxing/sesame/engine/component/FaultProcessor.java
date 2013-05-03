@@ -12,11 +12,11 @@ import java.util.Map;
 import javax.jbi.messaging.Fault;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.xpath.XPath;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.jdom.xpath.XPath;
 
 public class FaultProcessor {
 	private Map<QName, FaultTransformer> transformers = new HashMap();
