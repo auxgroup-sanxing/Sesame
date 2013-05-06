@@ -117,7 +117,7 @@ public class Platform {
 					MBeanHelper.getPlatformMBeanName("core-manager"));
 			Console.echo("");
 			Console.echo("--------------------------------------------------------------------------------");
-			Console.echo("Statenet server (" + this.server.getName() + ") started");
+			Console.echo("Sesame server (" + this.server.getName() + ") started");
 			Console.echo("--------------------------------------------------------------------------------");
 		} catch (Exception e) {
 			LOG.error("Start server err", e);
@@ -167,7 +167,7 @@ public class Platform {
 		}
 		
 		Console.echo("--------------------------------------------------------------------------------");
-		Console.echo("Statenet server (" + this.server.getName() + ") shutdown complete");
+		Console.echo("Sesame server (" + this.server.getName() + ") shutdown complete");
 		Console.echo("--------------------------------------------------------------------------------");
 	}
 

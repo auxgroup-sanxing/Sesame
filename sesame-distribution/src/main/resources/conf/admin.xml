@@ -10,13 +10,13 @@
   </jms>
   <jdbc>
     <datasource>
-      <jndi-name>SN_DATASOURCE</jndi-name>
+      <jndi-name>STM_DATASOURCE</jndi-name>
       <transaction>true</transaction>
       <app-info>
         <driver-class>oracle.jdbc.driver.OracleDriver</driver-class>
-        <username>statenet_test</username>
+        <username>sesame_test</username>
         <initial-size>30</initial-size>
-        <password>statenet</password>
+        <password>sesame</password>
         <max-idle>30</max-idle>
         <max-wait>100</max-wait>
         <max-active>30</max-active>

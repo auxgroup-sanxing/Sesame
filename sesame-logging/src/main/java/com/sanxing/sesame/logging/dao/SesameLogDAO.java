@@ -44,7 +44,7 @@ public class SesameLogDAO implements SesameBaseDAO {
 
 	public String getDataSourceName() {
 		return System.getProperty("sesame.logging.monitor.datasource.name",
-				"SN_DATASOURCE");
+				"STM_DATASOURCE");
 	}
 
 	public String getUpdateStateSQL() {

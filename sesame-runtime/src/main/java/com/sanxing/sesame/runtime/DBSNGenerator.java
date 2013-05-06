@@ -14,7 +14,7 @@ import javax.sql.DataSource;
 public class DBSNGenerator extends SerialGenerator {
 	private AtomicLong limit = new AtomicLong();
 	private DataSource ds;
-	private static String DATASOURCE_NAME = "SN_DATASOURCE";
+	private static String DATASOURCE_NAME = "STM_DATASOURCE";
 
 	private static String QUERY_SERIAL_SQL = " SELECT CUR_SERIAL FROM SESAME_SYSCTL FOR UPDATE ";
 	private static String UPDATE_SERIAL_SQL = " UPDATE SESAME_SYSCTL SET CUR_SERIAL = ? ";

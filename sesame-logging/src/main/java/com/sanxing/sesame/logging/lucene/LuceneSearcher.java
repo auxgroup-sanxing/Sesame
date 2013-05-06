@@ -65,7 +65,7 @@ public class LuceneSearcher {
 		if (luceneSearcher == null) {
 			synchronized (LuceneSearcher.class) {
 				if (luceneSearcher == null) {
-					String dir = System.getProperty("STATENET_HOME")
+					String dir = System.getProperty("SESAME_HOME")
 							+ "/"
 							+ System.getProperty(
 									"sesame.logging.monitor.lucene.name",

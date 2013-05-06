@@ -3,7 +3,7 @@ Ext.BLANK_IMAGE_URL='../images/s.gif';
 
 var descArray = [
 	'BTM(Bitronix Transaction Manager)是一个开源的事务管理器,它完全实现了JTA 1.0.1B标准,可以很好的支持JDBC和JMS两种资源.', 
-	'STM(Sesame Transaction Manager)是sesame平台内部提供的事务管理器,相比 BTM,目前只支持单数据源的JDBC资源,且数据源的JNDI名称必须为stm-datasource.',
+	'STM(Sesame Transaction Manager)是sesame平台内部提供的事务管理器,相比 BTM,目前只支持单数据源的JDBC资源,且数据源的JNDI名称必须为STM_DATASOURCE.',
 	''
 ];
 

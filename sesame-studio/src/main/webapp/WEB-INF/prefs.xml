@@ -6,8 +6,8 @@
     <passwd>pass</passwd>
   </jmx-server>
   <database>
-    <connection name="oracle" driver="com.oracle.jdbc.Driver" password="statenet" user="statenet_test" url="jdbc:oracle:thin:@10.2.231.210:1521:sxsoft" />
-    <connection name="statenet" default="default" datasource="SN_DATASOURCE" />
+    <connection name="oracle" driver="com.oracle.jdbc.Driver" password="sesame" user="sesame_test" url="jdbc:oracle:thin:@10.2.231.210:1521:sxsoft" />
+    <connection name="sesame" default="default" datasource="STM_DATASOURCE" />
   </database>
   <scm>
     <repository url="file:///F:/svn/trunk" />

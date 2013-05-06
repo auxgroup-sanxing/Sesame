@@ -37,7 +37,7 @@ public class JNDIUtil {
 
 		if (onSesame) {
 			try {
-				LOG.trace("ON STATENET");
+				LOG.trace("ON SESAME");
 				Class clazz = Class
 						.forName("com.sanxing.sesame.core.naming.JNDIUtil");
 				Method method = clazz.getDeclaredMethod("getInitialContext",

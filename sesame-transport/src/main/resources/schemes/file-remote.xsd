@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://framework.statenet.org/bc/" xmlns:tns="http://framework.statenet.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="http://framework.sesame.org/bc/" xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
 	<annotation>
 	  <documentation>file-remote参数</documentation>
 	</annotation>
