@@ -61,6 +61,10 @@ public class Platform
         parsePropertyFile( new File( System.getProperty( "SESAME_HOME" ), "conf/system.properties" ) );
 
         Console.echo( System.getProperty( "sesame.echo", "on" ).equals( "on" ) );
+        
+        System.setOut( Console.out );
+        
+        System.setErr( Console.err );
 
         validateLicense();
 
