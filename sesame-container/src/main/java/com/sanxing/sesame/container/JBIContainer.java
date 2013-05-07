@@ -29,12 +29,12 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JBIContainer extends BaseLifeCycle {
 	public static final String DEFAULT_NAME = "sesame";
-	private static final Log LOG = LogFactory.getLog(JBIContainer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JBIContainer.class);
 	private MBeanServer mbeanServer;
 	protected Router router = new MessageRouter();
 	protected ServiceUnitManager serviceManager;

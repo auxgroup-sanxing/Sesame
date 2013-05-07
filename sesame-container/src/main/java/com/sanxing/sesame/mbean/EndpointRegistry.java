@@ -27,11 +27,11 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.management.JMException;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EndpointRegistry {
-	private static final Log LOG = LogFactory.getLog(EndpointRegistry.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EndpointRegistry.class);
 	private Registry registry;
 	private Map<AbstractEndpoint, Endpoint> endpointMBeans;
 	private Map<String, ServiceEndpoint> internalEndpoints;

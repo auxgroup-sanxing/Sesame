@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
 import javax.jbi.JBIException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DispatcherProvider {
-	private static final Log LOG = LogFactory.getLog(DispatcherProvider.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DispatcherProvider.class);
 
 	private static final FactoryFinder FINDER = new FactoryFinder(
 			"META-INF/services/com/sanxing/sesame/dispatch/");

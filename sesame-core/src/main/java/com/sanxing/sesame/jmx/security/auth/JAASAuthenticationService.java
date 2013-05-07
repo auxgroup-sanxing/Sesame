@@ -11,12 +11,11 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JAASAuthenticationService implements AuthenticationService {
-	private static final Log LOG = LogFactory
-			.getLog(JAASAuthenticationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(JAASAuthenticationService.class);
 
 	public void authenticate(Subject subject, String domain, final String user,
 			final Object credentials) throws GeneralSecurityException {

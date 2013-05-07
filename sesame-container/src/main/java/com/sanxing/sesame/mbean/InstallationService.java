@@ -29,12 +29,12 @@ import javax.management.JMException;
 import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InstallationService extends BaseSystemService implements
 		InstallationServiceMBean {
-	private static final Log LOG = LogFactory.getLog(InstallationService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InstallationService.class);
 	private EnvironmentContext environmentContext;
 	private ManagementContext managementContext;
 	private Map<String, InstallerMBeanImpl> installers;

@@ -20,8 +20,8 @@ import javax.jbi.messaging.NormalizedMessage;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.transaction.Transaction;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 public abstract class MessageExchangeImpl implements MessageExchange,
@@ -54,7 +54,7 @@ public abstract class MessageExchangeImpl implements MessageExchange,
 	protected static final int STATES_NEXT_ERROR = 3;
 	protected static final int STATES_NEXT_DONE = 4;
 	private static final long serialVersionUID = -3639175136897005605L;
-	private static final Log LOG = LogFactory.getLog(MessageExchangeImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MessageExchangeImpl.class);
 	protected ComponentContextImpl sourceContext;
 	protected ExchangePacket packet;
 	protected PojoMarshaler marshaler;

@@ -10,13 +10,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.jbi.JBIException;
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AutoDeploymentService extends BaseSystemService implements
 		AutoDeploymentServiceMBean {
-	private static final Log LOG = LogFactory
-			.getLog(AutoDeploymentService.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AutoDeploymentService.class);
 	private EnvironmentContext environmentContext;
 	private boolean monitorInstallationDirectory;
 	private boolean monitorDeploymentDirectory;

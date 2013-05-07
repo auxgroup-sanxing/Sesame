@@ -40,11 +40,11 @@ import java.util.zip.ZipFile;
 import javax.jbi.JBIException;
 import javax.jbi.management.DeploymentException;
 import javax.jbi.management.LifeCycleMBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ArchiveManager extends BaseSystemService {
-	private static Log LOG = LogFactory.getLog(ArchiveManager.class);
+	private static Logger LOG = LoggerFactory.getLogger(ArchiveManager.class);
 	private boolean monitorInstallationDirectory;
 	private boolean monitorDeploymentDirectory;
 	private static String filePrefix = "file:///";

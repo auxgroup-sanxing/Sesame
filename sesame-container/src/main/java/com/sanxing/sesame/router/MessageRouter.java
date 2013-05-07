@@ -33,11 +33,11 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.management.JMException;
 import javax.management.MBeanOperationInfo;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MessageRouter extends BaseSystemService implements Router {
-	private static final Log LOG = LogFactory.getLog(MessageRouter.class);
+	private static final Logger LOG = LoggerFactory.getLogger(MessageRouter.class);
 	private Registry registry;
 	private String dispatcherNames = "cluster,straight";
 	private String subscriptionFlowName;

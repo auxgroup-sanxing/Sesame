@@ -17,14 +17,13 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 
 public class ComponentContextImpl implements ComponentContext, MBeanNames {
-	private static final Log LOG = LogFactory
-			.getLog(ComponentContextImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ComponentContextImpl.class);
 	private ComponentNameSpace componentName;
 	private ComponentEnvironment environment;
 	private JBIContainer container;

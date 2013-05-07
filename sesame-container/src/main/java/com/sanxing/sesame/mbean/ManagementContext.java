@@ -23,12 +23,12 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ManagementContext extends BaseSystemService implements
 		ManagementContextMBean {
-	private static final Log LOG = LogFactory.getLog(ManagementContext.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ManagementContext.class);
 
 	protected Map<String, ObjectName> systemServices = new ConcurrentHashMap();
 

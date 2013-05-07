@@ -21,11 +21,11 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ComponentMBeanImpl extends BaseLifeCycle implements ComponentMBean {
-	private static final Log LOG = LogFactory.getLog(ComponentMBeanImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ComponentMBeanImpl.class);
 	private boolean exchangeThrottling;
 	private long throttlingTimeout = 100L;
 	private int throttlingInterval = 1;

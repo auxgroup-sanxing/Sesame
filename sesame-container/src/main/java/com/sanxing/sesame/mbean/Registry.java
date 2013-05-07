@@ -31,8 +31,8 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -40,7 +40,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class Registry extends BaseSystemService implements RegistryMBean {
-	private static final Log LOG = LogFactory.getLog(Registry.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Registry.class);
 	private ComponentRegistry componentRegistry;
 	private EndpointRegistry endpointRegistry;
 	private ServiceAssemblyRegistry serviceAssemblyRegistry;

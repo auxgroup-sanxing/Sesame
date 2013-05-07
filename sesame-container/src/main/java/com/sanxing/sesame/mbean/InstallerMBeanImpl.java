@@ -18,11 +18,11 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanRegistrationException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class InstallerMBeanImpl implements InstallerMBean {
-	private static final Log LOG = LogFactory.getLog(InstallerMBeanImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(InstallerMBeanImpl.class);
 	private InstallationContextImpl context;
 	private JBIContainer container;
 	private ObjectName objectName;

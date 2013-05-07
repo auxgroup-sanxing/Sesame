@@ -6,12 +6,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class DeploySupport {
-	private static final transient Log LOG = LogFactory
-			.getLog(DeploySupport.class);
+	private static final transient Logger LOG = LoggerFactory.getLogger(DeploySupport.class);
 	private JBIContainer jbiContainer;
 	private CommandsService commandsService;
 	private boolean deferException;

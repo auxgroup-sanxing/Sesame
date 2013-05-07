@@ -17,8 +17,8 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.exception.FaultException;
 import com.sanxing.sesame.exception.NotInitialisedYetException;
@@ -26,7 +26,7 @@ import com.sanxing.sesame.management.BaseLifeCycle;
 
 public abstract class BaseComponent extends BaseLifeCycle implements
 		ComponentLifeCycle {
-	protected Log logger = LogFactory.getLog(BaseComponent.class);
+	protected Logger logger = LoggerFactory.getLogger(BaseComponent.class);
 	private ComponentContext context;
 	private ObjectName extensionMBeanName;
 	private QName service;

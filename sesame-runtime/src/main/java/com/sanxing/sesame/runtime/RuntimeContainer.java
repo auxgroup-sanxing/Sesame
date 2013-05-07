@@ -31,13 +31,11 @@ import javax.jbi.component.Component;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RuntimeContainer extends JBIContainer implements Container {
-	private static final Log LOG = LogFactory.getLog(RuntimeContainer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(RuntimeContainer.class);
 
 	private ContainerContext containerContext = null;
 
@@ -101,7 +99,7 @@ public class RuntimeContainer extends JBIContainer implements Container {
 		LuceneTask task = new LuceneTask();
 		timer.schedule(task, new Date(), 10000L);
 
-		LOG.debug("Start Log Service success");
+		LOG.debug("Start Logger Service success");
 	}
 
 	public String getContainerName() {

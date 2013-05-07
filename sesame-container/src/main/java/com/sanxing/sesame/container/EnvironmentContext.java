@@ -12,12 +12,12 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.jbi.JBIException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EnvironmentContext extends BaseSystemService implements
 		EnvironmentContextMBean {
-	private static final Log LOG = LogFactory.getLog(EnvironmentContext.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EnvironmentContext.class);
 	private File jbiRootDir;
 	private File componentsDir;
 	private File installationDir;

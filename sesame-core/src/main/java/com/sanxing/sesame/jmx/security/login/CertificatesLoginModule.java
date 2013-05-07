@@ -21,14 +21,13 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CertificatesLoginModule implements LoginModule {
 	private static final String USER_FILE = "com.sanxing.sesame.security.certificates.user";
 	private static final String GROUP_FILE = "com.sanxing.sesame.security.certificates.group";
-	private static final Log LOG = LogFactory
-			.getLog(CertificatesLoginModule.class);
+	private static final Logger LOG = LoggerFactory.getLogger(CertificatesLoginModule.class);
 	private Subject subject;
 	private CallbackHandler callbackHandler;
 	private boolean debug;

@@ -3,8 +3,8 @@ package com.sanxing.sesame.servicedesc;
 import com.sanxing.sesame.util.W3CUtil;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -12,8 +12,7 @@ import org.w3c.dom.Element;
 public final class EndpointReferenceBuilder {
 	public static final String JBI_NAMESPACE = "http://java.sun.com/jbi/end-point-reference";
 	public static final String XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/";
-	private static final Log LOG = LogFactory
-			.getLog(EndpointReferenceBuilder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(EndpointReferenceBuilder.class);
 
 	public static DocumentFragment getReference(ServiceEndpoint endpoint) {
 		try {

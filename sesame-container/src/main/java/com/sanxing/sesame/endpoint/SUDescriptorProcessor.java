@@ -7,12 +7,11 @@ import com.sanxing.sesame.mbean.Registry;
 import com.sanxing.sesame.mbean.ServiceUnitLifeCycle;
 import com.sanxing.sesame.servicedesc.InternalEndpoint;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SUDescriptorProcessor implements EndpointProcessor {
-	private static final Log LOG = LogFactory
-			.getLog(SUDescriptorProcessor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SUDescriptorProcessor.class);
 	private Registry registry;
 
 	public void init(Registry reg) {

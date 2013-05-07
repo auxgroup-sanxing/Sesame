@@ -25,12 +25,12 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractDispatcher extends BaseLifeCycle implements
 		Dispatcher {
-	protected final Log log;
+	protected final Logger log;
 	protected Router router;
 	protected ExecutorFactory executorFactory;
 	private ReadWriteLock lock;
@@ -38,7 +38,7 @@ public abstract class AbstractDispatcher extends BaseLifeCycle implements
 	private String name;
 
 	public AbstractDispatcher() {
-		this.log = LogFactory.getLog(AbstractDispatcher.class);
+		this.log = LoggerFactory.getLogger(AbstractDispatcher.class);
 
 		this.lock = new ReentrantReadWriteLock();
 	}

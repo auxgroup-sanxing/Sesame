@@ -20,8 +20,8 @@ import java.util.Set;
 import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -33,7 +33,7 @@ public class DeployServiceUnit {
 	private Object[] paramsnull;
 	private String[] signaturenull;
 	private Boolean assemblyState;
-	private Log log;
+	private Logger log;
 
 	public DeployServiceUnit() {
 		this.servername = Platform.getEnv().getServerName();
@@ -41,7 +41,7 @@ public class DeployServiceUnit {
 		this.paramsnull = new Object[0];
 		this.signaturenull = new String[0];
 		this.assemblyState = Boolean.valueOf(true);
-		this.log = LogFactory.getLog(DeployServiceUnit.class);
+		this.log = LoggerFactory.getLogger(DeployServiceUnit.class);
 	}
 
 	private void copySchema(String srcSchema, String desSchema)

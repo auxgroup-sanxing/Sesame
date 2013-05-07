@@ -18,8 +18,8 @@ import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 import org.w3c.dom.Element;
@@ -30,7 +30,7 @@ import org.xml.sax.SAXParseException;
 public final class DescriptorFactory {
 	public static final String DESCRIPTOR_FILE = "META-INF/jbi.xml";
 	private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";
-	private static final Log LOG = LogFactory.getLog(DescriptorFactory.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DescriptorFactory.class);
 
 	public static Descriptor buildDescriptor(File descriptorFile) {
 		if (descriptorFile.isDirectory()) {

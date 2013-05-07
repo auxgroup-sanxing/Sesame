@@ -32,11 +32,11 @@ import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DeliveryChannelImpl implements DeliveryChannel {
-	private static final Log LOG = LogFactory.getLog(DeliveryChannelImpl.class);
+	private static final Logger LOG = LoggerFactory.getLogger(DeliveryChannelImpl.class);
 	private JBIContainer container;
 	private ComponentContextImpl context;
 	private ComponentMBeanImpl component;

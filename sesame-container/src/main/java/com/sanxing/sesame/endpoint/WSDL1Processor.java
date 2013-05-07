@@ -14,14 +14,14 @@ import javax.wsdl.Service;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.xml.namespace.QName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class WSDL1Processor implements EndpointProcessor {
 	public static final String WSDL1_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/";
-	private static final Log LOG = LogFactory.getLog(WSDL1Processor.class);
+	private static final Logger LOG = LoggerFactory.getLogger(WSDL1Processor.class);
 	private Registry registry;
 
 	public void init(Registry reg) {

@@ -40,13 +40,13 @@ import javax.management.modelmbean.ModelMBeanNotificationInfo;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BaseStandardMBean extends StandardMBean implements
 		ModelMBeanNotificationBroadcaster, MBeanRegistration,
 		PropertyChangeListener {
-	private static final Log LOG = LogFactory.getLog(BaseStandardMBean.class);
+	private static final Logger LOG = LoggerFactory.getLogger(BaseStandardMBean.class);
 
 	private static final Map<String, Class<?>> PRIMITIVE_CLASSES = new Hashtable(8);
 	protected ExecutorService executorService;

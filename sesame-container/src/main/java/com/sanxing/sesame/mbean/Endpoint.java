@@ -22,11 +22,11 @@ import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanOperationInfo;
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Endpoint implements EndpointMBean, MBeanInfoProvider {
-	private static final Log LOG = LogFactory.getLog(Endpoint.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Endpoint.class);
 	private AbstractEndpoint endpoint;
 	private Registry registry;
 

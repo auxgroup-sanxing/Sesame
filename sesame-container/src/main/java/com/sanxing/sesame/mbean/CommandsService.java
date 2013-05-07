@@ -22,12 +22,12 @@ import javax.jbi.management.DeploymentException;
 import javax.management.JMException;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectName;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommandsService extends BaseSystemService implements
 		CommandsServiceMBean {
-	static Log LOG = LogFactory.getLog(CommandsService.class);
+	static Logger LOG = LoggerFactory.getLogger(CommandsService.class);
 
 	public String getDescription() {
 		return "Administrator Commands Service";
