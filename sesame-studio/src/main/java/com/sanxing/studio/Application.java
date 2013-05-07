@@ -12,6 +12,7 @@ import javax.servlet.ServletContextListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.core.Platform;
 import com.sanxing.studio.team.SCM;
 
 public class Application
@@ -82,6 +83,8 @@ public class Application
     public void contextInitialized( ServletContextEvent event )
     {
         servletContext = event.getServletContext();
+        
+        servletContext.setAttribute( "MBeanServer", Platform.getLocalMBeanServer() );
 
         String home = System.getProperty( "SESAME_HOME" );
         projectFolder = new File( home, "projects" );
