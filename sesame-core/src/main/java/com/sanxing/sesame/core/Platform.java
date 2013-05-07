@@ -51,9 +51,6 @@ public class Platform {
 				"conf/system.properties"));
 
 		Console.echo(System.getProperty("sesame.echo", "on").equals("on"));
-
-		System.setOut(Console.out);
-		System.setErr(Console.err);
 		
 		validateLicense();
 
