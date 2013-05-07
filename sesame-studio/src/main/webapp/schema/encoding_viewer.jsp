@@ -1,8 +1,10 @@
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@page import="java.util.*,  java.io.*"%>
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="java.net.URLDecoder" %>
+<%@page import="java.net.URLDecoder"%>
 <%@page import="org.json.*"%>
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -71,34 +73,35 @@ catch (Exception e)
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <title>消息编辑器</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <style type="text/css">
-html, body {
-font: normal 12px arial, verdana;
-	margin:0;
-	padding:0;
+html,body {
+	font: normal 12px arial, verdana;
+	margin: 0;
+	padding: 0;
 	border: 0 none;
 	overflow: auto;
-	cursor:default; 
-	width:100%;
-	height:100%;
+	cursor: default;
+	width: 100%;
+	height: 100%;
 }
 
 .x-view-item {
-    padding: 2px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    -o-text-overflow:ellipsis;
-    overflow: hidden;
+	padding: 2px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	-o-text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .x-view-selected {
-    background: #DFEDFF; 
-    border: 1px solid #6593cf; 
-    padding: 1px; 
+	background: #DFEDFF;
+	border: 1px solid #6593cf;
+	padding: 1px;
 }
 
 .x-form-item {
@@ -126,6 +129,7 @@ font: normal 12px arial, verdana;
 }
 
 .x-restrict-tool {
+	
 }
 
 .x-combo-list-inner {
@@ -140,22 +144,22 @@ font: normal 12px arial, verdana;
 }
 
 .x-data-view {
-	background-color:white; 
-	border:1px solid #B5B8C8; 
-	cursor:default;
+	background-color: white;
+	border: 1px solid #B5B8C8;
+	cursor: default;
 	width: auto !important;
 	height: 150px !important;
-	overflow:auto; 
+	overflow: auto;
 }
 
 .settings {
 	background-image: url("../images/elcl16/cog_go.png") !important;
 }
-
 </style>
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 
 <script type="text/javascript" src="../package/schema/SchemaNodeUI.js"></script>
 <script type="text/javascript" src="../package/dialog/dialog.js"></script>
@@ -164,7 +168,7 @@ font: normal 12px arial, verdana;
 <script type="text/javascript" src="encoding_viewer.js"></script>
 </head>
 <body>
-<script type="text/javascript">
+	<script type="text/javascript">
 	//document.oncontextmenu = function(e) { return false; };
 	var isVersioned = '<%=isVersioned%>';
 	var isLocked = '<%=isLocked%>';

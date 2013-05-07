@@ -2,7 +2,6 @@ package com.sanxing.sesame.component;
 
 import java.io.File;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jbi.JBIException;
@@ -15,71 +14,95 @@ import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.service.ServiceUnit;
 
-public class UnitManagerProxy implements ServiceUnitManager {
-	private static Logger LOG = LoggerFactory.getLogger(UnitManagerProxy.class);
+public class UnitManagerProxy
+    implements ServiceUnitManager
+{
+    private static Logger LOG = LoggerFactory.getLogger( UnitManagerProxy.class );
 
-	private Map<String, ServiceUnit> serviceUnits = new Hashtable();
-	private ComponentSupport component;
-	private ServiceUnitManager manager;
+    private final Map<String, ServiceUnit> serviceUnits = new Hashtable();
 
-	public UnitManagerProxy(ComponentSupport component,
-			ServiceUnitManager serviceUnitManager) {
-		this.component = component;
-		this.manager = serviceUnitManager;
-	}
+    private final ComponentSupport component;
 
-	public String deploy(String serviceUnitName, String serviceUnitRootPath)
-			throws DeploymentException {
-		return this.manager.deploy(serviceUnitName, serviceUnitRootPath);
-	}
+    private final ServiceUnitManager manager;
 
-	public String undeploy(String serviceUnitName, String serviceUnitRootPath)
-			throws DeploymentException {
-		return this.manager.undeploy(serviceUnitName, serviceUnitRootPath);
-	}
+    public UnitManagerProxy( ComponentSupport component, ServiceUnitManager serviceUnitManager )
+    {
+        this.component = component;
+        manager = serviceUnitManager;
+    }
 
-	public void init(String serviceUnitName, String serviceUnitRootPath)
-			throws DeploymentException {
-		try {
-			ServiceUnit serviceUnit = new ServiceUnit(new File(
-					serviceUnitRootPath));
-			this.serviceUnits.put(serviceUnitName, serviceUnit);
-		} catch (JBIException e) {
-			if (e.getCause() != null) {
-				Throwable t = e.getCause();
-				LOG.trace(t.getMessage(), t);
-			}
-			throw this.component.taskFailure("init service unit "
-					+ serviceUnitName, e.getMessage());
-		}
-		this.manager.init(serviceUnitName, serviceUnitRootPath);
-	}
+    @Override
+    public String deploy( String serviceUnitName, String serviceUnitRootPath )
+        throws DeploymentException
+    {
+        return manager.deploy( serviceUnitName, serviceUnitRootPath );
+    }
 
-	public void shutDown(String serviceUnitName) throws DeploymentException {
-		this.manager.shutDown(serviceUnitName);
-		this.serviceUnits.remove(serviceUnitName);
-	}
+    @Override
+    public String undeploy( String serviceUnitName, String serviceUnitRootPath )
+        throws DeploymentException
+    {
+        return manager.undeploy( serviceUnitName, serviceUnitRootPath );
+    }
 
-	public void start(String serviceUnitName) throws DeploymentException {
-		this.manager.start(serviceUnitName);
-	}
+    @Override
+    public void init( String serviceUnitName, String serviceUnitRootPath )
+        throws DeploymentException
+    {
+        try
+        {
+            ServiceUnit serviceUnit = new ServiceUnit( new File( serviceUnitRootPath ) );
+            serviceUnits.put( serviceUnitName, serviceUnit );
+        }
+        catch ( JBIException e )
+        {
+            if ( e.getCause() != null )
+            {
+                Throwable t = e.getCause();
+                LOG.trace( t.getMessage(), t );
+            }
+            throw component.taskFailure( "init service unit " + serviceUnitName, e.getMessage() );
+        }
+        manager.init( serviceUnitName, serviceUnitRootPath );
+    }
 
-	public void stop(String serviceUnitName) throws DeploymentException {
-		this.manager.stop(serviceUnitName);
-	}
+    @Override
+    public void shutDown( String serviceUnitName )
+        throws DeploymentException
+    {
+        manager.shutDown( serviceUnitName );
+        serviceUnits.remove( serviceUnitName );
+    }
 
-	public ServiceUnit getServiceUnit(String serviceUnitName) {
-		return ((ServiceUnit) this.serviceUnits.get(serviceUnitName));
-	}
+    @Override
+    public void start( String serviceUnitName )
+        throws DeploymentException
+    {
+        manager.start( serviceUnitName );
+    }
 
-	public ServiceUnit getServiceUnit(QName serviceName) {
-		for (Iterator iter = this.serviceUnits.values().iterator(); iter
-				.hasNext();) {
-			ServiceUnit unit = (ServiceUnit) iter.next();
-			if (serviceName.equals(unit.getServiceName())) {
-				return unit;
-			}
-		}
-		return null;
-	}
+    @Override
+    public void stop( String serviceUnitName )
+        throws DeploymentException
+    {
+        manager.stop( serviceUnitName );
+    }
+
+    public ServiceUnit getServiceUnit( String serviceUnitName )
+    {
+        return serviceUnits.get( serviceUnitName );
+    }
+
+    public ServiceUnit getServiceUnit( QName serviceName )
+    {
+        for ( Object element : serviceUnits.values() )
+        {
+            ServiceUnit unit = (ServiceUnit) element;
+            if ( serviceName.equals( unit.getServiceName() ) )
+            {
+                return unit;
+            }
+        }
+        return null;
+    }
 }

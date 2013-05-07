@@ -2,6 +2,7 @@ package com.sanxing.sesame.jmx;
 
 import java.io.IOException;
 import java.util.Map;
+
 import javax.management.Attribute;
 import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
@@ -25,176 +26,247 @@ import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 import javax.security.auth.Subject;
 
-public class RemoteMBeanProxy implements DynamicMBean, NotificationEmitter,
-		MBeanRegistration {
-	private final ObjectName remoteObjectName;
-	private final JMXConnector connector;
-	private final MBeanServerConnection connection;
+public class RemoteMBeanProxy
+    implements DynamicMBean, NotificationEmitter, MBeanRegistration
+{
+    private final ObjectName remoteObjectName;
 
-	public RemoteMBeanProxy(ObjectName remoteObjectName, JMXServiceURL url,
-			Map environment, Subject delegate) throws IOException {
-		this(remoteObjectName, JMXConnectorFactory.newJMXConnector(url,
-				environment), environment, delegate);
-	}
+    private final JMXConnector connector;
 
-	public RemoteMBeanProxy(ObjectName remoteObjectName,
-			JMXConnector connector, Map environment, Subject delegate)
-			throws IOException {
-		this.remoteObjectName = remoteObjectName;
-		this.connector = connector;
-		this.connector.connect(environment);
-		this.connection = connector.getMBeanServerConnection(delegate);
-	}
+    private final MBeanServerConnection connection;
 
-	public RemoteMBeanProxy(ObjectName remoteObjectName,
-			MBeanServerConnection connection) {
-		this.remoteObjectName = remoteObjectName;
-		this.connector = null;
-		this.connection = connection;
-	}
+    public RemoteMBeanProxy( ObjectName remoteObjectName, JMXServiceURL url, Map environment, Subject delegate )
+        throws IOException
+    {
+        this( remoteObjectName, JMXConnectorFactory.newJMXConnector( url, environment ), environment, delegate );
+    }
 
-	public ObjectName preRegister(MBeanServer server, ObjectName name)
-			throws Exception {
-		return name;
-	}
+    public RemoteMBeanProxy( ObjectName remoteObjectName, JMXConnector connector, Map environment, Subject delegate )
+        throws IOException
+    {
+        this.remoteObjectName = remoteObjectName;
+        this.connector = connector;
+        this.connector.connect( environment );
+        connection = connector.getMBeanServerConnection( delegate );
+    }
 
-	public void postRegister(Boolean registrationDone) {
-	}
+    public RemoteMBeanProxy( ObjectName remoteObjectName, MBeanServerConnection connection )
+    {
+        this.remoteObjectName = remoteObjectName;
+        connector = null;
+        this.connection = connection;
+    }
 
-	public void preDeregister() throws Exception {
-		JMXConnector cntor = getJMXConnector();
-		if (cntor == null)
-			return;
-		cntor.close();
-	}
+    @Override
+    public ObjectName preRegister( MBeanServer server, ObjectName name )
+        throws Exception
+    {
+        return name;
+    }
 
-	public void postDeregister() {
-	}
+    @Override
+    public void postRegister( Boolean registrationDone )
+    {
+    }
 
-	protected ObjectName getRemoteObjectName() {
-		return this.remoteObjectName;
-	}
+    @Override
+    public void preDeregister()
+        throws Exception
+    {
+        JMXConnector cntor = getJMXConnector();
+        if ( cntor == null )
+        {
+            return;
+        }
+        cntor.close();
+    }
 
-	protected MBeanServerConnection getMBeanServerConnection() {
-		return this.connection;
-	}
+    @Override
+    public void postDeregister()
+    {
+    }
 
-	protected JMXConnector getJMXConnector() {
-		return this.connector;
-	}
+    protected ObjectName getRemoteObjectName()
+    {
+        return remoteObjectName;
+    }
 
-	public MBeanInfo getMBeanInfo() {
-		try {
-			return getMBeanServerConnection().getMBeanInfo(
-					getRemoteObjectName());
-		} catch (Exception x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    protected MBeanServerConnection getMBeanServerConnection()
+    {
+        return connection;
+    }
 
-	public Object getAttribute(String attribute)
-			throws AttributeNotFoundException, MBeanException,
-			ReflectionException {
-		try {
-			return getMBeanServerConnection().getAttribute(
-					getRemoteObjectName(), attribute);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    protected JMXConnector getJMXConnector()
+    {
+        return connector;
+    }
 
-	public void setAttribute(Attribute attribute)
-			throws AttributeNotFoundException, InvalidAttributeValueException,
-			MBeanException, ReflectionException {
-		try {
-			getMBeanServerConnection().setAttribute(getRemoteObjectName(),
-					attribute);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public MBeanInfo getMBeanInfo()
+    {
+        try
+        {
+            return getMBeanServerConnection().getMBeanInfo( getRemoteObjectName() );
+        }
+        catch ( Exception x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public AttributeList getAttributes(String[] attributes) {
-		try {
-			return getMBeanServerConnection().getAttributes(
-					getRemoteObjectName(), attributes);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (ReflectionException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public Object getAttribute( String attribute )
+        throws AttributeNotFoundException, MBeanException, ReflectionException
+    {
+        try
+        {
+            return getMBeanServerConnection().getAttribute( getRemoteObjectName(), attribute );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public AttributeList setAttributes(AttributeList attributes) {
-		try {
-			return getMBeanServerConnection().setAttributes(
-					getRemoteObjectName(), attributes);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (ReflectionException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public void setAttribute( Attribute attribute )
+        throws AttributeNotFoundException, InvalidAttributeValueException, MBeanException, ReflectionException
+    {
+        try
+        {
+            getMBeanServerConnection().setAttribute( getRemoteObjectName(), attribute );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public Object invoke(String method, Object[] arguments, String[] params)
-			throws MBeanException, ReflectionException {
-		try {
-			return getMBeanServerConnection().invoke(getRemoteObjectName(),
-					method, arguments, params);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public AttributeList getAttributes( String[] attributes )
+    {
+        try
+        {
+            return getMBeanServerConnection().getAttributes( getRemoteObjectName(), attributes );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( ReflectionException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public MBeanNotificationInfo[] getNotificationInfo() {
-		return getMBeanInfo().getNotifications();
-	}
+    @Override
+    public AttributeList setAttributes( AttributeList attributes )
+    {
+        try
+        {
+            return getMBeanServerConnection().setAttributes( getRemoteObjectName(), attributes );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( ReflectionException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public void addNotificationListener(NotificationListener listener,
-			NotificationFilter filter, Object handback)
-			throws IllegalArgumentException {
-		try {
-			getMBeanServerConnection().addNotificationListener(
-					getRemoteObjectName(), listener, filter, handback);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public Object invoke( String method, Object[] arguments, String[] params )
+        throws MBeanException, ReflectionException
+    {
+        try
+        {
+            return getMBeanServerConnection().invoke( getRemoteObjectName(), method, arguments, params );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 
-	public void removeNotificationListener(NotificationListener listener)
-			throws ListenerNotFoundException {
-		try {
-			getMBeanServerConnection().removeNotificationListener(
-					getRemoteObjectName(), listener);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public MBeanNotificationInfo[] getNotificationInfo()
+    {
+        return getMBeanInfo().getNotifications();
+    }
 
-	public void removeNotificationListener(NotificationListener listener,
-			NotificationFilter filter, Object handback)
-			throws ListenerNotFoundException {
-		try {
-			getMBeanServerConnection().removeNotificationListener(
-					getRemoteObjectName(), listener, filter, handback);
-		} catch (InstanceNotFoundException x) {
-			throw new RemoteMBeanProxyException(x);
-		} catch (IOException x) {
-			throw new RemoteMBeanProxyException(x);
-		}
-	}
+    @Override
+    public void addNotificationListener( NotificationListener listener, NotificationFilter filter, Object handback )
+        throws IllegalArgumentException
+    {
+        try
+        {
+            getMBeanServerConnection().addNotificationListener( getRemoteObjectName(), listener, filter, handback );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
+
+    @Override
+    public void removeNotificationListener( NotificationListener listener )
+        throws ListenerNotFoundException
+    {
+        try
+        {
+            getMBeanServerConnection().removeNotificationListener( getRemoteObjectName(), listener );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
+
+    @Override
+    public void removeNotificationListener( NotificationListener listener, NotificationFilter filter, Object handback )
+        throws ListenerNotFoundException
+    {
+        try
+        {
+            getMBeanServerConnection().removeNotificationListener( getRemoteObjectName(), listener, filter, handback );
+        }
+        catch ( InstanceNotFoundException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+        catch ( IOException x )
+        {
+            throw new RemoteMBeanProxyException( x );
+        }
+    }
 }

@@ -2,32 +2,41 @@ package com.sanxing.sesame.deployment;
 
 import javax.xml.namespace.QName;
 
-public class Provides {
-	private QName serviceName;
-	private String endpointName;
-	private QName interfaceName;
+public class Provides
+{
+    private QName serviceName;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    private String endpointName;
 
-	public void setInterfaceName(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    private QName interfaceName;
 
-	public QName getServiceName() {
-		return this.serviceName;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	public void setServiceName(QName serviceName) {
-		this.serviceName = serviceName;
-	}
+    public void setInterfaceName( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    public QName getServiceName()
+    {
+        return serviceName;
+    }
 
-	public void setEndpointName(String endpointName) {
-		this.endpointName = endpointName;
-	}
+    public void setServiceName( QName serviceName )
+    {
+        this.serviceName = serviceName;
+    }
+
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
+
+    public void setEndpointName( String endpointName )
+    {
+        this.endpointName = endpointName;
+    }
 }

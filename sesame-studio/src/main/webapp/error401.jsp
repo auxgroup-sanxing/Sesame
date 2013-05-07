@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=utf-8" isErrorPage="true"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	isErrorPage="true"%>
 
 <%
 	String context = request.getContextPath();
@@ -11,7 +12,7 @@
 
 <style type="text/css">
 <!--
-body, td, th {
+body,td,th {
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	font-weight: normal;
@@ -26,8 +27,8 @@ body, td, th {
 	font: bolder 24px "Times New Roman";
 }
 
-a:link, a:visited {
-  color: #0240a3;
+a:link,a:visited {
+	color: #0240a3;
 }
 
 .line {
@@ -41,26 +42,42 @@ a:link, a:visited {
 	//top.location.replace('<%=context%>/login.jsp');
 </script>
 </head>
-<body style="vertical-align: middle; padding: 30px; 0px; 0px; 0px;">
-<table align="center" bgcolor="#f9f9f9" border="0" cellpadding="0" cellspacing="0" width="460"><tbody>
-  <tr>
-    <td background="<%=context%>/images/top_bg.gif" height="54"><table border="0" cellpadding="0" cellspacing="8" width="97%">
-      <tbody><tr>
-        <td><font size="5" color="white" face="Times New Roman"><b>Application Development Studio</b></font></td>
-      </tr>
-    </tbody></table></td>
-  </tr>
-  <tr>
-    <td class="line"><table align="center" border="0" cellpadding="0" cellspacing="8" width="100%">
-      <tbody><tr>
-        <td align="center"><img src="<%=context%>/images/notice.gif"/></td>
-        <td style="font-size: 12px;">
-			<p><big><b>通过认证才能访问</b></big></p>
-			<p>您尚未登录系统，也可能会话已过期，请点击<a href="<%=context%>/login.jsp" target="_top">登录</a></p>
-		</td>
-		</tr></tbody>
-		</table></td>
-  </tr>
-</tbody></table>
+<body style="vertical-align: middle; padding: 30px;">
+	<table align="center" bgcolor="#f9f9f9" border="0" cellpadding="0"
+		cellspacing="0" width="460">
+		<tbody>
+			<tr>
+				<td background="<%=context%>/images/top_bg.gif" height="54"><table
+						border="0" cellpadding="0" cellspacing="8" width="97%">
+						<tbody>
+							<tr>
+								<td><font size="5" color="white" face="Times New Roman"><b>Application
+											Development Studio</b></font></td>
+							</tr>
+						</tbody>
+					</table></td>
+			</tr>
+			<tr>
+				<td class="line"><table align="center" border="0"
+						cellpadding="0" cellspacing="8" width="100%">
+						<tbody>
+							<tr>
+								<td align="center"><img
+									src="<%=context%>/images/notice.gif" /></td>
+								<td style="font-size: 12px;">
+									<p>
+										<big><b>通过认证才能访问</b></big>
+									</p>
+									<p>
+										您尚未登录系统，也可能会话已过期，请点击<a href="<%=context%>/login.jsp"
+											target="_top">登录</a>
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table></td>
+			</tr>
+		</tbody>
+	</table>
 </body>
 </html>

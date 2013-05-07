@@ -16,161 +16,207 @@ import javax.xml.namespace.QName;
 
 import org.apache.ws.commons.schema.XmlSchema;
 
-public class OperationContext {
-	private QName serviceName;
-	private QName interfaceName;
-	private QName operationName;
-	private String endpointName;
-	private ServiceUnit serviceUnit;
-	private BindingOperation operation;
-	private String action;
-	private ReferenceEntry ref;
-	private Map<String, QName> elementMap = new HashMap();
+public class OperationContext
+{
+    private QName serviceName;
 
-	public OperationContext(BindingOperation operation) {
-		this.operation = operation;
-		setOperationName(new QName(operation.getName()));
-		Iterator extIterator = operation.getExtensibilityElements().iterator();
-		while (extIterator.hasNext()) {
-			Object ext = extIterator.next();
-			if (ext instanceof SOAPOperation) {
-				SOAPOperation op = (SOAPOperation) ext;
-				setAction(op.getSoapActionURI());
-				break;
-			}
-		}
+    private QName interfaceName;
 
-		if (operation.getOperation() != null)
-			cacheElements(operation.getOperation());
-	}
+    private QName operationName;
 
-	public OperationContext(Operation operation) {
-		setOperationName(new QName(operation.getName()));
-		setAction(null);
-		cacheElements(operation);
-	}
+    private String endpointName;
 
-	private void cacheElements(Operation operation) {
-		Input input = operation.getInput();
-		if ((input != null) && (input.getMessage() != null)) {
-			Part part = input.getMessage().getPart("parameters");
-			if (part != null)
-				this.elementMap.put("input", part.getElementName());
-		}
-		Output output = operation.getOutput();
-		if ((output != null) && (output.getMessage() != null)) {
-			Part part = output.getMessage().getPart("parameters");
-			if (part != null)
-				this.elementMap.put("output", part.getElementName());
-		}
-		Map faults = operation.getFaults();
-		for (Iterator iterator = faults.keySet().iterator(); iterator.hasNext();) {
-			String key = (String) iterator.next();
-			Fault fault = (Fault) faults.get(key);
-			if (fault.getMessage() != null) {
-				Part part = fault.getMessage().getPart("parameters");
-				if (part == null)
-					continue;
-				this.elementMap.put("fault:" + fault.getName(),
-						part.getElementName());
-			}
-		}
-	}
+    private ServiceUnit serviceUnit;
 
-	public QName getQName() {
-		return new QName(this.serviceUnit.getName(),
-				this.operationName.getLocalPart());
-	}
+    private BindingOperation operation;
 
-	public QName getServcieName() {
-		return this.serviceName;
-	}
+    private String action;
 
-	protected void setServcieName(QName serviceName) {
-		this.serviceName = serviceName;
-	}
+    private ReferenceEntry ref;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    private final Map<String, QName> elementMap = new HashMap();
 
-	protected void setInterfaceName(QName _interfaceName) {
-		this.interfaceName = _interfaceName;
-	}
+    public OperationContext( BindingOperation operation )
+    {
+        this.operation = operation;
+        setOperationName( new QName( operation.getName() ) );
+        Iterator extIterator = operation.getExtensibilityElements().iterator();
+        while ( extIterator.hasNext() )
+        {
+            Object ext = extIterator.next();
+            if ( ext instanceof SOAPOperation )
+            {
+                SOAPOperation op = (SOAPOperation) ext;
+                setAction( op.getSoapActionURI() );
+                break;
+            }
+        }
 
-	public QName getOperationName() {
-		return this.operationName;
-	}
+        if ( operation.getOperation() != null )
+        {
+            cacheElements( operation.getOperation() );
+        }
+    }
 
-	protected void setOperationName(QName _operationName) {
-		this.operationName = _operationName;
-	}
+    public OperationContext( Operation operation )
+    {
+        setOperationName( new QName( operation.getName() ) );
+        setAction( null );
+        cacheElements( operation );
+    }
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    private void cacheElements( Operation operation )
+    {
+        Input input = operation.getInput();
+        if ( ( input != null ) && ( input.getMessage() != null ) )
+        {
+            Part part = input.getMessage().getPart( "parameters" );
+            if ( part != null )
+            {
+                elementMap.put( "input", part.getElementName() );
+            }
+        }
+        Output output = operation.getOutput();
+        if ( ( output != null ) && ( output.getMessage() != null ) )
+        {
+            Part part = output.getMessage().getPart( "parameters" );
+            if ( part != null )
+            {
+                elementMap.put( "output", part.getElementName() );
+            }
+        }
+        Map faults = operation.getFaults();
+        for ( Iterator iterator = faults.keySet().iterator(); iterator.hasNext(); )
+        {
+            String key = (String) iterator.next();
+            Fault fault = (Fault) faults.get( key );
+            if ( fault.getMessage() != null )
+            {
+                Part part = fault.getMessage().getPart( "parameters" );
+                if ( part == null )
+                {
+                    continue;
+                }
+                elementMap.put( "fault:" + fault.getName(), part.getElementName() );
+            }
+        }
+    }
 
-	public void setEndpointName(String endpointName) {
-		this.endpointName = endpointName;
-	}
+    public QName getQName()
+    {
+        return new QName( serviceUnit.getName(), operationName.getLocalPart() );
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public QName getServcieName()
+    {
+        return serviceName;
+    }
 
-	public String getAction() {
-		return this.action;
-	}
+    protected void setServcieName( QName serviceName )
+    {
+        this.serviceName = serviceName;
+    }
 
-	public String toString() {
-		return "{ class='" + super.getClass().getSimpleName()
-				+ "', serviceName: '" + this.serviceName + "', servcieUnit: '"
-				+ this.serviceUnit.getName() + "', operation: '"
-				+ this.operationName.getLocalPart() + "'}";
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	public void setReference(ReferenceEntry ref) {
-		this.ref = ref;
-	}
+    protected void setInterfaceName( QName _interfaceName )
+    {
+        interfaceName = _interfaceName;
+    }
 
-	public ReferenceEntry getReference() {
-		return this.ref;
-	}
+    public QName getOperationName()
+    {
+        return operationName;
+    }
 
-	protected void setServiceUnit(ServiceUnit serviceUnit) {
-		this.serviceUnit = serviceUnit;
-	}
+    protected void setOperationName( QName _operationName )
+    {
+        operationName = _operationName;
+    }
 
-	public ServiceUnit getServiceUnit() {
-		return this.serviceUnit;
-	}
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
 
-	public BindingOperation getBindingOperation() {
-		return this.operation;
-	}
+    public void setEndpointName( String endpointName )
+    {
+        this.endpointName = endpointName;
+    }
 
-	public XmlSchema getSchema() {
-		return ((this.serviceUnit == null) ? null : this.serviceUnit
-				.getSchema(this.operationName.getLocalPart()));
-	}
+    public void setAction( String action )
+    {
+        this.action = action;
+    }
 
-	public QName getInputElement() {
-		return ((QName) this.elementMap.get("input"));
-	}
+    public String getAction()
+    {
+        return action;
+    }
 
-	public QName getOutputElement() {
-		return ((QName) this.elementMap.get("output"));
-	}
+    @Override
+    public String toString()
+    {
+        return "{ class='" + super.getClass().getSimpleName() + "', serviceName: '" + serviceName + "', servcieUnit: '"
+            + serviceUnit.getName() + "', operation: '" + operationName.getLocalPart() + "'}";
+    }
 
-	public QName getFaultElement(String name) {
-		if (name == null) {
-			Set<String> keySet = this.elementMap.keySet();
-			for (String key : keySet) {
-				if (key.startsWith("fault:")) {
-					return ((QName) this.elementMap.get(key));
-				}
-			}
-		}
-		return ((QName) this.elementMap.get("fault:" + name));
-	}
+    public void setReference( ReferenceEntry ref )
+    {
+        this.ref = ref;
+    }
+
+    public ReferenceEntry getReference()
+    {
+        return ref;
+    }
+
+    protected void setServiceUnit( ServiceUnit serviceUnit )
+    {
+        this.serviceUnit = serviceUnit;
+    }
+
+    public ServiceUnit getServiceUnit()
+    {
+        return serviceUnit;
+    }
+
+    public BindingOperation getBindingOperation()
+    {
+        return operation;
+    }
+
+    public XmlSchema getSchema()
+    {
+        return ( ( serviceUnit == null ) ? null : serviceUnit.getSchema( operationName.getLocalPart() ) );
+    }
+
+    public QName getInputElement()
+    {
+        return elementMap.get( "input" );
+    }
+
+    public QName getOutputElement()
+    {
+        return elementMap.get( "output" );
+    }
+
+    public QName getFaultElement( String name )
+    {
+        if ( name == null )
+        {
+            Set<String> keySet = elementMap.keySet();
+            for ( String key : keySet )
+            {
+                if ( key.startsWith( "fault:" ) )
+                {
+                    return elementMap.get( key );
+                }
+            }
+        }
+        return elementMap.get( "fault:" + name );
+    }
 }

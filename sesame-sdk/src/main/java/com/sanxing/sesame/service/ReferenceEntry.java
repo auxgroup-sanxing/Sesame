@@ -4,48 +4,63 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
-public class ReferenceEntry implements Serializable {
-	private static final long serialVersionUID = 1415388341021885499L;
-	private QName servcieName;
-	private QName interfaceName;
-	private QName operationName;
-	private String endpointName;
+public class ReferenceEntry
+    implements Serializable
+{
+    private static final long serialVersionUID = 1415388341021885499L;
 
-	public QName getServcieName() {
-		return this.servcieName;
-	}
+    private QName servcieName;
 
-	public void setServcieName(QName servcieName) {
-		this.servcieName = servcieName;
-	}
+    private QName interfaceName;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    private QName operationName;
 
-	public void setInterfaceName(QName _interfaceName) {
-		this.interfaceName = _interfaceName;
-	}
+    private String endpointName;
 
-	public QName getOperationName() {
-		return this.operationName;
-	}
+    public QName getServcieName()
+    {
+        return servcieName;
+    }
 
-	public void setOperationName(QName _operationName) {
-		this.operationName = _operationName;
-	}
+    public void setServcieName( QName servcieName )
+    {
+        this.servcieName = servcieName;
+    }
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	public void setEndpointName(String endpointName) {
-		this.endpointName = endpointName;
-	}
+    public void setInterfaceName( QName _interfaceName )
+    {
+        interfaceName = _interfaceName;
+    }
 
-	public String toString() {
-		return "{servcieName=" + this.servcieName + ", interfaceName="
-				+ this.interfaceName + ", endpointName=" + this.endpointName
-				+ ", operationName=" + this.operationName + '}';
-	}
+    public QName getOperationName()
+    {
+        return operationName;
+    }
+
+    public void setOperationName( QName _operationName )
+    {
+        operationName = _operationName;
+    }
+
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
+
+    public void setEndpointName( String endpointName )
+    {
+        this.endpointName = endpointName;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "{servcieName=" + servcieName + ", interfaceName=" + interfaceName + ", endpointName=" + endpointName
+            + ", operationName=" + operationName + '}';
+    }
 }

@@ -2,71 +2,95 @@ package com.sanxing.studio.team;
 
 import java.util.Date;
 
-public class PathEntry {
-	public static final String DIR = "dir";
-	public static final String FILE = "file";
-	public static final String NONE = "none";
-	String name;
-	String author;
-	String relativePath;
-	String kind;
-	long revision;
-	long size;
-	Date date;
+public class PathEntry
+{
+    public static final String DIR = "dir";
 
-	public String getName() {
-		return this.name;
-	}
+    public static final String FILE = "file";
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public static final String NONE = "none";
 
-	public String getAuthor() {
-		return this.author;
-	}
+    String name;
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    String author;
 
-	public String getRelativePath() {
-		return this.relativePath;
-	}
+    String relativePath;
 
-	public void setRelativePath(String relativePath) {
-		this.relativePath = relativePath;
-	}
+    String kind;
 
-	public String getKind() {
-		return this.kind;
-	}
+    long revision;
 
-	public void setKind(String kind) {
-		this.kind = kind;
-	}
+    long size;
 
-	public long getRevision() {
-		return this.revision;
-	}
+    Date date;
 
-	public void setRevision(long revision) {
-		this.revision = revision;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public long getSize() {
-		return this.size;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public void setSize(long size) {
-		this.size = size;
-	}
+    public String getAuthor()
+    {
+        return author;
+    }
 
-	public Date getDate() {
-		return this.date;
-	}
+    public void setAuthor( String author )
+    {
+        this.author = author;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public String getRelativePath()
+    {
+        return relativePath;
+    }
+
+    public void setRelativePath( String relativePath )
+    {
+        this.relativePath = relativePath;
+    }
+
+    public String getKind()
+    {
+        return kind;
+    }
+
+    public void setKind( String kind )
+    {
+        this.kind = kind;
+    }
+
+    public long getRevision()
+    {
+        return revision;
+    }
+
+    public void setRevision( long revision )
+    {
+        this.revision = revision;
+    }
+
+    public long getSize()
+    {
+        return size;
+    }
+
+    public void setSize( long size )
+    {
+        this.size = size;
+    }
+
+    public Date getDate()
+    {
+        return date;
+    }
+
+    public void setDate( Date date )
+    {
+        this.date = date;
+    }
 }

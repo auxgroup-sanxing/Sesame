@@ -2,16 +2,21 @@ package com.sanxing.sesame.exception;
 
 import javax.xml.namespace.QName;
 
-public class NoInterfaceAvailableException extends NoEndpointAvailableException {
-	private static final long serialVersionUID = -509652152833232925L;
-	private final QName interfaceName;
+public class NoInterfaceAvailableException
+    extends NoEndpointAvailableException
+{
+    private static final long serialVersionUID = -509652152833232925L;
 
-	public NoInterfaceAvailableException(QName interfaceName) {
-		super("Cannot find an instance of the service: " + interfaceName);
-		this.interfaceName = interfaceName;
-	}
+    private final QName interfaceName;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    public NoInterfaceAvailableException( QName interfaceName )
+    {
+        super( "Cannot find an instance of the service: " + interfaceName );
+        this.interfaceName = interfaceName;
+    }
+
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 }

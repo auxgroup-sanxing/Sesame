@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://framework.sesame.org/bc/" xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="http://framework.sesame.org/bc/"
+	xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
 	<annotation>
-	  <documentation>mq-remote 参数</documentation>
+		<documentation>mq-remote 参数</documentation>
 	</annotation>
 	<element name="properties">
-        <annotation>
-           	<appinfo>
-           		<xtype>fieldset</xtype>
-           		<title>参数</title>
-           		<layout>column</layout>
-           		<border>true</border>
-           		<labelWidth>130</labelWidth>
-           	</appinfo>
-        </annotation>
-        <complexType>
+		<annotation>
+			<appinfo>
+				<xtype>fieldset</xtype>
+				<title>参数</title>
+				<layout>column</layout>
+				<border>true</border>
+				<labelWidth>130</labelWidth>
+			</appinfo>
+		</annotation>
+		<complexType>
 			<sequence>
 				<element name="column1">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-right:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-right:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
 							<element name="initialContextFactoryName" type="string">
@@ -36,7 +37,7 @@
 									<documentation>连接工厂绑定名</documentation>
 								</annotation>
 							</element>
-								<element name="responseQBindingName" type="string">
+							<element name="responseQBindingName" type="string">
 								<annotation>
 									<documentation>响应队列绑定名</documentation>
 								</annotation>
@@ -50,17 +51,17 @@
 					</complexType>
 				</element>
 				<element name="column2">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-left:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-left:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
-						<element name="providerURL" type="string">
+							<element name="providerURL" type="string">
 								<annotation>
 									<documentation>providerURL</documentation>
 								</annotation>

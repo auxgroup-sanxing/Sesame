@@ -2,144 +2,185 @@ package com.sanxing.sesame.logging.dao;
 
 import java.sql.Timestamp;
 
-public class LogBean extends BaseBean {
-	private static final long serialVersionUID = 7993539740276309124L;
-	private Long serialNumber;
-	private Timestamp startTime;
-	private Timestamp updateTime;
-	private String state = "9";
-	private String exceptionMessage;
-	private String serviceName;
-	private String operationName;
-	private String transactionCode;
-	private String channel;
-	private String content;
-	private String stage;
-	private long expireTime;
-	private Long count;
-	private boolean callout = false;
+public class LogBean
+    extends BaseBean
+{
+    private static final long serialVersionUID = 7993539740276309124L;
 
-	public String toString() {
-		return "LogBean [channel=" + this.channel + ", content=" + this.content
-				+ ", count=" + this.count + ", exceptionMessage="
-				+ this.exceptionMessage + ", expireTime=" + this.expireTime
-				+ ", operationName=" + this.operationName + ", serialNumber="
-				+ this.serialNumber + ", serviceName=" + this.serviceName
-				+ ", stage=" + this.stage + ", startTime=" + this.startTime
-				+ ", state=" + this.state + ", transactionCode="
-				+ this.transactionCode + ", updateTime=" + this.updateTime
-				+ "]";
-	}
+    private Long serialNumber;
 
-	public String getContent() {
-		return this.content;
-	}
+    private Timestamp startTime;
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    private Timestamp updateTime;
 
-	public boolean isCallout() {
-		return this.callout;
-	}
+    private String state = "9";
 
-	public void setCallout(boolean callout) {
-		this.callout = callout;
-	}
+    private String exceptionMessage;
 
-	public Long getCount() {
-		return this.count;
-	}
+    private String serviceName;
 
-	public void setCount(Long count) {
-		this.count = count;
-	}
+    private String operationName;
 
-	public Timestamp getStartTime() {
-		return this.startTime;
-	}
+    private String transactionCode;
 
-	public void setStartTime(Timestamp startTime) {
-		this.startTime = startTime;
-	}
+    private String channel;
 
-	public Timestamp getUpdateTime() {
-		return this.updateTime;
-	}
+    private String content;
 
-	public void setUpdateTime(Timestamp updateTime) {
-		this.updateTime = updateTime;
-	}
+    private String stage;
 
-	public String getServiceName() {
-		return this.serviceName;
-	}
+    private long expireTime;
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
+    private Long count;
 
-	public String getOperationName() {
-		return this.operationName;
-	}
+    private boolean callout = false;
 
-	public void setOperationName(String operationName) {
-		this.operationName = operationName;
-	}
+    @Override
+    public String toString()
+    {
+        return "LogBean [channel=" + channel + ", content=" + content + ", count=" + count + ", exceptionMessage="
+            + exceptionMessage + ", expireTime=" + expireTime + ", operationName=" + operationName + ", serialNumber="
+            + serialNumber + ", serviceName=" + serviceName + ", stage=" + stage + ", startTime=" + startTime
+            + ", state=" + state + ", transactionCode=" + transactionCode + ", updateTime=" + updateTime + "]";
+    }
 
-	public String getTransactionCode() {
-		return this.transactionCode;
-	}
+    public String getContent()
+    {
+        return content;
+    }
 
-	public void setTransactionCode(String transactionCode) {
-		this.transactionCode = transactionCode;
-	}
+    public void setContent( String content )
+    {
+        this.content = content;
+    }
 
-	public String getChannel() {
-		return this.channel;
-	}
+    public boolean isCallout()
+    {
+        return callout;
+    }
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    public void setCallout( boolean callout )
+    {
+        this.callout = callout;
+    }
 
-	public long getExpireTime() {
-		return this.expireTime;
-	}
+    public Long getCount()
+    {
+        return count;
+    }
 
-	public void setExpireTime(long expireTime) {
-		this.expireTime = expireTime;
-	}
+    public void setCount( Long count )
+    {
+        this.count = count;
+    }
 
-	public String getStage() {
-		return this.stage;
-	}
+    public Timestamp getStartTime()
+    {
+        return startTime;
+    }
 
-	public void setStage(String stage) {
-		this.stage = stage;
-	}
+    public void setStartTime( Timestamp startTime )
+    {
+        this.startTime = startTime;
+    }
 
-	public Long getSerialNumber() {
-		return this.serialNumber;
-	}
+    public Timestamp getUpdateTime()
+    {
+        return updateTime;
+    }
 
-	public void setSerialNumber(Long serialNumber) {
-		this.serialNumber = serialNumber;
-	}
+    public void setUpdateTime( Timestamp updateTime )
+    {
+        this.updateTime = updateTime;
+    }
 
-	public String getState() {
-		return this.state;
-	}
+    public String getServiceName()
+    {
+        return serviceName;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setServiceName( String serviceName )
+    {
+        this.serviceName = serviceName;
+    }
 
-	public String getExceptionMessage() {
-		return this.exceptionMessage;
-	}
+    public String getOperationName()
+    {
+        return operationName;
+    }
 
-	public void setExceptionMessage(String exceptionMessage) {
-		this.exceptionMessage = exceptionMessage;
-	}
+    public void setOperationName( String operationName )
+    {
+        this.operationName = operationName;
+    }
+
+    public String getTransactionCode()
+    {
+        return transactionCode;
+    }
+
+    public void setTransactionCode( String transactionCode )
+    {
+        this.transactionCode = transactionCode;
+    }
+
+    public String getChannel()
+    {
+        return channel;
+    }
+
+    public void setChannel( String channel )
+    {
+        this.channel = channel;
+    }
+
+    public long getExpireTime()
+    {
+        return expireTime;
+    }
+
+    public void setExpireTime( long expireTime )
+    {
+        this.expireTime = expireTime;
+    }
+
+    public String getStage()
+    {
+        return stage;
+    }
+
+    public void setStage( String stage )
+    {
+        this.stage = stage;
+    }
+
+    public Long getSerialNumber()
+    {
+        return serialNumber;
+    }
+
+    public void setSerialNumber( Long serialNumber )
+    {
+        this.serialNumber = serialNumber;
+    }
+
+    public String getState()
+    {
+        return state;
+    }
+
+    public void setState( String state )
+    {
+        this.state = state;
+    }
+
+    public String getExceptionMessage()
+    {
+        return exceptionMessage;
+    }
+
+    public void setExceptionMessage( String exceptionMessage )
+    {
+        this.exceptionMessage = exceptionMessage;
+    }
 }

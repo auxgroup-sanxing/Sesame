@@ -25,9 +25,9 @@ public class ExitCommand
     @Override
     public boolean execute()
     {
-        ShutdownHelper.exit(666);
+        ShutdownHelper.exit( 666 );
 
-        throw new Error("Unreachable statement");
+        throw new Error( "Unreachable statement" );
     }
 
 }

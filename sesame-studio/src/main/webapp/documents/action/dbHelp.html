@@ -2,7 +2,8 @@
 <html>
 <head>
 <title>数据库操作Action配置帮助文档</title>
-<link rel="stylesheet" type="text/css" href="css/helpdoc.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="css/helpdoc.css"
+	media="all" />
 </head>
 <body>
 	<div id="wrapper">
@@ -13,41 +14,58 @@
 				<td>通过操作数据库给xml元素赋值</td>
 			</div>
 			<div class="example">
-				<h2>配置实例如下图所示 </h2>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/db.jpg"/></p>
-				
+				<h2>配置实例如下图所示</h2>
+				<p>
+					<img style="border: 1px solid #8EA4C1; width: 360px"
+						src="images/db.jpg" />
+				</p>
+
 			</div>
-			<td>选择数据源,执行SQL语句,将执行结果返回.该数据源是在[控制面板]的[数据源设置]界面配置.</td><br />
-				<td>SQL语句中,使用参数变量中的元素值.例如上图中：</td><br />
-				REQUEST:<br />
-				<STREAM><br />
-				<TXCODE>0001</TXCODE><br />
-				<ID>33323110009</ID><br />
-				</STREAM><br />
-				<td>那么SQL语句就是"SELECT * FROM TRANSFER ID = '33323110009'"</td><br />
-				<td>该SQL语句执行后：RESPONSE:</td><br />
-				 <RESULT> <br />
-				 <ROW> <br />
-				  <ID>33323110009</ID>  <br />
-				 <CUSTOMER_ID>3100092</CUSTOMER_ID> <br />
-				 <PAY_ACCOUNT>5529302393110009</PAY_ACCOUNT> <br />
-				 <TRANCODE>342</TRANCODE> <br />
-				 <TRANSFER_AMOUT>610009901931093998</TRANSFER_AMOUT> <br />
-				 <PAYER_ACCOUNT>669309019310410009</PAYER_ACCOUNT> <br />
-				 <PAYEE_ACCOUNT>1000909019310093998</PAYEE_ACCOUNT> <br />
-				 <PAY_CARD_NUM>3423432200999</PAY_CARD_NUM> <br />
-				 <CUSTOMER_IP>10.14.2.32</CUSTOMER_IP> <br />
-				 <TELLER_ID>33222</TELLER_ID> <br />
-				 <CUSTOMER_MOBILE_NUM>13419293029</CUSTOMER_MOBILE_NUM> <br />
-				 </ROW> <br />
-				 </RESULT><br />
-				<td></td><br />
-				<td></td><br />
-				<td></td><br />
-				<td></td><br />
-				<td></td><br />
-				
-				<td></td><br />
+			<td>选择数据源,执行SQL语句,将执行结果返回.该数据源是在[控制面板]的[数据源设置]界面配置.</td>
+			<br />
+			<td>SQL语句中,使用参数变量中的元素值.例如上图中：</td>
+			<br /> REQUEST:<br />
+			<STREAM>
+			<br />
+			<TXCODE>0001</TXCODE>
+			<br />
+			<ID>33323110009</ID>
+			<br />
+			</STREAM>
+			<br />
+			<td>那么SQL语句就是"SELECT * FROM TRANSFER ID = '33323110009'"</td>
+			<br />
+			<td>该SQL语句执行后：RESPONSE:</td>
+			<br />
+			<RESULT> <br />
+			<ROW> <br />
+			<ID>33323110009</ID> <br />
+			<CUSTOMER_ID>3100092</CUSTOMER_ID> <br />
+			<PAY_ACCOUNT>5529302393110009</PAY_ACCOUNT> <br />
+			<TRANCODE>342</TRANCODE> <br />
+			<TRANSFER_AMOUT>610009901931093998</TRANSFER_AMOUT> <br />
+			<PAYER_ACCOUNT>669309019310410009</PAYER_ACCOUNT> <br />
+			<PAYEE_ACCOUNT>1000909019310093998</PAYEE_ACCOUNT> <br />
+			<PAY_CARD_NUM>3423432200999</PAY_CARD_NUM> <br />
+			<CUSTOMER_IP>10.14.2.32</CUSTOMER_IP> <br />
+			<TELLER_ID>33222</TELLER_ID> <br />
+			<CUSTOMER_MOBILE_NUM>13419293029</CUSTOMER_MOBILE_NUM> <br />
+			</ROW> <br />
+			</RESULT>
+			<br />
+			<td></td>
+			<br />
+			<td></td>
+			<br />
+			<td></td>
+			<br />
+			<td></td>
+			<br />
+			<td></td>
+			<br />
+
+			<td></td>
+			<br />
 			<div>
 				<h2>配置项说明</h2>
 				<table class="dataintable">
@@ -74,8 +92,8 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
 		</div>
-	</div>
 	</div>
 </body>
 </html>

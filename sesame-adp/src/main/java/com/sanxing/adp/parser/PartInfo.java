@@ -2,59 +2,78 @@ package com.sanxing.adp.parser;
 
 import javax.xml.namespace.QName;
 
-public class PartInfo {
-	public static final int IN = 0;
-	public static final int OUT = 1;
-	public static final int FAULT = 2;
-	private int type;
-	private String name;
-	private QName elementName;
-	private String javaType;
-	private String xsType;
+public class PartInfo
+{
+    public static final int IN = 0;
 
-	public void setType(int type) {
-		this.type = type;
-	}
+    public static final int OUT = 1;
 
-	public int getType() {
-		return this.type;
-	}
+    public static final int FAULT = 2;
 
-	public String getXsType() {
-		return this.xsType;
-	}
+    private int type;
 
-	public void setXsType(String xsType) {
-		this.xsType = xsType;
-	}
+    private String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private QName elementName;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String javaType;
 
-	public QName getElementName() {
-		return this.elementName;
-	}
+    private String xsType;
 
-	public void setElementName(QName elementName) {
-		this.elementName = elementName;
-	}
+    public void setType( int type )
+    {
+        this.type = type;
+    }
 
-	public String getJavaType() {
-		return this.javaType;
-	}
+    public int getType()
+    {
+        return type;
+    }
 
-	public void setJavaType(String javaType) {
-		this.javaType = javaType;
-	}
+    public String getXsType()
+    {
+        return xsType;
+    }
 
-	public String toString() {
-		return "PartInfo [elementName=" + this.elementName + ", javaType="
-				+ this.javaType + ", name=" + this.name + ", type=" + this.type
-				+ "]";
-	}
+    public void setXsType( String xsType )
+    {
+        this.xsType = xsType;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public QName getElementName()
+    {
+        return elementName;
+    }
+
+    public void setElementName( QName elementName )
+    {
+        this.elementName = elementName;
+    }
+
+    public String getJavaType()
+    {
+        return javaType;
+    }
+
+    public void setJavaType( String javaType )
+    {
+        this.javaType = javaType;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "PartInfo [elementName=" + elementName + ", javaType=" + javaType + ", name=" + name + ", type=" + type
+            + "]";
+    }
 }

@@ -5,9 +5,10 @@
 <%@page import="java.rmi.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.json.*" %>
+<%@page import="org.json.*"%>
 <%@page import="org.jdom.*"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!
 

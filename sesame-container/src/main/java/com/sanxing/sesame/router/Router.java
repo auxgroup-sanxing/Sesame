@@ -1,19 +1,22 @@
 package com.sanxing.sesame.router;
 
-import com.sanxing.sesame.container.JBIContainer;
 import javax.jbi.JBIException;
 import javax.jbi.messaging.MessageExchange;
 
-public abstract interface Router extends RouterMBean {
-	public abstract JBIContainer getContainer();
+import com.sanxing.sesame.container.JBIContainer;
 
-	public abstract void init(JBIContainer paramJBIContainer)
-			throws JBIException;
+public abstract interface Router
+    extends RouterMBean
+{
+    public abstract JBIContainer getContainer();
 
-	public abstract void suspend();
+    public abstract void init( JBIContainer paramJBIContainer )
+        throws JBIException;
 
-	public abstract void resume();
+    public abstract void suspend();
 
-	public abstract void sendExchangePacket(MessageExchange paramMessageExchange)
-			throws JBIException;
+    public abstract void resume();
+
+    public abstract void sendExchangePacket( MessageExchange paramMessageExchange )
+        throws JBIException;
 }

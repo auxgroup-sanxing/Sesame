@@ -1,166 +1,190 @@
 package com.sanxing.studio.search;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriter.MaxFieldLength;
 import org.apache.lucene.queryParser.MultiFieldQueryParser;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.Searcher;
-import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class LuceneSearcher implements StringSearcher {
-	private String name;
-	private String indexDirectory;
-	private IndexWriter writer;
-	private Analyzer analyzer = new SmartChineseAnalyzer(Version.LUCENE_CURRENT);
+public class LuceneSearcher
+    implements StringSearcher
+{
+    private String name;
 
-	private Set<String> fieldSet = new TreeSet();
+    private final String indexDirectory;
 
-	static Logger logger = LoggerFactory.getLogger(LuceneSearcher.class.getName());
+    private IndexWriter writer;
 
-	public String getName() {
-		return this.name;
-	}
+    private final Analyzer analyzer = new SmartChineseAnalyzer( Version.LUCENE_CURRENT );
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private final Set<String> fieldSet = new TreeSet();
 
-	public LuceneSearcher(String dir) {
-		this.indexDirectory = dir;
-		cleanup();
-	}
+    private static final Logger LOG = LoggerFactory.getLogger( LuceneSearcher.class );
 
-	public void createIndex() {
-		try {
-			File indexDIR = new File(this.indexDirectory);
-			this.writer = new IndexWriter(FSDirectory.open(indexDIR),
-					getAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void addIndex(Record record) {
-		logger.debug("add index " + record.toString());
-		List<Column> columns = record.getColumns();
-		Document doc = new Document();
-		for (Column column : columns) {
-			String field = column.getName();
-			if ((field != null) && (column.getValue() != null)) {
-				if (column.isIndexAnalyzed()) {
-					doc.add(new Field(field, column.getValue(),
-							Field.Store.YES, Field.Index.ANALYZED));
-				} else {
-					doc.add(new Field(field, column.getValue(),
-							Field.Store.YES, Field.Index.NO));
-				}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-				this.fieldSet.add(field);
-			}
-		}
-		try {
-			this.writer.addDocument(doc);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public LuceneSearcher( String dir )
+    {
+        indexDirectory = dir;
+        cleanup();
+    }
 
-	public void closeIndex() {
-		try {
-			this.writer.optimize();
-			this.writer.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    public void createIndex()
+    {
+        try
+        {
+            File indexDIR = new File( indexDirectory );
+            writer =
+                new IndexWriter( FSDirectory.open( indexDIR ), getAnalyzer(), true, IndexWriter.MaxFieldLength.LIMITED );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void cleanup() {
-		DeleteFileUtil.delete(this.indexDirectory);
-	}
+    @Override
+    public void addIndex( Record record )
+    {
+        LOG.debug( "add index " + record.toString() );
+        List<Column> columns = record.getColumns();
+        Document doc = new Document();
+        for ( Column column : columns )
+        {
+            String field = column.getName();
+            if ( ( field != null ) && ( column.getValue() != null ) )
+            {
+                if ( column.isIndexAnalyzed() )
+                {
+                    doc.add( new Field( field, column.getValue(), Field.Store.YES, Field.Index.ANALYZED ) );
+                }
+                else
+                {
+                    doc.add( new Field( field, column.getValue(), Field.Store.YES, Field.Index.NO ) );
+                }
 
-	public Set<Record> search(String queryString, int maxHits) {
-		try {
-			IndexReader reader = IndexReader.open(
-					FSDirectory.open(new File(this.indexDirectory)), true);
+                fieldSet.add( field );
+            }
+        }
+        try
+        {
+            writer.addDocument( doc );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-			Searcher searcher = new IndexSearcher(reader);
+    @Override
+    public void closeIndex()
+    {
+        try
+        {
+            writer.optimize();
+            writer.close();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-			MultiFieldQueryParser parser = new MultiFieldQueryParser(
-					Version.LUCENE_CURRENT,
-					(String[]) (String[]) this.fieldSet
-							.toArray(new String[this.fieldSet.size()]),
-					getAnalyzer());
+    public void cleanup()
+    {
+        DeleteFileUtil.delete( indexDirectory );
+    }
 
-			Query query = parser.parse(queryString);
+    @Override
+    public Set<Record> search( String queryString, int maxHits )
+    {
+        try
+        {
+            IndexReader reader = IndexReader.open( FSDirectory.open( new File( indexDirectory ) ), true );
 
-			TopScoreDocCollector collector = TopScoreDocCollector.create(
-					maxHits, true);
+            Searcher searcher = new IndexSearcher( reader );
 
-			searcher.search(query, collector);
-			ScoreDoc[] hits = collector.topDocs().scoreDocs;
-			int numTotalHits = collector.getTotalHits();
-			logger.debug("Searcher " + getName() + ":" + numTotalHits
-					+ " total matching documents");
+            MultiFieldQueryParser parser =
+                new MultiFieldQueryParser( Version.LUCENE_CURRENT, fieldSet.toArray( new String[fieldSet.size()] ),
+                    getAnalyzer() );
 
-			Set records = new TreeSet();
-			for (int i = 0; (i < hits.length) && (i < maxHits); ++i) {
-				Document doc = searcher.doc(hits[i].doc);
-				Record rec = RecordFactory.createRecord(getName());
-				List<Fieldable> fields = doc.getFields();
-				for (Fieldable field : fields) {
-					rec.addField(new Column(field.name(), field.stringValue(),
-							false));
-				}
+            Query query = parser.parse( queryString );
 
-				rec.setSearcherName(getName());
-				logger.debug(i + ": " + rec.toString());
-				records.add(rec);
-			}
-			reader.close();
-			return records;
-		} catch (Exception e) {
-			System.out.print(e);
-			e.printStackTrace();
-		}
-		return null;
-	}
+            TopScoreDocCollector collector = TopScoreDocCollector.create( maxHits, true );
 
-	private Analyzer getAnalyzer() {
-		return this.analyzer;
-	}
+            searcher.search( query, collector );
+            ScoreDoc[] hits = collector.topDocs().scoreDocs;
+            int numTotalHits = collector.getTotalHits();
+            LOG.debug( "Searcher " + getName() + ":" + numTotalHits + " total matching documents" );
 
-	public static Set<Record> prepareData() {
-		Set records = new TreeSet();
+            Set records = new TreeSet();
+            for ( int i = 0; ( i < hits.length ) && ( i < maxHits ); ++i )
+            {
+                Document doc = searcher.doc( hits[i].doc );
+                Record rec = RecordFactory.createRecord( getName() );
+                List<Fieldable> fields = doc.getFields();
+                for ( Fieldable field : fields )
+                {
+                    rec.addField( new Column( field.name(), field.stringValue(), false ) );
+                }
 
-		Record rec = new ServiceRecord();
-		Column col1 = new Column("id", "0001", true);
-		Column col2 = new Column("name", "GangService", true);
-		Column col3 = new Column("address", "service for gang", true);
-		rec.addField(col1);
-		rec.addField(col2);
-		rec.addField(col3);
-		records.add(rec);
+                rec.setSearcherName( getName() );
+                LOG.debug( i + ": " + rec.toString() );
+                records.add( rec );
+            }
+            reader.close();
+            return records;
+        }
+        catch ( Exception e )
+        {
+            LOG.error( e.getMessage() );
+        }
+        return null;
+    }
 
-		return records;
-	}
+    private Analyzer getAnalyzer()
+    {
+        return analyzer;
+    }
+
+    public static Set<Record> prepareData()
+    {
+        Set records = new TreeSet();
+
+        Record rec = new ServiceRecord();
+        Column col1 = new Column( "id", "0001", true );
+        Column col2 = new Column( "name", "GangService", true );
+        Column col3 = new Column( "address", "service for gang", true );
+        rec.addField( col1 );
+        rec.addField( col2 );
+        rec.addField( col3 );
+        records.add( rec );
+
+        return records;
+    }
 }

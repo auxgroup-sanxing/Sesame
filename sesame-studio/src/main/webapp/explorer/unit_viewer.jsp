@@ -1,11 +1,13 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
-<%@page import="java.net.URLDecoder" %>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page import="java.net.URLDecoder"%>
 
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -182,14 +184,18 @@ catch (Exception e) {
 
 <title>外部系统</title>
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <!-- <link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/xtheme-gray.css" /> -->
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../package/xml/xdom.js"></script>
-<script type="text/javascript" src="../package/upload/FileUploadField.js"></script>
-<script type="text/javascript" src="../package/ux/InlineToolbarTabPanel.js"></script>
+<script type="text/javascript"
+	src="../package/upload/FileUploadField.js"></script>
+<script type="text/javascript"
+	src="../package/ux/InlineToolbarTabPanel.js"></script>
 
 <style type="text/css">
 .x-combo-list-inner {
@@ -199,35 +205,36 @@ catch (Exception e) {
 }
 
 .x-icon-loading {
-	background-image: url('../ext-Ajax/resources/images/default/grid/loading.gif');
+	background-image:
+		url('../ext-Ajax/resources/images/default/grid/loading.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
-.x-grid3-col-3{
-	padding: 0 3px 0 3px!important;
+.x-grid3-col-3 {
+	padding: 0 3px 0 3px !important;
 }
 
-.innerImg{
-	background:no-repeat;
+.innerImg {
+	background: no-repeat;
 	cursor: pointer;
 }
 
 .x-tab-panel-header {
-	border-right: 0px!important;
+	border-right: 0px !important;
 }
 
 .soapComboBox {
-	margin-bottom: 5px!important;
+	margin-bottom: 5px !important;
 }
 
 .column {
-	width: 160px!important;
-	margin-left: -60px!important;
+	width: 160px !important;
+	margin-left: -60px !important;
 }
 
 .locationList {
-	margin-left: -60px!important;
+	margin-left: -60px !important;
 }
 
 .address-book-btn {
@@ -246,53 +253,68 @@ catch (Exception e) {
 	display: none;
 }
 
-.rc_box1,.rc_box2,.rc_box3 { 
-	display:inline-block; 
-	*display:inline; 
-	*zoom:1; 
-	position:relative; 
-	border-style:solid; 
-	border-color:#99BBE8;
+.rc_box1,.rc_box2,.rc_box3 {
+	display: inline-block;
+	*display: inline;
+	*zoom: 1;
+	position: relative;
+	border-style: solid;
+	border-color: #99BBE8;
 }
 
 .rc_box2,.rc_box3 {
-	border-width:0 1px; 
-	*left:-2px; 
-	background-color:#DFE8F6;
+	border-width: 0 1px;
+	*left: -2px;
+	background-color: #DFE8F6;
 }
 
-.rc_box1 { border-width:1px; line-height:1.5;}
-.rc_box2 { margin:0 -2px;}
-.rc_box3 { 
-	margin:1px -2px; 
-	padding:4px 6px;
-	font: 12px tahoma,arial,helvetica,sans-serif;
+.rc_box1 {
+	border-width: 1px;
+	line-height: 1.5;
+}
+
+.rc_box2 {
+	margin: 0 -2px;
+}
+
+.rc_box3 {
+	margin: 1px -2px;
+	padding: 4px 6px;
+	font: 12px tahoma, arial, helvetica, sans-serif;
 	color: #15428B;
-	background: url("../images/unit_tip_bg.gif") repeat scroll 0 -48px transparent;
+	background: url("../images/unit_tip_bg.gif") repeat scroll 0 -48px
+		transparent;
 }
 
 .ov1,.ov2 {
-	position:absolute; 
-	left:50%; 
-	overflow:hidden; 
-	width:0; 
-	height:0;
-	border-left:10px dotted transparent; 
-	border-right:6px dotted transparent;
-	border-top:15px solid transparent;
+	position: absolute;
+	left: 50%;
+	overflow: hidden;
+	width: 0;
+	height: 0;
+	border-left: 10px dotted transparent;
+	border-right: 6px dotted transparent;
+	border-top: 15px solid transparent;
 }
 
-.ov1 { top:26px; border-top-color:#99BBE8;}
-.ov2 { top:25px; border-top-color:#DFE8F6;}
+.ov1 {
+	top: 26px;
+	border-top-color: #99BBE8;
+}
 
-.x-grid3-header-offset{
-	width:auto;
+.ov2 {
+	top: 25px;
+	border-top-color: #DFE8F6;
+}
+
+.x-grid3-header-offset {
+	width: auto;
 }
 </style>
 </head>
 
 <body>
-<script type="text/javascript">
+	<script type="text/javascript">
 	var isVersioned = '<%=isVersioned%>';
 	var unitLocked = '<%=unitLocked%>';
 	var unit = '<%=unit%>';
@@ -330,21 +352,21 @@ catch (Exception e) {
 	}
 
 </script>
-<script type="text/javascript" src="unit_base.js"></script>
-<script type="text/javascript; e4x=1">
+	<script type="text/javascript" src="unit_base.js"></script>
+	<script type="text/javascript; e4x=1">
 	<%=script%>
 </script>
 
-<!-- 锁定提示  -->
-<div id="tip" class="rc_box1">
-    <div class="rc_box2">
-        <div class="rc_box3">
-            	<b>编辑服务前，请先锁定服务!</b>
-        </div>
-    </div>
-    <div class="ov1"></div>
-    <div class="ov2"></div>
-</div>
+	<!-- 锁定提示  -->
+	<div id="tip" class="rc_box1">
+		<div class="rc_box2">
+			<div class="rc_box3">
+				<b>编辑服务前，请先锁定服务!</b>
+			</div>
+		</div>
+		<div class="ov1"></div>
+		<div class="ov2"></div>
+	</div>
 </body>
 </html>
 

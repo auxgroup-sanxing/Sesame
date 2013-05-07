@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page language="java" contentType="text/html; charset=utf-8" errorPage="../exception.jsp"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	errorPage="../exception.jsp"%>
 <%@page import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.action.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
@@ -55,12 +56,13 @@
 <title>更改角色权限</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <style type="text/css">
 <!--
 TD {
-	font-size: 12px; 
-	vertical-align: middle; 
+	font-size: 12px;
+	vertical-align: middle;
 }
 -->
 </style>
@@ -73,22 +75,31 @@ TD {
 <script type="text/javascript" src="../ext-Ajax/package/date.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/widget-core.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/qtips/qtips.js"></script>
-<script type="text/javascript" src="../ext-Ajax/package/button/button.js"></script>
-<script type="text/javascript" src="../ext-Ajax/package/toolbar/toolbar.js"></script>
-<script type="text/javascript" src="../ext-Ajax/package/dragdrop/dragdrop.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/package/button/button.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/package/toolbar/toolbar.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/package/dragdrop/dragdrop.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/splitbar.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/data/data.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/form/form.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/tabs/tabs.js"></script>
-<script type="text/javascript" src="../ext-Ajax/package/layout/layout.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/package/layout/layout.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/menu/menus.js"></script>
-<script type="text/javascript" src="../ext-Ajax/package/datepicker/datepicker.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/package/datepicker/datepicker.js"></script>
 <script type="text/javascript" src="../ext-Ajax/package/tree/tree.js"></script>
-<script type="text/javascript" src="../ext-Ajax/build/widgets/View-min.js"></script>
-<script type="text/javascript" src="../ext-Ajax/build/widgets/LoadMask-min.js"></script>
-<script type="text/javascript" src="../ext-Ajax/build/state/State-min.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/build/widgets/View-min.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/build/widgets/LoadMask-min.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/build/state/State-min.js"></script>
 <!-- include the locale file -->
-<script type="text/javascript" src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
 
 <script type="text/javascript">
 <!--
@@ -306,27 +317,43 @@ TD {
 	<p style="font-weight: bold;"><%=roleName.equals("")?"创建新角色":"更改角色 "+roleName+""%></p>
 	<table style="margin: 5px 0px 5px 0px;">
 		<%if (!roleId.equals("")) {%>
-		<tr><td><img src="../images/icons/user_delete.png"></td><td><a onclick='deleteRole(this)' href="#" target="_self">删除角色</a></td></tr>
+		<tr>
+			<td><img src="../images/icons/user_delete.png"></td>
+			<td><a onclick='deleteRole(this)' href="#" target="_self">删除角色</a></td>
+		</tr>
 		<%}%>
 	</table>
 	<form name="form" action="../UserAction" method="post">
-	<input type="hidden" name="action" value="changeRole">
-	<input type="hidden" name="accredit" value="">
-	
-	<table style="margin: 0px 0px 5px 0px; width: 100%;">
-		<tr><td>角色标识:</td><td><input type="text" name="roleid" value="<%=roleId%>" onchange="Ext.get('btnSubmit').dom.disabled='';"></td>
-		<td rowspan="2">角色描述:</td><td rowspan="2"><textarea style="width: 100%;" name="desc" onchange="Ext.get('btnSubmit').dom.disabled='';"><%=desc%></textarea></td></tr>
-		<tr><td>角色名称:</td><td><input type="text" name="rolename" value="<%=roleName%>" onchange="Ext.get('btnSubmit').dom.disabled='';"></td></tr>
-	</table>
+		<input type="hidden" name="action" value="changeRole"> <input
+			type="hidden" name="accredit" value="">
+
+		<table style="margin: 0px 0px 5px 0px; width: 100%;">
+			<tr>
+				<td>角色标识:</td>
+				<td><input type="text" name="roleid" value="<%=roleId%>"
+					onchange="Ext.get('btnSubmit').dom.disabled='';"></td>
+				<td rowspan="2">角色描述:</td>
+				<td rowspan="2"><textarea style="width: 100%;" name="desc"
+						onchange="Ext.get('btnSubmit').dom.disabled='';"><%=desc%></textarea></td>
+			</tr>
+			<tr>
+				<td>角色名称:</td>
+				<td><input type="text" name="rolename" value="<%=roleName%>"
+					onchange="Ext.get('btnSubmit').dom.disabled='';"></td>
+			</tr>
+		</table>
 	</form>
-	<table style="width:100%;">
-		<tr><td align="left">
-		<div id="layout" style="font-size:14px; height: 320px;"></div>
-		</td></tr>
-		<tr><td align="right">
-			<input type="button" id="btnSubmit" value="提交" disabled="disabled">
-			<input type="button" value="取消" onclick="window.history.back(-1);">
-		</td></tr>
+	<table style="width: 100%;">
+		<tr>
+			<td align="left">
+				<div id="layout" style="font-size: 14px; height: 320px;"></div>
+			</td>
+		</tr>
+		<tr>
+			<td align="right"><input type="button" id="btnSubmit" value="提交"
+				disabled="disabled"> <input type="button" value="取消"
+				onclick="window.history.back(-1);"></td>
+		</tr>
 	</table>
 </body>
 </html>

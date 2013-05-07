@@ -1,19 +1,24 @@
 package com.sanxing.sesame.jdbc.template.impl;
 
-public class InputInfo {
-	private String sql = null;
-	private String[] paramNames = null;
+public class InputInfo
+{
+    private String sql = null;
 
-	public InputInfo(String sql, String[] paramNames) {
-		this.sql = sql;
-		this.paramNames = paramNames;
-	}
+    private String[] paramNames = null;
 
-	public String getSql() {
-		return this.sql;
-	}
+    public InputInfo( String sql, String[] paramNames )
+    {
+        this.sql = sql;
+        this.paramNames = paramNames;
+    }
 
-	public String[] getParamNames() {
-		return this.paramNames;
-	}
+    public String getSql()
+    {
+        return sql;
+    }
+
+    public String[] getParamNames()
+    {
+        return paramNames;
+    }
 }

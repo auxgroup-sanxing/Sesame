@@ -4,8 +4,9 @@
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
-<%@page import="java.net.URLDecoder" %>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page import="java.net.URLDecoder"%>
 
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -64,11 +65,13 @@ catch (Exception e)
 
 <title>外部系统</title>
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <!--link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/xtheme-gray.css" /-->
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../package/xml/xdom.js"></script>
 
 <style type="text/css">
@@ -81,7 +84,7 @@ catch (Exception e)
 </head>
 
 <body>
-<script type="text/javascript">
+	<script type="text/javascript">
 //document.oncontextmenu = function(e) { return false; };
 
 var schemes = <%=schemes%>;

@@ -10,54 +10,80 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public class JarResourceHandle extends AbstractResourceHandle {
-	private final JarFile jarFile;
-	private final JarEntry jarEntry;
-	private final URL url;
-	private final URL codeSource;
+public class JarResourceHandle
+    extends AbstractResourceHandle
+{
+    private final JarFile jarFile;
 
-	public JarResourceHandle(JarFile jarFile, JarEntry jarEntry, URL codeSource)
-			throws MalformedURLException {
-		this.jarFile = jarFile;
-		this.jarEntry = jarEntry;
-		this.url = JarFileUrlStreamHandler.createUrl(jarFile, jarEntry,
-				codeSource);
-		this.codeSource = codeSource;
-	}
+    private final JarEntry jarEntry;
 
-	public String getName() {
-		return this.jarEntry.getName();
-	}
+    private final URL url;
 
-	public URL getUrl() {
-		return this.url;
-	}
+    private final URL codeSource;
 
-	public URL getCodeSourceUrl() {
-		return this.codeSource;
-	}
+    public JarResourceHandle( JarFile jarFile, JarEntry jarEntry, URL codeSource )
+        throws MalformedURLException
+    {
+        this.jarFile = jarFile;
+        this.jarEntry = jarEntry;
+        url = JarFileUrlStreamHandler.createUrl( jarFile, jarEntry, codeSource );
+        this.codeSource = codeSource;
+    }
 
-	public boolean isDirectory() {
-		return this.jarEntry.isDirectory();
-	}
+    @Override
+    public String getName()
+    {
+        return jarEntry.getName();
+    }
 
-	public InputStream getInputStream() throws IOException {
-		return this.jarFile.getInputStream(this.jarEntry);
-	}
+    @Override
+    public URL getUrl()
+    {
+        return url;
+    }
 
-	public int getContentLength() {
-		return (int) this.jarEntry.getSize();
-	}
+    @Override
+    public URL getCodeSourceUrl()
+    {
+        return codeSource;
+    }
 
-	public Manifest getManifest() throws IOException {
-		return this.jarFile.getManifest();
-	}
+    @Override
+    public boolean isDirectory()
+    {
+        return jarEntry.isDirectory();
+    }
 
-	public Attributes getAttributes() throws IOException {
-		return this.jarEntry.getAttributes();
-	}
+    @Override
+    public InputStream getInputStream()
+        throws IOException
+    {
+        return jarFile.getInputStream( jarEntry );
+    }
 
-	public Certificate[] getCertificates() {
-		return this.jarEntry.getCertificates();
-	}
+    @Override
+    public int getContentLength()
+    {
+        return (int) jarEntry.getSize();
+    }
+
+    @Override
+    public Manifest getManifest()
+        throws IOException
+    {
+        return jarFile.getManifest();
+    }
+
+    @Override
+    public Attributes getAttributes()
+        throws IOException
+    {
+        return jarEntry.getAttributes();
+    }
+
+    @Override
+    public Certificate[] getCertificates()
+    {
+        return jarEntry.getCertificates();
+    }
 }

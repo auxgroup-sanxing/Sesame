@@ -1,212 +1,272 @@
 package com.sanxing.sesame.container;
 
-import com.sanxing.sesame.mbean.CommandsService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class DeploySupport {
-	private static final transient Logger LOG = LoggerFactory.getLogger(DeploySupport.class);
-	private JBIContainer jbiContainer;
-	private CommandsService commandsService;
-	private boolean deferException;
-	private String homeDir;
-	private String repositoryDir;
-	private String groupId;
-	private String artifactId;
-	private String version;
-	private String type;
-	private String file;
+import com.sanxing.sesame.mbean.CommandsService;
 
-	public DeploySupport() {
-		this.type = "-installer.zip";
-	}
+public abstract class DeploySupport
+{
+    private static final transient Logger LOG = LoggerFactory.getLogger( DeploySupport.class );
 
-	public void afterPropertiesSet() throws Exception {
-	}
+    private JBIContainer jbiContainer;
 
-	public void deploy(JBIContainer container) throws Exception {
-		setJbiContainer(container);
-		if (container == null) {
-			throw new IllegalArgumentException("No JBI container configured!");
-		}
-		if (getCommandsService() == null) {
-			setCommandsService(getJbiContainer().getAdminCommandsService());
-		}
-		doDeploy();
-	}
+    private CommandsService commandsService;
 
-	public JBIContainer getJbiContainer() {
-		return this.jbiContainer;
-	}
+    private boolean deferException;
 
-	public void setJbiContainer(JBIContainer jbiContainer) {
-		this.jbiContainer = jbiContainer;
-	}
+    private String homeDir;
 
-	public CommandsService getCommandsService() {
-		return this.commandsService;
-	}
+    private String repositoryDir;
 
-	public void setCommandsService(CommandsService commandsService) {
-		this.commandsService = commandsService;
-	}
+    private String groupId;
 
-	public boolean isDeferException() {
-		return this.deferException;
-	}
+    private String artifactId;
 
-	public void setDeferException(boolean deferException) {
-		this.deferException = deferException;
-	}
+    private String version;
 
-	public String getArtifactId() {
-		if (this.artifactId == null) {
-			throw new IllegalArgumentException(
-					"You must specify either a file or a groupId and an artifactId property");
-		}
-		return this.artifactId;
-	}
+    private String type;
 
-	public void setArtifactId(String artifactId) {
-		this.artifactId = artifactId;
-	}
+    private String file;
 
-	public String getGroupId() {
-		if (this.groupId == null) {
-			throw new IllegalArgumentException(
-					"You must specify either a file or a groupId and an artifactId property");
-		}
-		return this.groupId;
-	}
+    public DeploySupport()
+    {
+        type = "-installer.zip";
+    }
 
-	public void setGroupId(String groupId) {
-		this.groupId = groupId;
-	}
+    public void afterPropertiesSet()
+        throws Exception
+    {
+    }
 
-	public String getHomeDir() {
-		if (this.homeDir == null) {
-			this.homeDir = System.getProperty("user.home", "~");
-			String os = System.getProperty("os.name");
-			if (os.startsWith("Windows")) {
-				this.homeDir = this.homeDir.replace('\\', '/');
-				this.homeDir = this.homeDir.replaceAll(" ", "%20");
-			}
-		}
+    public void deploy( JBIContainer container )
+        throws Exception
+    {
+        setJbiContainer( container );
+        if ( container == null )
+        {
+            throw new IllegalArgumentException( "No JBI container configured!" );
+        }
+        if ( getCommandsService() == null )
+        {
+            setCommandsService( getJbiContainer().getAdminCommandsService() );
+        }
+        doDeploy();
+    }
 
-		return this.homeDir;
-	}
+    public JBIContainer getJbiContainer()
+    {
+        return jbiContainer;
+    }
 
-	public void setHomeDir(String homeDir) {
-		this.homeDir = homeDir;
-	}
+    public void setJbiContainer( JBIContainer jbiContainer )
+    {
+        this.jbiContainer = jbiContainer;
+    }
 
-	public String getRepositoryDir() {
-		if (this.repositoryDir == null) {
-			if (System.getProperty("localRepository") != null)
-				this.repositoryDir = System.getProperty("localRepository");
-			else {
-				this.repositoryDir = getHomeDir() + "/.m2/repository";
-			}
-		}
-		return this.repositoryDir;
-	}
+    public CommandsService getCommandsService()
+    {
+        return commandsService;
+    }
 
-	public void setRepositoryDir(String repositoryDir) {
-		this.repositoryDir = repositoryDir;
-	}
+    public void setCommandsService( CommandsService commandsService )
+    {
+        this.commandsService = commandsService;
+    }
 
-	public String getVersion() {
-		if (this.version == null) {
-			this.version = createVersion();
-		}
-		return this.version;
-	}
+    public boolean isDeferException()
+    {
+        return deferException;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public void setDeferException( boolean deferException )
+    {
+        this.deferException = deferException;
+    }
 
-	public String getFile() {
-		if (this.file == null) {
-			this.file = createFile();
-		}
-		return this.file;
-	}
+    public String getArtifactId()
+    {
+        if ( artifactId == null )
+        {
+            throw new IllegalArgumentException(
+                "You must specify either a file or a groupId and an artifactId property" );
+        }
+        return artifactId;
+    }
 
-	public void setFile(String file) {
-		this.file = file;
-	}
+    public void setArtifactId( String artifactId )
+    {
+        this.artifactId = artifactId;
+    }
 
-	public String getType() {
-		return this.type;
-	}
+    public String getGroupId()
+    {
+        if ( groupId == null )
+        {
+            throw new IllegalArgumentException(
+                "You must specify either a file or a groupId and an artifactId property" );
+        }
+        return groupId;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setGroupId( String groupId )
+    {
+        this.groupId = groupId;
+    }
 
-	protected abstract void doDeploy() throws Exception;
+    public String getHomeDir()
+    {
+        if ( homeDir == null )
+        {
+            homeDir = System.getProperty( "user.home", "~" );
+            String os = System.getProperty( "os.name" );
+            if ( os.startsWith( "Windows" ) )
+            {
+                homeDir = homeDir.replace( '\\', '/' );
+                homeDir = homeDir.replaceAll( " ", "%20" );
+            }
+        }
 
-	protected String createFile() {
-		String group = getGroupId();
-		String artifact = getArtifactId();
-		String v = getVersion();
-		if (v == null) {
-			throw new IllegalArgumentException(
-					"You must specify a version property as it could not be deduced for "
-							+ getGroupId() + ":" + getArtifactId());
-		}
+        return homeDir;
+    }
 
-		group = group.replace('.', '/');
-		return getFilePrefix() + getRepositoryDir() + "/" + group + "/"
-				+ artifact + "/" + v + "/" + artifact + "-" + v + this.type;
-	}
+    public void setHomeDir( String homeDir )
+    {
+        this.homeDir = homeDir;
+    }
 
-	protected String createVersion() {
-		String group = getGroupId();
-		String artifact = getArtifactId();
-		String key = group + "/" + artifact + "/version";
-		try {
-			Enumeration iter = Thread.currentThread().getContextClassLoader()
-					.getResources("META-INF/maven/dependencies.properties");
-			while (iter.hasMoreElements()) {
-				URL url = (URL) iter.nextElement();
+    public String getRepositoryDir()
+    {
+        if ( repositoryDir == null )
+        {
+            if ( System.getProperty( "localRepository" ) != null )
+            {
+                repositoryDir = System.getProperty( "localRepository" );
+            }
+            else
+            {
+                repositoryDir = getHomeDir() + "/.m2/repository";
+            }
+        }
+        return repositoryDir;
+    }
 
-				LOG.debug("looking into properties file: " + url
-						+ " with key: " + key);
-				Properties properties = new Properties();
-				InputStream in = url.openStream();
-				properties.load(in);
-				in.close();
-				String answer = properties.getProperty(key);
-				if (answer != null) {
-					answer = answer.trim();
-					LOG.debug("Found version: " + answer);
-					return answer;
-				}
-			}
-		} catch (IOException e) {
-			LOG.error("Failed: " + e, e);
-		}
-		return null;
-	}
+    public void setRepositoryDir( String repositoryDir )
+    {
+        this.repositoryDir = repositoryDir;
+    }
 
-	protected String getFilePrefix() {
-		String filePrefix = "file://";
-		String os = System.getProperty("os.name");
-		if (os.startsWith("Windows")) {
-			filePrefix = "file:///";
-		}
+    public String getVersion()
+    {
+        if ( version == null )
+        {
+            version = createVersion();
+        }
+        return version;
+    }
 
-		return ((isFileUrlFormat()) ? filePrefix : "");
-	}
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
 
-	protected boolean isFileUrlFormat() {
-		return true;
-	}
+    public String getFile()
+    {
+        if ( file == null )
+        {
+            file = createFile();
+        }
+        return file;
+    }
+
+    public void setFile( String file )
+    {
+        this.file = file;
+    }
+
+    public String getType()
+    {
+        return type;
+    }
+
+    public void setType( String type )
+    {
+        this.type = type;
+    }
+
+    protected abstract void doDeploy()
+        throws Exception;
+
+    protected String createFile()
+    {
+        String group = getGroupId();
+        String artifact = getArtifactId();
+        String v = getVersion();
+        if ( v == null )
+        {
+            throw new IllegalArgumentException( "You must specify a version property as it could not be deduced for "
+                + getGroupId() + ":" + getArtifactId() );
+        }
+
+        group = group.replace( '.', '/' );
+        return getFilePrefix() + getRepositoryDir() + "/" + group + "/" + artifact + "/" + v + "/" + artifact + "-" + v
+            + type;
+    }
+
+    protected String createVersion()
+    {
+        String group = getGroupId();
+        String artifact = getArtifactId();
+        String key = group + "/" + artifact + "/version";
+        try
+        {
+            Enumeration iter =
+                Thread.currentThread().getContextClassLoader().getResources( "META-INF/maven/dependencies.properties" );
+            while ( iter.hasMoreElements() )
+            {
+                URL url = (URL) iter.nextElement();
+
+                LOG.debug( "looking into properties file: " + url + " with key: " + key );
+                Properties properties = new Properties();
+                InputStream in = url.openStream();
+                properties.load( in );
+                in.close();
+                String answer = properties.getProperty( key );
+                if ( answer != null )
+                {
+                    answer = answer.trim();
+                    LOG.debug( "Found version: " + answer );
+                    return answer;
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            LOG.error( "Failed: " + e, e );
+        }
+        return null;
+    }
+
+    protected String getFilePrefix()
+    {
+        String filePrefix = "file://";
+        String os = System.getProperty( "os.name" );
+        if ( os.startsWith( "Windows" ) )
+        {
+            filePrefix = "file:///";
+        }
+
+        return ( ( isFileUrlFormat() ) ? filePrefix : "" );
+    }
+
+    protected boolean isFileUrlFormat()
+    {
+        return true;
+    }
 }

@@ -5,37 +5,57 @@ import java.io.OutputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VirtualOutput extends OutputStream {
-	private static Logger LOG = LoggerFactory.getLogger(VirtualOutput.class);
-	private BlockingQueue<String> queue;
+public class VirtualOutput
+    extends OutputStream
+{
+    private static Logger LOG = LoggerFactory.getLogger( VirtualOutput.class );
 
-	public VirtualOutput(int capacity) {
-		this.queue = new LinkedBlockingQueue(capacity);
-	}
+    private final BlockingQueue<String> queue;
 
-	public void write(int b) throws IOException {
-	}
+    public VirtualOutput( int capacity )
+    {
+        queue = new LinkedBlockingQueue( capacity );
+    }
 
-	public void write(byte[] b, int off, int len) throws IOException {
-		try {
-			if (this.queue.remainingCapacity() == 0) {
-				this.queue.take();
-			}
-			this.queue.put(new String(b, off, len));
-		} catch (InterruptedException e) {
-			LOG.error(e.getMessage(), e);
-		}
-	}
+    @Override
+    public void write( int b )
+        throws IOException
+    {
+    }
 
-	public String poll(long timeout, TimeUnit unit) throws InterruptedException {
-		return ((String) this.queue.poll(timeout, unit));
-	}
+    @Override
+    public void write( byte[] b, int off, int len )
+        throws IOException
+    {
+        try
+        {
+            if ( queue.remainingCapacity() == 0 )
+            {
+                queue.take();
+            }
+            queue.put( new String( b, off, len ) );
+        }
+        catch ( InterruptedException e )
+        {
+            LOG.error( e.getMessage(), e );
+        }
+    }
 
-	public void close() throws IOException {
-		this.queue.clear();
-		super.close();
-	}
+    public String poll( long timeout, TimeUnit unit )
+        throws InterruptedException
+    {
+        return queue.poll( timeout, unit );
+    }
+
+    @Override
+    public void close()
+        throws IOException
+    {
+        queue.clear();
+        super.close();
+    }
 }

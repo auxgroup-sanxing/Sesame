@@ -1,16 +1,9 @@
 package com.sanxing.sesame.mbean;
 
-import com.sanxing.sesame.container.ActivationSpec;
-import com.sanxing.sesame.container.ComponentEnvironment;
-import com.sanxing.sesame.container.JBIContainer;
-import com.sanxing.sesame.management.AttributeInfoHelper;
-import com.sanxing.sesame.management.BaseLifeCycle;
-import com.sanxing.sesame.management.OperationInfoHelper;
-import com.sanxing.sesame.messaging.DeliveryChannelImpl;
-import com.sanxing.sesame.util.XmlPersistenceSupport;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+
 import javax.jbi.JBIException;
 import javax.jbi.component.Component;
 import javax.jbi.component.ComponentLifeCycle;
@@ -21,452 +14,622 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanOperationInfo;
 import javax.management.ObjectName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ComponentMBeanImpl extends BaseLifeCycle implements ComponentMBean {
-	private static final Logger LOG = LoggerFactory.getLogger(ComponentMBeanImpl.class);
-	private boolean exchangeThrottling;
-	private long throttlingTimeout = 100L;
-	private int throttlingInterval = 1;
-	private Component component;
-	private ComponentLifeCycle lifeCycle;
-	private ServiceUnitManager suManager;
-	private ComponentContextImpl context;
-	private ActivationSpec activationSpec;
-	private ObjectName mBeanName;
-	private JBIContainer container;
-	private ComponentNameSpace componentName;
-	private String description = "POJO Component";
-	private int queueCapacity = 1024;
-	private boolean pojo;
-	private boolean binding;
-	private boolean service;
-	private File stateFile;
-	private String[] sharedLibraries;
+import com.sanxing.sesame.container.ActivationSpec;
+import com.sanxing.sesame.container.JBIContainer;
+import com.sanxing.sesame.management.AttributeInfoHelper;
+import com.sanxing.sesame.management.BaseLifeCycle;
+import com.sanxing.sesame.management.OperationInfoHelper;
+import com.sanxing.sesame.messaging.DeliveryChannelImpl;
+import com.sanxing.sesame.util.XmlPersistenceSupport;
 
-	public ComponentMBeanImpl(JBIContainer container, ComponentNameSpace name,
-			String description, Component component, boolean binding,
-			boolean service, String[] sharedLibraries) {
-		this.componentName = name;
-		this.container = container;
-		this.component = component;
-		this.description = description;
-		this.binding = binding;
-		this.service = service;
-		this.sharedLibraries = sharedLibraries;
-	}
+public class ComponentMBeanImpl
+    extends BaseLifeCycle
+    implements ComponentMBean
+{
+    private static final Logger LOG = LoggerFactory.getLogger( ComponentMBeanImpl.class );
 
-	public void dispose() {
-		ClassLoader cl = this.component.getClass().getClassLoader();
-		this.lifeCycle = null;
-		this.suManager = null;
-		this.component = null;
-	}
+    private boolean exchangeThrottling;
 
-	public ObjectName registerMBeans(ManagementContext ctx) throws JBIException {
-		try {
-			this.mBeanName = ctx.createObjectName(this);
-			ctx.registerMBean(this.mBeanName, this, ComponentMBean.class);
-			return this.mBeanName;
-		} catch (Exception e) {
-			String errorStr = "Failed to register MBeans";
-			LOG.error(errorStr, e);
-			throw new JBIException(errorStr, e);
-		}
-	}
+    private long throttlingTimeout = 100L;
 
-	public void unregisterMbeans(ManagementContext ctx) throws JBIException {
-		ctx.unregisterMBean(this.mBeanName);
-	}
+    private int throttlingInterval = 1;
 
-	public void setContext(ComponentContextImpl ctx) {
-		this.context = ctx;
-		this.stateFile = ctx.getEnvironment().getStateFile();
-	}
+    private Component component;
 
-	public ObjectName getExtensionMBeanName() {
-		if ((isInitialized()) || (isStarted()) || (isStopped())) {
-			return this.lifeCycle.getExtensionMBeanName();
-		}
-		return null;
-	}
+    private ComponentLifeCycle lifeCycle;
 
-	public String getName() {
-		return this.componentName.getName();
-	}
+    private ServiceUnitManager suManager;
 
-	public String getType() {
-		return "Component";
-	}
+    private ComponentContextImpl context;
 
-	public String getSubType() {
-		return "LifeCycle";
-	}
+    private ActivationSpec activationSpec;
 
-	public String getDescription() {
-		return this.description;
-	}
+    private ObjectName mBeanName;
 
-	public void init() throws JBIException {
-		LOG.info("Initializing component: " + getName());
-		if ((this.context != null) && (this.component != null)) {
-			DeliveryChannelImpl channel = new DeliveryChannelImpl(this);
-			channel.setContext(this.context);
-			this.context.setDeliveryChannel(channel);
-			super.init();
+    private final JBIContainer container;
 
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(
-						getLifeCycle().getClass().getClassLoader());
-				getLifeCycle().init(this.context);
-			} finally {
-				Thread.currentThread().setContextClassLoader(loader);
-			}
-		}
-	}
+    private final ComponentNameSpace componentName;
 
-	public void start() throws JBIException {
-		LOG.info("Starting component: " + getName());
-		try {
-			doStart();
-			persistRunningState();
-			getContainer().getRegistry().checkPendingAssemblies();
-		} catch (JBIException e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		} catch (RuntimeException e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		} catch (Error e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		}
-	}
+    private String description = "POJO Component";
 
-	public void stop() throws JBIException {
-		LOG.info("Stopping component: " + getName());
-		try {
-			doStop();
-			persistRunningState();
-		} catch (JBIException e) {
-			LOG.error("Could not stop component", e);
-			throw e;
-		} catch (RuntimeException e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		} catch (Error e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		}
-	}
+    private int queueCapacity = 1024;
 
-	public void shutDown() throws JBIException {
-		LOG.info("Shutting down component: " + getName());
-		try {
-			doShutDown();
-			persistRunningState();
-		} catch (JBIException e) {
-			LOG.error("Could not shutDown component", e);
-			throw e;
-		} catch (RuntimeException e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		} catch (Error e) {
-			LOG.error("Could not start component", e);
-			throw e;
-		}
-	}
+    private boolean pojo;
 
-	public void setShutdownStateAfterInstall() {
-		setCurrentState("Shutdown");
-	}
+    private final boolean binding;
 
-	public void doStart() throws JBIException {
-		if (isShutDown()) {
-			init();
-		}
-		if (!(isStarted())) {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(
-						getLifeCycle().getClass().getClassLoader());
-				getLifeCycle().start();
-			} finally {
-				Thread.currentThread().setContextClassLoader(loader);
-			}
-			super.start();
-			initServiceAssemblies();
-			startServiceAssemblies();
-		}
-	}
+    private final boolean service;
 
-	public void doStop() throws JBIException {
-		if ((isUnknown()) || (isStarted())) {
-			stopServiceAssemblies();
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(
-						getLifeCycle().getClass().getClassLoader());
-				getLifeCycle().stop();
-			} finally {
-				Thread.currentThread().setContextClassLoader(loader);
-			}
-			super.stop();
-		}
-	}
+    private File stateFile;
 
-	public void doShutDown() throws JBIException {
-		if ((!(isUnknown())) && (!(isShutDown()))) {
-			doStop();
-			shutDownServiceAssemblies();
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(
-						getLifeCycle().getClass().getClassLoader());
-				getLifeCycle().shutDown();
-			} finally {
-				Thread.currentThread().setContextClassLoader(loader);
-			}
-			if (getDeliveryChannel() != null) {
-				getDeliveryChannel().close();
-				setDeliveryChannel(null);
-			}
-			this.lifeCycle = null;
-			this.suManager = null;
-		}
-		super.shutDown();
-	}
+    private final String[] sharedLibraries;
 
-	public void setInitialRunningState() throws JBIException {
-		if (!(isPojo())) {
-			String name = getName();
-			String runningState = getRunningStateFromStore();
-			LOG.info("Setting running state for Component: " + name + " to "
-					+ runningState);
-			if (runningState != null)
-				if (runningState.equals("Started")) {
-					doStart();
-				} else if (runningState.equals("Stopped")) {
-					doStart();
-					doStop();
-				} else if (runningState.equals("Shutdown")) {
-					doShutDown();
-				}
-		}
-	}
+    public ComponentMBeanImpl( JBIContainer container, ComponentNameSpace name, String description,
+                               Component component, boolean binding, boolean service, String[] sharedLibraries )
+    {
+        componentName = name;
+        this.container = container;
+        this.component = component;
+        this.description = description;
+        this.binding = binding;
+        this.service = service;
+        this.sharedLibraries = sharedLibraries;
+    }
 
-	public void persistRunningState() {
-		if (!(isPojo())) {
-			String name = getName();
-			try {
-				String currentState = getCurrentState();
-				Properties props = new Properties();
-				props.setProperty("state", currentState);
-				XmlPersistenceSupport.write(this.stateFile, props);
-			} catch (IOException e) {
-				LOG.error(
-						"Failed to write current running state for Component: "
-								+ name, e);
-			}
-		}
-	}
+    public void dispose()
+    {
+        ClassLoader cl = component.getClass().getClassLoader();
+        lifeCycle = null;
+        suManager = null;
+        component = null;
+    }
 
-	public String getRunningStateFromStore() {
-		String result = "Unknown";
-		String name = getName();
-		try {
-			Properties props = (Properties) XmlPersistenceSupport
-					.read(this.stateFile);
-			result = props.getProperty("state", result);
-		} catch (Exception e) {
-			LOG.error("Failed to read running state for Component: " + name, e);
-		}
-		return result;
-	}
+    public ObjectName registerMBeans( ManagementContext ctx )
+        throws JBIException
+    {
+        try
+        {
+            mBeanName = ctx.createObjectName( this );
+            ctx.registerMBean( mBeanName, this, ComponentMBean.class );
+            return mBeanName;
+        }
+        catch ( Exception e )
+        {
+            String errorStr = "Failed to register MBeans";
+            LOG.error( errorStr, e );
+            throw new JBIException( errorStr, e );
+        }
+    }
 
-	public int getInboundQueueCapacity() {
-		return this.queueCapacity;
-	}
+    public void unregisterMbeans( ManagementContext ctx )
+        throws JBIException
+    {
+        ctx.unregisterMBean( mBeanName );
+    }
 
-	public void setInboundQueueCapacity(int value) {
-		if (getDeliveryChannel() != null) {
-			throw new IllegalStateException(
-					"The component must be shut down before changing queue capacity");
-		}
-		this.queueCapacity = value;
-	}
+    public void setContext( ComponentContextImpl ctx )
+    {
+        context = ctx;
+        stateFile = ctx.getEnvironment().getStateFile();
+    }
 
-	public DeliveryChannel getDeliveryChannel() {
-		return this.context.getDeliveryChannel();
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        if ( ( isInitialized() ) || ( isStarted() ) || ( isStopped() ) )
+        {
+            return lifeCycle.getExtensionMBeanName();
+        }
+        return null;
+    }
 
-	public void setDeliveryChannel(DeliveryChannel deliveryChannel) {
-		this.context.setDeliveryChannel(deliveryChannel);
-	}
+    @Override
+    public String getName()
+    {
+        return componentName.getName();
+    }
 
-	public ActivationSpec getActivationSpec() {
-		return this.activationSpec;
-	}
+    @Override
+    public String getType()
+    {
+        return "Component";
+    }
 
-	public boolean isPojo() {
-		return this.pojo;
-	}
+    @Override
+    public String getSubType()
+    {
+        return "LifeCycle";
+    }
 
-	public void setActivationSpec(ActivationSpec activationSpec) {
-		this.activationSpec = activationSpec;
-	}
+    @Override
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public boolean isExchangeThrottling() {
-		return this.exchangeThrottling;
-	}
+    @Override
+    public void init()
+        throws JBIException
+    {
+        LOG.info( "Initializing component: " + getName() );
+        if ( ( context != null ) && ( component != null ) )
+        {
+            DeliveryChannelImpl channel = new DeliveryChannelImpl( this );
+            channel.setContext( context );
+            context.setDeliveryChannel( channel );
+            super.init();
 
-	public void setExchangeThrottling(boolean value) {
-		this.exchangeThrottling = value;
-	}
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try
+            {
+                Thread.currentThread().setContextClassLoader( getLifeCycle().getClass().getClassLoader() );
+                getLifeCycle().init( context );
+            }
+            finally
+            {
+                Thread.currentThread().setContextClassLoader( loader );
+            }
+        }
+    }
 
-	public long getThrottlingTimeout() {
-		return this.throttlingTimeout;
-	}
+    @Override
+    public void start()
+        throws JBIException
+    {
+        LOG.info( "Starting component: " + getName() );
+        try
+        {
+            doStart();
+            persistRunningState();
+            getContainer().getRegistry().checkPendingAssemblies();
+        }
+        catch ( JBIException e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+        catch ( RuntimeException e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+        catch ( Error e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+    }
 
-	public void setThrottlingTimeout(long value) {
-		this.throttlingTimeout = value;
-	}
+    @Override
+    public void stop()
+        throws JBIException
+    {
+        LOG.info( "Stopping component: " + getName() );
+        try
+        {
+            doStop();
+            persistRunningState();
+        }
+        catch ( JBIException e )
+        {
+            LOG.error( "Could not stop component", e );
+            throw e;
+        }
+        catch ( RuntimeException e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+        catch ( Error e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+    }
 
-	public int getThrottlingInterval() {
-		return this.throttlingInterval;
-	}
+    @Override
+    public void shutDown()
+        throws JBIException
+    {
+        LOG.info( "Shutting down component: " + getName() );
+        try
+        {
+            doShutDown();
+            persistRunningState();
+        }
+        catch ( JBIException e )
+        {
+            LOG.error( "Could not shutDown component", e );
+            throw e;
+        }
+        catch ( RuntimeException e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+        catch ( Error e )
+        {
+            LOG.error( "Could not start component", e );
+            throw e;
+        }
+    }
 
-	public void setThrottlingInterval(int value) {
-		this.throttlingInterval = value;
-	}
+    public void setShutdownStateAfterInstall()
+    {
+        setCurrentState( "Shutdown" );
+    }
 
-	public MBeanAttributeInfo[] getAttributeInfos() throws JMException {
-		AttributeInfoHelper helper = new AttributeInfoHelper();
-		helper.addAttribute(getObjectToManage(), "componentType",
-				"the type of this component (BC, SE, POJO)");
-		helper.addAttribute(getObjectToManage(), "inboundQueueCapacity",
-				"capacity of the inbound queue");
-		helper.addAttribute(getObjectToManage(), "exchangeThrottling",
-				"apply throttling");
-		helper.addAttribute(getObjectToManage(), "throttlingTimeout",
-				"timeout for throttling");
-		helper.addAttribute(getObjectToManage(), "throttlingInterval",
-				"exchange intervals before throttling");
-		helper.addAttribute(getObjectToManage(), "extensionMBeanName",
-				"extension mbean name");
-		return AttributeInfoHelper.join(super.getAttributeInfos(),
-				helper.getAttributeInfos());
-	}
+    public void doStart()
+        throws JBIException
+    {
+        if ( isShutDown() )
+        {
+            init();
+        }
+        if ( !( isStarted() ) )
+        {
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try
+            {
+                Thread.currentThread().setContextClassLoader( getLifeCycle().getClass().getClassLoader() );
+                getLifeCycle().start();
+            }
+            finally
+            {
+                Thread.currentThread().setContextClassLoader( loader );
+            }
+            super.start();
+            initServiceAssemblies();
+            startServiceAssemblies();
+        }
+    }
 
-	public MBeanOperationInfo[] getOperationInfos() throws JMException {
-		OperationInfoHelper helper = new OperationInfoHelper();
-		return OperationInfoHelper.join(super.getOperationInfos(),
-				helper.getOperationInfos());
-	}
+    public void doStop()
+        throws JBIException
+    {
+        if ( ( isUnknown() ) || ( isStarted() ) )
+        {
+            stopServiceAssemblies();
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try
+            {
+                Thread.currentThread().setContextClassLoader( getLifeCycle().getClass().getClassLoader() );
+                getLifeCycle().stop();
+            }
+            finally
+            {
+                Thread.currentThread().setContextClassLoader( loader );
+            }
+            super.stop();
+        }
+    }
 
-	public void firePropertyChanged(String name, Object oldValue,
-			Object newValue) {
-		super.firePropertyChanged(name, oldValue, newValue);
-	}
+    public void doShutDown()
+        throws JBIException
+    {
+        if ( ( !( isUnknown() ) ) && ( !( isShutDown() ) ) )
+        {
+            doStop();
+            shutDownServiceAssemblies();
+            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            try
+            {
+                Thread.currentThread().setContextClassLoader( getLifeCycle().getClass().getClassLoader() );
+                getLifeCycle().shutDown();
+            }
+            finally
+            {
+                Thread.currentThread().setContextClassLoader( loader );
+            }
+            if ( getDeliveryChannel() != null )
+            {
+                getDeliveryChannel().close();
+                setDeliveryChannel( null );
+            }
+            lifeCycle = null;
+            suManager = null;
+        }
+        super.shutDown();
+    }
 
-	protected void initServiceAssemblies() throws DeploymentException {
-	}
+    public void setInitialRunningState()
+        throws JBIException
+    {
+        if ( !( isPojo() ) )
+        {
+            String name = getName();
+            String runningState = getRunningStateFromStore();
+            LOG.info( "Setting running state for Component: " + name + " to " + runningState );
+            if ( runningState != null )
+            {
+                if ( runningState.equals( "Started" ) )
+                {
+                    doStart();
+                }
+                else if ( runningState.equals( "Stopped" ) )
+                {
+                    doStart();
+                    doStop();
+                }
+                else if ( runningState.equals( "Shutdown" ) )
+                {
+                    doShutDown();
+                }
+            }
+        }
+    }
 
-	protected void startServiceAssemblies() throws DeploymentException {
-	}
+    public void persistRunningState()
+    {
+        if ( !( isPojo() ) )
+        {
+            String name = getName();
+            try
+            {
+                String currentState = getCurrentState();
+                Properties props = new Properties();
+                props.setProperty( "state", currentState );
+                XmlPersistenceSupport.write( stateFile, props );
+            }
+            catch ( IOException e )
+            {
+                LOG.error( "Failed to write current running state for Component: " + name, e );
+            }
+        }
+    }
 
-	protected void stopServiceAssemblies() throws DeploymentException {
-		Registry registry = getContainer().getRegistry();
-		String[] sas = registry
-				.getDeployedServiceAssembliesForComponent(getName());
-		for (int i = 0; i < sas.length; ++i) {
-			ServiceAssemblyLifeCycle sa = registry.getServiceAssembly(sas[i]);
-			if (!(sa.isStarted()))
-				continue;
-			try {
-				sa.stop(false, false);
-				registry.addPendingAssembly(sa);
-			} catch (Exception e) {
-				LOG.error("Error stopping service assembly " + sas[i]);
-			}
-		}
-	}
+    public String getRunningStateFromStore()
+    {
+        String result = "Unknown";
+        String name = getName();
+        try
+        {
+            Properties props = (Properties) XmlPersistenceSupport.read( stateFile );
+            result = props.getProperty( "state", result );
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Failed to read running state for Component: " + name, e );
+        }
+        return result;
+    }
 
-	protected void shutDownServiceAssemblies() throws DeploymentException {
-		Registry registry = getContainer().getRegistry();
-		String[] sas = registry
-				.getDeployedServiceAssembliesForComponent(getName());
-		for (int i = 0; i < sas.length; ++i) {
-			ServiceAssemblyLifeCycle sa = registry.getServiceAssembly(sas[i]);
-			if (!(sa.isStopped()))
-				continue;
-			try {
-				sa.shutDown(false);
-				registry.addPendingAssembly(sa);
-			} catch (Exception e) {
-				LOG.error("Error shutting down service assembly " + sas[i]);
-			}
-		}
-	}
+    public int getInboundQueueCapacity()
+    {
+        return queueCapacity;
+    }
 
-	public ComponentLifeCycle getLifeCycle() {
-		if (this.lifeCycle == null) {
-			this.lifeCycle = this.component.getLifeCycle();
-		}
-		return this.lifeCycle;
-	}
+    public void setInboundQueueCapacity( int value )
+    {
+        if ( getDeliveryChannel() != null )
+        {
+            throw new IllegalStateException( "The component must be shut down before changing queue capacity" );
+        }
+        queueCapacity = value;
+    }
 
-	public ServiceUnitManager getServiceUnitManager() {
-		if (this.suManager == null) {
-			this.suManager = this.component.getServiceUnitManager();
-		}
-		return this.suManager;
-	}
+    public DeliveryChannel getDeliveryChannel()
+    {
+        return context.getDeliveryChannel();
+    }
 
-	public JBIContainer getContainer() {
-		return this.container;
-	}
+    public void setDeliveryChannel( DeliveryChannel deliveryChannel )
+    {
+        context.setDeliveryChannel( deliveryChannel );
+    }
 
-	public Component getComponent() {
-		return this.component;
-	}
+    public ActivationSpec getActivationSpec()
+    {
+        return activationSpec;
+    }
 
-	public ComponentNameSpace getComponentNameSpace() {
-		return this.componentName;
-	}
+    public boolean isPojo()
+    {
+        return pojo;
+    }
 
-	public ComponentContextImpl getContext() {
-		return this.context;
-	}
+    public void setActivationSpec( ActivationSpec activationSpec )
+    {
+        this.activationSpec = activationSpec;
+    }
 
-	public ObjectName getMBeanName() {
-		return this.mBeanName;
-	}
+    @Override
+    public boolean isExchangeThrottling()
+    {
+        return exchangeThrottling;
+    }
 
-	public boolean isBinding() {
-		return this.binding;
-	}
+    @Override
+    public void setExchangeThrottling( boolean value )
+    {
+        exchangeThrottling = value;
+    }
 
-	public boolean isService() {
-		return this.service;
-	}
+    @Override
+    public long getThrottlingTimeout()
+    {
+        return throttlingTimeout;
+    }
 
-	public void setPojo(boolean pojo) {
-		this.pojo = pojo;
-	}
+    @Override
+    public void setThrottlingTimeout( long value )
+    {
+        throttlingTimeout = value;
+    }
 
-	public boolean isEngine() {
-		return this.service;
-	}
+    @Override
+    public int getThrottlingInterval()
+    {
+        return throttlingInterval;
+    }
 
-	public String[] getSharedLibraries() {
-		return this.sharedLibraries;
-	}
+    @Override
+    public void setThrottlingInterval( int value )
+    {
+        throttlingInterval = value;
+    }
 
-	public String getComponentType() {
-		return ((isEngine()) ? "service-engine"
-				: (isBinding()) ? "binding-component" : "pojo");
-	}
+    @Override
+    public MBeanAttributeInfo[] getAttributeInfos()
+        throws JMException
+    {
+        AttributeInfoHelper helper = new AttributeInfoHelper();
+        helper.addAttribute( getObjectToManage(), "componentType", "the type of this component (BC, SE, POJO)" );
+        helper.addAttribute( getObjectToManage(), "inboundQueueCapacity", "capacity of the inbound queue" );
+        helper.addAttribute( getObjectToManage(), "exchangeThrottling", "apply throttling" );
+        helper.addAttribute( getObjectToManage(), "throttlingTimeout", "timeout for throttling" );
+        helper.addAttribute( getObjectToManage(), "throttlingInterval", "exchange intervals before throttling" );
+        helper.addAttribute( getObjectToManage(), "extensionMBeanName", "extension mbean name" );
+        return AttributeInfoHelper.join( super.getAttributeInfos(), helper.getAttributeInfos() );
+    }
+
+    @Override
+    public MBeanOperationInfo[] getOperationInfos()
+        throws JMException
+    {
+        OperationInfoHelper helper = new OperationInfoHelper();
+        return OperationInfoHelper.join( super.getOperationInfos(), helper.getOperationInfos() );
+    }
+
+    @Override
+    public void firePropertyChanged( String name, Object oldValue, Object newValue )
+    {
+        super.firePropertyChanged( name, oldValue, newValue );
+    }
+
+    protected void initServiceAssemblies()
+        throws DeploymentException
+    {
+    }
+
+    protected void startServiceAssemblies()
+        throws DeploymentException
+    {
+    }
+
+    protected void stopServiceAssemblies()
+        throws DeploymentException
+    {
+        Registry registry = getContainer().getRegistry();
+        String[] sas = registry.getDeployedServiceAssembliesForComponent( getName() );
+        for ( int i = 0; i < sas.length; ++i )
+        {
+            ServiceAssemblyLifeCycle sa = registry.getServiceAssembly( sas[i] );
+            if ( !( sa.isStarted() ) )
+            {
+                continue;
+            }
+            try
+            {
+                sa.stop( false, false );
+                registry.addPendingAssembly( sa );
+            }
+            catch ( Exception e )
+            {
+                LOG.error( "Error stopping service assembly " + sas[i] );
+            }
+        }
+    }
+
+    protected void shutDownServiceAssemblies()
+        throws DeploymentException
+    {
+        Registry registry = getContainer().getRegistry();
+        String[] sas = registry.getDeployedServiceAssembliesForComponent( getName() );
+        for ( int i = 0; i < sas.length; ++i )
+        {
+            ServiceAssemblyLifeCycle sa = registry.getServiceAssembly( sas[i] );
+            if ( !( sa.isStopped() ) )
+            {
+                continue;
+            }
+            try
+            {
+                sa.shutDown( false );
+                registry.addPendingAssembly( sa );
+            }
+            catch ( Exception e )
+            {
+                LOG.error( "Error shutting down service assembly " + sas[i] );
+            }
+        }
+    }
+
+    public ComponentLifeCycle getLifeCycle()
+    {
+        if ( lifeCycle == null )
+        {
+            lifeCycle = component.getLifeCycle();
+        }
+        return lifeCycle;
+    }
+
+    public ServiceUnitManager getServiceUnitManager()
+    {
+        if ( suManager == null )
+        {
+            suManager = component.getServiceUnitManager();
+        }
+        return suManager;
+    }
+
+    public JBIContainer getContainer()
+    {
+        return container;
+    }
+
+    public Component getComponent()
+    {
+        return component;
+    }
+
+    public ComponentNameSpace getComponentNameSpace()
+    {
+        return componentName;
+    }
+
+    public ComponentContextImpl getContext()
+    {
+        return context;
+    }
+
+    public ObjectName getMBeanName()
+    {
+        return mBeanName;
+    }
+
+    public boolean isBinding()
+    {
+        return binding;
+    }
+
+    public boolean isService()
+    {
+        return service;
+    }
+
+    public void setPojo( boolean pojo )
+    {
+        this.pojo = pojo;
+    }
+
+    public boolean isEngine()
+    {
+        return service;
+    }
+
+    public String[] getSharedLibraries()
+    {
+        return sharedLibraries;
+    }
+
+    @Override
+    public String getComponentType()
+    {
+        return ( ( isEngine() ) ? "service-engine" : ( isBinding() ) ? "binding-component" : "pojo" );
+    }
 }

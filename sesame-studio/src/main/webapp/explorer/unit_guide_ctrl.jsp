@@ -1,9 +1,10 @@
-<%@page import="java.net.URLDecoder"%><%@page import="org.dom4j.DocumentHelper"%>
+<%@page import="java.net.URLDecoder"%><%@page
+	import="org.dom4j.DocumentHelper"%>
 <%@page import="org.dom4j.QName"%>
 <%@page import="org.xml.sax.InputSource"%>
 <%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
-<%@page import="com.ibm.wsdl.extensions.schema.*" %>
-<%@page import="com.ibm.wsdl.extensions.soap.*" %>
+<%@page import="com.ibm.wsdl.extensions.schema.*"%>
+<%@page import="com.ibm.wsdl.extensions.soap.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="java.lang.reflect.*"%>
@@ -16,11 +17,13 @@
 <%@page import="javax.xml.parsers.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="com.sanxing.sesame.transport.Protocols"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="java.net.URL"%>
 <%@page import="org.json.*"%>
 <%@page import="java.net.*"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%!private static final String BINDING_FILE = "binding.xml";
 
 private final Logger logger = LoggerFactory.getLogger(this.getClass());

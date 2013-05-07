@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://framework.sesame.org/bc/" xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="http://framework.sesame.org/bc/"
+	xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
 	<annotation>
-	  <documentation>sftp 组件</documentation>
+		<documentation>sftp 组件</documentation>
 	</annotation>
 	<element name="properties">
-        <annotation>
-           	<appinfo>
-           		<xtype>fieldset</xtype>
-           		<title>参数</title>
-           		<layout>column</layout>
-           		<border>true</border>
-           		<labelWidth>130</labelWidth>
-           	</appinfo>
-        </annotation>
-        <complexType>
+		<annotation>
+			<appinfo>
+				<xtype>fieldset</xtype>
+				<title>参数</title>
+				<layout>column</layout>
+				<border>true</border>
+				<labelWidth>130</labelWidth>
+			</appinfo>
+		</annotation>
+		<complexType>
 			<sequence>
 				<element name="column1">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-right:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-right:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
 							<element name="timeount" type="int">
@@ -50,29 +51,31 @@
 							<element name="setContextAction">
 								<annotation>
 									<documentation>是否设置交易码</documentation>
-								<appinfo>
+									<appinfo>
 										<editable>false</editable>
 										<forceSelection>false</forceSelection>
 										<value>true</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="false"></enumeration>
-									<enumeration value="true"></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="false"></enumeration>
+										<enumeration value="true"></enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 						</sequence>
 					</complexType>
 				</element>
 				<element name="column2">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-left:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-left:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
 							<element name="interval" type="int">
@@ -89,11 +92,13 @@
 										<value>GBK</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="GBK"></enumeration>
-									<enumeration value="UTF-8"></enumeration>
-									<enumeration value="ISO8859-1"></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="GBK"></enumeration>
+										<enumeration value="UTF-8"></enumeration>
+										<enumeration value="ISO8859-1"></enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 							<element name="password" type="string">
 								<annotation>

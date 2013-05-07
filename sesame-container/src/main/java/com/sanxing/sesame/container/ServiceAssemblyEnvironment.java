@@ -1,48 +1,62 @@
 package com.sanxing.sesame.container;
 
-import com.sanxing.sesame.util.FileUtil;
 import java.io.File;
 
-public class ServiceAssemblyEnvironment {
-	private File rootDir;
-	private File installDir;
-	private File susDir;
-	private File stateFile;
+import com.sanxing.sesame.util.FileUtil;
 
-	public File getInstallDir() {
-		return this.installDir;
-	}
+public class ServiceAssemblyEnvironment
+{
+    private File rootDir;
 
-	public void setInstallDir(File installRoot) {
-		this.installDir = installRoot;
-	}
+    private File installDir;
 
-	public File getSusDir() {
-		return this.susDir;
-	}
+    private File susDir;
 
-	public void setSusDir(File susRoot) {
-		this.susDir = susRoot;
-	}
+    private File stateFile;
 
-	public File getStateFile() {
-		return this.stateFile;
-	}
+    public File getInstallDir()
+    {
+        return installDir;
+    }
 
-	public void setStateFile(File stateFile) {
-		this.stateFile = stateFile;
-	}
+    public void setInstallDir( File installRoot )
+    {
+        installDir = installRoot;
+    }
 
-	public File getRootDir() {
-		return this.rootDir;
-	}
+    public File getSusDir()
+    {
+        return susDir;
+    }
 
-	public void setRootDir(File rootDir) {
-		this.rootDir = rootDir;
-	}
+    public void setSusDir( File susRoot )
+    {
+        susDir = susRoot;
+    }
 
-	public File getServiceUnitDirectory(String componentName, String suName) {
-		File compDir = FileUtil.getDirectoryPath(this.susDir, componentName);
-		return FileUtil.getDirectoryPath(compDir, suName);
-	}
+    public File getStateFile()
+    {
+        return stateFile;
+    }
+
+    public void setStateFile( File stateFile )
+    {
+        this.stateFile = stateFile;
+    }
+
+    public File getRootDir()
+    {
+        return rootDir;
+    }
+
+    public void setRootDir( File rootDir )
+    {
+        this.rootDir = rootDir;
+    }
+
+    public File getServiceUnitDirectory( String componentName, String suName )
+    {
+        File compDir = FileUtil.getDirectoryPath( susDir, componentName );
+        return FileUtil.getDirectoryPath( compDir, suName );
+    }
 }

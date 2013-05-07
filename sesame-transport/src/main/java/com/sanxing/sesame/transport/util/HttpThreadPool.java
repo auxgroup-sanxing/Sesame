@@ -1,35 +1,49 @@
 package com.sanxing.sesame.transport.util;
 
-import com.sanxing.sesame.executors.ExecutorFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import org.eclipse.jetty.util.thread.ThreadPool;
 
-public class HttpThreadPool implements ThreadPool {
-	private ExecutorService executor = ExecutorFactory.getFactory()
-			.createExecutor("transports.http");
+import com.sanxing.sesame.executors.ExecutorFactory;
 
-	public boolean dispatch(Runnable job) {
-		this.executor.execute(job);
-		return true;
-	}
+public class HttpThreadPool
+    implements ThreadPool
+{
+    private final ExecutorService executor = ExecutorFactory.getFactory().createExecutor( "transports.http" );
 
-	public void join() throws InterruptedException {
-		this.executor.awaitTermination(60L, TimeUnit.SECONDS);
-	}
+    @Override
+    public boolean dispatch( Runnable job )
+    {
+        executor.execute( job );
+        return true;
+    }
 
-	public int getThreads() {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor) this.executor;
-		return executor.getMaximumPoolSize();
-	}
+    @Override
+    public void join()
+        throws InterruptedException
+    {
+        executor.awaitTermination( 60L, TimeUnit.SECONDS );
+    }
 
-	public int getIdleThreads() {
-		ThreadPoolExecutor executor = (ThreadPoolExecutor) this.executor;
-		return (executor.getMaximumPoolSize() - executor.getActiveCount());
-	}
+    @Override
+    public int getThreads()
+    {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) this.executor;
+        return executor.getMaximumPoolSize();
+    }
 
-	public boolean isLowOnThreads() {
-		return false;
-	}
+    @Override
+    public int getIdleThreads()
+    {
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) this.executor;
+        return ( executor.getMaximumPoolSize() - executor.getActiveCount() );
+    }
+
+    @Override
+    public boolean isLowOnThreads()
+    {
+        return false;
+    }
 }

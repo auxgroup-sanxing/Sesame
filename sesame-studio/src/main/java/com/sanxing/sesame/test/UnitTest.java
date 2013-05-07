@@ -1,8 +1,5 @@
 package com.sanxing.sesame.test;
 
-import com.sanxing.studio.utils.SchemaUtil;
-import com.sanxing.sesame.component.ClientComponent;
-import com.sanxing.sesame.util.JdomUtil;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Reader;
@@ -12,6 +9,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.NormalizedMessage;
 import javax.wsdl.BindingOperation;
@@ -30,8 +28,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
 import org.jdom.Document;
@@ -39,198 +36,251 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class UnitTest {
-	private String serviceUnitRoot;
-	private String operationName;
-	private Definition definition;
-	private static Logger LOG = LoggerFactory.getLogger(UnitTest.class);
+import com.sanxing.sesame.component.ClientComponent;
+import com.sanxing.sesame.util.JdomUtil;
+import com.sanxing.studio.utils.SchemaUtil;
 
-	public UnitTest(String serviceUnitRoot, String operationName) {
-		this.operationName = operationName;
-		this.serviceUnitRoot = serviceUnitRoot;
-		this.definition = null;
-		init();
-	}
+public class UnitTest
+{
+    private final String serviceUnitRoot;
 
-	public String generateXmlData() {
-		String xml = "";
-		try {
-			String rootName = "";
-			Iterator itr;
-			Iterator iter;
-			if (this.definition != null) {
-				Map ptMap = this.definition.getAllPortTypes();
-				if (ptMap != null)
-					for (itr = ptMap.entrySet().iterator(); itr.hasNext();) {
-						if (!("".equals(rootName))) {
-							break;
-						}
-						Map.Entry entry = (Map.Entry) itr.next();
-						PortType portType = (PortType) entry.getValue();
-						List opList = portType.getOperations();
-						if ((opList != null) && (!(opList.isEmpty())))
-							for (iter = opList.iterator(); iter.hasNext();) {
-								Operation operation = (Operation) iter.next();
-								if (this.operationName.equals(operation
-										.getName())) {
-									Input input = operation.getInput();
-									if (input != null) {
-										Message message = input.getMessage();
-										rootName = (message != null) ? message
-												.getPart("parameters")
-												.getElementName()
-												.getLocalPart() : "";
+    private final String operationName;
 
-										break;
-									}
-								}
-							}
-					}
-			}
-			if ("".equals(rootName)) {
-				rootName = this.operationName;
-			}
+    private Definition definition;
 
-			File schemaFile = new File(this.serviceUnitRoot, this.operationName
-					+ ".xsd");
+    private static Logger LOG = LoggerFactory.getLogger( UnitTest.class );
 
-			File flowFile = new File(this.serviceUnitRoot, this.operationName
-					+ ".xml");
+    public UnitTest( String serviceUnitRoot, String operationName )
+    {
+        this.operationName = operationName;
+        this.serviceUnitRoot = serviceUnitRoot;
+        definition = null;
+        init();
+    }
 
-			Element xmlEle = null;
-			if (flowFile.exists()) {
-				SAXBuilder builder = new SAXBuilder();
-				Document xmldoc = builder.build(flowFile);
-				xmlEle = xmldoc.getRootElement();
-			}
+    public String generateXmlData()
+    {
+        String xml = "";
+        try
+        {
+            String rootName = "";
+            Iterator itr;
+            Iterator iter;
+            if ( definition != null )
+            {
+                Map ptMap = definition.getAllPortTypes();
+                if ( ptMap != null )
+                {
+                    for ( itr = ptMap.entrySet().iterator(); itr.hasNext(); )
+                    {
+                        if ( !( "".equals( rootName ) ) )
+                        {
+                            break;
+                        }
+                        Map.Entry entry = (Map.Entry) itr.next();
+                        PortType portType = (PortType) entry.getValue();
+                        List opList = portType.getOperations();
+                        if ( ( opList != null ) && ( !( opList.isEmpty() ) ) )
+                        {
+                            for ( iter = opList.iterator(); iter.hasNext(); )
+                            {
+                                Operation operation = (Operation) iter.next();
+                                if ( operationName.equals( operation.getName() ) )
+                                {
+                                    Input input = operation.getInput();
+                                    if ( input != null )
+                                    {
+                                        Message message = input.getMessage();
+                                        rootName =
+                                            ( message != null ) ? message.getPart( "parameters" ).getElementName().getLocalPart()
+                                                : "";
 
-			if (schemaFile.exists()) {
-				InputStream is = schemaFile.toURI().toURL().openStream();
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if ( "".equals( rootName ) )
+            {
+                rootName = operationName;
+            }
 
-				XmlSchemaCollection schemaCol = new XmlSchemaCollection();
-				StreamSource source = new StreamSource(is);
-				source.setSystemId(schemaFile.toURI().toString());
-				XmlSchema schema = schemaCol.read(source, null);
+            File schemaFile = new File( serviceUnitRoot, operationName + ".xsd" );
 
-				Element xmlEl = SchemaUtil.schema2Xml(schema, rootName, xmlEle);
-				Format format = Format.getPrettyFormat();
-				format.setIndent("  ");
-				XMLOutputter outter = new XMLOutputter(format);
-				xml = outter.outputString(xmlEl);
-			}
-		} catch (Exception e) {
-			xml = e.getMessage();
-		}
-		LOG.debug(xml);
-		return xml;
-	}
+            File flowFile = new File( serviceUnitRoot, operationName + ".xml" );
 
-	public String sendRecv(String input) {
-		try {
-			QName serviceName = getServiceName(this.operationName);
-			QName interfaceName = getInterfaceName(this.operationName);
-			LOG.debug("service: " + serviceName);
-			LOG.debug("interface: " + interfaceName);
+            Element xmlEle = null;
+            if ( flowFile.exists() )
+            {
+                SAXBuilder builder = new SAXBuilder();
+                Document xmldoc = builder.build( flowFile );
+                xmlEle = xmldoc.getRootElement();
+            }
 
-			SAXBuilder builder = new SAXBuilder();
-			Document doc = null;
-			Reader in = new StringReader(input);
-			doc = builder.build(in);
-			Source inputSource = JdomUtil.JDOMDocument2DOMSource(doc);
-			ClientComponent test_ac = ClientComponent.getInstance();
+            if ( schemaFile.exists() )
+            {
+                InputStream is = schemaFile.toURI().toURL().openStream();
 
-			MessageExchange exchange = test_ac.getExchangeFactory()
-					.createInOutExchange();
-			Long serial = Long.valueOf(DummySequencer.getSerial());
-			exchange.setProperty("sesame.exchange.platform.serial", serial);
-			exchange.setService(serviceName);
-			exchange.setInterfaceName(interfaceName);
-			exchange.setOperation(new QName(this.operationName));
-			NormalizedMessage msg = exchange.createMessage();
-			msg.setContent(inputSource);
-			exchange.setMessage(msg, "in");
-			test_ac.sendSync(exchange);
-			if (exchange.getError() != null) {
-				throw new RuntimeException(exchange.getError());
-			}
-			if (exchange.getFault() != null) {
-				Transformer transformer = TransformerFactory.newInstance()
-						.newTransformer();
-				transformer.setOutputProperty("indent", "yes");
-				StringWriter buffer = new StringWriter();
-				transformer.transform(exchange.getFault().getContent(),
-						new StreamResult(buffer));
-				throw new RuntimeException(buffer.toString());
-			}
+                XmlSchemaCollection schemaCol = new XmlSchemaCollection();
+                StreamSource source = new StreamSource( is );
+                source.setSystemId( schemaFile.toURI().toString() );
+                XmlSchema schema = schemaCol.read( source, null );
 
-			Source output = exchange.getMessage("out").getContent();
+                Element xmlEl = SchemaUtil.schema2Xml( schema, rootName, xmlEle );
+                Format format = Format.getPrettyFormat();
+                format.setIndent( "  " );
+                XMLOutputter outter = new XMLOutputter( format );
+                xml = outter.outputString( xmlEl );
+            }
+        }
+        catch ( Exception e )
+        {
+            xml = e.getMessage();
+        }
+        LOG.debug( xml );
+        return xml;
+    }
 
-			return JdomUtil.print(output);
-		} catch (Exception e) {
-			if (LOG.isDebugEnabled())
-				LOG.debug("SendRecv error: " + e.getMessage(), e);
-			return e.getMessage();
-		}
-	}
+    public String sendRecv( String input )
+    {
+        try
+        {
+            QName serviceName = getServiceName( operationName );
+            QName interfaceName = getInterfaceName( operationName );
+            LOG.debug( "service: " + serviceName );
+            LOG.debug( "interface: " + interfaceName );
 
-	private void init() {
-		try {
-			WSDLFactory wsdlFactory = WSDLFactory.newInstance();
-			WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
-			wsdlReader.setFeature("javax.wsdl.verbose", false);
-			wsdlReader.setFeature("javax.wsdl.importDocuments", true);
-			File wsdlFile = new File(this.serviceUnitRoot, "unit.wsdl");
-			this.definition = wsdlReader.readWSDL(wsdlFile.toURI().toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = null;
+            Reader in = new StringReader( input );
+            doc = builder.build( in );
+            Source inputSource = JdomUtil.JDOMDocument2DOMSource( doc );
+            ClientComponent test_ac = ClientComponent.getInstance();
 
-	private QName getServiceName(String operationName) {
-		Iterator itr;
-		Service service;
-		if (this.definition != null) {
-			Map sMap = this.definition.getServices();
-			if (sMap != null)
-				for (itr = sMap.entrySet().iterator(); itr.hasNext();) {
-					Map.Entry entry = (Map.Entry) itr.next();
-					service = (Service) entry.getValue();
-					Map pMap = service.getPorts();
-					if (pMap != null)
-						for (Port port : (Collection<Port>) pMap.values()) {
-							List bos = port.getBinding().getBindingOperations();
-							for (int index = 0; index < bos.size(); ++index) {
-								BindingOperation operation = (BindingOperation) bos
-										.get(index);
-								if (operationName.equals(operation.getName()))
-									return service.getQName();
-							}
-						}
-				}
-		}
-		return null;
-	}
+            MessageExchange exchange = test_ac.getExchangeFactory().createInOutExchange();
+            Long serial = Long.valueOf( DummySequencer.getSerial() );
+            exchange.setProperty( "sesame.exchange.platform.serial", serial );
+            exchange.setService( serviceName );
+            exchange.setInterfaceName( interfaceName );
+            exchange.setOperation( new QName( operationName ) );
+            NormalizedMessage msg = exchange.createMessage();
+            msg.setContent( inputSource );
+            exchange.setMessage( msg, "in" );
+            test_ac.sendSync( exchange );
+            if ( exchange.getError() != null )
+            {
+                throw new RuntimeException( exchange.getError() );
+            }
+            if ( exchange.getFault() != null )
+            {
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty( "indent", "yes" );
+                StringWriter buffer = new StringWriter();
+                transformer.transform( exchange.getFault().getContent(), new StreamResult( buffer ) );
+                throw new RuntimeException( buffer.toString() );
+            }
 
-	private QName getInterfaceName(String operationName) {
-		Iterator itr;
-		PortType portType;
-		Iterator iter;
-		if (this.definition != null) {
-			Map ptMap = this.definition.getAllPortTypes();
-			if (ptMap != null)
-				for (itr = ptMap.entrySet().iterator(); itr.hasNext();) {
-					Map.Entry entry = (Map.Entry) itr.next();
-					portType = (PortType) entry.getValue();
-					List opList = portType.getOperations();
-					if ((opList != null) && (!(opList.isEmpty())))
-						for (iter = opList.iterator(); iter.hasNext();) {
-							Operation operation = (Operation) iter.next();
-							if (operationName.equals(operation.getName()))
-								return portType.getQName();
-						}
-				}
-		}
-		return null;
-	}
+            Source output = exchange.getMessage( "out" ).getContent();
+
+            return JdomUtil.print( output );
+        }
+        catch ( Exception e )
+        {
+            if ( LOG.isDebugEnabled() )
+            {
+                LOG.debug( "SendRecv error: " + e.getMessage(), e );
+            }
+            return e.getMessage();
+        }
+    }
+
+    private void init()
+    {
+        try
+        {
+            WSDLFactory wsdlFactory = WSDLFactory.newInstance();
+            WSDLReader wsdlReader = wsdlFactory.newWSDLReader();
+            wsdlReader.setFeature( "javax.wsdl.verbose", false );
+            wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
+            File wsdlFile = new File( serviceUnitRoot, "unit.wsdl" );
+            definition = wsdlReader.readWSDL( wsdlFile.toURI().toString() );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private QName getServiceName( String operationName )
+    {
+        Iterator itr;
+        Service service;
+        if ( definition != null )
+        {
+            Map sMap = definition.getServices();
+            if ( sMap != null )
+            {
+                for ( itr = sMap.entrySet().iterator(); itr.hasNext(); )
+                {
+                    Map.Entry entry = (Map.Entry) itr.next();
+                    service = (Service) entry.getValue();
+                    Map pMap = service.getPorts();
+                    if ( pMap != null )
+                    {
+                        for ( Port port : (Collection<Port>) pMap.values() )
+                        {
+                            List bos = port.getBinding().getBindingOperations();
+                            for ( int index = 0; index < bos.size(); ++index )
+                            {
+                                BindingOperation operation = (BindingOperation) bos.get( index );
+                                if ( operationName.equals( operation.getName() ) )
+                                {
+                                    return service.getQName();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private QName getInterfaceName( String operationName )
+    {
+        Iterator itr;
+        PortType portType;
+        Iterator iter;
+        if ( definition != null )
+        {
+            Map ptMap = definition.getAllPortTypes();
+            if ( ptMap != null )
+            {
+                for ( itr = ptMap.entrySet().iterator(); itr.hasNext(); )
+                {
+                    Map.Entry entry = (Map.Entry) itr.next();
+                    portType = (PortType) entry.getValue();
+                    List opList = portType.getOperations();
+                    if ( ( opList != null ) && ( !( opList.isEmpty() ) ) )
+                    {
+                        for ( iter = opList.iterator(); iter.hasNext(); )
+                        {
+                            Operation operation = (Operation) iter.next();
+                            if ( operationName.equals( operation.getName() ) )
+                            {
+                                return portType.getQName();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
 }

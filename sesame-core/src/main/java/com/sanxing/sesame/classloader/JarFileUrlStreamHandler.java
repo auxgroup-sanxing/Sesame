@@ -10,84 +10,105 @@ import java.net.URLStreamHandler;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class JarFileUrlStreamHandler extends URLStreamHandler {
-	private URL expectedUrl;
-	private JarFile jarFile = null;
-	private JarEntry jarEntry = null;
+public class JarFileUrlStreamHandler
+    extends URLStreamHandler
+{
+    private URL expectedUrl;
 
-	public static URL createUrl(JarFile jarFile, JarEntry jarEntry)
-			throws MalformedURLException {
-		return createUrl(jarFile, jarEntry, new File(jarFile.getName()).toURL());
-	}
+    private JarFile jarFile = null;
 
-	public static URL createUrl(JarFile jarFile, JarEntry jarEntry,
-			URL codeSource) throws MalformedURLException {
-		JarFileUrlStreamHandler handler = new JarFileUrlStreamHandler(jarFile,
-				jarEntry);
-		URL url = new URL("jar", "", -1,
-				codeSource + "!/" + jarEntry.getName(), handler);
-		handler.setExpectedUrl(url);
-		return url;
-	}
+    private JarEntry jarEntry = null;
 
-	public JarFileUrlStreamHandler() {
-	}
+    public static URL createUrl( JarFile jarFile, JarEntry jarEntry )
+        throws MalformedURLException
+    {
+        return createUrl( jarFile, jarEntry, new File( jarFile.getName() ).toURL() );
+    }
 
-	public JarFileUrlStreamHandler(JarFile jarFile, JarEntry jarEntry) {
-		if (jarFile == null)
-			throw new NullPointerException("jarFile is null");
-		if (jarEntry == null)
-			throw new NullPointerException("jarEntry is null");
+    public static URL createUrl( JarFile jarFile, JarEntry jarEntry, URL codeSource )
+        throws MalformedURLException
+    {
+        JarFileUrlStreamHandler handler = new JarFileUrlStreamHandler( jarFile, jarEntry );
+        URL url = new URL( "jar", "", -1, codeSource + "!/" + jarEntry.getName(), handler );
+        handler.setExpectedUrl( url );
+        return url;
+    }
 
-		this.jarFile = jarFile;
-		this.jarEntry = jarEntry;
-	}
+    public JarFileUrlStreamHandler()
+    {
+    }
 
-	public void setExpectedUrl(URL expectedUrl) {
-		if (expectedUrl == null)
-			throw new NullPointerException("expectedUrl is null");
-		this.expectedUrl = expectedUrl;
-	}
+    public JarFileUrlStreamHandler( JarFile jarFile, JarEntry jarEntry )
+    {
+        if ( jarFile == null )
+        {
+            throw new NullPointerException( "jarFile is null" );
+        }
+        if ( jarEntry == null )
+        {
+            throw new NullPointerException( "jarEntry is null" );
+        }
 
-	public URLConnection openConnection(URL url) throws IOException {
-		if ((this.expectedUrl == null) || (!(this.expectedUrl.equals(url)))) {
-			if (!(url.getProtocol().equals("jar"))) {
-				throw new IllegalArgumentException("Unsupported protocol "
-						+ url.getProtocol());
-			}
+        this.jarFile = jarFile;
+        this.jarEntry = jarEntry;
+    }
 
-			String path = url.getPath();
-			String[] chunks = path.split("!/", 2);
+    public void setExpectedUrl( URL expectedUrl )
+    {
+        if ( expectedUrl == null )
+        {
+            throw new NullPointerException( "expectedUrl is null" );
+        }
+        this.expectedUrl = expectedUrl;
+    }
 
-			if (chunks.length == 1) {
-				throw new MalformedURLException(
-						"Url does not contain a '!' character: " + url);
-			}
+    @Override
+    public URLConnection openConnection( URL url )
+        throws IOException
+    {
+        if ( ( expectedUrl == null ) || ( !( expectedUrl.equals( url ) ) ) )
+        {
+            if ( !( url.getProtocol().equals( "jar" ) ) )
+            {
+                throw new IllegalArgumentException( "Unsupported protocol " + url.getProtocol() );
+            }
 
-			String file = chunks[0];
-			String entryPath = chunks[1];
+            String path = url.getPath();
+            String[] chunks = path.split( "!/", 2 );
 
-			if (!(file.startsWith("file:"))) {
-				return new URL(url.toExternalForm()).openConnection();
-			}
-			file = file.substring("file:".length());
+            if ( chunks.length == 1 )
+            {
+                throw new MalformedURLException( "Url does not contain a '!' character: " + url );
+            }
 
-			File f = new File(file);
-			if (f.exists()) {
-				this.jarFile = new JarFile(f);
-			}
+            String file = chunks[0];
+            String entryPath = chunks[1];
 
-			if (this.jarFile == null) {
-				throw new FileNotFoundException("Cannot find JarFile: " + file);
-			}
+            if ( !( file.startsWith( "file:" ) ) )
+            {
+                return new URL( url.toExternalForm() ).openConnection();
+            }
+            file = file.substring( "file:".length() );
 
-			this.jarEntry = this.jarFile.getJarEntry(entryPath);
-			if (this.jarEntry == null) {
-				throw new FileNotFoundException("Entry not found: " + url);
-			}
-			this.expectedUrl = url;
-		}
+            File f = new File( file );
+            if ( f.exists() )
+            {
+                jarFile = new JarFile( f );
+            }
 
-		return new JarFileUrlConnection(url, this.jarFile, this.jarEntry);
-	}
+            if ( jarFile == null )
+            {
+                throw new FileNotFoundException( "Cannot find JarFile: " + file );
+            }
+
+            jarEntry = jarFile.getJarEntry( entryPath );
+            if ( jarEntry == null )
+            {
+                throw new FileNotFoundException( "Entry not found: " + url );
+            }
+            expectedUrl = url;
+        }
+
+        return new JarFileUrlConnection( url, jarFile, jarEntry );
+    }
 }

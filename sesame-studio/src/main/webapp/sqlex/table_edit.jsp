@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=utf-8" errorPage="../exception.jsp"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	errorPage="../exception.jsp"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.studio.action.*"%>
 <%@page import="java.io.File"%>
@@ -53,13 +54,15 @@
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>表维护 - <%=tableName %></title>
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../package/expr/expression.js"></script>
 <script type="text/javascript" src="../package/secure/md5.js"></script>
 <script type="text/javascript" src="table_edit.js"></script>

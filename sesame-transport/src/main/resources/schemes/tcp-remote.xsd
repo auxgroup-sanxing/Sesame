@@ -1,29 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://framework.sesame.org/bc/" xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="http://framework.sesame.org/bc/"
+	xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
 	<annotation>
-	  <documentation>Socket外联通讯端子</documentation>
+		<documentation>Socket外联通讯端子</documentation>
 	</annotation>
 	<element name="properties">
-        <annotation>
-           	<appinfo>
-           		<xtype>fieldset</xtype>
-           		<title>参数</title>
-           		<layout>column</layout>
-           		<border>true</border>
-           		<labelWidth>130</labelWidth>
-           	</appinfo>
-        </annotation>
-        <complexType>
+		<annotation>
+			<appinfo>
+				<xtype>fieldset</xtype>
+				<title>参数</title>
+				<layout>column</layout>
+				<border>true</border>
+				<labelWidth>130</labelWidth>
+			</appinfo>
+		</annotation>
+		<complexType>
 			<sequence>
 				<element name="column1">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-right:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-right:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
 							<element name="keep-alive">
@@ -35,10 +36,20 @@
 										<value>false</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="false"><annotation><documentation>false-短连接</documentation></annotation></enumeration>
-									<enumeration value="true"><annotation><documentation>true-长连接</documentation></annotation></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="false">
+											<annotation>
+												<documentation>false-短连接</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="true">
+											<annotation>
+												<documentation>true-长连接</documentation>
+											</annotation>
+										</enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 							<element name="buffer_size" type="unsignedInt">
 								<annotation>
@@ -55,14 +66,40 @@
 										<value>0</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="0"><annotation><documentation>不指定长度</documentation></annotation></enumeration>
-									<enumeration value="2"><annotation><documentation>2-二进制编码</documentation></annotation></enumeration>
-									<enumeration value="10"><annotation><documentation>10-十进制字符</documentation></annotation></enumeration>
-									<enumeration value="16"><annotation><documentation>16-十六进制字符</documentation></annotation></enumeration>
-									<enumeration value="20"><annotation><documentation>20-压缩十进制</documentation></annotation></enumeration>
-									<enumeration value="26"><annotation><documentation>26-压缩十六进制</documentation></annotation></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="0">
+											<annotation>
+												<documentation>不指定长度</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="2">
+											<annotation>
+												<documentation>2-二进制编码</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="10">
+											<annotation>
+												<documentation>10-十进制字符</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="16">
+											<annotation>
+												<documentation>16-十六进制字符</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="20">
+											<annotation>
+												<documentation>20-压缩十进制</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="26">
+											<annotation>
+												<documentation>26-压缩十六进制</documentation>
+											</annotation>
+										</enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 							<element name="recv_len_begin" type="int">
 								<annotation>
@@ -87,24 +124,38 @@
 										<value>N</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="N"><annotation><documentation>N-无对齐</documentation></annotation></enumeration>
-									<enumeration value="L"><annotation><documentation>L-左对齐</documentation></annotation></enumeration>
-									<enumeration value="R"><annotation><documentation>R-右对齐</documentation></annotation></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="N">
+											<annotation>
+												<documentation>N-无对齐</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="L">
+											<annotation>
+												<documentation>L-左对齐</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="R">
+											<annotation>
+												<documentation>R-右对齐</documentation>
+											</annotation>
+										</enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 						</sequence>
 					</complexType>
 				</element>
 				<element name="column2">
-                 <annotation>
-                 	<appinfo>
-                 		<border>false</border>
-                 		<bodyStyle>padding-left:5px;</bodyStyle>
-                 		<columnWidth>0.5</columnWidth>
-           		        <labelWidth>130</labelWidth>
-                 	</appinfo>
-                 </annotation>
+					<annotation>
+						<appinfo>
+							<border>false</border>
+							<bodyStyle>padding-left:5px;</bodyStyle>
+							<columnWidth>0.5</columnWidth>
+							<labelWidth>130</labelWidth>
+						</appinfo>
+					</annotation>
 					<complexType>
 						<sequence>
 							<element name="timeout" type="int">
@@ -124,11 +175,13 @@
 										<value>GBK</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="GBK"></enumeration>
-									<enumeration value="UTF-8"></enumeration>
-									<enumeration value="ISO8859-1"></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="GBK"></enumeration>
+										<enumeration value="UTF-8"></enumeration>
+										<enumeration value="ISO8859-1"></enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 							<element name="len_include">
 								<annotation>
@@ -137,10 +190,20 @@
 										<value>E</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<enumeration value="E"><annotation><documentation>E-不包括长度本身</documentation></annotation></enumeration>
-									<enumeration value="I"><annotation><documentation>I-包括长度字节数</documentation></annotation></enumeration>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<enumeration value="E">
+											<annotation>
+												<documentation>E-不包括长度本身</documentation>
+											</annotation>
+										</enumeration>
+										<enumeration value="I">
+											<annotation>
+												<documentation>I-包括长度字节数</documentation>
+											</annotation>
+										</enumeration>
+									</restriction>
+								</simpleType>
 							</element>
 							<element name="recv_len_end" type="unsignedInt">
 								<annotation>
@@ -165,9 +228,15 @@
 										<value>20</value>
 									</appinfo>
 								</annotation>
-								<simpleType><restriction base="string">
-									<pattern value="^([0-9a-fA-F]{2})*$"><annotation><documentation>非法的16进制数据</documentation></annotation></pattern>
-								</restriction></simpleType>
+								<simpleType>
+									<restriction base="string">
+										<pattern value="^([0-9a-fA-F]{2})*$">
+											<annotation>
+												<documentation>非法的16进制数据</documentation>
+											</annotation>
+										</pattern>
+									</restriction>
+								</simpleType>
 							</element>
 						</sequence>
 					</complexType>

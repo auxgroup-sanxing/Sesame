@@ -1,12 +1,5 @@
 package com.sanxing.sesame.core;
 
-import com.sanxing.sesame.jmx.DefaultJMXServiceURLBuilder;
-import com.sanxing.sesame.jmx.JMXServiceURLBuilder;
-import com.sanxing.sesame.jmx.mbean.PlatformManager;
-import com.sanxing.sesame.jmx.mbean.PlatformManagerMBean;
-import com.sanxing.sesame.core.api.MBeanHelper;
-import com.sanxing.sesame.core.naming.JNDIUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -15,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.management.MBeanServer;
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerFactory;
@@ -35,216 +29,285 @@ import javax.naming.NamingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Platform {
-	private static final Logger LOG;
-	private Env env = new Env();
-	private MBeanServer mbeanServer;
-	private JMXConnectorServer connectorServer;
-	private JMXServiceURLBuilder jmxServiceURLBuilder;
-	private BaseServer server;
-	private InitialContext namingContext;
-	private transient Thread shutdownHook;
-	private static Platform instance;
+import com.sanxing.sesame.core.api.MBeanHelper;
+import com.sanxing.sesame.core.naming.JNDIUtil;
+import com.sanxing.sesame.jmx.DefaultJMXServiceURLBuilder;
+import com.sanxing.sesame.jmx.JMXServiceURLBuilder;
+import com.sanxing.sesame.jmx.mbean.PlatformManager;
+import com.sanxing.sesame.jmx.mbean.PlatformManagerMBean;
 
-	static {
-		parsePropertyFile(new File(System.getProperty("SESAME_HOME"),
-				"conf/system.properties"));
+public class Platform
+{
+    private static final Logger LOG;
 
-		Console.echo(System.getProperty("sesame.echo", "on").equals("on"));
-		
-		validateLicense();
+    private final Env env = new Env();
 
-		LOG = LoggerFactory.getLogger(Platform.class);
+    private MBeanServer mbeanServer;
 
-		instance = new Platform();
-	}
+    private JMXConnectorServer connectorServer;
 
-	private static void validateLicense() {
-	}
+    private JMXServiceURLBuilder jmxServiceURLBuilder;
 
-	private static void parsePropertyFile(File propertiesFile) {
-		Properties properites = new Properties();
-		try {
-			properites.load(new FileInputStream(propertiesFile));
-			Enumeration enumer = properites.propertyNames();
+    private BaseServer server;
 
-			while (enumer.hasMoreElements()) {
-				String key = (String) enumer.nextElement();
-				String value = properites.getProperty(key);
+    private final InitialContext namingContext;
 
-				if (System.getProperty(key) == null)
-					System.setProperty(key, value);
-			}
-		} catch (IOException e) {
-			System.out.println("Load conf/system.properties failure!");
-		}
-	}
+    private transient Thread shutdownHook;
 
-	private Platform() {
-		this.namingContext = JNDIUtil.getInitialContext();
+    private static Platform instance;
 
-		if (this.env.isAdmin()) {
-			this.server = new AdminServer();
-			this.env.setClustered(false);
-		} else {
-			this.env.setClustered(true);
-			this.server = new ManagedServer();
-		}
-	}
+    static
+    {
+        parsePropertyFile( new File( System.getProperty( "SESAME_HOME" ), "conf/system.properties" ) );
 
-	public static Platform getPlatform() {
-		return instance;
-	}
+        Console.echo( System.getProperty( "sesame.echo", "on" ).equals( "on" ) );
 
-	public static JMXServiceURLBuilder getJmxServiceURLBuilder() {
-		return instance.jmxServiceURLBuilder;
-	}
+        validateLicense();
 
-	private void start() {
-		try {
-			addShutdownHook();
-			this.jmxServiceURLBuilder = new DefaultJMXServiceURLBuilder(
-					this.server, this.env);
+        LOG = LoggerFactory.getLogger( Platform.class );
 
-			addSystemClusterListener();
-			this.server.start();
-			PlatformManagerMBean coreManager = new PlatformManager();
-			MBeanHelper.registerMBean(this.server.getMBeanServer(),
-					coreManager,
-					MBeanHelper.getPlatformMBeanName("core-manager"));
-			Console.echo("");
-			Console.echo("--------------------------------------------------------------------------------");
-			Console.echo("Sesame server (" + this.server.getName() + ") started");
-			Console.echo("--------------------------------------------------------------------------------");
-		} catch (Exception e) {
-			LOG.error("Start server err", e);
-		}
-	}
+        instance = new Platform();
+    }
 
-	private void stop() {
-		Console.echo("");
-		Console.echo("--------------------------------------------------------------------------------");
-		Console.echo("Shuting down " + this.server.getName() + "...");
-		Console.echo("--------------------------------------------------------------------------------");
-		this.server.shutdown();
-		try {
-			MBeanServer mbeanServer = this.server.getMBeanServer();
-			ObjectName objectName = new ObjectName(getEnv().getDomain() + ":*");
-			Set<ObjectName> set = mbeanServer.queryNames(objectName, null);
-			for (ObjectName name : set) {
-				try {
-					if (mbeanServer.isRegistered(name))
-						mbeanServer.unregisterMBean(name);
-				} catch (Throwable t) {
-					LOG.debug(name.toString());
-					if (LOG.isDebugEnabled())
-						LOG.debug(t.getMessage(), t);
-				}
-			}
-			LOG.debug("MBeans cleaned");
+    private static void validateLicense()
+    {
+    }
 
-			this.connectorServer.stop();
-		} catch (MalformedObjectNameException localMalformedObjectNameException) {
-		} catch (IOException e) {
-			if ((e.getCause() != null)
-					&& (e.getCause() instanceof ContextNotEmptyException)) {
-				try {
-					InitialContext context = getNamingContext();
-					NamingEnumeration enumer = context.list("");
-					while (enumer.hasMore()) {
-						NameClassPair pair = (NameClassPair) enumer.next();
-						context.unbind(pair.getName());
-					}
-				} catch (NamingException ex) {
-					LOG.debug(ex.getMessage(), ex);
-				}
-			} else {
-				LOG.error(e.getMessage(), e);
-			}
-		}
-		
-		Console.echo("--------------------------------------------------------------------------------");
-		Console.echo("Sesame server (" + this.server.getName() + ") shutdown complete");
-		Console.echo("--------------------------------------------------------------------------------");
-	}
+    private static void parsePropertyFile( File propertiesFile )
+    {
+        Properties properites = new Properties();
+        try
+        {
+            properites.load( new FileInputStream( propertiesFile ) );
+            Enumeration enumer = properites.propertyNames();
 
-	private void addShutdownHook() {
-		this.shutdownHook = new Thread("Sesame-Platform-ShutdownHook") {
-			public void run() {
-				Platform.this.stop();
-			}
-		};
-		this.shutdownHook.setDaemon(true);
+            while ( enumer.hasMoreElements() )
+            {
+                String key = (String) enumer.nextElement();
+                String value = properites.getProperty( key );
 
-		Runtime.getRuntime().addShutdownHook(this.shutdownHook);
-	}
+                if ( System.getProperty( key ) == null )
+                {
+                    System.setProperty( key, value );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            LOG.error( "Load conf/system.properties failure!" );
+        }
+    }
 
-	private void addSystemClusterListener() {
-	}
+    private Platform()
+    {
+        namingContext = JNDIUtil.getInitialContext();
 
-	void startJMXServer() {
-		try {
-			LOG.info("create mbean server on server ["
-					+ this.env.getServerName() + "]");
-			this.mbeanServer = MBeanServerFactory.createMBeanServer(this.env
-					.getDomain());
-			JMXServiceURL serviceURL = this.jmxServiceURLBuilder
-					.getLocalJMXServiceURL();
-			this.connectorServer = JMXConnectorServerFactory
-					.newJMXConnectorServer(serviceURL, null, this.mbeanServer);
-			this.connectorServer.start();
-			LOG.info("jmx connector server started @" + serviceURL.toString());
-		} catch (IOException e) {
-			if (LOG.isTraceEnabled()) {
-				LOG.trace(e.getMessage(), e);
-			} else
-				LOG.error(e.getMessage());
-		}
-	}
+        if ( env.isAdmin() )
+        {
+            server = new AdminServer();
+            env.setClustered( false );
+        }
+        else
+        {
+            env.setClustered( true );
+            server = new ManagedServer();
+        }
+    }
 
-	public static Env getEnv() {
-		return instance.env;
-	}
+    public static Platform getPlatform()
+    {
+        return instance;
+    }
 
-	public static MBeanServer getLocalMBeanServer() {
-		return instance.mbeanServer;
-	}
+    public static JMXServiceURLBuilder getJmxServiceURLBuilder()
+    {
+        return instance.jmxServiceURLBuilder;
+    }
 
-	public static void startup() {
-		instance.start();
-	}
+    private void start()
+    {
+        try
+        {
+            addShutdownHook();
+            jmxServiceURLBuilder = new DefaultJMXServiceURLBuilder( server, env );
 
-	public static void shutdown() {
-		instance.stop();
-	}
+            addSystemClusterListener();
+            server.start();
+            PlatformManagerMBean coreManager = new PlatformManager();
+            MBeanHelper.registerMBean( server.getMBeanServer(), coreManager,
+                MBeanHelper.getPlatformMBeanName( "core-manager" ) );
+            Console.echo( "" );
+            Console.echo( "--------------------------------------------------------------------------------" );
+            Console.echo( "Sesame server (" + server.getName() + ") started" );
+            Console.echo( "--------------------------------------------------------------------------------" );
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Start server err", e );
+        }
+    }
 
-	public <T> T getAdminMBean(Class<T> clazz, ObjectName name) {
-		try {
-			JMXServiceURLBuilder builder = this.jmxServiceURLBuilder;
-			JMXServiceURL adminServerURL = builder.getAdminJMXServiceURL();
-			Map environment = new HashMap();
-			environment.put("java.naming.factory.initial",
-					"com.sun.jndi.rmi.registry.RegistryContextFactory");
-			JMXConnector adminServerConnector = JMXConnectorFactory.connect(
-					adminServerURL, environment);
-			MBeanServerConnection adminServerCon = adminServerConnector
-					.getMBeanServerConnection();
+    private void stop()
+    {
+        Console.echo( "" );
+        Console.echo( "--------------------------------------------------------------------------------" );
+        Console.echo( "Shuting down " + server.getName() + "..." );
+        Console.echo( "--------------------------------------------------------------------------------" );
+        server.shutdown();
+        try
+        {
+            MBeanServer mbeanServer = server.getMBeanServer();
+            ObjectName objectName = new ObjectName( getEnv().getDomain() + ":*" );
+            Set<ObjectName> set = mbeanServer.queryNames( objectName, null );
+            for ( ObjectName name : set )
+            {
+                try
+                {
+                    if ( mbeanServer.isRegistered( name ) )
+                    {
+                        mbeanServer.unregisterMBean( name );
+                    }
+                }
+                catch ( Throwable t )
+                {
+                    LOG.debug( name.toString() );
+                    if ( LOG.isDebugEnabled() )
+                    {
+                        LOG.debug( t.getMessage(), t );
+                    }
+                }
+            }
+            LOG.debug( "MBeans cleaned" );
 
-			return MBeanServerInvocationHandler.newProxyInstance(
-					adminServerCon, name, clazz, false);
-		} catch (Exception e) {
-		}
-		return null;
-	}
+            connectorServer.stop();
+        }
+        catch ( MalformedObjectNameException localMalformedObjectNameException )
+        {
+        }
+        catch ( IOException e )
+        {
+            if ( ( e.getCause() != null ) && ( e.getCause() instanceof ContextNotEmptyException ) )
+            {
+                try
+                {
+                    InitialContext context = getNamingContext();
+                    NamingEnumeration enumer = context.list( "" );
+                    while ( enumer.hasMore() )
+                    {
+                        NameClassPair pair = (NameClassPair) enumer.next();
+                        context.unbind( pair.getName() );
+                    }
+                }
+                catch ( NamingException ex )
+                {
+                    LOG.debug( ex.getMessage(), ex );
+                }
+            }
+            else
+            {
+                LOG.error( e.getMessage(), e );
+            }
+        }
 
-	public static InitialContext getNamingContext() {
-		if (instance.namingContext == null) {
-			throw new RuntimeException("Naming context initialized failure");
-		}
-		return instance.namingContext;
-	}
+        Console.echo( "--------------------------------------------------------------------------------" );
+        Console.echo( "Sesame server (" + server.getName() + ") shutdown complete" );
+        Console.echo( "--------------------------------------------------------------------------------" );
+    }
 
-	public String toString() {
-		return this.env.toString();
-	}
+    private void addShutdownHook()
+    {
+        shutdownHook = new Thread( "Sesame-Platform-ShutdownHook" )
+        {
+            @Override
+            public void run()
+            {
+                Platform.this.stop();
+            }
+        };
+        shutdownHook.setDaemon( true );
+
+        Runtime.getRuntime().addShutdownHook( shutdownHook );
+    }
+
+    private void addSystemClusterListener()
+    {
+    }
+
+    void startJMXServer()
+    {
+        try
+        {
+            LOG.info( "create mbean server on server [" + env.getServerName() + "]" );
+            mbeanServer = MBeanServerFactory.createMBeanServer( env.getDomain() );
+            JMXServiceURL serviceURL = jmxServiceURLBuilder.getLocalJMXServiceURL();
+            connectorServer = JMXConnectorServerFactory.newJMXConnectorServer( serviceURL, null, mbeanServer );
+            connectorServer.start();
+            LOG.info( "jmx connector server started @" + serviceURL.toString() );
+        }
+        catch ( IOException e )
+        {
+            if ( LOG.isTraceEnabled() )
+            {
+                LOG.trace( e.getMessage(), e );
+            }
+            else
+            {
+                LOG.error( e.getMessage() );
+            }
+        }
+    }
+
+    public static Env getEnv()
+    {
+        return instance.env;
+    }
+
+    public static MBeanServer getLocalMBeanServer()
+    {
+        return instance.mbeanServer;
+    }
+
+    public static void startup()
+    {
+        instance.start();
+    }
+
+    public static void shutdown()
+    {
+        instance.stop();
+    }
+
+    public <T> T getAdminMBean( Class<T> clazz, ObjectName name )
+    {
+        try
+        {
+            JMXServiceURLBuilder builder = jmxServiceURLBuilder;
+            JMXServiceURL adminServerURL = builder.getAdminJMXServiceURL();
+            Map environment = new HashMap();
+            environment.put( "java.naming.factory.initial", "com.sun.jndi.rmi.registry.RegistryContextFactory" );
+            JMXConnector adminServerConnector = JMXConnectorFactory.connect( adminServerURL, environment );
+            MBeanServerConnection adminServerCon = adminServerConnector.getMBeanServerConnection();
+
+            return MBeanServerInvocationHandler.newProxyInstance( adminServerCon, name, clazz, false );
+        }
+        catch ( Exception e )
+        {
+        }
+        return null;
+    }
+
+    public static InitialContext getNamingContext()
+    {
+        if ( instance.namingContext == null )
+        {
+            throw new RuntimeException( "Naming context initialized failure" );
+        }
+        return instance.namingContext;
+    }
+
+    @Override
+    public String toString()
+    {
+        return env.toString();
+    }
 }

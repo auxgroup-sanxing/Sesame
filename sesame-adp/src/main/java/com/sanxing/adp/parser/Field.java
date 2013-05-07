@@ -1,22 +1,28 @@
 package com.sanxing.adp.parser;
 
-public class Field {
-	public String fieldName;
-	public String javaType;
+public class Field
+{
+    public String fieldName;
 
-	public String getFieldName() {
-		return this.fieldName;
-	}
+    public String javaType;
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
-	}
+    public String getFieldName()
+    {
+        return fieldName;
+    }
 
-	public String getJavaType() {
-		return this.javaType;
-	}
+    public void setFieldName( String fieldName )
+    {
+        this.fieldName = fieldName;
+    }
 
-	public void setJavaType(String javaType) {
-		this.javaType = javaType;
-	}
+    public String getJavaType()
+    {
+        return javaType;
+    }
+
+    public void setJavaType( String javaType )
+    {
+        this.javaType = javaType;
+    }
 }

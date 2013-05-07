@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@page import="java.util.*"%>
 <%
 String schema = request.getParameter("schema");
@@ -9,30 +10,32 @@ out.clear();
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0 plus SVG 1.1/EN" "http://www.w3.org/2002/04/xhtml-math-svg/xhtml-math-svg.dtd">
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>转换编辑器</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="../package/schema/resources/SchemaPanel.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../package/schema/resources/SchemaPanel.css" />
 <style type="text/css">
-html, body {
-font: normal 12px arial, verdana;
-	margin:0;
-	padding:0;
+html,body {
+	font: normal 12px arial, verdana;
+	margin: 0;
+	padding: 0;
 	border: 0 none;
 	overflow: auto;
-	cursor:default; 
-	width:100%; 
-	height:100%;
+	cursor: default;
+	width: 100%;
+	height: 100%;
 }
 
 .x-view-item {
-    padding: 2px; 
+	padding: 2px;
 }
 
 .x-view-selected {
-    background: #DFEDFF; 
-    border: 1px solid #6593cf; 
-    padding: 1px; 
+	background: #DFEDFF;
+	border: 1px solid #6593cf;
+	padding: 1px;
 }
 
 .x-form-item {
@@ -75,62 +78,70 @@ font: normal 12px arial, verdana;
 }
 
 .x-data-view {
-	background-color:white; 
-	border:1px solid #B5B8C8; 
-	cursor:default;
+	background-color: white;
+	border: 1px solid #B5B8C8;
+	cursor: default;
 	width: auto !important;
 	height: 150px !important;
-	overflow:auto; 
+	overflow: auto;
 }
 
 .x-column-tree .x-tree-node {
-    zoom:1;
-}
-.x-column-tree .x-tree-node-el {
-    /*border-bottom:1px solid #eee; borders? */
-    zoom:1;
-}
-.x-column-tree .x-tree-selected {
-    background: #d9e8fb;
-}
-.x-column-tree  .x-tree-node a {
-    line-height:18px;
-    vertical-align:middle;
-}
-.x-column-tree  .x-tree-node a span{
-	
-}
-.x-column-tree  .x-tree-node .x-tree-selected a span{
-	background:transparent;
-	color:#000;
-}
-.x-tree-col {
-    float:left;
-    overflow:hidden;
-    padding:0 1px;
-    zoom:1;
+	zoom: 1;
 }
 
-.x-tree-col-text, .x-tree-hd-text {
-    overflow:hidden;
-    -o-text-overflow: ellipsis;
+.x-column-tree .x-tree-node-el {
+	/*border-bottom:1px solid #eee; borders? */
+	zoom: 1;
+}
+
+.x-column-tree .x-tree-selected {
+	background: #d9e8fb;
+}
+
+.x-column-tree  .x-tree-node a {
+	line-height: 18px;
+	vertical-align: middle;
+}
+
+.x-column-tree  .x-tree-node a span {
+	
+}
+
+.x-column-tree  .x-tree-node .x-tree-selected a span {
+	background: transparent;
+	color: #000;
+}
+
+.x-tree-col {
+	float: left;
+	overflow: hidden;
+	padding: 0 1px;
+	zoom: 1;
+}
+
+.x-tree-col-text,.x-tree-hd-text {
+	overflow: hidden;
+	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
-    padding:3px 3px 3px 5px;
-    white-space: nowrap;
-    font:normal 12px arial, tahoma, helvetica, sans-serif;
+	padding: 3px 3px 3px 5px;
+	white-space: nowrap;
+	font: normal 12px arial, tahoma, helvetica, sans-serif;
 }
 
 .x-tree-headers {
-    background: #f9f9f9 url(../ext-Ajax/resources/images/default/grid/grid3-hrow.gif) repeat-x 0 bottom;
-	cursor:default;
-    zoom:1;
+	background: #f9f9f9
+		url(../ext-Ajax/resources/images/default/grid/grid3-hrow.gif) repeat-x
+		0 bottom;
+	cursor: default;
+	zoom: 1;
 }
 
 .x-tree-hd {
-    float:left;
-    overflow:hidden;
-    border-left:1px solid #eee;
-    border-right:1px solid #d0d0d0;
+	float: left;
+	overflow: hidden;
+	border-left: 1px solid #eee;
+	border-right: 1px solid #d0d0d0;
 }
 
 .rtl-tree {
@@ -190,12 +201,12 @@ font: normal 12px arial, verdana;
 .xslt-tree .x-tree-selected {
 	background-color: yellow;
 }
-
 </style>
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
 
-<script type="text/javascript" src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../package/schema/SchemaNodeUI.js"></script>
 <script type="text/javascript" src="../package/xml/xdom.js"></script>
 <script type="text/javascript" src="../package/dialog/dialog.js"></script>

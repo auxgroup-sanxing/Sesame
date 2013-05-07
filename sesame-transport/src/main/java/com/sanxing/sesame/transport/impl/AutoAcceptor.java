@@ -1,54 +1,75 @@
 package com.sanxing.sesame.transport.impl;
 
-import com.sanxing.sesame.binding.BindingException;
-import com.sanxing.sesame.binding.context.MessageContext;
-import com.sanxing.sesame.transport.quartz.SesameScheduler;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.quartz.SchedulerException;
 
-public class AutoAcceptor extends TaskTransport {
-	private static Logger LOG = LoggerFactory.getLogger(AutoAcceptor.class);
+import com.sanxing.sesame.binding.BindingException;
+import com.sanxing.sesame.binding.context.MessageContext;
+import com.sanxing.sesame.transport.quartz.SesameScheduler;
 
-	public void executeTask(Map<?, ?> properties) throws Exception {
-		LOG.debug("jobName is:" + properties.get("jobName"));
-		accept(new ByteArrayInputStream("".getBytes()), "getfile",
-				(String) properties.get("jobName"));
-	}
+public class AutoAcceptor
+    extends TaskTransport
+{
+    private static Logger LOG = LoggerFactory.getLogger( AutoAcceptor.class );
 
-	public void reply(MessageContext context) throws BindingException,
-			IOException {
-	}
+    @Override
+    public void executeTask( Map<?, ?> properties )
+        throws Exception
+    {
+        LOG.debug( "jobName is:" + properties.get( "jobName" ) );
+        accept( new ByteArrayInputStream( "".getBytes() ), "getfile", (String) properties.get( "jobName" ) );
+    }
 
-	public void close() throws IOException {
-		try {
-			this.scheduler.shutdown();
-			this.workExecutor.shutdown();
-			this.active = false;
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-			throw new IOException(e.getMessage());
-		}
-	}
+    @Override
+    public void reply( MessageContext context )
+        throws BindingException, IOException
+    {
+    }
 
-	public String getCharacterEncoding() {
-		return this.encoding;
-	}
+    @Override
+    public void close()
+        throws IOException
+    {
+        try
+        {
+            scheduler.shutdown();
+            workExecutor.shutdown();
+            active = false;
+        }
+        catch ( SchedulerException e )
+        {
+            e.printStackTrace();
+            throw new IOException( e.getMessage() );
+        }
+    }
 
-	public void open() throws IOException {
-		try {
-			this.active = true;
+    @Override
+    public String getCharacterEncoding()
+    {
+        return encoding;
+    }
 
-			this.scheduler = new SesameScheduler();
-			this.scheduler.init();
-			this.scheduler.start();
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-			throw new IOException(e.getMessage());
-		}
-	}
+    @Override
+    public void open()
+        throws IOException
+    {
+        try
+        {
+            active = true;
+
+            scheduler = new SesameScheduler();
+            scheduler.init();
+            scheduler.start();
+        }
+        catch ( SchedulerException e )
+        {
+            e.printStackTrace();
+            throw new IOException( e.getMessage() );
+        }
+    }
 }

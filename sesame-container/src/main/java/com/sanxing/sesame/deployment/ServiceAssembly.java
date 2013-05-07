@@ -1,46 +1,59 @@
 package com.sanxing.sesame.deployment;
 
-public class ServiceAssembly {
-	private Connections connections;
-	private Identification identification;
-	private ServiceUnit[] serviceUnits;
-	private String state;
+public class ServiceAssembly
+{
+    private Connections connections;
 
-	public ServiceAssembly() {
-		this.connections = new Connections();
+    private Identification identification;
 
-		this.state = "";
-	}
+    private ServiceUnit[] serviceUnits;
 
-	public Connections getConnections() {
-		return this.connections;
-	}
+    private String state;
 
-	public Identification getIdentification() {
-		return this.identification;
-	}
+    public ServiceAssembly()
+    {
+        connections = new Connections();
 
-	public ServiceUnit[] getServiceUnits() {
-		return this.serviceUnits;
-	}
+        state = "";
+    }
 
-	public String getState() {
-		return this.state;
-	}
+    public Connections getConnections()
+    {
+        return connections;
+    }
 
-	public void setConnections(Connections connections) {
-		this.connections = connections;
-	}
+    public Identification getIdentification()
+    {
+        return identification;
+    }
 
-	public void setIdentification(Identification identification) {
-		this.identification = identification;
-	}
+    public ServiceUnit[] getServiceUnits()
+    {
+        return serviceUnits;
+    }
 
-	public void setServiceUnits(ServiceUnit[] serviceUnits) {
-		this.serviceUnits = serviceUnits;
-	}
+    public String getState()
+    {
+        return state;
+    }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+    public void setConnections( Connections connections )
+    {
+        this.connections = connections;
+    }
+
+    public void setIdentification( Identification identification )
+    {
+        this.identification = identification;
+    }
+
+    public void setServiceUnits( ServiceUnit[] serviceUnits )
+    {
+        this.serviceUnits = serviceUnits;
+    }
+
+    public void setState( String state )
+    {
+        this.state = state;
+    }
 }

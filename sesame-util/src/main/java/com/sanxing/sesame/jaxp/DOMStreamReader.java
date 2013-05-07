@@ -1,216 +1,308 @@
 package com.sanxing.sesame.jaxp;
 
-import com.sanxing.sesame.util.FastStack;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-public abstract class DOMStreamReader implements XMLStreamReader {
-	protected Map properties = new HashMap();
+import com.sanxing.sesame.util.FastStack;
 
-	protected int currentEvent = 7;
+public abstract class DOMStreamReader
+    implements XMLStreamReader
+{
+    protected Map properties = new HashMap();
 
-	protected FastStack<ElementFrame> frames = new FastStack();
-	protected ElementFrame frame;
+    protected int currentEvent = 7;
 
-	public DOMStreamReader(ElementFrame frame) {
-		init(frame);
-	}
+    protected FastStack<ElementFrame> frames = new FastStack();
 
-	private void init(ElementFrame f) {
-		this.frame = f;
-		this.frames.push(this.frame);
-		newFrame(f);
-	}
+    protected ElementFrame frame;
 
-	protected ElementFrame getCurrentFrame() {
-		return this.frame;
-	}
+    public DOMStreamReader( ElementFrame frame )
+    {
+        init( frame );
+    }
 
-	public Object getProperty(String key) throws IllegalArgumentException {
-		return this.properties.get(key);
-	}
+    private void init( ElementFrame f )
+    {
+        frame = f;
+        frames.push( frame );
+        newFrame( f );
+    }
 
-	public int next() throws XMLStreamException {
-		if (this.frame.ended) {
-			this.frames.pop();
-			if (!(this.frames.empty())) {
-				this.frame = ((ElementFrame) this.frames.peek());
-			} else {
-				this.currentEvent = 8;
-				return this.currentEvent;
-			}
-		}
+    protected ElementFrame getCurrentFrame()
+    {
+        return frame;
+    }
 
-		if (!(this.frame.started)) {
-			this.frame.started = true;
-			this.currentEvent = 1;
-		} else if (this.frame.currentAttribute < getAttributeCount() - 1) {
-			this.frame.currentAttribute += 1;
-			this.currentEvent = 10;
-		} else if (this.frame.currentChild < getChildCount() - 1) {
-			this.frame.currentChild += 1;
+    @Override
+    public Object getProperty( String key )
+        throws IllegalArgumentException
+    {
+        return properties.get( key );
+    }
 
-			this.currentEvent = moveToChild(this.frame.currentChild);
+    @Override
+    public int next()
+        throws XMLStreamException
+    {
+        if ( frame.ended )
+        {
+            frames.pop();
+            if ( !( frames.empty() ) )
+            {
+                frame = frames.peek();
+            }
+            else
+            {
+                currentEvent = 8;
+                return currentEvent;
+            }
+        }
 
-			if (this.currentEvent == 1) {
-				ElementFrame newFrame = getChildFrame(this.frame.currentChild);
-				newFrame.started = true;
-				this.frame = newFrame;
-				this.frames.push(this.frame);
-				this.currentEvent = 1;
+        if ( !( frame.started ) )
+        {
+            frame.started = true;
+            currentEvent = 1;
+        }
+        else if ( frame.currentAttribute < getAttributeCount() - 1 )
+        {
+            frame.currentAttribute += 1;
+            currentEvent = 10;
+        }
+        else if ( frame.currentChild < getChildCount() - 1 )
+        {
+            frame.currentChild += 1;
 
-				newFrame(newFrame);
-			}
-		} else {
-			this.frame.ended = true;
-			this.currentEvent = 2;
-			endElement();
-		}
-		return this.currentEvent;
-	}
+            currentEvent = moveToChild( frame.currentChild );
 
-	protected void newFrame(ElementFrame newFrame) {
-	}
+            if ( currentEvent == 1 )
+            {
+                ElementFrame newFrame = getChildFrame( frame.currentChild );
+                newFrame.started = true;
+                frame = newFrame;
+                frames.push( frame );
+                currentEvent = 1;
 
-	protected void endElement() {
-	}
+                newFrame( newFrame );
+            }
+        }
+        else
+        {
+            frame.ended = true;
+            currentEvent = 2;
+            endElement();
+        }
+        return currentEvent;
+    }
 
-	protected abstract int moveToChild(int paramInt);
+    protected void newFrame( ElementFrame newFrame )
+    {
+    }
 
-	protected abstract ElementFrame getChildFrame(int paramInt);
+    protected void endElement()
+    {
+    }
 
-	protected abstract int getChildCount();
+    protected abstract int moveToChild( int paramInt );
 
-	public void require(int arg0, String arg1, String arg2)
-			throws XMLStreamException {
-		throw new UnsupportedOperationException();
-	}
+    protected abstract ElementFrame getChildFrame( int paramInt );
 
-	public abstract String getElementText() throws XMLStreamException;
+    protected abstract int getChildCount();
 
-	public int nextTag() throws XMLStreamException {
-		while (hasNext()) {
-			if (1 == next()) {
-				return 1;
-			}
-		}
+    @Override
+    public void require( int arg0, String arg1, String arg2 )
+        throws XMLStreamException
+    {
+        throw new UnsupportedOperationException();
+    }
 
-		return this.currentEvent;
-	}
+    @Override
+    public abstract String getElementText()
+        throws XMLStreamException;
 
-	public boolean hasNext() throws XMLStreamException {
-		return ((this.frames.size() != 0) || (!(this.frame.ended)));
-	}
+    @Override
+    public int nextTag()
+        throws XMLStreamException
+    {
+        while ( hasNext() )
+        {
+            if ( 1 == next() )
+            {
+                return 1;
+            }
+        }
 
-	public void close() throws XMLStreamException {
-	}
+        return currentEvent;
+    }
 
-	public abstract String getNamespaceURI(String paramString);
+    @Override
+    public boolean hasNext()
+        throws XMLStreamException
+    {
+        return ( ( frames.size() != 0 ) || ( !( frame.ended ) ) );
+    }
 
-	public boolean isStartElement() {
-		return (this.currentEvent == 1);
-	}
+    @Override
+    public void close()
+        throws XMLStreamException
+    {
+    }
 
-	public boolean isEndElement() {
-		return (this.currentEvent == 2);
-	}
+    @Override
+    public abstract String getNamespaceURI( String paramString );
 
-	public boolean isCharacters() {
-		return (this.currentEvent == 4);
-	}
+    @Override
+    public boolean isStartElement()
+    {
+        return ( currentEvent == 1 );
+    }
 
-	public boolean isWhiteSpace() {
-		return (this.currentEvent == 6);
-	}
+    @Override
+    public boolean isEndElement()
+    {
+        return ( currentEvent == 2 );
+    }
 
-	public int getEventType() {
-		return this.currentEvent;
-	}
+    @Override
+    public boolean isCharacters()
+    {
+        return ( currentEvent == 4 );
+    }
 
-	public int getTextCharacters(int sourceStart, char[] target,
-			int targetStart, int length) throws XMLStreamException {
-		char[] src = getText().toCharArray();
+    @Override
+    public boolean isWhiteSpace()
+    {
+        return ( currentEvent == 6 );
+    }
 
-		if (sourceStart + length >= src.length) {
-			length = src.length - sourceStart;
-		}
+    @Override
+    public int getEventType()
+    {
+        return currentEvent;
+    }
 
-		for (int i = 0; i < length; ++i) {
-			target[(targetStart + i)] = src[(i + sourceStart)];
-		}
+    @Override
+    public int getTextCharacters( int sourceStart, char[] target, int targetStart, int length )
+        throws XMLStreamException
+    {
+        char[] src = getText().toCharArray();
 
-		return length;
-	}
+        if ( sourceStart + length >= src.length )
+        {
+            length = src.length - sourceStart;
+        }
 
-	public boolean hasText() {
-		return ((this.currentEvent == 4) || (this.currentEvent == 11)
-				|| (this.currentEvent == 9) || (this.currentEvent == 5) || (this.currentEvent == 6));
-	}
+        for ( int i = 0; i < length; ++i )
+        {
+            target[( targetStart + i )] = src[( i + sourceStart )];
+        }
 
-	public Location getLocation() {
-		return new Location() {
-			public int getCharacterOffset() {
-				return 0;
-			}
+        return length;
+    }
 
-			public int getColumnNumber() {
-				return 0;
-			}
+    @Override
+    public boolean hasText()
+    {
+        return ( ( currentEvent == 4 ) || ( currentEvent == 11 ) || ( currentEvent == 9 ) || ( currentEvent == 5 ) || ( currentEvent == 6 ) );
+    }
 
-			public int getLineNumber() {
-				return 0;
-			}
+    @Override
+    public Location getLocation()
+    {
+        return new Location()
+        {
+            @Override
+            public int getCharacterOffset()
+            {
+                return 0;
+            }
 
-			public String getPublicId() {
-				return null;
-			}
+            @Override
+            public int getColumnNumber()
+            {
+                return 0;
+            }
 
-			public String getSystemId() {
-				return null;
-			}
-		};
-	}
+            @Override
+            public int getLineNumber()
+            {
+                return 0;
+            }
 
-	public boolean hasName() {
-		return ((this.currentEvent == 1) || (this.currentEvent == 2));
-	}
+            @Override
+            public String getPublicId()
+            {
+                return null;
+            }
 
-	public String getVersion() {
-		return null;
-	}
+            @Override
+            public String getSystemId()
+            {
+                return null;
+            }
+        };
+    }
 
-	public boolean isStandalone() {
-		return false;
-	}
+    @Override
+    public boolean hasName()
+    {
+        return ( ( currentEvent == 1 ) || ( currentEvent == 2 ) );
+    }
 
-	public boolean standaloneSet() {
-		return false;
-	}
+    @Override
+    public String getVersion()
+    {
+        return null;
+    }
 
-	public String getCharacterEncodingScheme() {
-		return null;
-	}
+    @Override
+    public boolean isStandalone()
+    {
+        return false;
+    }
 
-	public static class ElementFrame {
-		Object element;
-		boolean started;
-		boolean ended;
-		int currentChild = -1;
-		int currentAttribute = -1;
-		int currentElement = -1;
-		List<String> uris;
-		List<String> prefixes;
-		List attributes;
-		final ElementFrame parent;
+    @Override
+    public boolean standaloneSet()
+    {
+        return false;
+    }
 
-		public ElementFrame(Object element, ElementFrame parent) {
-			this.element = element;
-			this.parent = parent;
-		}
-	}
+    @Override
+    public String getCharacterEncodingScheme()
+    {
+        return null;
+    }
+
+    public static class ElementFrame
+    {
+        Object element;
+
+        boolean started;
+
+        boolean ended;
+
+        int currentChild = -1;
+
+        int currentAttribute = -1;
+
+        int currentElement = -1;
+
+        List<String> uris;
+
+        List<String> prefixes;
+
+        List attributes;
+
+        final ElementFrame parent;
+
+        public ElementFrame( Object element, ElementFrame parent )
+        {
+            this.element = element;
+            this.parent = parent;
+        }
+    }
 }

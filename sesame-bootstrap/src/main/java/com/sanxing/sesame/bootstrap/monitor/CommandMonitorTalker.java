@@ -27,20 +27,18 @@ public class CommandMonitorTalker
     private static final int FIVE_SECONDS = 5000;
 
     /**
-     * Host to send commands to.
-     * Never null.
+     * Host to send commands to. Never null.
      */
     private final String host;
 
     /**
-     * Port on host to send commands to.
-     * Bigger then 1.
+     * Port on host to send commands to. Bigger then 1.
      */
     private final int port;
 
     /**
      * Constructor.
-     *
+     * 
      * @param host to send commands to. Cannot be null.
      * @param port on host to send commands to. Must be bigger then 1.
      */
@@ -60,7 +58,7 @@ public class CommandMonitorTalker
 
     /**
      * Sends a command to a {@link CommandMonitorThread} on configured host/port.
-     *
+     * 
      * @param command to send. Cannot be null.
      * @throws Exception Re-thrown if sending command fails
      */
@@ -73,7 +71,7 @@ public class CommandMonitorTalker
     /**
      * Sends a command to a {@link CommandMonitorThread} on configured host/port, timing out after the specified number
      * of milliseconds.
-     *
+     * 
      * @param command to send. Cannot be null.
      * @param timeout number of milliseconds after which sending the command should timeout
      * @throws Exception Re-thrown if sending command fails
@@ -105,7 +103,7 @@ public class CommandMonitorTalker
 
     /**
      * Returns the host to send commands to.
-     *
+     * 
      * @return host to send commands to. Never null.
      */
     public String getHost()
@@ -115,7 +113,7 @@ public class CommandMonitorTalker
 
     /**
      * Returns the port on host to send commands to.
-     *
+     * 
      * @return port on host to send commands to. Bigger then 1.
      */
     public String getPort()

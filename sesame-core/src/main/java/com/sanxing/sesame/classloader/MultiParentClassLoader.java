@@ -11,306 +11,378 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 
-public class MultiParentClassLoader extends URLClassLoader {
-	private final ClassLoader[] parents;
-	private final boolean inverseClassLoading;
-	private final String[] hiddenClasses;
-	private final String[] nonOverridableClasses;
-	private final String[] hiddenResources;
-	private final String[] nonOverridableResources;
-	private boolean destroyed;
+public class MultiParentClassLoader
+    extends URLClassLoader
+{
+    private final ClassLoader[] parents;
 
-	public MultiParentClassLoader(URL[] urls) {
-		super(urls);
+    private final boolean inverseClassLoading;
 
-		this.destroyed = false;
+    private final String[] hiddenClasses;
 
-		this.parents = new ClassLoader[] { ClassLoader.getSystemClassLoader() };
-		this.inverseClassLoading = false;
-		this.hiddenClasses = new String[0];
-		this.nonOverridableClasses = new String[0];
-		this.hiddenResources = new String[0];
-		this.nonOverridableResources = new String[0];
-	}
+    private final String[] nonOverridableClasses;
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent) {
-		this(urls, parent, new ClassLoader[] { parent });
-	}
+    private final String[] hiddenResources;
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent,
-			boolean inverseClassLoading, String[] hiddenClasses,
-			String[] nonOverridableClasses) {
-		this(urls, parent, new ClassLoader[] { parent }, inverseClassLoading,
-				hiddenClasses, nonOverridableClasses);
-	}
+    private final String[] nonOverridableResources;
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent,
-			URLStreamHandlerFactory factory) {
-		this(urls, new ClassLoader[] { parent }, factory);
-	}
+    private boolean destroyed;
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent, ClassLoader[] parents) {
-		super(urls, parent);
+    public MultiParentClassLoader( URL[] urls )
+    {
+        super( urls );
 
-		this.destroyed = false;
+        destroyed = false;
 
-		this.parents = copyParents(parents);
-		this.inverseClassLoading = false;
-		this.hiddenClasses = new String[0];
-		this.nonOverridableClasses = new String[0];
-		this.hiddenResources = new String[0];
-		this.nonOverridableResources = new String[0];
-	}
+        parents = new ClassLoader[] { ClassLoader.getSystemClassLoader() };
+        inverseClassLoading = false;
+        hiddenClasses = new String[0];
+        nonOverridableClasses = new String[0];
+        hiddenResources = new String[0];
+        nonOverridableResources = new String[0];
+    }
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent, ClassLoader[] parents,
-			boolean inverseClassLoading, Collection hiddenClasses,
-			Collection nonOverridableClasses) {
-		this(urls, parent, parents, inverseClassLoading, (String[]) hiddenClasses
-				.toArray(new String[hiddenClasses.size()]),
-				(String[]) nonOverridableClasses
-						.toArray(new String[nonOverridableClasses.size()]));
-	}
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent )
+    {
+        this( urls, parent, new ClassLoader[] { parent } );
+    }
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader parent, ClassLoader[] parents,
-			boolean inverseClassLoading, String[] hiddenClasses,
-			String[] nonOverridableClasses) {
-		super(urls, parent);
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent, boolean inverseClassLoading, String[] hiddenClasses,
+                                   String[] nonOverridableClasses )
+    {
+        this( urls, parent, new ClassLoader[] { parent }, inverseClassLoading, hiddenClasses, nonOverridableClasses );
+    }
 
-		this.destroyed = false;
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent, URLStreamHandlerFactory factory )
+    {
+        this( urls, new ClassLoader[] { parent }, factory );
+    }
 
-		this.parents = copyParents(parents);
-		this.inverseClassLoading = inverseClassLoading;
-		this.hiddenClasses = hiddenClasses;
-		this.nonOverridableClasses = nonOverridableClasses;
-		this.hiddenResources = toResources(hiddenClasses);
-		this.nonOverridableResources = toResources(nonOverridableClasses);
-	}
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent, ClassLoader[] parents )
+    {
+        super( urls, parent );
 
-	public MultiParentClassLoader(MultiParentClassLoader source) {
-		this(source.getURLs(), ClassLoader.getSystemClassLoader(), deepCopyParents(source.parents),
-				source.inverseClassLoading, source.hiddenClasses,
-				source.nonOverridableClasses);
-	}
+        destroyed = false;
 
-	static ClassLoader copy(ClassLoader source) {
-		if (source instanceof MultiParentClassLoader)
-			return new MultiParentClassLoader((MultiParentClassLoader) source);
-		if (source instanceof URLClassLoader) {
-			return new URLClassLoader(((URLClassLoader) source).getURLs(),
-					source.getParent());
-		}
-		return new URLClassLoader(new URL[0], source);
-	}
+        this.parents = copyParents( parents );
+        inverseClassLoading = false;
+        hiddenClasses = new String[0];
+        nonOverridableClasses = new String[0];
+        hiddenResources = new String[0];
+        nonOverridableResources = new String[0];
+    }
 
-	ClassLoader copy() {
-		return copy(this);
-	}
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent, ClassLoader[] parents, boolean inverseClassLoading,
+                                   Collection hiddenClasses, Collection nonOverridableClasses )
+    {
+        this( urls, parent, parents, inverseClassLoading,
+            (String[]) hiddenClasses.toArray( new String[hiddenClasses.size()] ),
+            (String[]) nonOverridableClasses.toArray( new String[nonOverridableClasses.size()] ) );
+    }
 
-	private String[] toResources(String[] classes) {
-		String[] resources = new String[classes.length];
-		for (int i = 0; i < classes.length; ++i) {
-			String className = classes[i];
-			resources[i] = className.replace('.', '/');
-		}
-		return resources;
-	}
+    public MultiParentClassLoader( URL[] urls, ClassLoader parent, ClassLoader[] parents, boolean inverseClassLoading,
+                                   String[] hiddenClasses, String[] nonOverridableClasses )
+    {
+        super( urls, parent );
 
-	public MultiParentClassLoader(URL[] urls, ClassLoader[] parents,
-			URLStreamHandlerFactory factory) {
-		super(urls, parents[0], factory);
+        destroyed = false;
 
-		this.destroyed = false;
+        this.parents = copyParents( parents );
+        this.inverseClassLoading = inverseClassLoading;
+        this.hiddenClasses = hiddenClasses;
+        this.nonOverridableClasses = nonOverridableClasses;
+        hiddenResources = toResources( hiddenClasses );
+        nonOverridableResources = toResources( nonOverridableClasses );
+    }
 
-		this.parents = copyParents(parents);
-		this.inverseClassLoading = false;
-		this.hiddenClasses = new String[0];
-		this.nonOverridableClasses = new String[0];
-		this.hiddenResources = new String[0];
-		this.nonOverridableResources = new String[0];
-	}
+    public MultiParentClassLoader( MultiParentClassLoader source )
+    {
+        this( source.getURLs(), ClassLoader.getSystemClassLoader(), deepCopyParents( source.parents ),
+            source.inverseClassLoading, source.hiddenClasses, source.nonOverridableClasses );
+    }
 
-	private static ClassLoader[] copyParents(ClassLoader[] parents) {
-		ClassLoader[] newParentsArray = new ClassLoader[parents.length];
-		for (int i = 0; i < parents.length; ++i) {
-			ClassLoader parent = parents[i];
-			if (parent == null) {
-				throw new RuntimeException("parent[" + i + "] is null");
-			}
-			newParentsArray[i] = parent;
-		}
-		return newParentsArray;
-	}
+    static ClassLoader copy( ClassLoader source )
+    {
+        if ( source instanceof MultiParentClassLoader )
+        {
+            return new MultiParentClassLoader( (MultiParentClassLoader) source );
+        }
+        if ( source instanceof URLClassLoader )
+        {
+            return new URLClassLoader( ( (URLClassLoader) source ).getURLs(), source.getParent() );
+        }
+        return new URLClassLoader( new URL[0], source );
+    }
 
-	private static ClassLoader[] deepCopyParents(ClassLoader[] parents) {
-		ClassLoader[] newParentsArray = new ClassLoader[parents.length];
-		for (int i = 0; i < parents.length; ++i) {
-			ClassLoader parent = parents[i];
-			if (parent == null) {
-				throw new RuntimeException("parent[" + i + "] is null");
-			}
-			if (parent instanceof MultiParentClassLoader) {
-				parent = ((MultiParentClassLoader) parent).copy();
-			}
-			newParentsArray[i] = parent;
-		}
-		return newParentsArray;
-	}
+    ClassLoader copy()
+    {
+        return copy( this );
+    }
 
-	public ClassLoader[] getParents() {
-		return this.parents;
-	}
+    private String[] toResources( String[] classes )
+    {
+        String[] resources = new String[classes.length];
+        for ( int i = 0; i < classes.length; ++i )
+        {
+            String className = classes[i];
+            resources[i] = className.replace( '.', '/' );
+        }
+        return resources;
+    }
 
-	public void addURL(URL url) {
-		super.addURL(url);
-	}
+    public MultiParentClassLoader( URL[] urls, ClassLoader[] parents, URLStreamHandlerFactory factory )
+    {
+        super( urls, parents[0], factory );
 
-	protected synchronized Class loadClass(String name, boolean resolve)
-			throws ClassNotFoundException {
-		Class cachedClass = findLoadedClass(name);
-		if (cachedClass != null) {
-			return resolveClass(cachedClass, resolve);
-		}
+        destroyed = false;
 
-		try {
-			Class clazz = findClass(name);
-			return resolveClass(clazz, resolve);
-		} catch (ClassNotFoundException e) {
-			if (!(isHiddenClass(name))) {
-				for (int i = 0; i < this.parents.length; ++i) {
-					ClassLoader parent = this.parents[i];
-					try {
-						Class clazz = parent.loadClass(name);
-						return resolveClass(clazz, resolve);
-					} catch (ClassNotFoundException ex) {
-					}
+        this.parents = copyParents( parents );
+        inverseClassLoading = false;
+        hiddenClasses = new String[0];
+        nonOverridableClasses = new String[0];
+        hiddenResources = new String[0];
+        nonOverridableResources = new String[0];
+    }
 
-				}
+    private static ClassLoader[] copyParents( ClassLoader[] parents )
+    {
+        ClassLoader[] newParentsArray = new ClassLoader[parents.length];
+        for ( int i = 0; i < parents.length; ++i )
+        {
+            ClassLoader parent = parents[i];
+            if ( parent == null )
+            {
+                throw new RuntimeException( "parent[" + i + "] is null" );
+            }
+            newParentsArray[i] = parent;
+        }
+        return newParentsArray;
+    }
 
-			}
+    private static ClassLoader[] deepCopyParents( ClassLoader[] parents )
+    {
+        ClassLoader[] newParentsArray = new ClassLoader[parents.length];
+        for ( int i = 0; i < parents.length; ++i )
+        {
+            ClassLoader parent = parents[i];
+            if ( parent == null )
+            {
+                throw new RuntimeException( "parent[" + i + "] is null" );
+            }
+            if ( parent instanceof MultiParentClassLoader )
+            {
+                parent = ( (MultiParentClassLoader) parent ).copy();
+            }
+            newParentsArray[i] = parent;
+        }
+        return newParentsArray;
+    }
 
-			try {
-				Class clazz = findClass(name);
-				return resolveClass(clazz, resolve);
-			} catch (ClassNotFoundException ex) {
-				throw new ClassNotFoundException(name);
-			}
-		}
-	}
+    public ClassLoader[] getParents()
+    {
+        return parents;
+    }
 
-	private boolean isNonOverridableClass(String name) {
-		for (int i = 0; i < this.nonOverridableClasses.length; ++i) {
-			if (name.startsWith(this.nonOverridableClasses[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public void addURL( URL url )
+    {
+        super.addURL( url );
+    }
 
-	private boolean isHiddenClass(String name) {
-		for (int i = 0; i < this.hiddenClasses.length; ++i) {
-			if (name.startsWith(this.hiddenClasses[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    protected synchronized Class loadClass( String name, boolean resolve )
+        throws ClassNotFoundException
+    {
+        Class cachedClass = findLoadedClass( name );
+        if ( cachedClass != null )
+        {
+            return resolveClass( cachedClass, resolve );
+        }
 
-	private Class resolveClass(Class clazz, boolean resolve) {
-		if (resolve) {
-			resolveClass(clazz);
-		}
-		return clazz;
-	}
+        try
+        {
+            Class clazz = findClass( name );
+            return resolveClass( clazz, resolve );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            if ( !( isHiddenClass( name ) ) )
+            {
+                for ( int i = 0; i < parents.length; ++i )
+                {
+                    ClassLoader parent = parents[i];
+                    try
+                    {
+                        Class clazz = parent.loadClass( name );
+                        return resolveClass( clazz, resolve );
+                    }
+                    catch ( ClassNotFoundException ex )
+                    {
+                    }
 
-	public URL getResource(String name) {
-		if (isDestroyed()) {
-			return null;
-		}
+                }
 
-		if ((this.inverseClassLoading) && (!(isDestroyed()))
-				&& (!(isNonOverridableResource(name)))) {
-			URL url = findResource(name);
-			if (url != null) {
-				return url;
-			}
+            }
 
-		}
+            try
+            {
+                Class clazz = findClass( name );
+                return resolveClass( clazz, resolve );
+            }
+            catch ( ClassNotFoundException ex )
+            {
+                throw new ClassNotFoundException( name );
+            }
+        }
+    }
 
-		if (!(isHiddenResource(name))) {
-			for (int i = 0; i < this.parents.length; ++i) {
-				ClassLoader parent = this.parents[i];
-				URL url = parent.getResource(name);
-				if (url != null) {
-					return url;
-				}
+    private boolean isNonOverridableClass( String name )
+    {
+        for ( int i = 0; i < nonOverridableClasses.length; ++i )
+        {
+            if ( name.startsWith( nonOverridableClasses[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-			}
+    private boolean isHiddenClass( String name )
+    {
+        for ( int i = 0; i < hiddenClasses.length; ++i )
+        {
+            if ( name.startsWith( hiddenClasses[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
-		}
+    private Class resolveClass( Class clazz, boolean resolve )
+    {
+        if ( resolve )
+        {
+            resolveClass( clazz );
+        }
+        return clazz;
+    }
 
-		if (!(isDestroyed())) {
-			return findResource(name);
-		}
+    @Override
+    public URL getResource( String name )
+    {
+        if ( isDestroyed() )
+        {
+            return null;
+        }
 
-		return null;
-	}
+        if ( ( inverseClassLoading ) && ( !( isDestroyed() ) ) && ( !( isNonOverridableResource( name ) ) ) )
+        {
+            URL url = findResource( name );
+            if ( url != null )
+            {
+                return url;
+            }
 
-	public Enumeration findResources(String name) throws IOException {
-		if (isDestroyed()) {
-			return Collections.enumeration(Collections.EMPTY_SET);
-		}
+        }
 
-		List resources = new ArrayList();
+        if ( !( isHiddenResource( name ) ) )
+        {
+            for ( int i = 0; i < parents.length; ++i )
+            {
+                ClassLoader parent = parents[i];
+                URL url = parent.getResource( name );
+                if ( url != null )
+                {
+                    return url;
+                }
 
-		if ((this.inverseClassLoading) && (!(isDestroyed()))) {
-			List myResources = Collections.list(super.findResources(name));
-			resources.addAll(myResources);
-		}
+            }
 
-		for (int i = 0; i < this.parents.length; ++i) {
-			ClassLoader parent = this.parents[i];
-			List parentResources = Collections.list(parent.getResources(name));
-			resources.addAll(parentResources);
-		}
+        }
 
-		if ((!(this.inverseClassLoading)) && (!(isDestroyed()))) {
-			List myResources = Collections.list(super.findResources(name));
-			resources.addAll(myResources);
-		}
+        if ( !( isDestroyed() ) )
+        {
+            return findResource( name );
+        }
 
-		return Collections.enumeration(resources);
-	}
+        return null;
+    }
 
-	private boolean isNonOverridableResource(String name) {
-		for (int i = 0; i < this.nonOverridableResources.length; ++i) {
-			if (name.startsWith(this.nonOverridableResources[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
+    @Override
+    public Enumeration findResources( String name )
+        throws IOException
+    {
+        if ( isDestroyed() )
+        {
+            return Collections.enumeration( Collections.EMPTY_SET );
+        }
 
-	private boolean isHiddenResource(String name) {
-		for (int i = 0; i < this.hiddenResources.length; ++i) {
-			if (name.startsWith(this.hiddenResources[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
+        List resources = new ArrayList();
 
-	public synchronized boolean isDestroyed() {
-		return this.destroyed;
-	}
+        if ( ( inverseClassLoading ) && ( !( isDestroyed() ) ) )
+        {
+            List myResources = Collections.list( super.findResources( name ) );
+            resources.addAll( myResources );
+        }
 
-	public void destroy() {
-		synchronized (this) {
-			if (this.destroyed) {
-				return;
-			}
-			this.destroyed = true;
-		}
+        for ( int i = 0; i < parents.length; ++i )
+        {
+            ClassLoader parent = parents[i];
+            List parentResources = Collections.list( parent.getResources( name ) );
+            resources.addAll( parentResources );
+        }
 
-		Introspector.flushCaches();
-	}
+        if ( ( !( inverseClassLoading ) ) && ( !( isDestroyed() ) ) )
+        {
+            List myResources = Collections.list( super.findResources( name ) );
+            resources.addAll( myResources );
+        }
+
+        return Collections.enumeration( resources );
+    }
+
+    private boolean isNonOverridableResource( String name )
+    {
+        for ( int i = 0; i < nonOverridableResources.length; ++i )
+        {
+            if ( name.startsWith( nonOverridableResources[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isHiddenResource( String name )
+    {
+        for ( int i = 0; i < hiddenResources.length; ++i )
+        {
+            if ( name.startsWith( hiddenResources[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public synchronized boolean isDestroyed()
+    {
+        return destroyed;
+    }
+
+    public void destroy()
+    {
+        synchronized ( this )
+        {
+            if ( destroyed )
+            {
+                return;
+            }
+            destroyed = true;
+        }
+
+        Introspector.flushCaches();
+    }
 }

@@ -1,36 +1,53 @@
 package com.sanxing.sesame.engine.action.var;
 
+import java.util.List;
+
+import org.jdom.Attribute;
+import org.jdom.Element;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.util.List;
-import org.jdom.Attribute;
-import org.jdom.Element;
 
-public class RenameAction extends AbstractAction implements Constant {
-	String varName;
-	String xpath;
-	String newName;
+public class RenameAction
+    extends AbstractAction
+    implements Constant
+{
+    String varName;
 
-	public void doinit(Element config) {
-		this.varName = config.getAttributeValue("var");
-		this.xpath = config.getAttributeValue("xpath");
-		this.newName = config.getAttributeValue("new-name");
-	}
+    String xpath;
 
-	public void dowork(DataContext ctx) {
-		Variable toBeRenamed = getVariable(ctx, this.varName, this.xpath);
-		if (toBeRenamed.getVarType() == 0) {
-			((Element) toBeRenamed.get()).setName(this.newName);
-		} else if (toBeRenamed.getVarType() == 3) {
-			((Attribute) toBeRenamed.get()).setName(this.newName);
-		} else if (toBeRenamed.getVarType() == 5) {
-			List list = (List) toBeRenamed.get();
-			for (int i = 0; i < list.size(); ++i) {
-				Element ele = (Element) list.get(i);
-				ele.setName(this.newName);
-			}
-		}
-	}
+    String newName;
+
+    @Override
+    public void doinit( Element config )
+    {
+        varName = config.getAttributeValue( "var" );
+        xpath = config.getAttributeValue( "xpath" );
+        newName = config.getAttributeValue( "new-name" );
+    }
+
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        Variable toBeRenamed = getVariable( ctx, varName, xpath );
+        if ( toBeRenamed.getVarType() == 0 )
+        {
+            ( (Element) toBeRenamed.get() ).setName( newName );
+        }
+        else if ( toBeRenamed.getVarType() == 3 )
+        {
+            ( (Attribute) toBeRenamed.get() ).setName( newName );
+        }
+        else if ( toBeRenamed.getVarType() == 5 )
+        {
+            List list = (List) toBeRenamed.get();
+            for ( int i = 0; i < list.size(); ++i )
+            {
+                Element ele = (Element) list.get( i );
+                ele.setName( newName );
+            }
+        }
+    }
 }

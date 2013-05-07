@@ -37,7 +37,7 @@
 									<documentation>文件上传目录</documentation>
 								</annotation>
 							</element>
-							<element name="remoteBakPath" type="string" >
+							<element name="remoteBakPath" type="string">
 								<annotation>
 									<documentation>文件备份目录</documentation>
 								</annotation>
@@ -56,7 +56,7 @@
 					</annotation>
 					<complexType>
 						<sequence>
-							<element name="localBak" >
+							<element name="localBak">
 								<annotation>
 									<documentation>是否本地备份</documentation>
 									<appinfo>

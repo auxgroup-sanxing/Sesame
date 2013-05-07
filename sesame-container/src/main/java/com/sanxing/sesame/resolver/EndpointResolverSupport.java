@@ -5,81 +5,103 @@ import javax.jbi.component.ComponentContext;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.servicedesc.ServiceEndpoint;
 
-public abstract class EndpointResolverSupport implements EndpointResolver {
-	private EndpointChooser chooser;
-	private boolean failIfUnavailable;
+public abstract class EndpointResolverSupport
+    implements EndpointResolver
+{
+    private EndpointChooser chooser;
 
-	public EndpointResolverSupport() {
-		this.failIfUnavailable = true;
-	}
+    private boolean failIfUnavailable;
 
-	public ServiceEndpoint resolveEndpoint(ComponentContext context,
-			MessageExchange exchange, EndpointFilter filter)
-			throws JBIException {
-		ServiceEndpoint[] endpoints = resolveAvailableEndpoints(context,
-				exchange);
-		if (endpoints == null) {
-			return null;
-		}
-		if (endpoints.length > 0) {
-			endpoints = filterEndpoints(endpoints, exchange, filter);
-		}
-		if (endpoints.length == 0) {
-			if (this.failIfUnavailable) {
-				throw createServiceUnavailableException();
-			}
-			return null;
-		}
+    public EndpointResolverSupport()
+    {
+        failIfUnavailable = true;
+    }
 
-		if (endpoints.length == 1) {
-			return endpoints[0];
-		}
-		return getChooser().chooseEndpoint(endpoints, context, exchange);
-	}
+    @Override
+    public ServiceEndpoint resolveEndpoint( ComponentContext context, MessageExchange exchange, EndpointFilter filter )
+        throws JBIException
+    {
+        ServiceEndpoint[] endpoints = resolveAvailableEndpoints( context, exchange );
+        if ( endpoints == null )
+        {
+            return null;
+        }
+        if ( endpoints.length > 0 )
+        {
+            endpoints = filterEndpoints( endpoints, exchange, filter );
+        }
+        if ( endpoints.length == 0 )
+        {
+            if ( failIfUnavailable )
+            {
+                throw createServiceUnavailableException();
+            }
+            return null;
+        }
 
-	public boolean isFailIfUnavailable() {
-		return this.failIfUnavailable;
-	}
+        if ( endpoints.length == 1 )
+        {
+            return endpoints[0];
+        }
+        return getChooser().chooseEndpoint( endpoints, context, exchange );
+    }
 
-	public void setFailIfUnavailable(boolean failIfUnavailable) {
-		this.failIfUnavailable = failIfUnavailable;
-	}
+    public boolean isFailIfUnavailable()
+    {
+        return failIfUnavailable;
+    }
 
-	public EndpointChooser getChooser() {
-		if (this.chooser == null) {
-			this.chooser = new FirstChoicePolicy();
-		}
-		return this.chooser;
-	}
+    public void setFailIfUnavailable( boolean failIfUnavailable )
+    {
+        this.failIfUnavailable = failIfUnavailable;
+    }
 
-	public void setChooser(EndpointChooser chooser) {
-		this.chooser = chooser;
-	}
+    public EndpointChooser getChooser()
+    {
+        if ( chooser == null )
+        {
+            chooser = new FirstChoicePolicy();
+        }
+        return chooser;
+    }
 
-	protected abstract JBIException createServiceUnavailableException();
+    public void setChooser( EndpointChooser chooser )
+    {
+        this.chooser = chooser;
+    }
 
-	protected ServiceEndpoint[] filterEndpoints(ServiceEndpoint[] endpoints,
-			MessageExchange exchange, EndpointFilter filter) {
-		int matches = 0;
-		for (int i = 0; i < endpoints.length; ++i) {
-			ServiceEndpoint endpoint = endpoints[i];
-			if (filter.evaluate(endpoint, exchange))
-				++matches;
-			else {
-				endpoints[i] = null;
-			}
-		}
-		if (matches == endpoints.length) {
-			return endpoints;
-		}
-		ServiceEndpoint[] answer = new ServiceEndpoint[matches];
-		int j = 0;
-		for (int i = 0; i < endpoints.length; ++i) {
-			ServiceEndpoint endpoint = endpoints[i];
-			if (endpoint != null) {
-				answer[(j++)] = endpoints[i];
-			}
-		}
-		return answer;
-	}
+    protected abstract JBIException createServiceUnavailableException();
+
+    protected ServiceEndpoint[] filterEndpoints( ServiceEndpoint[] endpoints, MessageExchange exchange,
+                                                 EndpointFilter filter )
+    {
+        int matches = 0;
+        for ( int i = 0; i < endpoints.length; ++i )
+        {
+            ServiceEndpoint endpoint = endpoints[i];
+            if ( filter.evaluate( endpoint, exchange ) )
+            {
+                ++matches;
+            }
+            else
+            {
+                endpoints[i] = null;
+            }
+        }
+        if ( matches == endpoints.length )
+        {
+            return endpoints;
+        }
+        ServiceEndpoint[] answer = new ServiceEndpoint[matches];
+        int j = 0;
+        for ( int i = 0; i < endpoints.length; ++i )
+        {
+            ServiceEndpoint endpoint = endpoints[i];
+            if ( endpoint != null )
+            {
+                answer[( j++ )] = endpoints[i];
+            }
+        }
+        return answer;
+    }
 }

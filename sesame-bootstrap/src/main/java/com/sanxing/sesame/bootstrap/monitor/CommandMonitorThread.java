@@ -34,8 +34,7 @@ public class CommandMonitorThread
     private static final LogProxy log = LogProxy.getLogger( CommandMonitorThread.class );
 
     /**
-     * Listening socket.
-     * Never null.
+     * Listening socket. Never null.
      */
     private final ServerSocket socket;
 
@@ -46,8 +45,8 @@ public class CommandMonitorThread
 
     /**
      * Constructor.
-     *
-     * @param port     port on which to listen for commands. If zero, an random port will be chosen.
+     * 
+     * @param port port on which to listen for commands. If zero, an random port will be chosen.
      * @param commands available commands. Can be empty.
      * @throws IOException Re-thrown while opening listening socket
      */
@@ -68,7 +67,7 @@ public class CommandMonitorThread
         setName( "Bootstrap Command Monitor" );
 
         // Only listen on local interface
-        this.socket = new ServerSocket( port, 1, InetAddress.getByName( LOCALHOST ) );
+        socket = new ServerSocket( port, 1, InetAddress.getByName( LOCALHOST ) );
     }
 
     /**
@@ -127,7 +126,7 @@ public class CommandMonitorThread
     /**
      * Returns the port, the monitor, it listens to. Is the provided one or the random generated one if port used in
      * constructor was null.
-     *
+     * 
      * @return monitor port. Bigger then 0.
      */
     public int getPort()
@@ -137,7 +136,7 @@ public class CommandMonitorThread
 
     /**
      * A command to be executed in case that received command matches.
-     *
+     * 
      * @since 2.2
      */
     public static interface Command
@@ -145,14 +144,14 @@ public class CommandMonitorThread
 
         /**
          * ID of command (when it should be executed).
-         *
+         * 
          * @return command id. Never null.
          */
         String getId();
 
         /**
          * Executes the command.
-         *
+         * 
          * @return true, if command monitor thread should stop running
          */
         boolean execute();

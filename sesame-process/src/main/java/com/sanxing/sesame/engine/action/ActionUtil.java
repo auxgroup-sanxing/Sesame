@@ -1,28 +1,33 @@
 package com.sanxing.sesame.engine.action;
 
-import com.sanxing.sesame.engine.context.DataContext;
-import com.sanxing.sesame.engine.context.ExecutionContext;
 import java.util.Iterator;
+
 import org.jaxen.NamespaceContext;
 import org.jdom.Element;
 
-public class ActionUtil {
-	public static void bachInvoke(DataContext ctx, Iterator<?> actions) {
-		ExecutionContext executionCtx = ctx.getExecutionContext();
-		NamespaceContext namespaceCtx = (NamespaceContext) executionCtx
-				.get("process.namespaces");
+import com.sanxing.sesame.engine.context.DataContext;
+import com.sanxing.sesame.engine.context.ExecutionContext;
 
-		while (actions.hasNext()) {
-			Element actionEl = (Element) actions.next();
+public class ActionUtil
+{
+    public static void bachInvoke( DataContext ctx, Iterator<?> actions )
+    {
+        ExecutionContext executionCtx = ctx.getExecutionContext();
+        NamespaceContext namespaceCtx = (NamespaceContext) executionCtx.get( "process.namespaces" );
 
-			Action action = ActionFactory.getInstance(actionEl);
+        while ( actions.hasNext() )
+        {
+            Element actionEl = (Element) actions.next();
 
-			if (action instanceof AbstractAction) {
-				AbstractAction abstractAction = (AbstractAction) action;
+            Action action = ActionFactory.getInstance( actionEl );
 
-				abstractAction.setNamespaceContext(namespaceCtx);
-			}
-			action.work(ctx);
-		}
-	}
+            if ( action instanceof AbstractAction )
+            {
+                AbstractAction abstractAction = (AbstractAction) action;
+
+                abstractAction.setNamespaceContext( namespaceCtx );
+            }
+            action.work( ctx );
+        }
+    }
 }

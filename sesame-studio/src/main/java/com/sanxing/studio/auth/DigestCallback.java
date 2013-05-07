@@ -1,25 +1,33 @@
 package com.sanxing.studio.auth;
 
 import java.util.Map;
+
 import javax.security.auth.callback.Callback;
 
-public class DigestCallback implements Callback {
-	private String user;
-	private Map<String, ?> params;
+public class DigestCallback
+    implements Callback
+{
+    private String user;
 
-	public String getUser() {
-		return this.user;
-	}
+    private Map<String, ?> params;
 
-	public Map<String, ?> getParams() {
-		return this.params;
-	}
+    public String getUser()
+    {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public Map<String, ?> getParams()
+    {
+        return params;
+    }
 
-	public void setParams(Map<String, ?> params) {
-		this.params = params;
-	}
+    public void setUser( String user )
+    {
+        this.user = user;
+    }
+
+    public void setParams( Map<String, ?> params )
+    {
+        this.params = params;
+    }
 }

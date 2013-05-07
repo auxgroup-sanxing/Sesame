@@ -2,23 +2,30 @@ package com.sanxing.studio.auth;
 
 import javax.security.auth.callback.Callback;
 
-public class PassiveCallback implements Callback {
-	private String user;
-	private String password;
+public class PassiveCallback
+    implements Callback
+{
+    private String user;
 
-	public String getUser() {
-		return this.user;
-	}
+    private String password;
 
-	public String getPassword() {
-		return this.password;
-	}
+    public String getUser()
+    {
+        return user;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public String getPassword()
+    {
+        return password;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setUser( String user )
+    {
+        this.user = user;
+    }
+
+    public void setPassword( String password )
+    {
+        this.password = password;
+    }
 }

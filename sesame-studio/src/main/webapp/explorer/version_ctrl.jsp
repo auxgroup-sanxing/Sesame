@@ -13,7 +13,8 @@
 <%@page import="org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 
-<%@page language="java" contentType="text/json; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/json; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!//private static Namespace XMLNS_ART = Namespace.getNamespace("sn", Namespaces.SESAME);
 	

@@ -1,67 +1,81 @@
 package com.sanxing.sesame.engine.action.flow;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.jdom.Element;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionUtil;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.util.Iterator;
-import java.util.List;
-import org.jdom.Element;
 
-public class IfThenAction extends AbstractAction implements Constant {
-	String varName;
-	String xpath;
-	Element config;
+public class IfThenAction
+    extends AbstractAction
+    implements Constant
+{
+    String varName;
 
-	public void doinit(Element config) {
-		this.varName = config.getAttributeValue("var");
+    String xpath;
 
-		this.xpath = config.getChildTextTrim("xpath");
+    Element config;
 
-		this.config = config;
-	}
+    @Override
+    public void doinit( Element config )
+    {
+        varName = config.getAttributeValue( "var" );
 
-	public void dowork(DataContext ctx) {
-		Variable var = ctx.getVariable(this.varName);
-		Element ele = (Element) var.get();
+        xpath = config.getChildTextTrim( "xpath" );
 
-		Variable booleanVar = select(ele, this.xpath, ctx);
-		Boolean bool = (Boolean) booleanVar.get();
-		if (bool.booleanValue()) {
-			Iterator thenActions = this.config.getChild("then").getChildren()
-					.iterator();
-			ActionUtil.bachInvoke(ctx, thenActions);
-		} else {
-			boolean elseif = false;
+        this.config = config;
+    }
 
-			List list = this.config.getChildren("else-if");
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        Variable var = ctx.getVariable( varName );
+        Element ele = (Element) var.get();
 
-			for (int i = 0; i < list.size(); ++i) {
-				Element elseifthen = (Element) list.get(i);
+        Variable booleanVar = select( ele, xpath, ctx );
+        Boolean bool = (Boolean) booleanVar.get();
+        if ( bool.booleanValue() )
+        {
+            Iterator thenActions = config.getChild( "then" ).getChildren().iterator();
+            ActionUtil.bachInvoke( ctx, thenActions );
+        }
+        else
+        {
+            boolean elseif = false;
 
-				this.varName = elseifthen.getAttributeValue("var");
-				String xpath = elseifthen.getChildTextTrim("xpath");
+            List list = config.getChildren( "else-if" );
 
-				var = ctx.getVariable(this.varName);
-				ele = (Element) var.get();
+            for ( int i = 0; i < list.size(); ++i )
+            {
+                Element elseifthen = (Element) list.get( i );
 
-				booleanVar = select(ele, xpath, ctx);
-				bool = (Boolean) booleanVar.get();
-				Iterator thenActions = elseifthen.getChild("then")
-						.getChildren().iterator();
-				if (bool.booleanValue()) {
-					elseif = true;
-					ActionUtil.bachInvoke(ctx, thenActions);
-					break;
-				}
-			}
+                varName = elseifthen.getAttributeValue( "var" );
+                String xpath = elseifthen.getChildTextTrim( "xpath" );
 
-			if ((!(elseif)) && (this.config.getChild("else") != null)) {
-				Iterator elseActions = this.config.getChild("else")
-						.getChildren().iterator();
-				ActionUtil.bachInvoke(ctx, elseActions);
-			}
-		}
-	}
+                var = ctx.getVariable( varName );
+                ele = (Element) var.get();
+
+                booleanVar = select( ele, xpath, ctx );
+                bool = (Boolean) booleanVar.get();
+                Iterator thenActions = elseifthen.getChild( "then" ).getChildren().iterator();
+                if ( bool.booleanValue() )
+                {
+                    elseif = true;
+                    ActionUtil.bachInvoke( ctx, thenActions );
+                    break;
+                }
+            }
+
+            if ( ( !( elseif ) ) && ( config.getChild( "else" ) != null ) )
+            {
+                Iterator elseActions = config.getChild( "else" ).getChildren().iterator();
+                ActionUtil.bachInvoke( ctx, elseActions );
+            }
+        }
+    }
 }

@@ -1,14 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%@page import="org.json.*"%>
 <%@page import="com.sanxing.studio.*"%>
-<%@page import="com.sanxing.studio.auth.*" %>
+<%@page import="com.sanxing.studio.auth.*"%>
 <%@page import="com.sanxing.studio.utils.WebUtil"%>
-<%@page import="java.security.*" %>
-<%@page import="java.security.interfaces.*" %>
-<%@page import="java.util.*" %>
-<%@page import="javax.security.auth.*" %>
+<%@page import="java.security.*"%>
+<%@page import="java.security.interfaces.*"%>
+<%@page import="java.util.*"%>
+<%@page import="javax.security.auth.*"%>
 <%
 	KeyPair keyPair = Application.getKeyPair();
 
@@ -32,7 +33,10 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>更改帐户密码</title>
 <style type="text/css">
-	TD { font-size: 12px; vertical-align: top; }
+TD {
+	font-size: 12px;
+	vertical-align: top;
+}
 </style>
 <script type="text/javascript" src="../package/secure/md5.js"></script>
 <script type="text/javascript" src="../package/secure/rsa/BigInt.js"></script>
@@ -77,7 +81,8 @@
 	}
 </script>
 </head>
-<body onload="var form = document.forms[0]; form.confirmpwd.disabled=false;">
+<body
+	onload="var form = document.forms[0]; form.confirmpwd.disabled=false;">
 	<%
 	String userId = request.getParameter("userid");
 	if (userId!=null)
@@ -87,21 +92,34 @@
 	%>
 	<p style="font-weight: bold"><%=currUser.equals(userId)?"更改您的密码":"更改 "+userId+" 的密码"%></p>
 	<form name="form" action="../UserAction" method="post">
-	<input type="hidden" name="action" value="changePwd">
-	<input type="hidden" name="userid" value="<%=userId%>">
-	<table style="width:100%">
-		<%
+		<input type="hidden" name="action" value="changePwd"> <input
+			type="hidden" name="userid" value="<%=userId%>">
+		<table style="width: 100%">
+			<%
 		if (currUser.equals(userId))
 		{
 		%>
-		<tr><td align="left">输入您的当前密码:<br/><input type="password" name="currpwd" style="width:240px;"><br/></td></tr>
-		<%
+			<tr>
+				<td align="left">输入您的当前密码:<br />
+				<input type="password" name="currpwd" style="width: 240px;"><br /></td>
+			</tr>
+			<%
 		}
 		%>
-		<tr><td align="left">输入一个新密码:<br/><input type="password" name="newpwd" style="width:240px;"><br/></td></tr>
-		<tr><td align="left">再次输入新密码:<br/><input type="password" name="confirmpwd" style="width:240px;"><br/></td></tr>
-		<tr><td align="right"><input type="button" onclick="submitCheck()" value="更改密码"><input type="button" value="取消" onclick="window.history.back(-1)"></td></tr>
-	</table>
+			<tr>
+				<td align="left">输入一个新密码:<br />
+				<input type="password" name="newpwd" style="width: 240px;"><br /></td>
+			</tr>
+			<tr>
+				<td align="left">再次输入新密码:<br />
+				<input type="password" name="confirmpwd" style="width: 240px;"><br /></td>
+			</tr>
+			<tr>
+				<td align="right"><input type="button" onclick="submitCheck()"
+					value="更改密码"><input type="button" value="取消"
+					onclick="window.history.back(-1)"></td>
+			</tr>
+		</table>
 	</form>
 </body>
 </html>

@@ -1,19 +1,22 @@
 
-<%@page import="java.net.URLDecoder"%><%@page import="com.sanxing.studio.*"%>
+<%@page import="java.net.URLDecoder"%><%@page
+	import="com.sanxing.studio.*"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.rmi.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.json.*" %>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page import="org.json.*"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
 <%@page import="com.sanxing.sesame.core.keymanager.*"%>
 <%@page import="javax.wsdl.*"%>
 <%@page import="javax.wsdl.factory.*"%>
 <%@page import="javax.wsdl.xml.*"%>
 <%@page import=" com.sanxing.studio.search.*"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());

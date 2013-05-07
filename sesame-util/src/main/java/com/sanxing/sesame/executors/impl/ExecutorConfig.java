@@ -2,104 +2,125 @@ package com.sanxing.sesame.executors.impl;
 
 import java.io.Serializable;
 
-public class ExecutorConfig implements Serializable {
-	private static final long serialVersionUID = -3296569827553190492L;
-	private int corePoolSize = 10;
+public class ExecutorConfig
+    implements Serializable
+{
+    private static final long serialVersionUID = -3296569827553190492L;
 
-	private int maximumPoolSize = 2147483647;
+    private int corePoolSize = 10;
 
-	private long keepAliveTime = 60000L;
+    private int maximumPoolSize = 2147483647;
 
-	private boolean threadDaemon = true;
+    private long keepAliveTime = 60000L;
 
-	private int threadPriority = 5;
+    private boolean threadDaemon = true;
 
-	private int queueSize = 100;
+    private int threadPriority = 5;
 
-	private long shutdownDelay = 1000L;
+    private int queueSize = 100;
 
-	private boolean allowCoreThreadsTimeout = true;
-	private String callbackClass;
+    private long shutdownDelay = 1000L;
 
-	public int getCorePoolSize() {
-		return this.corePoolSize;
-	}
+    private boolean allowCoreThreadsTimeout = true;
 
-	public void setCorePoolSize(int corePoolSize) {
-		this.corePoolSize = corePoolSize;
-	}
+    private String callbackClass;
 
-	public long getKeepAliveTime() {
-		return this.keepAliveTime;
-	}
+    public int getCorePoolSize()
+    {
+        return corePoolSize;
+    }
 
-	public void setKeepAliveTime(long keepAlive) {
-		this.keepAliveTime = keepAlive;
-	}
+    public void setCorePoolSize( int corePoolSize )
+    {
+        this.corePoolSize = corePoolSize;
+    }
 
-	public int getMaximumPoolSize() {
-		return this.maximumPoolSize;
-	}
+    public long getKeepAliveTime()
+    {
+        return keepAliveTime;
+    }
 
-	public void setMaximumPoolSize(int maximumPoolSize) {
-		this.maximumPoolSize = maximumPoolSize;
-	}
+    public void setKeepAliveTime( long keepAlive )
+    {
+        keepAliveTime = keepAlive;
+    }
 
-	public int getQueueSize() {
-		return this.queueSize;
-	}
+    public int getMaximumPoolSize()
+    {
+        return maximumPoolSize;
+    }
 
-	public void setQueueSize(int queueSize) {
-		this.queueSize = queueSize;
-	}
+    public void setMaximumPoolSize( int maximumPoolSize )
+    {
+        this.maximumPoolSize = maximumPoolSize;
+    }
 
-	public boolean isThreadDaemon() {
-		return this.threadDaemon;
-	}
+    public int getQueueSize()
+    {
+        return queueSize;
+    }
 
-	public void setThreadDaemon(boolean threadDaemon) {
-		this.threadDaemon = threadDaemon;
-	}
+    public void setQueueSize( int queueSize )
+    {
+        this.queueSize = queueSize;
+    }
 
-	public int getThreadPriority() {
-		return this.threadPriority;
-	}
+    public boolean isThreadDaemon()
+    {
+        return threadDaemon;
+    }
 
-	public void setThreadPriority(int threadPriority) {
-		this.threadPriority = threadPriority;
-	}
+    public void setThreadDaemon( boolean threadDaemon )
+    {
+        this.threadDaemon = threadDaemon;
+    }
 
-	public long getShutdownDelay() {
-		return this.shutdownDelay;
-	}
+    public int getThreadPriority()
+    {
+        return threadPriority;
+    }
 
-	public void setShutdownDelay(long shutdownDelay) {
-		this.shutdownDelay = shutdownDelay;
-	}
+    public void setThreadPriority( int threadPriority )
+    {
+        this.threadPriority = threadPriority;
+    }
 
-	public boolean isAllowCoreThreadsTimeout() {
-		return this.allowCoreThreadsTimeout;
-	}
+    public long getShutdownDelay()
+    {
+        return shutdownDelay;
+    }
 
-	public void setAllowCoreThreadsTimeout(boolean allowCoreThreadsTimeout) {
-		this.allowCoreThreadsTimeout = allowCoreThreadsTimeout;
-	}
+    public void setShutdownDelay( long shutdownDelay )
+    {
+        this.shutdownDelay = shutdownDelay;
+    }
 
-	public void setCallbackClass(String callbackClass) {
-		this.callbackClass = callbackClass;
-	}
+    public boolean isAllowCoreThreadsTimeout()
+    {
+        return allowCoreThreadsTimeout;
+    }
 
-	public String getCallbackClass() {
-		return this.callbackClass;
-	}
+    public void setAllowCoreThreadsTimeout( boolean allowCoreThreadsTimeout )
+    {
+        this.allowCoreThreadsTimeout = allowCoreThreadsTimeout;
+    }
 
-	public String toString() {
-		return "ExecutorConfig [allowCoreThreadsTimeout="
-				+ this.allowCoreThreadsTimeout + ", corePoolSize="
-				+ this.corePoolSize + ", keepAliveTime=" + this.keepAliveTime
-				+ ", maximumPoolSize=" + this.maximumPoolSize + ", queueSize="
-				+ this.queueSize + ", shutdownDelay=" + this.shutdownDelay
-				+ ", threadDaemon=" + this.threadDaemon + ", threadPriority="
-				+ this.threadPriority + "]";
-	}
+    public void setCallbackClass( String callbackClass )
+    {
+        this.callbackClass = callbackClass;
+    }
+
+    public String getCallbackClass()
+    {
+        return callbackClass;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ExecutorConfig [allowCoreThreadsTimeout=" + allowCoreThreadsTimeout + ", corePoolSize=" + corePoolSize
+            + ", keepAliveTime=" + keepAliveTime + ", maximumPoolSize=" + maximumPoolSize + ", queueSize=" + queueSize
+            + ", shutdownDelay=" + shutdownDelay + ", threadDaemon=" + threadDaemon + ", threadPriority="
+            + threadPriority + "]";
+    }
 }

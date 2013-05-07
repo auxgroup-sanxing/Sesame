@@ -3,57 +3,75 @@ package com.sanxing.sesame.logging.lucene;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class LuceneRecord implements Comparable<LuceneRecord> {
-	public List<LuceneColumn> columns = new ArrayList();
-	private String searcherName;
+public abstract class LuceneRecord
+    implements Comparable<LuceneRecord>
+{
+    public List<LuceneColumn> columns = new ArrayList();
 
-	public void addField(LuceneColumn column) {
-		this.columns.add(column);
-	}
+    private String searcherName;
 
-	public List<LuceneColumn> getColumns() {
-		return this.columns;
-	}
+    public void addField( LuceneColumn column )
+    {
+        columns.add( column );
+    }
 
-	public LuceneColumn getColumnByName(String name) {
-		for (LuceneColumn e : getColumns()) {
-			if (e.getName().equalsIgnoreCase(name)) {
-				return e;
-			}
-		}
-		return null;
-	}
+    public List<LuceneColumn> getColumns()
+    {
+        return columns;
+    }
 
-	public void setIndexAnalyzed(boolean indexAnalyzed) {
-		for (LuceneColumn column : this.columns)
-			column.setIndexAnalyzed(indexAnalyzed);
-	}
+    public LuceneColumn getColumnByName( String name )
+    {
+        for ( LuceneColumn e : getColumns() )
+        {
+            if ( e.getName().equalsIgnoreCase( name ) )
+            {
+                return e;
+            }
+        }
+        return null;
+    }
 
-	public void join(LuceneRecord base, boolean indexAnalyzed) {
-		List<LuceneColumn> baseColumns = base.getColumns();
-		for (LuceneColumn e : baseColumns) {
-			LuceneColumn ne = new LuceneColumn(e);
-			ne.setIndexAnalyzed(indexAnalyzed);
-			this.columns.add(ne);
-		}
-	}
+    public void setIndexAnalyzed( boolean indexAnalyzed )
+    {
+        for ( LuceneColumn column : columns )
+        {
+            column.setIndexAnalyzed( indexAnalyzed );
+        }
+    }
 
-	public void setSearcherName(String searcherName) {
-		this.searcherName = searcherName;
-	}
+    public void join( LuceneRecord base, boolean indexAnalyzed )
+    {
+        List<LuceneColumn> baseColumns = base.getColumns();
+        for ( LuceneColumn e : baseColumns )
+        {
+            LuceneColumn ne = new LuceneColumn( e );
+            ne.setIndexAnalyzed( indexAnalyzed );
+            columns.add( ne );
+        }
+    }
 
-	public int compareTo(LuceneRecord o) {
-		return -1;
-	}
+    public void setSearcherName( String searcherName )
+    {
+        this.searcherName = searcherName;
+    }
 
-	public String toString() {
-		String name = "{";
-		for (LuceneColumn column : this.columns) {
-			name = name + column.getName() + "=" + column.getValue()
-					+ " isIndexAnalyzed=" + column.isIndexAnalyzed();
-			name = name + "\t";
-		}
-		name = name + "}";
-		return name;
-	}
+    @Override
+    public int compareTo( LuceneRecord o )
+    {
+        return -1;
+    }
+
+    @Override
+    public String toString()
+    {
+        String name = "{";
+        for ( LuceneColumn column : columns )
+        {
+            name = name + column.getName() + "=" + column.getValue() + " isIndexAnalyzed=" + column.isIndexAnalyzed();
+            name = name + "\t";
+        }
+        name = name + "}";
+        return name;
+    }
 }

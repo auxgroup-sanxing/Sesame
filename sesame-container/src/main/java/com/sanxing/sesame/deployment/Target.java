@@ -1,22 +1,28 @@
 package com.sanxing.sesame.deployment;
 
-public class Target {
-	private String artifactsZip;
-	private String componentName;
+public class Target
+{
+    private String artifactsZip;
 
-	public String getArtifactsZip() {
-		return this.artifactsZip;
-	}
+    private String componentName;
 
-	public void setArtifactsZip(String artifactsZip) {
-		this.artifactsZip = artifactsZip;
-	}
+    public String getArtifactsZip()
+    {
+        return artifactsZip;
+    }
 
-	public String getComponentName() {
-		return this.componentName;
-	}
+    public void setArtifactsZip( String artifactsZip )
+    {
+        this.artifactsZip = artifactsZip;
+    }
 
-	public void setComponentName(String componentName) {
-		this.componentName = componentName;
-	}
+    public String getComponentName()
+    {
+        return componentName;
+    }
+
+    public void setComponentName( String componentName )
+    {
+        this.componentName = componentName;
+    }
 }

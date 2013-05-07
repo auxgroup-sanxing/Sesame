@@ -4,7 +4,8 @@
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 %>
@@ -19,41 +20,44 @@ String libName = libPath.replaceAll(".*?/", "");
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>共享库浏览</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="../package/upload/resources/UploadDialog.css"/>
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../package/upload/resources/UploadDialog.css" />
 <style type="text/css">
 .item-wrap {
-	text-align:center;
+	text-align: center;
 	float: left;
 	cursor: pointer;
 	margin-top: 4px;
 	margin-left: 4px;
-	padding:2px 7px!important;
-	font: 13px Arial,Helvetica,"Nimbus Sans L",sans-serif;
+	padding: 2px 7px !important;
+	font: 13px Arial, Helvetica, "Nimbus Sans L", sans-serif;
 }
 
 .displayNameWrap {
 	
 }
 
-.fullNameWrap, .sizeWarp, .timeWarp {
+.fullNameWrap,.sizeWarp,.timeWarp {
 	display: none
 }
 
 .hilited {
-	background: #EFEFEF; 
+	background: #EFEFEF;
 	color: black;
 }
 </style>
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="sharelib_viewer.js"></script>
 <script type="text/javascript" src="../package/upload/UploadDialog.js"></script>
 </head>
 
 <body style="height: 100%">
-<script type="text/javascript">
+	<script type="text/javascript">
    var path = '<%=libPath%>';
    var name = '<%=libName%>';
 </script>

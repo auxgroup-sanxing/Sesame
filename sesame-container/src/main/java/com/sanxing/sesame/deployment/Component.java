@@ -1,143 +1,182 @@
 package com.sanxing.sesame.deployment;
 
-public class Component {
-	private String type;
-	private String componentClassLoaderDelegation;
-	private String bootstrapClassLoaderDelegation;
-	private Identification identification;
-	private String componentClassName;
-	private String description;
-	private ClassPath componentClassPath;
-	private String bootstrapClassName;
-	private ClassPath bootstrapClassPath;
-	private SharedLibraryList[] sharedLibraries;
-	private InstallationDescriptorExtension descriptorExtension;
+public class Component
+{
+    private String type;
 
-	public Component() {
-		this.componentClassLoaderDelegation = "parent-first";
-		this.bootstrapClassLoaderDelegation = "parent-first";
-	}
+    private String componentClassLoaderDelegation;
 
-	public boolean isServiceEngine() {
-		return ((this.type != null) && (this.type.equals("service-engine")));
-	}
+    private String bootstrapClassLoaderDelegation;
 
-	public boolean isBindingComponent() {
-		return ((this.type != null) && (this.type.equals("binding-component")));
-	}
+    private Identification identification;
 
-	public boolean isComponentClassLoaderDelegationParentFirst() {
-		return isParentFirst(this.componentClassLoaderDelegation);
-	}
+    private String componentClassName;
 
-	public boolean isComponentClassLoaderDelegationSelfFirst() {
-		return isSelfFirst(this.componentClassLoaderDelegation);
-	}
+    private String description;
 
-	public boolean isBootstrapClassLoaderDelegationParentFirst() {
-		return isParentFirst(this.bootstrapClassLoaderDelegation);
-	}
+    private ClassPath componentClassPath;
 
-	public boolean isBootstrapClassLoaderDelegationSelfFirst() {
-		return isSelfFirst(this.bootstrapClassLoaderDelegation);
-	}
+    private String bootstrapClassName;
 
-	public String getType() {
-		return this.type;
-	}
+    private ClassPath bootstrapClassPath;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    private SharedLibraryList[] sharedLibraries;
 
-	public String getComponentClassLoaderDelegation() {
-		return this.componentClassLoaderDelegation;
-	}
+    private InstallationDescriptorExtension descriptorExtension;
 
-	public void setComponentClassLoaderDelegation(
-			String componentClassLoaderDelegation) {
-		this.componentClassLoaderDelegation = componentClassLoaderDelegation;
-	}
+    public Component()
+    {
+        componentClassLoaderDelegation = "parent-first";
+        bootstrapClassLoaderDelegation = "parent-first";
+    }
 
-	public String getBootstrapClassLoaderDelegation() {
-		return this.bootstrapClassLoaderDelegation;
-	}
+    public boolean isServiceEngine()
+    {
+        return ( ( type != null ) && ( type.equals( "service-engine" ) ) );
+    }
 
-	public void setBootstrapClassLoaderDelegation(
-			String bootstrapClassLoaderDelegation) {
-		this.bootstrapClassLoaderDelegation = bootstrapClassLoaderDelegation;
-	}
+    public boolean isBindingComponent()
+    {
+        return ( ( type != null ) && ( type.equals( "binding-component" ) ) );
+    }
 
-	public Identification getIdentification() {
-		return this.identification;
-	}
+    public boolean isComponentClassLoaderDelegationParentFirst()
+    {
+        return isParentFirst( componentClassLoaderDelegation );
+    }
 
-	public void setIdentification(Identification identification) {
-		this.identification = identification;
-	}
+    public boolean isComponentClassLoaderDelegationSelfFirst()
+    {
+        return isSelfFirst( componentClassLoaderDelegation );
+    }
 
-	public String getComponentClassName() {
-		return this.componentClassName;
-	}
+    public boolean isBootstrapClassLoaderDelegationParentFirst()
+    {
+        return isParentFirst( bootstrapClassLoaderDelegation );
+    }
 
-	public void setComponentClassName(String componentClassName) {
-		this.componentClassName = componentClassName;
-	}
+    public boolean isBootstrapClassLoaderDelegationSelfFirst()
+    {
+        return isSelfFirst( bootstrapClassLoaderDelegation );
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public String getType()
+    {
+        return type;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setType( String type )
+    {
+        this.type = type;
+    }
 
-	public ClassPath getComponentClassPath() {
-		return this.componentClassPath;
-	}
+    public String getComponentClassLoaderDelegation()
+    {
+        return componentClassLoaderDelegation;
+    }
 
-	public void setComponentClassPath(ClassPath componentClassPath) {
-		this.componentClassPath = componentClassPath;
-	}
+    public void setComponentClassLoaderDelegation( String componentClassLoaderDelegation )
+    {
+        this.componentClassLoaderDelegation = componentClassLoaderDelegation;
+    }
 
-	public String getBootstrapClassName() {
-		return this.bootstrapClassName;
-	}
+    public String getBootstrapClassLoaderDelegation()
+    {
+        return bootstrapClassLoaderDelegation;
+    }
 
-	public void setBootstrapClassName(String bootstrapClassName) {
-		this.bootstrapClassName = bootstrapClassName;
-	}
+    public void setBootstrapClassLoaderDelegation( String bootstrapClassLoaderDelegation )
+    {
+        this.bootstrapClassLoaderDelegation = bootstrapClassLoaderDelegation;
+    }
 
-	public ClassPath getBootstrapClassPath() {
-		return this.bootstrapClassPath;
-	}
+    public Identification getIdentification()
+    {
+        return identification;
+    }
 
-	public void setBootstrapClassPath(ClassPath bootstrapClassPath) {
-		this.bootstrapClassPath = bootstrapClassPath;
-	}
+    public void setIdentification( Identification identification )
+    {
+        this.identification = identification;
+    }
 
-	public SharedLibraryList[] getSharedLibraries() {
-		return this.sharedLibraries;
-	}
+    public String getComponentClassName()
+    {
+        return componentClassName;
+    }
 
-	public void setSharedLibraries(SharedLibraryList[] sharedLibraries) {
-		this.sharedLibraries = sharedLibraries;
-	}
+    public void setComponentClassName( String componentClassName )
+    {
+        this.componentClassName = componentClassName;
+    }
 
-	public InstallationDescriptorExtension getDescriptorExtension() {
-		return this.descriptorExtension;
-	}
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public void setDescriptorExtension(
-			InstallationDescriptorExtension descriptorExtension) {
-		this.descriptorExtension = descriptorExtension;
-	}
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
 
-	protected boolean isParentFirst(String text) {
-		return ((text != null) && (text.equalsIgnoreCase("parent-first")));
-	}
+    public ClassPath getComponentClassPath()
+    {
+        return componentClassPath;
+    }
 
-	protected boolean isSelfFirst(String text) {
-		return ((text != null) && (text.equalsIgnoreCase("self-first")));
-	}
+    public void setComponentClassPath( ClassPath componentClassPath )
+    {
+        this.componentClassPath = componentClassPath;
+    }
+
+    public String getBootstrapClassName()
+    {
+        return bootstrapClassName;
+    }
+
+    public void setBootstrapClassName( String bootstrapClassName )
+    {
+        this.bootstrapClassName = bootstrapClassName;
+    }
+
+    public ClassPath getBootstrapClassPath()
+    {
+        return bootstrapClassPath;
+    }
+
+    public void setBootstrapClassPath( ClassPath bootstrapClassPath )
+    {
+        this.bootstrapClassPath = bootstrapClassPath;
+    }
+
+    public SharedLibraryList[] getSharedLibraries()
+    {
+        return sharedLibraries;
+    }
+
+    public void setSharedLibraries( SharedLibraryList[] sharedLibraries )
+    {
+        this.sharedLibraries = sharedLibraries;
+    }
+
+    public InstallationDescriptorExtension getDescriptorExtension()
+    {
+        return descriptorExtension;
+    }
+
+    public void setDescriptorExtension( InstallationDescriptorExtension descriptorExtension )
+    {
+        this.descriptorExtension = descriptorExtension;
+    }
+
+    protected boolean isParentFirst( String text )
+    {
+        return ( ( text != null ) && ( text.equalsIgnoreCase( "parent-first" ) ) );
+    }
+
+    protected boolean isSelfFirst( String text )
+    {
+        return ( ( text != null ) && ( text.equalsIgnoreCase( "self-first" ) ) );
+    }
 }

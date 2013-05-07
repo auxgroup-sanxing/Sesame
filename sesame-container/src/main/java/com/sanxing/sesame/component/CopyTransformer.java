@@ -1,11 +1,8 @@
 package com.sanxing.sesame.component;
 
-import com.sanxing.sesame.jaxp.BytesSource;
-import com.sanxing.sesame.jaxp.SourceTransformer;
-import com.sanxing.sesame.jaxp.StringSource;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.Set;
+
 import javax.activation.DataHandler;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
@@ -15,112 +12,150 @@ import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
+
 import org.xml.sax.SAXException;
 
-public class CopyTransformer implements MessageTransformer {
-	private static final CopyTransformer INSTANCE = new CopyTransformer();
-	private SourceTransformer sourceTransformer;
-	private boolean copyProperties;
-	private boolean copyAttachments;
-	private boolean copySecuritySubject;
+import com.sanxing.sesame.jaxp.BytesSource;
+import com.sanxing.sesame.jaxp.SourceTransformer;
+import com.sanxing.sesame.jaxp.StringSource;
 
-	public CopyTransformer() {
-		this.sourceTransformer = new SourceTransformer();
+public class CopyTransformer
+    implements MessageTransformer
+{
+    private static final CopyTransformer INSTANCE = new CopyTransformer();
 
-		this.copyProperties = true;
+    private final SourceTransformer sourceTransformer;
 
-		this.copyAttachments = true;
+    private boolean copyProperties;
 
-		this.copySecuritySubject = true;
-	}
+    private boolean copyAttachments;
 
-	public boolean isCopyAttachments() {
-		return this.copyAttachments;
-	}
+    private boolean copySecuritySubject;
 
-	public void setCopyAttachments(boolean copyAttachments) {
-		this.copyAttachments = copyAttachments;
-	}
+    public CopyTransformer()
+    {
+        sourceTransformer = new SourceTransformer();
 
-	public boolean isCopyProperties() {
-		return this.copyProperties;
-	}
+        copyProperties = true;
 
-	public void setCopyProperties(boolean copyProperties) {
-		this.copyProperties = copyProperties;
-	}
+        copyAttachments = true;
 
-	public boolean isCopySecuritySubject() {
-		return this.copySecuritySubject;
-	}
+        copySecuritySubject = true;
+    }
 
-	public void setCopySecuritySubject(boolean copySecuritySubject) {
-		this.copySecuritySubject = copySecuritySubject;
-	}
+    public boolean isCopyAttachments()
+    {
+        return copyAttachments;
+    }
 
-	public static CopyTransformer getInstance() {
-		return INSTANCE;
-	}
+    public void setCopyAttachments( boolean copyAttachments )
+    {
+        this.copyAttachments = copyAttachments;
+    }
 
-	public boolean transform(MessageExchange exchange, NormalizedMessage from,
-			NormalizedMessage to) throws MessagingException {
-		if (this.copyProperties) {
-			copyProperties(from, to);
-		}
+    public boolean isCopyProperties()
+    {
+        return copyProperties;
+    }
 
-		Source content = from.getContent();
-		if ((((content instanceof StreamSource) || (content instanceof SAXSource)))
-				&& (!(content instanceof StringSource))
-				&& (!(content instanceof BytesSource))) {
-			try {
-				content = this.sourceTransformer.toDOMSource(from);
-			} catch (TransformerException e) {
-				throw new MessagingException(e);
-			} catch (ParserConfigurationException e) {
-				throw new MessagingException(e);
-			} catch (IOException e) {
-				throw new MessagingException(e);
-			} catch (SAXException e) {
-				throw new MessagingException(e);
-			}
-		}
-		to.setContent(content);
+    public void setCopyProperties( boolean copyProperties )
+    {
+        this.copyProperties = copyProperties;
+    }
 
-		if (this.copyAttachments) {
-			copyAttachments(from, to);
-		}
+    public boolean isCopySecuritySubject()
+    {
+        return copySecuritySubject;
+    }
 
-		if (this.copySecuritySubject) {
-			copySecuritySubject(from, to);
-		}
+    public void setCopySecuritySubject( boolean copySecuritySubject )
+    {
+        this.copySecuritySubject = copySecuritySubject;
+    }
 
-		return true;
-	}
+    public static CopyTransformer getInstance()
+    {
+        return INSTANCE;
+    }
 
-	public static void copyProperties(NormalizedMessage from,
-			NormalizedMessage to) {
-		for (Iterator iter = from.getPropertyNames().iterator(); iter.hasNext();) {
-			String name = (String) iter.next();
+    @Override
+    public boolean transform( MessageExchange exchange, NormalizedMessage from, NormalizedMessage to )
+        throws MessagingException
+    {
+        if ( copyProperties )
+        {
+            copyProperties( from, to );
+        }
 
-			if (!("com.sanxing.sesame.body".equals(name))) {
-				Object value = from.getProperty(name);
-				to.setProperty(name, value);
-			}
-		}
-	}
+        Source content = from.getContent();
+        if ( ( ( ( content instanceof StreamSource ) || ( content instanceof SAXSource ) ) )
+            && ( !( content instanceof StringSource ) ) && ( !( content instanceof BytesSource ) ) )
+        {
+            try
+            {
+                content = sourceTransformer.toDOMSource( from );
+            }
+            catch ( TransformerException e )
+            {
+                throw new MessagingException( e );
+            }
+            catch ( ParserConfigurationException e )
+            {
+                throw new MessagingException( e );
+            }
+            catch ( IOException e )
+            {
+                throw new MessagingException( e );
+            }
+            catch ( SAXException e )
+            {
+                throw new MessagingException( e );
+            }
+        }
+        to.setContent( content );
 
-	public static void copyAttachments(NormalizedMessage from,
-			NormalizedMessage to) throws MessagingException {
-		Iterator iter = from.getAttachmentNames().iterator();
-		while (iter.hasNext()) {
-			String name = (String) iter.next();
-			DataHandler value = from.getAttachment(name);
-			to.addAttachment(name, value);
-		}
-	}
+        if ( copyAttachments )
+        {
+            copyAttachments( from, to );
+        }
 
-	public static void copySecuritySubject(NormalizedMessage from,
-			NormalizedMessage to) throws MessagingException {
-		to.setSecuritySubject(from.getSecuritySubject());
-	}
+        if ( copySecuritySubject )
+        {
+            copySecuritySubject( from, to );
+        }
+
+        return true;
+    }
+
+    public static void copyProperties( NormalizedMessage from, NormalizedMessage to )
+    {
+        for ( Iterator iter = from.getPropertyNames().iterator(); iter.hasNext(); )
+        {
+            String name = (String) iter.next();
+
+            if ( !( "com.sanxing.sesame.body".equals( name ) ) )
+            {
+                Object value = from.getProperty( name );
+                to.setProperty( name, value );
+            }
+        }
+    }
+
+    public static void copyAttachments( NormalizedMessage from, NormalizedMessage to )
+        throws MessagingException
+    {
+        Iterator iter = from.getAttachmentNames().iterator();
+        while ( iter.hasNext() )
+        {
+            String name = (String) iter.next();
+            DataHandler value = from.getAttachment( name );
+            to.addAttachment( name, value );
+        }
+    }
+
+    public static void copySecuritySubject( NormalizedMessage from, NormalizedMessage to )
+        throws MessagingException
+    {
+        to.setSecuritySubject( from.getSecuritySubject() );
+    }
 }

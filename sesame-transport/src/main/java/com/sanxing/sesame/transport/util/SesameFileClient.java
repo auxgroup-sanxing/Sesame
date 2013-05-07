@@ -11,129 +11,163 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Map;
 
-public class SesameFileClient {
-	String getFilePath = "";
-	String bakFilePath = "";
-	String putFilePath = "";
+public class SesameFileClient
+{
+    String getFilePath = "";
 
-	public File[] getFiles() throws Exception {
-		File getDirectory = new File(this.getFilePath);
-		File[] files = getDirectory.listFiles(new FileFilter() {
-			public boolean accept(File pathname) {
-				return pathname.isFile();
-			}
-		});
-		return files;
-	}
+    String bakFilePath = "";
 
-	public void setBindingProperties(Map<?, ?> props) {
-		this.getFilePath = ((String) props.get("remoteGetPath"));
-		this.bakFilePath = ((String) props.get("remoteBakPath"));
-		this.putFilePath = ((String) props.get("remotePutPath"));
-	}
+    String putFilePath = "";
 
-	public InputStream readOneFile(File file) throws Exception {
-		return new FileInputStream(file);
-	}
+    public File[] getFiles()
+        throws Exception
+    {
+        File getDirectory = new File( getFilePath );
+        File[] files = getDirectory.listFiles( new FileFilter()
+        {
+            @Override
+            public boolean accept( File pathname )
+            {
+                return pathname.isFile();
+            }
+        } );
+        return files;
+    }
 
-	public InputStream readOneFileWithName(String filename) throws Exception {
-		return new FileInputStream(this.bakFilePath + "/" + filename);
-	}
+    public void setBindingProperties( Map<?, ?> props )
+    {
+        getFilePath = ( (String) props.get( "remoteGetPath" ) );
+        bakFilePath = ( (String) props.get( "remoteBakPath" ) );
+        putFilePath = ( (String) props.get( "remotePutPath" ) );
+    }
 
-	public byte[] getInputByte(InputStream in) throws IOException {
-		byte[] result = (byte[]) null;
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		byte[] temp = new byte[1024];
-		int len = 0;
-		while ((len = in.read(temp)) != -1) {
-			in.read(temp);
-			output.write(temp, 0, len);
-			len = 0;
-		}
-		in.close();
-		result = output.toByteArray();
-		output.close();
-		return result;
-	}
+    public InputStream readOneFile( File file )
+        throws Exception
+    {
+        return new FileInputStream( file );
+    }
 
-	public void writeOneFile(byte[] resp) throws Exception {
-		File respFile = new File(this.putFilePath, "response.txt");
-		FileOutputStream out = new FileOutputStream(respFile);
+    public InputStream readOneFileWithName( String filename )
+        throws Exception
+    {
+        return new FileInputStream( bakFilePath + "/" + filename );
+    }
 
-		out.write(resp);
+    public byte[] getInputByte( InputStream in )
+        throws IOException
+    {
+        byte[] result = null;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] temp = new byte[1024];
+        int len = 0;
+        while ( ( len = in.read( temp ) ) != -1 )
+        {
+            in.read( temp );
+            output.write( temp, 0, len );
+            len = 0;
+        }
+        in.close();
+        result = output.toByteArray();
+        output.close();
+        return result;
+    }
 
-		out.close();
-	}
+    public void writeOneFile( byte[] resp )
+        throws Exception
+    {
+        File respFile = new File( putFilePath, "response.txt" );
+        FileOutputStream out = new FileOutputStream( respFile );
 
-	public void uploadOneFile(byte[] buf, String filename) throws Exception {
-		File respFile = new File(this.putFilePath, filename);
-		FileOutputStream out = new FileOutputStream(respFile);
-		out.write(buf);
-		out.close();
-	}
+        out.write( resp );
 
-	public void copyFile(String src, String des) throws Exception {
-		FileInputStream in = new FileInputStream(src);
-		FileOutputStream out = new FileOutputStream(des);
+        out.close();
+    }
 
-		FileChannel fcIn = in.getChannel();
-		FileChannel fcOut = out.getChannel();
+    public void uploadOneFile( byte[] buf, String filename )
+        throws Exception
+    {
+        File respFile = new File( putFilePath, filename );
+        FileOutputStream out = new FileOutputStream( respFile );
+        out.write( buf );
+        out.close();
+    }
 
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
+    public void copyFile( String src, String des )
+        throws Exception
+    {
+        FileInputStream in = new FileInputStream( src );
+        FileOutputStream out = new FileOutputStream( des );
 
-		while (fcIn.read(buffer) != -1) {
-			buffer.flip();
-			fcOut.write(buffer);
-			buffer.clear();
-		}
-		fcIn.close();
-		fcOut.close();
-		in.close();
-		out.close();
-	}
+        FileChannel fcIn = in.getChannel();
+        FileChannel fcOut = out.getChannel();
 
-	public void copyFile(File src, File des) throws Exception {
-		FileInputStream in = new FileInputStream(src);
-		FileOutputStream out = new FileOutputStream(des);
+        ByteBuffer buffer = ByteBuffer.allocate( 1024 );
 
-		FileChannel fcIn = in.getChannel();
-		FileChannel fcOut = out.getChannel();
+        while ( fcIn.read( buffer ) != -1 )
+        {
+            buffer.flip();
+            fcOut.write( buffer );
+            buffer.clear();
+        }
+        fcIn.close();
+        fcOut.close();
+        in.close();
+        out.close();
+    }
 
-		ByteBuffer buffer = ByteBuffer.allocate(1024);
+    public void copyFile( File src, File des )
+        throws Exception
+    {
+        FileInputStream in = new FileInputStream( src );
+        FileOutputStream out = new FileOutputStream( des );
 
-		while (fcIn.read(buffer) != -1) {
-			buffer.flip();
-			fcOut.write(buffer);
-			buffer.clear();
-		}
-		fcIn.close();
-		fcOut.close();
-		in.close();
-		out.close();
-	}
+        FileChannel fcIn = in.getChannel();
+        FileChannel fcOut = out.getChannel();
 
-	public boolean bakFile(File file) throws Exception {
-		File bakFile = new File(this.bakFilePath + "/" + file.getName());
-		copyFile(file, bakFile);
-		return deleteFile(file);
-	}
+        ByteBuffer buffer = ByteBuffer.allocate( 1024 );
 
-	public boolean bakFile(String filename) throws Exception {
-		copyFile(this.getFilePath + "/" + filename, this.bakFilePath + "/"
-				+ filename);
-		return deleteFileWithName(this.getFilePath + "/" + filename);
-	}
+        while ( fcIn.read( buffer ) != -1 )
+        {
+            buffer.flip();
+            fcOut.write( buffer );
+            buffer.clear();
+        }
+        fcIn.close();
+        fcOut.close();
+        in.close();
+        out.close();
+    }
 
-	public boolean deleteFile(File file) throws Exception {
-		return file.delete();
-	}
+    public boolean bakFile( File file )
+        throws Exception
+    {
+        File bakFile = new File( bakFilePath + "/" + file.getName() );
+        copyFile( file, bakFile );
+        return deleteFile( file );
+    }
 
-	public boolean deleteFileWithName(String filename) throws Exception {
-		File file = new File(filename);
-		return file.delete();
-	}
+    public boolean bakFile( String filename )
+        throws Exception
+    {
+        copyFile( getFilePath + "/" + filename, bakFilePath + "/" + filename );
+        return deleteFileWithName( getFilePath + "/" + filename );
+    }
 
-	public void setProperties(Map<?, ?> props) {
-		setBindingProperties(props);
-	}
+    public boolean deleteFile( File file )
+        throws Exception
+    {
+        return file.delete();
+    }
+
+    public boolean deleteFileWithName( String filename )
+        throws Exception
+    {
+        File file = new File( filename );
+        return file.delete();
+    }
+
+    public void setProperties( Map<?, ?> props )
+    {
+        setBindingProperties( props );
+    }
 }

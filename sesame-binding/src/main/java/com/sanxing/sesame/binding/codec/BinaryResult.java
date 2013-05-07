@@ -6,113 +6,150 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
 import javax.activation.DataSource;
 import javax.xml.transform.Result;
+
 import org.apache.ws.commons.schema.XmlSchema;
 
-public class BinaryResult implements Result {
-	private String elementName;
-	private String systemId;
-	private OutputStream outputStream;
-	private String encoding = System.getProperty("file.encoding");
-	private XmlSchema schema;
-	private Map<String, Object> properties = new Hashtable();
+public class BinaryResult
+    implements Result
+{
+    private String elementName;
 
-	private Map<String, DataSource> attachments = new Hashtable();
+    private String systemId;
 
-	public BinaryResult() {
-		setOutputStream(new ByteArrayOutputStream());
-	}
+    private OutputStream outputStream;
 
-	public BinaryResult(OutputStream outputStream) {
-		setOutputStream(outputStream);
-	}
+    private String encoding = System.getProperty( "file.encoding" );
 
-	public BinaryResult(String systemId) {
-		this.systemId = systemId;
-	}
+    private XmlSchema schema;
 
-	public void setOutputStream(OutputStream outputStream) {
-		this.outputStream = outputStream;
-	}
+    private final Map<String, Object> properties = new Hashtable();
 
-	public OutputStream getOutputStream() {
-		return this.outputStream;
-	}
+    private final Map<String, DataSource> attachments = new Hashtable();
 
-	public byte[] getBytes() {
-		if (this.outputStream instanceof ByteArrayOutputStream) {
-			return ((ByteArrayOutputStream) this.outputStream).toByteArray();
-		}
+    public BinaryResult()
+    {
+        setOutputStream( new ByteArrayOutputStream() );
+    }
 
-		return null;
-	}
+    public BinaryResult( OutputStream outputStream )
+    {
+        setOutputStream( outputStream );
+    }
 
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
+    public BinaryResult( String systemId )
+    {
+        this.systemId = systemId;
+    }
 
-	public String getEncoding() {
-		return this.encoding;
-	}
+    public void setOutputStream( OutputStream outputStream )
+    {
+        this.outputStream = outputStream;
+    }
 
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
+    public OutputStream getOutputStream()
+    {
+        return outputStream;
+    }
 
-	public String getSystemId() {
-		return this.systemId;
-	}
+    public byte[] getBytes()
+    {
+        if ( outputStream instanceof ByteArrayOutputStream )
+        {
+            return ( (ByteArrayOutputStream) outputStream ).toByteArray();
+        }
 
-	public void setXMLSchema(XmlSchema schema) {
-		this.schema = schema;
-	}
+        return null;
+    }
 
-	public XmlSchema getXMLSchema() {
-		return this.schema;
-	}
+    public void setEncoding( String encoding )
+    {
+        this.encoding = encoding;
+    }
 
-	public void setElementName(String elementName) {
-		this.elementName = elementName;
-	}
+    public String getEncoding()
+    {
+        return encoding;
+    }
 
-	public String getElementName() {
-		return this.elementName;
-	}
+    @Override
+    public void setSystemId( String systemId )
+    {
+        this.systemId = systemId;
+    }
 
-	public Set<String> getPropertyNames() {
-		return this.properties.keySet();
-	}
+    @Override
+    public String getSystemId()
+    {
+        return systemId;
+    }
 
-	public Object getProperty(String name) {
-		return this.properties.get(name);
-	}
+    public void setXMLSchema( XmlSchema schema )
+    {
+        this.schema = schema;
+    }
 
-	public void setProperty(String name, Object value) {
-		this.properties.put(name, value);
-	}
+    public XmlSchema getXMLSchema()
+    {
+        return schema;
+    }
 
-	public void addAttachment(String id, DataSource source) {
-		this.attachments.put(id, source);
-	}
+    public void setElementName( String elementName )
+    {
+        this.elementName = elementName;
+    }
 
-	public void removeAttachment(String id) {
-		this.attachments.remove(id);
-	}
+    public String getElementName()
+    {
+        return elementName;
+    }
 
-	public DataSource getAttachment(String id) {
-		return ((DataSource) this.attachments.get(id));
-	}
+    public Set<String> getPropertyNames()
+    {
+        return properties.keySet();
+    }
 
-	public Set<String> getAttachmentNames() {
-		return this.attachments.keySet();
-	}
+    public Object getProperty( String name )
+    {
+        return properties.get( name );
+    }
 
-	public void write(byte[] b) throws IOException {
-		this.outputStream.write(b);
-	}
+    public void setProperty( String name, Object value )
+    {
+        properties.put( name, value );
+    }
 
-	public void write(byte[] b, int off, int len) throws IOException {
-		this.outputStream.write(b, off, len);
-	}
+    public void addAttachment( String id, DataSource source )
+    {
+        attachments.put( id, source );
+    }
+
+    public void removeAttachment( String id )
+    {
+        attachments.remove( id );
+    }
+
+    public DataSource getAttachment( String id )
+    {
+        return attachments.get( id );
+    }
+
+    public Set<String> getAttachmentNames()
+    {
+        return attachments.keySet();
+    }
+
+    public void write( byte[] b )
+        throws IOException
+    {
+        outputStream.write( b );
+    }
+
+    public void write( byte[] b, int off, int len )
+        throws IOException
+    {
+        outputStream.write( b, off, len );
+    }
 }

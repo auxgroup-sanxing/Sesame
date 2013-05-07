@@ -6,13 +6,15 @@
 <%@page import="java.sql.Timestamp"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
+<%@page
+	import="org.jdom.*,org.jdom.input.*,org.jdom.output.*,org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
 <%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

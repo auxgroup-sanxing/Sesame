@@ -1,10 +1,11 @@
 package com.sanxing.sesame.jaxp;
 
 import java.util.ArrayList;
-import java.util.List;
+
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;
@@ -13,294 +14,401 @@ import org.w3c.dom.Element;
 import org.w3c.dom.EntityReference;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-public class W3CDOMStreamReader extends DOMStreamReader {
-	private Node content;
-	private Document document;
-	private W3CNamespaceContext context;
+public class W3CDOMStreamReader
+    extends DOMStreamReader
+{
+    private Node content;
 
-	public W3CDOMStreamReader(Element element) {
-		super(new DOMStreamReader.ElementFrame(element, null));
+    private final Document document;
 
-		this.document = element.getOwnerDocument();
-	}
+    private W3CNamespaceContext context;
 
-	public Document getDocument() {
-		return this.document;
-	}
+    public W3CDOMStreamReader( Element element )
+    {
+        super( new DOMStreamReader.ElementFrame( element, null ) );
 
-	protected void newFrame(DOMStreamReader.ElementFrame frame) {
-		Element element = getCurrentElement();
-		frame.uris = new ArrayList();
-		frame.prefixes = new ArrayList();
-		frame.attributes = new ArrayList();
+        document = element.getOwnerDocument();
+    }
 
-		if (this.context == null) {
-			this.context = new W3CNamespaceContext();
-		}
+    public Document getDocument()
+    {
+        return document;
+    }
 
-		this.context.setElement(element);
+    @Override
+    protected void newFrame( DOMStreamReader.ElementFrame frame )
+    {
+        Element element = getCurrentElement();
+        frame.uris = new ArrayList();
+        frame.prefixes = new ArrayList();
+        frame.attributes = new ArrayList();
 
-		NamedNodeMap nodes = element.getAttributes();
+        if ( context == null )
+        {
+            context = new W3CNamespaceContext();
+        }
 
-		String ePrefix = element.getPrefix();
-		if (ePrefix == null) {
-			ePrefix = "";
-		}
+        context.setElement( element );
 
-		for (int i = 0; i < nodes.getLength(); ++i) {
-			Node node = nodes.item(i);
-			String prefix = node.getPrefix();
-			String localName = node.getLocalName();
-			String value = node.getNodeValue();
-			String name = node.getNodeName();
+        NamedNodeMap nodes = element.getAttributes();
 
-			if (prefix == null) {
-				prefix = "";
-			}
+        String ePrefix = element.getPrefix();
+        if ( ePrefix == null )
+        {
+            ePrefix = "";
+        }
 
-			if ((name != null) && ("xmlns".equals(name))) {
-				frame.uris.add(value);
-				frame.prefixes.add("");
-			} else if ((prefix.length() > 0) && ("xmlns".equals(prefix))) {
-				frame.uris.add(value);
-				frame.prefixes.add(localName);
-			} else if (name.startsWith("xmlns:")) {
-				prefix = name.substring(6);
-				frame.uris.add(value);
-				frame.prefixes.add(prefix);
-			} else {
-				frame.attributes.add(node);
-			}
-		}
-	}
+        for ( int i = 0; i < nodes.getLength(); ++i )
+        {
+            Node node = nodes.item( i );
+            String prefix = node.getPrefix();
+            String localName = node.getLocalName();
+            String value = node.getNodeValue();
+            String name = node.getNodeName();
 
-	protected void endElement() {
-		super.endElement();
-	}
+            if ( prefix == null )
+            {
+                prefix = "";
+            }
 
-	Element getCurrentElement() {
-		return ((Element) getCurrentFrame().element);
-	}
+            if ( ( name != null ) && ( "xmlns".equals( name ) ) )
+            {
+                frame.uris.add( value );
+                frame.prefixes.add( "" );
+            }
+            else if ( ( prefix.length() > 0 ) && ( "xmlns".equals( prefix ) ) )
+            {
+                frame.uris.add( value );
+                frame.prefixes.add( localName );
+            }
+            else if ( name.startsWith( "xmlns:" ) )
+            {
+                prefix = name.substring( 6 );
+                frame.uris.add( value );
+                frame.prefixes.add( prefix );
+            }
+            else
+            {
+                frame.attributes.add( node );
+            }
+        }
+    }
 
-	protected DOMStreamReader.ElementFrame getChildFrame(int currentChild) {
-		return new DOMStreamReader.ElementFrame(getCurrentElement()
-				.getChildNodes().item(currentChild), getCurrentFrame());
-	}
+    @Override
+    protected void endElement()
+    {
+        super.endElement();
+    }
 
-	protected int getChildCount() {
-		return getCurrentElement().getChildNodes().getLength();
-	}
+    Element getCurrentElement()
+    {
+        return ( (Element) getCurrentFrame().element );
+    }
 
-	protected int moveToChild(int currentChild) {
-		this.content = getCurrentElement().getChildNodes().item(currentChild);
-		if (this.content instanceof Text)
-			return 4;
-		if (this.content instanceof Element)
-			return 1;
-		if (this.content instanceof CDATASection)
-			return 12;
-		if (this.content instanceof Comment)
-			return 4;
-		if (this.content instanceof EntityReference) {
-			return 9;
-		}
-		throw new IllegalStateException();
-	}
+    @Override
+    protected DOMStreamReader.ElementFrame getChildFrame( int currentChild )
+    {
+        return new DOMStreamReader.ElementFrame( getCurrentElement().getChildNodes().item( currentChild ),
+            getCurrentFrame() );
+    }
 
-	public String getElementText() throws XMLStreamException {
-		this.frame.ended = true;
-		this.currentEvent = 2;
-		endElement();
-		String result = getContent(getCurrentElement());
+    @Override
+    protected int getChildCount()
+    {
+        return getCurrentElement().getChildNodes().getLength();
+    }
 
-		return ((result != null) ? result : "");
-	}
+    @Override
+    protected int moveToChild( int currentChild )
+    {
+        content = getCurrentElement().getChildNodes().item( currentChild );
+        if ( content instanceof Text )
+        {
+            return 4;
+        }
+        if ( content instanceof Element )
+        {
+            return 1;
+        }
+        if ( content instanceof CDATASection )
+        {
+            return 12;
+        }
+        if ( content instanceof Comment )
+        {
+            return 4;
+        }
+        if ( content instanceof EntityReference )
+        {
+            return 9;
+        }
+        throw new IllegalStateException();
+    }
 
-	public String getNamespaceURI(String prefix) {
-		DOMStreamReader.ElementFrame frame = getCurrentFrame();
+    @Override
+    public String getElementText()
+        throws XMLStreamException
+    {
+        frame.ended = true;
+        currentEvent = 2;
+        endElement();
+        String result = getContent( getCurrentElement() );
 
-		while (frame != null) {
-			int index = frame.prefixes.indexOf(prefix);
-			if (index != -1) {
-				return ((String) frame.uris.get(index));
-			}
+        return ( ( result != null ) ? result : "" );
+    }
 
-			frame = frame.parent;
-		}
+    @Override
+    public String getNamespaceURI( String prefix )
+    {
+        DOMStreamReader.ElementFrame frame = getCurrentFrame();
 
-		return null;
-	}
+        while ( frame != null )
+        {
+            int index = frame.prefixes.indexOf( prefix );
+            if ( index != -1 )
+            {
+                return frame.uris.get( index );
+            }
 
-	public String getAttributeValue(String ns, String local) {
-		Attr attr;
-		if ((ns == null) || (ns.equals("")))
-			attr = getCurrentElement().getAttributeNode(local);
-		else {
-			attr = getCurrentElement().getAttributeNodeNS(ns, local);
-		}
-		if (attr != null) {
-			return attr.getValue();
-		}
-		return null;
-	}
+            frame = frame.parent;
+        }
 
-	public int getAttributeCount() {
-		return getCurrentFrame().attributes.size();
-	}
+        return null;
+    }
 
-	Attr getAttribute(int i) {
-		return ((Attr) getCurrentFrame().attributes.get(i));
-	}
+    @Override
+    public String getAttributeValue( String ns, String local )
+    {
+        Attr attr;
+        if ( ( ns == null ) || ( ns.equals( "" ) ) )
+        {
+            attr = getCurrentElement().getAttributeNode( local );
+        }
+        else
+        {
+            attr = getCurrentElement().getAttributeNodeNS( ns, local );
+        }
+        if ( attr != null )
+        {
+            return attr.getValue();
+        }
+        return null;
+    }
 
-	private String getLocalName(Attr attr) {
-		String name = attr.getLocalName();
-		if (name == null) {
-			name = attr.getNodeName();
-		}
-		return name;
-	}
+    @Override
+    public int getAttributeCount()
+    {
+        return getCurrentFrame().attributes.size();
+    }
 
-	public QName getAttributeName(int i) {
-		Attr at = getAttribute(i);
+    Attr getAttribute( int i )
+    {
+        return ( (Attr) getCurrentFrame().attributes.get( i ) );
+    }
 
-		String prefix = at.getPrefix();
-		String ln = getLocalName(at);
+    private String getLocalName( Attr attr )
+    {
+        String name = attr.getLocalName();
+        if ( name == null )
+        {
+            name = attr.getNodeName();
+        }
+        return name;
+    }
 
-		String ns = at.getNamespaceURI();
+    @Override
+    public QName getAttributeName( int i )
+    {
+        Attr at = getAttribute( i );
 
-		if (prefix == null) {
-			return new QName(ns, ln);
-		}
-		return new QName(ns, ln, prefix);
-	}
+        String prefix = at.getPrefix();
+        String ln = getLocalName( at );
 
-	public String getAttributeNamespace(int i) {
-		return getAttribute(i).getNamespaceURI();
-	}
+        String ns = at.getNamespaceURI();
 
-	public String getAttributeLocalName(int i) {
-		Attr attr = getAttribute(i);
-		return getLocalName(attr);
-	}
+        if ( prefix == null )
+        {
+            return new QName( ns, ln );
+        }
+        return new QName( ns, ln, prefix );
+    }
 
-	public String getAttributePrefix(int i) {
-		return getAttribute(i).getPrefix();
-	}
+    @Override
+    public String getAttributeNamespace( int i )
+    {
+        return getAttribute( i ).getNamespaceURI();
+    }
 
-	public String getAttributeType(int i) {
-		return "CDATA";
-	}
+    @Override
+    public String getAttributeLocalName( int i )
+    {
+        Attr attr = getAttribute( i );
+        return getLocalName( attr );
+    }
 
-	public String getAttributeValue(int i) {
-		return getAttribute(i).getValue();
-	}
+    @Override
+    public String getAttributePrefix( int i )
+    {
+        return getAttribute( i ).getPrefix();
+    }
 
-	public boolean isAttributeSpecified(int i) {
-		return (getAttribute(i).getValue() != null);
-	}
+    @Override
+    public String getAttributeType( int i )
+    {
+        return "CDATA";
+    }
 
-	public int getNamespaceCount() {
-		return getCurrentFrame().prefixes.size();
-	}
+    @Override
+    public String getAttributeValue( int i )
+    {
+        return getAttribute( i ).getValue();
+    }
 
-	public String getNamespacePrefix(int i) {
-		return ((String) getCurrentFrame().prefixes.get(i));
-	}
+    @Override
+    public boolean isAttributeSpecified( int i )
+    {
+        return ( getAttribute( i ).getValue() != null );
+    }
 
-	public String getNamespaceURI(int i) {
-		return ((String) getCurrentFrame().uris.get(i));
-	}
+    @Override
+    public int getNamespaceCount()
+    {
+        return getCurrentFrame().prefixes.size();
+    }
 
-	public NamespaceContext getNamespaceContext() {
-		return this.context;
-	}
+    @Override
+    public String getNamespacePrefix( int i )
+    {
+        return getCurrentFrame().prefixes.get( i );
+    }
 
-	public String getText() {
-		Node node = getCurrentElement().getChildNodes().item(
-				getCurrentFrame().currentChild);
-		return node.getNodeValue();
-	}
+    @Override
+    public String getNamespaceURI( int i )
+    {
+        return getCurrentFrame().uris.get( i );
+    }
 
-	public char[] getTextCharacters() {
-		return getText().toCharArray();
-	}
+    @Override
+    public NamespaceContext getNamespaceContext()
+    {
+        return context;
+    }
 
-	public int getTextStart() {
-		return 0;
-	}
+    @Override
+    public String getText()
+    {
+        Node node = getCurrentElement().getChildNodes().item( getCurrentFrame().currentChild );
+        return node.getNodeValue();
+    }
 
-	public int getTextLength() {
-		return getText().length();
-	}
+    @Override
+    public char[] getTextCharacters()
+    {
+        return getText().toCharArray();
+    }
 
-	public String getEncoding() {
-		return null;
-	}
+    @Override
+    public int getTextStart()
+    {
+        return 0;
+    }
 
-	public QName getName() {
-		Element el = getCurrentElement();
+    @Override
+    public int getTextLength()
+    {
+        return getText().length();
+    }
 
-		String prefix = getPrefix();
-		String ln = getLocalName();
+    @Override
+    public String getEncoding()
+    {
+        return null;
+    }
 
-		if (prefix == null) {
-			return new QName(el.getNamespaceURI(), ln);
-		}
-		return new QName(el.getNamespaceURI(), ln, prefix);
-	}
+    @Override
+    public QName getName()
+    {
+        Element el = getCurrentElement();
 
-	public String getLocalName() {
-		String name = getCurrentElement().getLocalName();
+        String prefix = getPrefix();
+        String ln = getLocalName();
 
-		if (name == null) {
-			name = getCurrentElement().getNodeName();
-		}
-		return name;
-	}
+        if ( prefix == null )
+        {
+            return new QName( el.getNamespaceURI(), ln );
+        }
+        return new QName( el.getNamespaceURI(), ln, prefix );
+    }
 
-	public String getNamespaceURI() {
-		return getCurrentElement().getNamespaceURI();
-	}
+    @Override
+    public String getLocalName()
+    {
+        String name = getCurrentElement().getLocalName();
 
-	public String getPrefix() {
-		String prefix = getCurrentElement().getPrefix();
-		if (prefix == null) {
-			prefix = "";
-		}
-		return prefix;
-	}
+        if ( name == null )
+        {
+            name = getCurrentElement().getNodeName();
+        }
+        return name;
+    }
 
-	public String getPITarget() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public String getNamespaceURI()
+    {
+        return getCurrentElement().getNamespaceURI();
+    }
 
-	public String getPIData() {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public String getPrefix()
+    {
+        String prefix = getCurrentElement().getPrefix();
+        if ( prefix == null )
+        {
+            prefix = "";
+        }
+        return prefix;
+    }
 
-	public static String getContent(Node n) {
-		if (n == null) {
-			return null;
-		}
-		Node n1 = getChild(n, 3);
-		if (n1 == null) {
-			return null;
-		}
-		String s1 = n1.getNodeValue();
-		return s1.trim();
-	}
+    @Override
+    public String getPITarget()
+    {
+        throw new UnsupportedOperationException();
+    }
 
-	public static Node getChild(Node parent, int type) {
-		Node n = parent.getFirstChild();
-		while ((n != null) && (type != n.getNodeType())) {
-			n = n.getNextSibling();
-		}
-		if (n == null) {
-			return null;
-		}
-		return n;
-	}
+    @Override
+    public String getPIData()
+    {
+        throw new UnsupportedOperationException();
+    }
+
+    public static String getContent( Node n )
+    {
+        if ( n == null )
+        {
+            return null;
+        }
+        Node n1 = getChild( n, 3 );
+        if ( n1 == null )
+        {
+            return null;
+        }
+        String s1 = n1.getNodeValue();
+        return s1.trim();
+    }
+
+    public static Node getChild( Node parent, int type )
+    {
+        Node n = parent.getFirstChild();
+        while ( ( n != null ) && ( type != n.getNodeType() ) )
+        {
+            n = n.getNextSibling();
+        }
+        if ( n == null )
+        {
+            return null;
+        }
+        return n;
+    }
 }

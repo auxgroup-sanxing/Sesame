@@ -3,32 +3,41 @@ package com.sanxing.studio.emu;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.jdom.Document;
 
-public class OperationEntry {
-	private XmlSchema schema;
-	private Document data;
-	private String interfaceName;
+public class OperationEntry
+{
+    private XmlSchema schema;
 
-	public Document getData() {
-		return this.data;
-	}
+    private Document data;
 
-	public void setData(Document data) {
-		this.data = data;
-	}
+    private String interfaceName;
 
-	public void setSchema(XmlSchema schema) {
-		this.schema = schema;
-	}
+    public Document getData()
+    {
+        return data;
+    }
 
-	public XmlSchema getSchema() {
-		return this.schema;
-	}
+    public void setData( Document data )
+    {
+        this.data = data;
+    }
 
-	public void setInterfaceName(String interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    public void setSchema( XmlSchema schema )
+    {
+        this.schema = schema;
+    }
 
-	public String getInterfaceName() {
-		return this.interfaceName;
-	}
+    public XmlSchema getSchema()
+    {
+        return schema;
+    }
+
+    public void setInterfaceName( String interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
+
+    public String getInterfaceName()
+    {
+        return interfaceName;
+    }
 }

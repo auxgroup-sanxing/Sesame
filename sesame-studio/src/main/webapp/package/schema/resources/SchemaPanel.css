@@ -1,32 +1,32 @@
 @CHARSET "UTF-8";
 
 .xsd-rightArrow {
-	background-image: url('images/right_arrow.gif'); 
+	background-image: url('images/right_arrow.gif');
 	background-position: left center;
 	background-repeat: no-repeat;
 }
 
 .xsd-lineH {
-	background-image: url('images/blue_dot.gif'); 
+	background-image: url('images/blue_dot.gif');
 	background-position: center;
 	background-repeat: repeat-x;
 }
 
 .xsd-lineV {
-	background-image: url('images/blue_dot.gif'); 
+	background-image: url('images/blue_dot.gif');
 	background-position: center;
 	background-repeat: repeat-y;
 }
 
 .xsd-lineL1 {
-	background-image: url('images/left_middle.gif'); 
+	background-image: url('images/left_middle.gif');
 	background-position: -1px center;
 	background-repeat: no-repeat;
 	padding-left: 10px;
 }
 
 .xsd-LineLT {
-	background-image: url('images/left_top.gif'); 
+	background-image: url('images/left_top.gif');
 	background-position: left center;
 	background-repeat: no-repeat;
 	vertical-align: middle;
@@ -42,7 +42,7 @@
 }
 
 .xsd-LineLB {
-	background-image: url('images/left_bottom.gif'); 
+	background-image: url('images/left_bottom.gif');
 	background-position: left center;
 	background-repeat: no-repeat;
 	vertical-align: middle;
@@ -51,25 +51,25 @@
 
 .xsd-box-deactive {
 	border: 1px solid gray;
-	-moz-border-radius : 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .xsd-box-active {
 	border: 1px solid black;
-	-moz-border-radius : 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .xsd-boxheader {
-	background-image:url('images/head_bg_deactive.gif'); 
+	background-image: url('images/head_bg_deactive.gif');
 	background-position: top;
 	background-repeat: repeat-x;
 	border-bottom: gray solid 1px;
 	padding: 2px;
-	text-align:center;
+	text-align: center;
 }
 
 .xsd-boxheader-active {
-	background-image:url('images/head_bg_active.gif'); 
+	background-image: url('images/head_bg_active.gif');
 	background-position: top;
 	background-repeat: repeat-x;
 	padding: 2px;
@@ -77,13 +77,13 @@
 
 .xsd-complex-deactive {
 	border: 1px solid #808000;
-	-moz-border-radius : 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .xsd-complex-expanded {
 	border: 1px solid #808000;
 	margin-bottom: 2px;
-	-moz-border-radius : 5px 5px;
+	-moz-border-radius: 5px 5px;
 }
 
 .xsd-complex-title {
@@ -92,8 +92,8 @@
 }
 
 .xsd_AddButton {
-	background-image:url('images/add.gif');
-	background-position:center; 
+	background-image: url('images/add.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 	margin: 0px auto 0px auto;
 	width: 16px;
@@ -101,11 +101,11 @@
 }
 
 .xsd_AddButton_hover {
-	background-image:url('images/add_hover.gif');
+	background-image: url('images/add_hover.gif');
 }
 
 .xsd-icon-schema {
-	background-image:url('images/XSDSchema.gif') !important; 
+	background-image: url('images/XSDSchema.gif') !important;
 }
 
 .xsd-icon-commtrigger {
@@ -117,83 +117,83 @@
 }
 
 .xsd-icon-directives {
-	background-image:url('images/directivesheader.gif') !important; 
+	background-image: url('images/directivesheader.gif') !important;
 }
 
 .xsd-icon-import {
-	background-image:url('images/XSDImport.gif') !important; 
+	background-image: url('images/XSDImport.gif') !important;
 }
 
 .xsd-icon-include {
-	background-image:url('images/XSDInclude.gif') !important; 
+	background-image: url('images/XSDInclude.gif') !important;
 }
 
 .xsd-icon-item {
-	background-image:url('images/protected_co.gif') !important;
+	background-image: url('images/protected_co.gif') !important;
 }
 
 .xsd-icon-redefine {
-	background-image:url('images/XSDRedefine.gif') !important; 
+	background-image: url('images/XSDRedefine.gif') !important;
 }
 
 .xsd-icon-elements {
-	background-image:url('images/elementsheader.gif') !important; 
+	background-image: url('images/elementsheader.gif') !important;
 }
 
 .xsd-icon-groups {
-	background-image:url('images/groupsheader.gif') !important; 
+	background-image: url('images/groupsheader.gif') !important;
 }
 
 .xsd-icon-notations {
-	background-image:url('images/notationsheader.gif') !important; 
+	background-image: url('images/notationsheader.gif') !important;
 }
 
 .xsd-icon-any {
-	background-image:url('images/XSDWildcardElement.gif') !important;
+	background-image: url('images/XSDWildcardElement.gif') !important;
 }
 
 .xsd-icon-part {
-	background-image:url('images/protected_co.gif') !important;
+	background-image: url('images/protected_co.gif') !important;
 }
 
 .xsd-icon-types {
-	background-image:url('images/typesheader.gif') !important;
+	background-image: url('images/typesheader.gif') !important;
 }
 
 .xsd-icon-element {
-	background-image:url('images/XSDElementDeclaration.gif') !important; 
+	background-image: url('images/XSDElementDeclaration.gif') !important;
 }
 
 .xsd-icon-ref {
-	background-image:url('images/ref_obj.gif') !important;
-	background-position: center !important; 
+	background-image: url('images/ref_obj.gif') !important;
+	background-position: center !important;
 }
 
 .xsd-icon-searchref {
-	background-image:url('images/search_ref_obj.gif') !important;
-	background-position: center !important; 
+	background-image: url('images/search_ref_obj.gif') !important;
+	background-position: center !important;
 	background-repeat: no-repeat !important;
 	cursor: pointer;
 }
 
 .xsd-icon-attribute {
-	background-image:url('images/XSDAttributeDeclaration.gif') !important; 
+	background-image: url('images/XSDAttributeDeclaration.gif') !important;
 }
 
 .xsd-icon-complextype {
-	background-image:url('images/XSDComplexType.gif') !important; 
+	background-image: url('images/XSDComplexType.gif') !important;
 }
 
 .xsd-icon-simpletype {
-	background-image:url('images/simpletype_obj.gif') !important; 
+	background-image: url('images/simpletype_obj.gif') !important;
 }
 
 .xsd-icon-sequence {
-	background-image:url('images/sequence_obj.gif') !important;
+	background-image: url('images/sequence_obj.gif') !important;
 }
 
 .xsd-icon-choice {
-	background-image:url('images/choice_obj.gif') !important;
+	background-image: url('images/choice_obj.gif') !important;
 	border: 1px solid gray !important;
 	height: 16px !important;
 	width: 14px !important;
@@ -201,7 +201,7 @@
 }
 
 .xsd-icon-all {
-	background-image:url('images/all_obj.gif') !important;
+	background-image: url('images/all_obj.gif') !important;
 	border: 1px solid gray !important;
 	height: 16px !important;
 	width: 14px !important;
@@ -209,7 +209,7 @@
 }
 
 .xsd-palette-category {
-	background-image: url('images/activity_category.gif'); 
+	background-image: url('images/activity_category.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }

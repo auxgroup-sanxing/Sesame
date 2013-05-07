@@ -2,57 +2,73 @@ package com.sanxing.sesame.deployment;
 
 import javax.xml.namespace.QName;
 
-public class Consumes {
-	private QName interfaceName;
-	private QName serviceName;
-	private String endpointName;
-	private String linkType;
+public class Consumes
+{
+    private QName interfaceName;
 
-	public Consumes() {
-		this.linkType = "standard";
-	}
+    private QName serviceName;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    private String endpointName;
 
-	public void setInterfaceName(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    private String linkType;
 
-	public QName getServiceName() {
-		return this.serviceName;
-	}
+    public Consumes()
+    {
+        linkType = "standard";
+    }
 
-	public void setServiceName(QName serviceName) {
-		this.serviceName = serviceName;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    public void setInterfaceName( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
 
-	public void setEndpointName(String endpointName) {
-		this.endpointName = endpointName;
-	}
+    public QName getServiceName()
+    {
+        return serviceName;
+    }
 
-	public String getLinkType() {
-		return this.linkType;
-	}
+    public void setServiceName( QName serviceName )
+    {
+        this.serviceName = serviceName;
+    }
 
-	public void setLinkType(String linkType) {
-		this.linkType = linkType;
-	}
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
 
-	public boolean isStandardLink() {
-		return ((this.linkType != null) && (this.linkType.equals("standard")));
-	}
+    public void setEndpointName( String endpointName )
+    {
+        this.endpointName = endpointName;
+    }
 
-	public boolean isSoftLink() {
-		return ((this.linkType != null) && (this.linkType.equals("soft")));
-	}
+    public String getLinkType()
+    {
+        return linkType;
+    }
 
-	public boolean isHardLink() {
-		return ((this.linkType != null) && (this.linkType.equals("hard")));
-	}
+    public void setLinkType( String linkType )
+    {
+        this.linkType = linkType;
+    }
+
+    public boolean isStandardLink()
+    {
+        return ( ( linkType != null ) && ( linkType.equals( "standard" ) ) );
+    }
+
+    public boolean isSoftLink()
+    {
+        return ( ( linkType != null ) && ( linkType.equals( "soft" ) ) );
+    }
+
+    public boolean isHardLink()
+    {
+        return ( ( linkType != null ) && ( linkType.equals( "hard" ) ) );
+    }
 }

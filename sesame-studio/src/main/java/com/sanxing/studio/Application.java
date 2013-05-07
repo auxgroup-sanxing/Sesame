@@ -1,83 +1,110 @@
 package com.sanxing.studio;
 
-import com.sanxing.studio.team.SCM;
 import java.io.File;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Application implements ServletContextListener {
-	public static final String ENCRYPT_ALGORITHM = "RSA";
-	public static final int KEY_SIZE = 512;
-	private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+import com.sanxing.studio.team.SCM;
 
-	private static ServletContext servletContext = null;
-	private static File projectFolder;
-	private static File wareFolder;
-	private static KeyPair keyPair;
+public class Application
+    implements ServletContextListener
+{
+    public static final String ENCRYPT_ALGORITHM = "RSA";
 
-	private static ServletContext getServletContext() {
-		if (servletContext == null) {
-			throw new RuntimeException("Application does not Initialized");
-		}
-		return servletContext;
-	}
+    public static final int KEY_SIZE = 512;
 
-	public static String getRealPath(String path) {
-		return getServletContext().getRealPath(path);
-	}
+    private static final Logger LOG = LoggerFactory.getLogger( Application.class );
 
-	public static File getWarehouseRoot() {
-		return wareFolder;
-	}
+    private static ServletContext servletContext = null;
 
-	public static File getWarehouseFile(String path) {
-		return new File(getWarehouseRoot(), path);
-	}
+    private static File projectFolder;
 
-	public static File getWorkspaceRoot() {
-		return projectFolder;
-	}
+    private static File wareFolder;
 
-	public static File getWorkspaceFile(String path) {
-		return new File(getWorkspaceRoot(), path);
-	}
+    private static KeyPair keyPair;
 
-	public static KeyPair getKeyPair() {
-		return keyPair;
-	}
+    private static ServletContext getServletContext()
+    {
+        if ( servletContext == null )
+        {
+            throw new RuntimeException( "Application does not Initialized" );
+        }
+        return servletContext;
+    }
 
-	public void contextDestroyed(ServletContextEvent event) {
-		servletContext = null;
-		SQLDataSource.closeDataSource();
-		SCM.cleanUp();
-	}
+    public static String getRealPath( String path )
+    {
+        return getServletContext().getRealPath( path );
+    }
 
-	public void contextInitialized(ServletContextEvent event) {
-		servletContext = event.getServletContext();
+    public static File getWarehouseRoot()
+    {
+        return wareFolder;
+    }
 
-		String home = System.getProperty("SESAME_HOME");
-		projectFolder = new File(home, "projects");
-		if (!(projectFolder.exists())) {
-			projectFolder.mkdir();
-		}
+    public static File getWarehouseFile( String path )
+    {
+        return new File( getWarehouseRoot(), path );
+    }
 
-		wareFolder = new File(home, "warehouse");
-		if (!(wareFolder.exists())) {
-			wareFolder.mkdir();
-		}
+    public static File getWorkspaceRoot()
+    {
+        return projectFolder;
+    }
 
-		try {
-			KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
-			generator.initialize(512);
-			keyPair = generator.generateKeyPair();
-		} catch (NoSuchAlgorithmException e) {
-			LOG.error(e.getMessage(), e);
-		}
-	}
+    public static File getWorkspaceFile( String path )
+    {
+        return new File( getWorkspaceRoot(), path );
+    }
+
+    public static KeyPair getKeyPair()
+    {
+        return keyPair;
+    }
+
+    @Override
+    public void contextDestroyed( ServletContextEvent event )
+    {
+        servletContext = null;
+        SQLDataSource.closeDataSource();
+        SCM.cleanUp();
+    }
+
+    @Override
+    public void contextInitialized( ServletContextEvent event )
+    {
+        servletContext = event.getServletContext();
+
+        String home = System.getProperty( "SESAME_HOME" );
+        projectFolder = new File( home, "projects" );
+        if ( !( projectFolder.exists() ) )
+        {
+            projectFolder.mkdir();
+        }
+
+        wareFolder = new File( home, "warehouse" );
+        if ( !( wareFolder.exists() ) )
+        {
+            wareFolder.mkdir();
+        }
+
+        try
+        {
+            KeyPairGenerator generator = KeyPairGenerator.getInstance( "RSA" );
+            generator.initialize( 512 );
+            keyPair = generator.generateKeyPair();
+        }
+        catch ( NoSuchAlgorithmException e )
+        {
+            LOG.error( e.getMessage(), e );
+        }
+    }
 }

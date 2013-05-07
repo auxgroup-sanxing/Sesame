@@ -1,16 +1,17 @@
 package com.sanxing.sesame.executors;
 
-import com.sanxing.sesame.executors.impl.ExecutorFactoryImpl;
-
 import java.util.concurrent.ExecutorService;
 
-public abstract class ExecutorFactory {
-	public abstract ExecutorService createExecutor(String paramString);
+import com.sanxing.sesame.executors.impl.ExecutorFactoryImpl;
 
-	public abstract ExecutorService createExecutor(String paramString,
-			Callback[] paramArrayOfCallback);
+public abstract class ExecutorFactory
+{
+    public abstract ExecutorService createExecutor( String paramString );
 
-	public static ExecutorFactory getFactory() {
-		return ExecutorFactoryImpl.getFactory();
-	}
+    public abstract ExecutorService createExecutor( String paramString, Callback[] paramArrayOfCallback );
+
+    public static ExecutorFactory getFactory()
+    {
+        return ExecutorFactoryImpl.getFactory();
+    }
 }

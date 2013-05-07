@@ -1,37 +1,46 @@
 package com.sanxing.sesame.resolver;
 
-import com.sanxing.sesame.exception.NoInterfaceAvailableException;
 import javax.jbi.JBIException;
 import javax.jbi.component.ComponentContext;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
-public class ExternalInterfaceNameEndpointResolver extends
-		EndpointResolverSupport {
-	private QName interfaceName;
+import com.sanxing.sesame.exception.NoInterfaceAvailableException;
 
-	public ExternalInterfaceNameEndpointResolver() {
-	}
+public class ExternalInterfaceNameEndpointResolver
+    extends EndpointResolverSupport
+{
+    private QName interfaceName;
 
-	public ExternalInterfaceNameEndpointResolver(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    public ExternalInterfaceNameEndpointResolver()
+    {
+    }
 
-	public ServiceEndpoint[] resolveAvailableEndpoints(
-			ComponentContext context, MessageExchange exchange) {
-		return context.getExternalEndpoints(this.interfaceName);
-	}
+    public ExternalInterfaceNameEndpointResolver( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    @Override
+    public ServiceEndpoint[] resolveAvailableEndpoints( ComponentContext context, MessageExchange exchange )
+    {
+        return context.getExternalEndpoints( interfaceName );
+    }
 
-	public void setInterfaceName(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	protected JBIException createServiceUnavailableException() {
-		return new NoInterfaceAvailableException(this.interfaceName);
-	}
+    public void setInterfaceName( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
+
+    @Override
+    protected JBIException createServiceUnavailableException()
+    {
+        return new NoInterfaceAvailableException( interfaceName );
+    }
 }

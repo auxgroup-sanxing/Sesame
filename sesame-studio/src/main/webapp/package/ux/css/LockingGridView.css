@@ -4,7 +4,7 @@
  * licensing@extjs.com
  * http://www.extjs.com/license
  */
-.x-grid3-locked, .x-grid3-unlocked {
+.x-grid3-locked,.x-grid3-unlocked {
 	overflow: hidden;
 	position: absolute;
 }

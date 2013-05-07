@@ -2,50 +2,64 @@ package com.sanxing.sesame.util.cache;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CachableRepos {
-	Logger LOG = LoggerFactory.getLogger(CachableRepos.class);
-	private String name;
-	private Cache cache = null;
+public class CachableRepos
+{
+    Logger LOG = LoggerFactory.getLogger( CachableRepos.class );
 
-	private static Map<String, CachableRepos> instance = new ConcurrentHashMap();
+    private final String name;
 
-	public static CachableRepos getInstanceByName(String name) {
-		if (instance.get(name) == null) {
-			instance.put(name, new CachableRepos(name));
-		}
-		return ((CachableRepos) instance.get(name));
-	}
+    private Cache cache = null;
 
-	private CachableRepos(String name) {
-		this.name = name;
-		this.cache = DefaultCacheFactory.getInstance().getCache(this.name);
-		if (this.cache == null)
-			throw new RuntimeException("no such cache named [" + name + "]");
-	}
+    private static Map<String, CachableRepos> instance = new ConcurrentHashMap();
 
-	public Object getByKey(String key) {
-		return this.cache.get(key);
-	}
+    public static CachableRepos getInstanceByName( String name )
+    {
+        if ( instance.get( name ) == null )
+        {
+            instance.put( name, new CachableRepos( name ) );
+        }
+        return instance.get( name );
+    }
 
-	public void delete(String key) {
-		this.cache.flush(key);
-		this.cache.getBackend().deleteFromPeristence(key);
-	}
+    private CachableRepos( String name )
+    {
+        this.name = name;
+        cache = DefaultCacheFactory.getInstance().getCache( this.name );
+        if ( cache == null )
+        {
+            throw new RuntimeException( "no such cache named [" + name + "]" );
+        }
+    }
 
-	public void update(String key, Object obj) {
-		this.cache.flush(key);
-		this.cache.getBackend().saveOrUpdateToPersistence(key, obj);
-	}
+    public Object getByKey( String key )
+    {
+        return cache.get( key );
+    }
 
-	public String add(Object obj) {
-		String key = this.cache.getBackend().addToPersistence(obj);
-		if (key != null) {
-			this.cache.put(key, obj);
-			return key;
-		}
-		return null;
-	}
+    public void delete( String key )
+    {
+        cache.flush( key );
+        cache.getBackend().deleteFromPeristence( key );
+    }
+
+    public void update( String key, Object obj )
+    {
+        cache.flush( key );
+        cache.getBackend().saveOrUpdateToPersistence( key, obj );
+    }
+
+    public String add( Object obj )
+    {
+        String key = cache.getBackend().addToPersistence( obj );
+        if ( key != null )
+        {
+            cache.put( key, obj );
+            return key;
+        }
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="com.sanxing.sesame.jaxp.*"%>
 <%@page import="com.ibm.wsdl.ImportImpl"%>
 <%@page import="java.lang.reflect.*"%>
@@ -15,11 +16,13 @@
 <%@page import="javax.wsdl.extensions.*"%>
 <%@page import="javax.wsdl.extensions.soap.*"%>
 <%@page import="javax.wsdl.extensions.schema.*"%>
-<%@page import="com.ibm.wsdl.extensions.schema.*" %>
+<%@page import="com.ibm.wsdl.extensions.schema.*"%>
 <%@page import="com.sanxing.studio.IllegalNameException"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="org.xml.sax.InputSource"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

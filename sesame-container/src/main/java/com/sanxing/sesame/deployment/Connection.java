@@ -1,22 +1,28 @@
 package com.sanxing.sesame.deployment;
 
-public class Connection {
-	private Consumer consumer;
-	private Provider provider;
+public class Connection
+{
+    private Consumer consumer;
 
-	public Consumer getConsumer() {
-		return this.consumer;
-	}
+    private Provider provider;
 
-	public void setConsumer(Consumer consumer) {
-		this.consumer = consumer;
-	}
+    public Consumer getConsumer()
+    {
+        return consumer;
+    }
 
-	public Provider getProvider() {
-		return this.provider;
-	}
+    public void setConsumer( Consumer consumer )
+    {
+        this.consumer = consumer;
+    }
 
-	public void setProvider(Provider provider) {
-		this.provider = provider;
-	}
+    public Provider getProvider()
+    {
+        return provider;
+    }
+
+    public void setProvider( Provider provider )
+    {
+        this.provider = provider;
+    }
 }

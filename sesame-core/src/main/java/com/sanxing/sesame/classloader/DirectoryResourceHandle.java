@@ -10,64 +10,95 @@ import java.security.cert.Certificate;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-public class DirectoryResourceHandle extends AbstractResourceHandle {
-	private final String name;
-	private final File file;
-	private final Manifest manifest;
-	private final URL url;
-	private final URL codeSource;
+public class DirectoryResourceHandle
+    extends AbstractResourceHandle
+{
+    private final String name;
 
-	public DirectoryResourceHandle(String name, File file, File codeSource,
-			Manifest manifest) throws MalformedURLException {
-		this.name = name;
-		this.file = file;
-		this.codeSource = codeSource.toURL();
-		this.manifest = manifest;
-		this.url = file.toURL();
-	}
+    private final File file;
 
-	public String getName() {
-		return this.name;
-	}
+    private final Manifest manifest;
 
-	public URL getUrl() {
-		return this.url;
-	}
+    private final URL url;
 
-	public URL getCodeSourceUrl() {
-		return this.codeSource;
-	}
+    private final URL codeSource;
 
-	public boolean isDirectory() {
-		return this.file.isDirectory();
-	}
+    public DirectoryResourceHandle( String name, File file, File codeSource, Manifest manifest )
+        throws MalformedURLException
+    {
+        this.name = name;
+        this.file = file;
+        this.codeSource = codeSource.toURL();
+        this.manifest = manifest;
+        url = file.toURL();
+    }
 
-	public InputStream getInputStream() throws IOException {
-		if (this.file.isDirectory()) {
-			return new IoUtil.EmptyInputStream();
-		}
-		return new FileInputStream(this.file);
-	}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
-	public int getContentLength() {
-		if ((this.file.isDirectory()) || (this.file.length() > 2147483647L)) {
-			return -1;
-		}
-		return (int) this.file.length();
-	}
+    @Override
+    public URL getUrl()
+    {
+        return url;
+    }
 
-	public Manifest getManifest() throws IOException {
-		return this.manifest;
-	}
+    @Override
+    public URL getCodeSourceUrl()
+    {
+        return codeSource;
+    }
 
-	public Attributes getAttributes() throws IOException {
-		if (this.manifest == null) {
-			return null;
-		}
-		return this.manifest.getAttributes(getName());
-	}
+    @Override
+    public boolean isDirectory()
+    {
+        return file.isDirectory();
+    }
 
-	public Certificate[] getCertificates() {
-		return null;
-	}
+    @Override
+    public InputStream getInputStream()
+        throws IOException
+    {
+        if ( file.isDirectory() )
+        {
+            return new IoUtil.EmptyInputStream();
+        }
+        return new FileInputStream( file );
+    }
+
+    @Override
+    public int getContentLength()
+    {
+        if ( ( file.isDirectory() ) || ( file.length() > 2147483647L ) )
+        {
+            return -1;
+        }
+        return (int) file.length();
+    }
+
+    @Override
+    public Manifest getManifest()
+        throws IOException
+    {
+        return manifest;
+    }
+
+    @Override
+    public Attributes getAttributes()
+        throws IOException
+    {
+        if ( manifest == null )
+        {
+            return null;
+        }
+        return manifest.getAttributes( getName() );
+    }
+
+    @Override
+    public Certificate[] getCertificates()
+    {
+        return null;
+    }
 }

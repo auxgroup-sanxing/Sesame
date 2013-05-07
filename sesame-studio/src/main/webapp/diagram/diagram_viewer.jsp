@@ -1,6 +1,8 @@
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@page import="java.util.*,  java.io.*"%>
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="com.sanxing.sesame.engine.ExecutionEnv"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
@@ -102,23 +104,24 @@
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>流程编辑器</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <style type="text/css">
-html, body {
+html,body {
 	font: normal 12px arial, verdana;
 	margin: 0;
 	padding: 0;
 	border: 0 none;
 	overflow: auto;
-	cursor:default; 
-	width:100%; 
-	height:100%;
+	cursor: default;
+	width: 100%;
+	height: 100%;
 }
 
 .hilited {
-	background: highlight; 
+	background: highlight;
 	color: highlighttext;
 }
 
@@ -180,11 +183,12 @@ html, body {
 	background-image: url("../images/obj16/element.gif") !important;
 }
 
-.icon-string, .icon-text {
+.icon-string,.icon-text {
 	background-image: url("../images/icons/string.gif") !important;
 }
 
-.icon-number, .icon-cdata, .icon-boolean, .icon-int, .icon-integer, .icon-double, .icon-float, .icon-decimal, .icon-any {
+.icon-number,.icon-cdata,.icon-boolean,.icon-int,.icon-integer,.icon-double,.icon-float,.icon-decimal,.icon-any
+	{
 	background-image: url("../images/icons/field_public_obj.gif") !important;
 }
 
@@ -219,71 +223,72 @@ html, body {
 }
 
 .action-hilited .processLineTL_whiledo {
-	background-image: url('images/top_left_whiledo.gif'); 
+	background-image: url('images/top_left_whiledo.gif');
 	background-position: center top;
 	background-repeat: no-repeat;
 }
 
 .line-hilited {
+	
 }
 
-.line-hilited > tbody > tr > td.processLineV {
+.line-hilited>tbody>tr>td.processLineV {
 	background-image: url('images/vert_line.gif');
 	background-position: center;
 	background-repeat: repeat-y;
 }
 
-.line-hilited > tbody > tr > td.processLineTR {
-	background-image: url('images/top_right.gif'); 
-	background-position: center; 
-	background-repeat: no-repeat;
-}
-
-.line-hilited > tbody > tr > td > div.processLineTR {
-	background-image: url('images/top_right.gif'); 
-	background-position: center; 
-	background-repeat: no-repeat;
-}
-
-.line-hilited > tbody > tr > td.processLineTL_dowhile {
-	background-image: url('images/top_left_dowhile.gif'); 
-	background-position: top; 
-	background-repeat: no-repeat;
-}
-
-.line-hilited  > tbody > tr > td > ul > li > div > div.processLineBL_dowhile {
-	background-image: url('images/horz_line.gif'); 
+.line-hilited>tbody>tr>td.processLineTR {
+	background-image: url('images/top_right.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
-.line-hilited  > tbody > tr > td.processLineBL_whiledo {
+.line-hilited>tbody>tr>td>div.processLineTR {
+	background-image: url('images/top_right.gif');
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.line-hilited>tbody>tr>td.processLineTL_dowhile {
+	background-image: url('images/top_left_dowhile.gif');
+	background-position: top;
+	background-repeat: no-repeat;
+}
+
+.line-hilited>tbody>tr>td>ul>li>div>div.processLineBL_dowhile {
+	background-image: url('images/horz_line.gif');
+	background-position: center;
+	background-repeat: no-repeat;
+}
+
+.line-hilited>tbody>tr>td.processLineBL_whiledo {
 	background-image: url('images/bottom_left_whiledo.gif');
-	background-position: bottom; 
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
-.line-hilited > tbody > tr > td.processLineBR {
-	background-image: url('images/bottom_right.gif'); 
-	background-position: bottom; 
+.line-hilited>tbody>tr>td.processLineBR {
+	background-image: url('images/bottom_right.gif');
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
-.line-hilited  > tbody > tr > td > div.processLineBR_dowhile {
-	background-image: url('images/bottom_right_dowhile.gif'); 
-	background-position: center; 
+.line-hilited>tbody>tr>td>div.processLineBR_dowhile {
+	background-image: url('images/bottom_right_dowhile.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
 td.line-hilited : first-child {
 	background-image: url('images/bottom_left_decision.gif');
-	background-position: bottom; 
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
 td.line-hilited : last-child {
-	background-image: url('images/bottom_right.gif') !important; 
-	background-position: bottom; 
+	background-image: url('images/bottom_right.gif') !important;
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
@@ -294,14 +299,15 @@ td.line-hilited : last-child {
 .edit-mode .x-tree-node-cb {
 	display: none;
 }
-
 </style>
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
 
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="../package/process/ProcessNodeUI.js"></script>
-<script type="text/javascript" src="../package/transform/AssemblePanel.js"></script>
+<script type="text/javascript"
+	src="../package/transform/AssemblePanel.js"></script>
 <script type="text/javascript" src="../package/xml/xdom.js"></script>
 
 <script type="text/javascript" src="diagram_viewer.js"></script>

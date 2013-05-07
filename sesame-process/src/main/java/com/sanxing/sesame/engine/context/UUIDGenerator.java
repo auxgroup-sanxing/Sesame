@@ -3,86 +3,109 @@ package com.sanxing.sesame.engine.context;
 import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class UUIDGenerator {
-	private static final int IP;
-	private static short counter;
-	private static final int JVM;
-	private static final String sep = "";
-	static UUIDGenerator generator;
-	static AtomicLong ID;
+public class UUIDGenerator
+{
+    private static final int IP;
 
-	static {
-		int ipadd;
-		try {
-			ipadd = IptoInt(InetAddress.getLocalHost().getAddress());
-		} catch (Exception e) {
-			ipadd = 0;
-		}
-		IP = ipadd;
+    private static short counter;
 
-		counter = 0;
-		JVM = (int) (System.currentTimeMillis() >>> 8);
+    private static final int JVM;
 
-		generator = new UUIDGenerator();
+    private static final String sep = "";
 
-		ID = new AtomicLong(0L);
-	}
+    static UUIDGenerator generator;
 
-	public static int IptoInt(byte[] bytes) {
-		int result = 0;
-		for (int i = 0; i < 4; ++i) {
-			result = (result << 8) - -128 + bytes[i];
-		}
-		return result;
-	}
+    static AtomicLong ID;
 
-	protected int getJVM() {
-		return JVM;
-	}
+    static
+    {
+        int ipadd;
+        try
+        {
+            ipadd = IptoInt( InetAddress.getLocalHost().getAddress() );
+        }
+        catch ( Exception e )
+        {
+            ipadd = 0;
+        }
+        IP = ipadd;
 
-	protected short getCount() {
-		synchronized (UUIDGenerator.class) {
-			if (counter < 0)
-				counter = 0;
-			short tmp18_15 = counter;
-			counter = (short) (tmp18_15 + 1);
-			return tmp18_15;
-		}
-	}
+        counter = 0;
+        JVM = (int) ( System.currentTimeMillis() >>> 8 );
 
-	protected int getIP() {
-		return IP;
-	}
+        generator = new UUIDGenerator();
 
-	protected short getHiTime() {
-		return (short) (int) (System.currentTimeMillis() >>> 32);
-	}
+        ID = new AtomicLong( 0L );
+    }
 
-	protected int getLoTime() {
-		return (int) System.currentTimeMillis();
-	}
+    public static int IptoInt( byte[] bytes )
+    {
+        int result = 0;
+        for ( int i = 0; i < 4; ++i )
+        {
+            result = ( result << 8 ) - -128 + bytes[i];
+        }
+        return result;
+    }
 
-	protected String format(int intval) {
-		String formatted = Integer.toHexString(intval);
-		StringBuffer buf = new StringBuffer("00000000");
-		buf.replace(8 - formatted.length(), 8, formatted);
-		return buf.toString();
-	}
+    protected int getJVM()
+    {
+        return JVM;
+    }
 
-	protected String format(short shortval) {
-		String formatted = Integer.toHexString(shortval);
-		StringBuffer buf = new StringBuffer("0000");
-		buf.replace(4 - formatted.length(), 4, formatted);
-		return buf.toString();
-	}
+    protected short getCount()
+    {
+        synchronized ( UUIDGenerator.class )
+        {
+            if ( counter < 0 )
+            {
+                counter = 0;
+            }
+            short tmp18_15 = counter;
+            counter = (short) ( tmp18_15 + 1 );
+            return tmp18_15;
+        }
+    }
 
-	public String generate() {
-		return 36 + format(getIP()) + "" + format(getJVM()) + ""
-				+ format(getHiTime()) + "" + format(getLoTime()) + ""
-				+ format(getCount());
-	}
+    protected int getIP()
+    {
+        return IP;
+    }
 
-	public static String getUUID() {
-		return new Long(System.nanoTime() + ID.getAndDecrement()).toString();
-	}
+    protected short getHiTime()
+    {
+        return (short) (int) ( System.currentTimeMillis() >>> 32 );
+    }
+
+    protected int getLoTime()
+    {
+        return (int) System.currentTimeMillis();
+    }
+
+    protected String format( int intval )
+    {
+        String formatted = Integer.toHexString( intval );
+        StringBuffer buf = new StringBuffer( "00000000" );
+        buf.replace( 8 - formatted.length(), 8, formatted );
+        return buf.toString();
+    }
+
+    protected String format( short shortval )
+    {
+        String formatted = Integer.toHexString( shortval );
+        StringBuffer buf = new StringBuffer( "0000" );
+        buf.replace( 4 - formatted.length(), 4, formatted );
+        return buf.toString();
+    }
+
+    public String generate()
+    {
+        return 36 + format( getIP() ) + "" + format( getJVM() ) + "" + format( getHiTime() ) + ""
+            + format( getLoTime() ) + "" + format( getCount() );
+    }
+
+    public static String getUUID()
+    {
+        return new Long( System.nanoTime() + ID.getAndDecrement() ).toString();
+    }
 }

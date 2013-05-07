@@ -1,9 +1,11 @@
 
-<%@page import="com.sanxing.studio.Configuration"%><%@page language="java" contentType="text/xml; charset=utf-8"%>
+<%@page import="com.sanxing.studio.Configuration"%><%@page
+	language="java" contentType="text/xml; charset=utf-8"%>
 
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="java.io.*, java.util.*, java.util.regex.*, java.net.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*, org.jdom.filter.Filter"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*, org.jdom.filter.Filter"%>
 <%@page import="org.json.*"%>
 
 <%!

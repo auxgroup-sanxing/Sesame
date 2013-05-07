@@ -1,7 +1,8 @@
 <%@page import="com.sanxing.sesame.test.UnitTest"%>
 <%@page language="java" contentType="text/xml; charset=utf-8"%>
 <%@page import="com.sanxing.studio.Configuration"%>
-<%@page import="com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*,com.sanxing.studio.*"%>
+<%@page
+	import="com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*,com.sanxing.studio.*"%>
 <%@page import="java.io.*, java.util.*, java.util.regex.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>

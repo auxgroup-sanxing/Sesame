@@ -3,6 +3,7 @@ package com.sanxing.sesame.binding.codec;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -10,88 +11,114 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 
-public class XMLResult implements Result {
-	private static final TransformerFactory transformerFactory = TransformerFactory
-			.newInstance();
-	private String systemId;
-	private Source content;
-	private Map<String, Object> properties = new Hashtable();
+public class XMLResult
+    implements Result
+{
+    private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
+    private String systemId;
 
-	public String getSystemId() {
-		return this.systemId;
-	}
+    private Source content;
 
-	public Set<String> getPropertyNames() {
-		return this.properties.keySet();
-	}
+    private final Map<String, Object> properties = new Hashtable();
 
-	public Object getProperty(String name) {
-		return this.properties.get(name);
-	}
+    @Override
+    public void setSystemId( String systemId )
+    {
+        this.systemId = systemId;
+    }
 
-	public void setProperty(String name, Object value) {
-		this.properties.put(name, value);
-	}
+    @Override
+    public String getSystemId()
+    {
+        return systemId;
+    }
 
-	public org.w3c.dom.Document getW3CDocument() throws TransformerException {
-		if (this.content instanceof DOMSource) {
-			return ((org.w3c.dom.Document) ((DOMSource) this.content).getNode());
-		}
+    public Set<String> getPropertyNames()
+    {
+        return properties.keySet();
+    }
 
-		DOMResult result = new DOMResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return ((org.w3c.dom.Document) result.getNode());
-	}
+    public Object getProperty( String name )
+    {
+        return properties.get( name );
+    }
 
-	public org.jdom.Document getJDOMDocument() throws TransformerException {
-		if (this.content instanceof JDOMSource) {
-			return ((JDOMSource) this.content).getDocument();
-		}
+    public void setProperty( String name, Object value )
+    {
+        properties.put( name, value );
+    }
 
-		JDOMResult result = new JDOMResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return result.getDocument();
-	}
+    public org.w3c.dom.Document getW3CDocument()
+        throws TransformerException
+    {
+        if ( content instanceof DOMSource )
+        {
+            return ( (org.w3c.dom.Document) ( (DOMSource) content ).getNode() );
+        }
 
-	public org.dom4j.Document getDOM4jDocument() throws TransformerException {
-		if (this.content instanceof DocumentSource) {
-			return ((DocumentSource) this.content).getDocument();
-		}
+        DOMResult result = new DOMResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return ( (org.w3c.dom.Document) result.getNode() );
+    }
 
-		DocumentResult result = new DocumentResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return result.getDocument();
-	}
+    public org.jdom.Document getJDOMDocument()
+        throws TransformerException
+    {
+        if ( content instanceof JDOMSource )
+        {
+            return ( (JDOMSource) content ).getDocument();
+        }
 
-	public Source getContent() {
-		return this.content;
-	}
+        JDOMResult result = new JDOMResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return result.getDocument();
+    }
 
-	public void setContent(Source content) {
-		this.content = content;
-	}
+    public org.dom4j.Document getDOM4jDocument()
+        throws TransformerException
+    {
+        if ( content instanceof DocumentSource )
+        {
+            return ( (DocumentSource) content ).getDocument();
+        }
 
-	public void setDocument(org.w3c.dom.Document document) {
-		this.content = new DOMSource(document);
-	}
+        DocumentResult result = new DocumentResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return result.getDocument();
+    }
 
-	public void setDocument(org.jdom.Document document) {
-		this.content = new JDOMSource(document);
-	}
+    public Source getContent()
+    {
+        return content;
+    }
 
-	public void setDocument(org.dom4j.Document document) {
-		this.content = new DocumentSource(document);
-	}
+    public void setContent( Source content )
+    {
+        this.content = content;
+    }
+
+    public void setDocument( org.w3c.dom.Document document )
+    {
+        content = new DOMSource( document );
+    }
+
+    public void setDocument( org.jdom.Document document )
+    {
+        content = new JDOMSource( document );
+    }
+
+    public void setDocument( org.dom4j.Document document )
+    {
+        content = new DocumentSource( document );
+    }
 }

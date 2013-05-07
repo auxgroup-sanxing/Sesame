@@ -15,10 +15,9 @@
         <div class="x-box-bl"><div class="x-box-br"><div class="x-box-bc"></div></div></div>
     </div>
  */
-
 .x-box-tl {
 	background: transparent no-repeat 0 0;
-    zoom:1;
+	zoom: 1;
 }
 
 .x-box-tc {
@@ -35,7 +34,7 @@
 	background: transparent repeat-y 0;
 	padding-left: 4px;
 	overflow: hidden;
-    zoom:1;
+	zoom: 1;
 }
 
 .x-box-mc {
@@ -45,7 +44,7 @@
 
 .x-box-mc h3 {
 	margin: 0 0 4px 0;
-    zoom:1;
+	zoom: 1;
 }
 
 .x-box-mr {
@@ -56,7 +55,7 @@
 
 .x-box-bl {
 	background: transparent no-repeat 0 -16px;
-    zoom:1;
+	zoom: 1;
 }
 
 .x-box-bc {
@@ -69,12 +68,12 @@
 	background: transparent no-repeat right -24px;
 }
 
-.x-box-tl, .x-box-bl {
+.x-box-tl,.x-box-bl {
 	padding-left: 8px;
 	overflow: hidden;
 }
 
-.x-box-tr, .x-box-br {
+.x-box-tr,.x-box-br {
 	padding-right: 8px;
 	overflow: hidden;
 }

@@ -1,93 +1,123 @@
 package com.sanxing.sesame.servicedesc;
 
-import com.sanxing.sesame.mbean.ComponentNameSpace;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.namespace.QName;
+
 import org.w3c.dom.DocumentFragment;
 
-public class InternalEndpoint extends AbstractEndpoint {
-	private static final long serialVersionUID = -2312687961530378310L;
-	private String endpointName;
-	private QName serviceName;
-	private Set<QName> interfaces = new HashSet();
-	private transient Map<ComponentNameSpace, InternalEndpoint> remotes = new HashMap();
+import com.sanxing.sesame.mbean.ComponentNameSpace;
 
-	public InternalEndpoint(ComponentNameSpace componentName,
-			String endpointName, QName serviceName) {
-		super(componentName);
-		this.endpointName = endpointName;
-		this.serviceName = serviceName;
-	}
+public class InternalEndpoint
+    extends AbstractEndpoint
+{
+    private static final long serialVersionUID = -2312687961530378310L;
 
-	public DocumentFragment getAsReference(QName operationName) {
-		return EndpointReferenceBuilder.getReference(this);
-	}
+    private final String endpointName;
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    private final QName serviceName;
 
-	public QName[] getInterfaces() {
-		QName[] result = new QName[this.interfaces.size()];
-		this.interfaces.toArray(result);
-		return result;
-	}
+    private final Set<QName> interfaces = new HashSet();
 
-	public void addInterface(QName name) {
-		this.interfaces.add(name);
-	}
+    private transient Map<ComponentNameSpace, InternalEndpoint> remotes = new HashMap();
 
-	public QName getServiceName() {
-		return this.serviceName;
-	}
+    public InternalEndpoint( ComponentNameSpace componentName, String endpointName, QName serviceName )
+    {
+        super( componentName );
+        this.endpointName = endpointName;
+        this.serviceName = serviceName;
+    }
 
-	public InternalEndpoint[] getRemoteEndpoints() {
-		InternalEndpoint[] result = new InternalEndpoint[this.remotes.size()];
-		this.remotes.values().toArray(result);
-		return result;
-	}
+    @Override
+    public DocumentFragment getAsReference( QName operationName )
+    {
+        return EndpointReferenceBuilder.getReference( this );
+    }
 
-	public void addRemoteEndpoint(InternalEndpoint remote) {
-		this.remotes.put(remote.getComponentNameSpace(), remote);
-	}
+    @Override
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
 
-	public void removeRemoteEndpoint(InternalEndpoint remote) {
-		this.remotes.remove(remote.getComponentNameSpace());
-	}
+    @Override
+    public QName[] getInterfaces()
+    {
+        QName[] result = new QName[interfaces.size()];
+        interfaces.toArray( result );
+        return result;
+    }
 
-	public boolean isLocal() {
-		return (getComponentNameSpace() != null);
-	}
+    public void addInterface( QName name )
+    {
+        interfaces.add( name );
+    }
 
-	public boolean isClustered() {
-		return ((this.remotes != null) && (this.remotes.size() > 0));
-	}
+    @Override
+    public QName getServiceName()
+    {
+        return serviceName;
+    }
 
-	public boolean equals(Object obj) {
-		boolean result = false;
-		if (obj instanceof InternalEndpoint) {
-			InternalEndpoint other = (InternalEndpoint) obj;
-			result = (other.serviceName.equals(this.serviceName))
-					&& (other.endpointName.equals(this.endpointName));
-		}
+    public InternalEndpoint[] getRemoteEndpoints()
+    {
+        InternalEndpoint[] result = new InternalEndpoint[remotes.size()];
+        remotes.values().toArray( result );
+        return result;
+    }
 
-		return result;
-	}
+    public void addRemoteEndpoint( InternalEndpoint remote )
+    {
+        remotes.put( remote.getComponentNameSpace(), remote );
+    }
 
-	public int hashCode() {
-		return (this.serviceName.hashCode() ^ this.endpointName.hashCode());
-	}
+    public void removeRemoteEndpoint( InternalEndpoint remote )
+    {
+        remotes.remove( remote.getComponentNameSpace() );
+    }
 
-	public String toString() {
-		return "ServiceEndpoint[service=" + this.serviceName + ",endpoint="
-				+ this.endpointName + ", clustered " + isClustered() + "]";
-	}
+    public boolean isLocal()
+    {
+        return ( getComponentNameSpace() != null );
+    }
 
-	protected String getClassifier() {
-		return "internal";
-	}
+    public boolean isClustered()
+    {
+        return ( ( remotes != null ) && ( remotes.size() > 0 ) );
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        boolean result = false;
+        if ( obj instanceof InternalEndpoint )
+        {
+            InternalEndpoint other = (InternalEndpoint) obj;
+            result = ( other.serviceName.equals( serviceName ) ) && ( other.endpointName.equals( endpointName ) );
+        }
+
+        return result;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return ( serviceName.hashCode() ^ endpointName.hashCode() );
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ServiceEndpoint[service=" + serviceName + ",endpoint=" + endpointName + ", clustered " + isClustered()
+            + "]";
+    }
+
+    @Override
+    protected String getClassifier()
+    {
+        return "internal";
+    }
 }

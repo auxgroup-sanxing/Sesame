@@ -7,107 +7,129 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.naming.InitialContext;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BusinesSerial {
-	private int period = 1000;
+public class BusinesSerial
+{
+    private final int period = 1000;
 
-	private static final Logger LOG = LoggerFactory.getLogger(BusinesSerial.class);
+    private static final Logger LOG = LoggerFactory.getLogger( BusinesSerial.class );
 
-	private AtomicBoolean persist = new AtomicBoolean(true);
+    private final AtomicBoolean persist = new AtomicBoolean( true );
 
-	private AtomicLong serial = new AtomicLong(0L);
+    private final AtomicLong serial = new AtomicLong( 0L );
 
-	private AtomicLong preSerial = new AtomicLong(0L);
-	private String today;
-	static Map<String, BusinesSerial> serials = new HashMap();
+    private final AtomicLong preSerial = new AtomicLong( 0L );
 
-	public void setPersist(boolean _persist) {
-		this.persist.set(_persist);
-	}
+    private final String today;
 
-	private long getCurrentSerialFromDB(String day) {
-		Connection con = null;
-		Statement state = null;
-		ResultSet set = null;
-		long serial = 0L;
-		try {
-			DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup(
-					"STM_DATASOURCE");
-			con = ds.getConnection();
-			state = con.createStatement();
-			set = state
-					.executeQuery("select BSERIAL  from B_SERIAL where BDAY = '"
-							+ day + "'");
+    static Map<String, BusinesSerial> serials = new HashMap();
 
-			while (set.next())
-				serial = set.getLong(1);
-		} catch (Exception e) {
-			throw new RuntimeException("db err", e);
-		} finally {
-			DataAccessUtil.closeResultSet(set);
-			DataAccessUtil.closeStatement(state);
-			DataAccessUtil.closeConnection(con);
-		}
-		return serial;
-	}
+    public void setPersist( boolean _persist )
+    {
+        persist.set( _persist );
+    }
 
-	private BusinesSerial(String _today) {
-		this.today = _today;
-		this.serial.set(getCurrentSerialFromDB(_today));
-		this.preSerial.set(this.serial.get());
-		LOG.debug("current serial" + this.preSerial);
-		resetCusor();
-	}
+    private long getCurrentSerialFromDB( String day )
+    {
+        Connection con = null;
+        Statement state = null;
+        ResultSet set = null;
+        long serial = 0L;
+        try
+        {
+            DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup( "STM_DATASOURCE" );
+            con = ds.getConnection();
+            state = con.createStatement();
+            set = state.executeQuery( "select BSERIAL  from B_SERIAL where BDAY = '" + day + "'" );
 
-	public String nextSerial() {
-		long temp = this.serial.getAndIncrement();
-		if (temp == this.preSerial.get()) {
-			resetCusor();
-		}
-		String noPad = "" + temp;
-		return this.today + StringUtils.leftPad(noPad, 12, "0");
-	}
+            while ( set.next() )
+            {
+                serial = set.getLong( 1 );
+            }
+        }
+        catch ( Exception e )
+        {
+            throw new RuntimeException( "db err", e );
+        }
+        finally
+        {
+            DataAccessUtil.closeResultSet( set );
+            DataAccessUtil.closeStatement( state );
+            DataAccessUtil.closeConnection( con );
+        }
+        return serial;
+    }
 
-	private void resetCusor() {
-		this.preSerial.getAndAdd(this.period);
-		LOG.debug("persits preSerial" + this.persist.get());
-		if (this.persist.get())
-			persist();
-	}
+    private BusinesSerial( String _today )
+    {
+        today = _today;
+        serial.set( getCurrentSerialFromDB( _today ) );
+        preSerial.set( serial.get() );
+        LOG.debug( "current serial" + preSerial );
+        resetCusor();
+    }
 
-	public void persist() {
-		Connection con = null;
-		Statement state = null;
-		try {
-			DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup(
-					"STM_DATASOURCE");
-			con = ds.getConnection();
-			con.setAutoCommit(true);
-			state = con.createStatement();
-			state.executeUpdate(" update B_SERIAL set BSERIAL = "
-					+ this.preSerial.get() + " where BDAY = '" + this.today
-					+ "'");
-		} catch (Exception e) {
-			throw new RuntimeException("db err", e);
-		} finally {
-			DataAccessUtil.closeStatement(state);
-			DataAccessUtil.closeConnection(con);
-		}
-	}
+    public String nextSerial()
+    {
+        long temp = serial.getAndIncrement();
+        if ( temp == preSerial.get() )
+        {
+            resetCusor();
+        }
+        String noPad = "" + temp;
+        return today + StringUtils.leftPad( noPad, 12, "0" );
+    }
 
-	public static BusinesSerial getInstance(String day) {
-		if (!(serials.containsKey(day))) {
-			BusinesSerial serial = new BusinesSerial(day);
-			serials.put(day, serial);
-		}
-		return ((BusinesSerial) serials.get(day));
-	}
+    private void resetCusor()
+    {
+        preSerial.getAndAdd( period );
+        LOG.debug( "persits preSerial" + persist.get() );
+        if ( persist.get() )
+        {
+            persist();
+        }
+    }
 
-	public static void main(String[] args) {
-	}
+    public void persist()
+    {
+        Connection con = null;
+        Statement state = null;
+        try
+        {
+            DataSource ds = (DataSource) JNDIUtil.getInitialContext().lookup( "STM_DATASOURCE" );
+            con = ds.getConnection();
+            con.setAutoCommit( true );
+            state = con.createStatement();
+            state.executeUpdate( " update B_SERIAL set BSERIAL = " + preSerial.get() + " where BDAY = '" + today + "'" );
+        }
+        catch ( Exception e )
+        {
+            throw new RuntimeException( "db err", e );
+        }
+        finally
+        {
+            DataAccessUtil.closeStatement( state );
+            DataAccessUtil.closeConnection( con );
+        }
+    }
+
+    public static BusinesSerial getInstance( String day )
+    {
+        if ( !( serials.containsKey( day ) ) )
+        {
+            BusinesSerial serial = new BusinesSerial( day );
+            serials.put( day, serial );
+        }
+        return serials.get( day );
+    }
+
+    public static void main( String[] args )
+    {
+    }
 }

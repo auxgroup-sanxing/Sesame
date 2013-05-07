@@ -6,47 +6,73 @@ import javax.jbi.component.ComponentLifeCycle;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
-public class PojoLifecycleAdaptor implements ComponentLifeCycle {
-	private Object pojo;
-	private QName service;
-	private String endpoint;
-	private ComponentContext context;
-	private ObjectName extensionMBeanName;
+public class PojoLifecycleAdaptor
+    implements ComponentLifeCycle
+{
+    private final Object pojo;
 
-	public PojoLifecycleAdaptor(Object pojo, QName service, String endpoint) {
-		this.pojo = pojo;
-		this.service = service;
-		this.endpoint = endpoint;
-	}
+    private final QName service;
 
-	public ObjectName getExtensionMBeanName() {
-		return this.extensionMBeanName;
-	}
+    private final String endpoint;
 
-	public void init(ComponentContext ctx) throws JBIException {
-		this.context = ctx;
-		if ((this.service != null) && (this.endpoint != null))
-			ctx.activateEndpoint(this.service, this.endpoint);
-	}
+    private ComponentContext context;
 
-	public void shutDown() throws JBIException {
-	}
+    private ObjectName extensionMBeanName;
 
-	public void start() throws JBIException {
-	}
+    public PojoLifecycleAdaptor( Object pojo, QName service, String endpoint )
+    {
+        this.pojo = pojo;
+        this.service = service;
+        this.endpoint = endpoint;
+    }
 
-	public void stop() throws JBIException {
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        return extensionMBeanName;
+    }
 
-	public Object getPojo() {
-		return this.pojo;
-	}
+    @Override
+    public void init( ComponentContext ctx )
+        throws JBIException
+    {
+        context = ctx;
+        if ( ( service != null ) && ( endpoint != null ) )
+        {
+            ctx.activateEndpoint( service, endpoint );
+        }
+    }
 
-	public void setExtensionMBeanName(ObjectName extensionMBeanName) {
-		this.extensionMBeanName = extensionMBeanName;
-	}
+    @Override
+    public void shutDown()
+        throws JBIException
+    {
+    }
 
-	public ComponentContext getContext() {
-		return this.context;
-	}
+    @Override
+    public void start()
+        throws JBIException
+    {
+    }
+
+    @Override
+    public void stop()
+        throws JBIException
+    {
+    }
+
+    public Object getPojo()
+    {
+        return pojo;
+    }
+
+    public void setExtensionMBeanName( ObjectName extensionMBeanName )
+    {
+        this.extensionMBeanName = extensionMBeanName;
+    }
+
+    public ComponentContext getContext()
+    {
+        return context;
+    }
 }

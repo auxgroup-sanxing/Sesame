@@ -1,45 +1,58 @@
 package com.sanxing.sesame.binding;
 
+import java.util.Map;
+
 import com.sanxing.sesame.binding.codec.Decoder;
 import com.sanxing.sesame.binding.codec.Encoder;
 import com.sanxing.sesame.binding.codec.FaultHandler;
-import java.util.Map;
 
-public class Codec {
-	private Decoder decoder;
-	private Encoder encoder;
-	private FaultHandler faultHandler;
-	private Map<String, String> properties;
+public class Codec
+{
+    private Decoder decoder;
 
-	public Decoder getDecoder() {
-		return this.decoder;
-	}
+    private Encoder encoder;
 
-	public void setDecoder(Decoder decoder) {
-		this.decoder = decoder;
-	}
+    private FaultHandler faultHandler;
 
-	public Encoder getEncoder() {
-		return this.encoder;
-	}
+    private Map<String, String> properties;
 
-	public void setEncoder(Encoder encoder) {
-		this.encoder = encoder;
-	}
+    public Decoder getDecoder()
+    {
+        return decoder;
+    }
 
-	public FaultHandler getFaultHandler() {
-		return this.faultHandler;
-	}
+    public void setDecoder( Decoder decoder )
+    {
+        this.decoder = decoder;
+    }
 
-	public void setFaultHandler(FaultHandler faultHandler) {
-		this.faultHandler = faultHandler;
-	}
+    public Encoder getEncoder()
+    {
+        return encoder;
+    }
 
-	public Map<String, String> getProperties() {
-		return this.properties;
-	}
+    public void setEncoder( Encoder encoder )
+    {
+        this.encoder = encoder;
+    }
 
-	public void setProperties(Map<String, String> properties) {
-		this.properties = properties;
-	}
+    public FaultHandler getFaultHandler()
+    {
+        return faultHandler;
+    }
+
+    public void setFaultHandler( FaultHandler faultHandler )
+    {
+        this.faultHandler = faultHandler;
+    }
+
+    public Map<String, String> getProperties()
+    {
+        return properties;
+    }
+
+    public void setProperties( Map<String, String> properties )
+    {
+        this.properties = properties;
+    }
 }

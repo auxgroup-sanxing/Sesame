@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page language="java" contentType="text/html; charset=utf-8" errorPage="../exception.jsp"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	errorPage="../exception.jsp"%>
 <%@page import="java.sql.*"%>
 <%@page import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
@@ -7,15 +8,15 @@
 <%@page import="java.net.URLEncoder"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*"%>
-<%@page import="javax.security.auth.*" %>
+<%@page import="javax.security.auth.*"%>
 
 <%@page import="org.json.*"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="org.jdom.*"%>
 <%@page import="org.jdom.xpath.XPath"%>
-<%@page import="com.sanxing.studio.*" %>
-<%@page import="com.sanxing.studio.auth.*" %>
-<%@page import="com.sanxing.studio.utils.*" %>
+<%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.auth.*"%>
+<%@page import="com.sanxing.studio.utils.*"%>
 <html>
 <head>
 <%
@@ -44,11 +45,33 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>用户首页</title>
 <style type="text/css">
-	BODY { background-color: window; }
-	TD { font-size: 12px; vertical-align: top; }
-	.user { border-style:solid;  border-width:1px; border-color: window; cursor: pointer; width: 50%;}
-	.user .userLogo { height: 48px; width: 48px; }
-	.userHilite { border-style:solid;  border-width: 1px; border-color: blue; }
+BODY {
+	background-color: window;
+}
+
+TD {
+	font-size: 12px;
+	vertical-align: top;
+}
+
+.user {
+	border-style: solid;
+	border-width: 1px;
+	border-color: window;
+	cursor: pointer;
+	width: 50%;
+}
+
+.user .userLogo {
+	height: 48px;
+	width: 48px;
+}
+
+.userHilite {
+	border-style: solid;
+	border-width: 1px;
+	border-color: blue;
+}
 </style>
 <script type="text/javascript">
 	document.oncontextmenu = function(e) { return false; };
@@ -62,18 +85,34 @@
 		if (request.getQueryString()==null)
 		{
 	%>
-	<p><b>选择一项操作</b></p>
+	<p>
+		<b>选择一项操作</b>
+	</p>
 	<table>
-		<tr><td><img src="../images/icons/right_a.gif"></td><td><a onclick='href="UserHome.jsp?action=selectAccount"' href="goto:" target="_self">更改帐户</a></td></tr>
-		<tr><td><img src="../images/icons/right_a.gif"></td><td><a onclick='href="CreateUser.jsp"' href="goto:" target="_self">创建新帐户</a></td></tr>
+		<tr>
+			<td><img src="../images/icons/right_a.gif"></td>
+			<td><a onclick='href="UserHome.jsp?action=selectAccount"'
+				href="goto:" target="_self">更改帐户</a></td>
+		</tr>
+		<tr>
+			<td><img src="../images/icons/right_a.gif"></td>
+			<td><a onclick='href="CreateUser.jsp"' href="goto:"
+				target="_self">创建新帐户</a></td>
+		</tr>
 		<%if (root.getAttributeValue("role-play", "false").equals("true")) {%>
-		<tr><td><img src="../images/icons/right_a.gif"></td><td><a onclick='href="RoleManager.jsp"' href="goto:" target="_self">角色管理</a></td></tr>
+		<tr>
+			<td><img src="../images/icons/right_a.gif"></td>
+			<td><a onclick='href="RoleManager.jsp"' href="goto:"
+				target="_self">角色管理</a></td>
+		</tr>
 		<%}%>
 	</table>
 	<%
 		}
 	%>
-	<p><b>选择要更改的帐户</b></p>
+	<p>
+		<b>选择要更改的帐户</b>
+	</p>
 	<%
 		JSONArray result = new JSONArray();
 	    List list = XPath.selectNodes(root, "user");
@@ -91,34 +130,37 @@
 			result.put(obj);
 		}
 	%>
-	<table style="width:100%">
-	<%
+	<table style="width: 100%">
+		<%
 		for (int i=0,len=result.length(); i<len;)
 		{
 		%>
-			<tr>
+		<tr>
 			<%
 			for (int j=0; j<2; j++)
 			{
 				if (i >= len) break;
 				JSONObject user = result.getJSONObject(i);
 			%>
-			<td  class="user" title="修改帐户信息" onclick="window.open('UserMgr.jsp?userid=<%=user.getString("userid")%>', '_self')" 
-				onmouseover="Ext.get(this).addClass('userHilite');" onmouseout="Ext.get(this).removeClass('userHilite');">
-				<table><tr>
-					<td><img src="<%="../images/logo/"+(user.has("userdsr")?user.getString("userdsr"):"user.gif")%>" class="userLogo"></td>
-					<td>
-						<b><%=user.getString("userid") %></b><br/>
-						<%=user.optString("fullname") %><br/>
-						<%=user.optString("userlevel").equals("S") ? "系统管理员":"普通帐户" %>
-					</td>
-				</tr></table>
+			<td class="user" title="修改帐户信息"
+				onclick="window.open('UserMgr.jsp?userid=<%=user.getString("userid")%>', '_self')"
+				onmouseover="Ext.get(this).addClass('userHilite');"
+				onmouseout="Ext.get(this).removeClass('userHilite');">
+				<table>
+					<tr>
+						<td><img
+							src="<%="../images/logo/"+(user.has("userdsr")?user.getString("userdsr"):"user.gif")%>"
+							class="userLogo"></td>
+						<td><b><%=user.getString("userid") %></b><br /> <%=user.optString("fullname") %><br />
+							<%=user.optString("userlevel").equals("S") ? "系统管理员":"普通帐户" %></td>
+					</tr>
+				</table>
 			</td>
 			<%
 			i++;
 			}
 			%>
-			</tr>
+		</tr>
 		<%
 		}
 	}

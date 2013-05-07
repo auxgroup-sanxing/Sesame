@@ -1,20 +1,29 @@
 package com.sanxing.sesame.engine.action.flow.exceptions;
 
+import org.jdom.Element;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.exceptions.AppException;
-import org.jdom.Element;
 
-public class ThrowAction extends AbstractAction {
-	private String exceptionKey;
-	private String exceptionMsg;
+public class ThrowAction
+    extends AbstractAction
+{
+    private String exceptionKey;
 
-	public void doinit(Element actionEl) {
-		this.exceptionKey = actionEl.getAttributeValue("exception-key");
-		this.exceptionMsg = actionEl.getAttributeValue("message");
-	}
+    private String exceptionMsg;
 
-	public void dowork(DataContext context) throws AppException {
-		throw new RuntimeException(this.exceptionKey + "|" + this.exceptionMsg);
-	}
+    @Override
+    public void doinit( Element actionEl )
+    {
+        exceptionKey = actionEl.getAttributeValue( "exception-key" );
+        exceptionMsg = actionEl.getAttributeValue( "message" );
+    }
+
+    @Override
+    public void dowork( DataContext context )
+        throws AppException
+    {
+        throw new RuntimeException( exceptionKey + "|" + exceptionMsg );
+    }
 }

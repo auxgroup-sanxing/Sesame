@@ -1,43 +1,57 @@
 package com.sanxing.sesame.mbean;
 
-import com.sanxing.sesame.container.JBIContainer;
-import com.sanxing.sesame.management.BaseLifeCycle;
 import javax.jbi.JBIException;
 
-public abstract class BaseSystemService extends BaseLifeCycle {
-	protected JBIContainer container;
+import com.sanxing.sesame.container.JBIContainer;
+import com.sanxing.sesame.management.BaseLifeCycle;
 
-	public String getName() {
-		String name = super.getClass().getName();
-		int index = name.lastIndexOf(".");
-		if ((index >= 0) && (index + 1 < name.length())) {
-			name = name.substring(index + 1);
-		}
-		return name;
-	}
+public abstract class BaseSystemService
+    extends BaseLifeCycle
+{
+    protected JBIContainer container;
 
-	public String getType() {
-		return "SystemService";
-	}
+    @Override
+    public String getName()
+    {
+        String name = super.getClass().getName();
+        int index = name.lastIndexOf( "." );
+        if ( ( index >= 0 ) && ( index + 1 < name.length() ) )
+        {
+            name = name.substring( index + 1 );
+        }
+        return name;
+    }
 
-	public void init(JBIContainer cont) throws JBIException {
-		this.container = cont;
-		cont.getManagementContext().registerSystemService(this,
-				getServiceMBean());
-		super.init();
-	}
+    @Override
+    public String getType()
+    {
+        return "SystemService";
+    }
 
-	public void shutDown() throws JBIException {
-		stop();
-		super.shutDown();
-		if ((this.container != null)
-				&& (this.container.getManagementContext() != null))
-			this.container.getManagementContext().unregisterSystemService(this);
-	}
+    public void init( JBIContainer cont )
+        throws JBIException
+    {
+        container = cont;
+        cont.getManagementContext().registerSystemService( this, getServiceMBean() );
+        super.init();
+    }
 
-	protected abstract Class getServiceMBean();
+    @Override
+    public void shutDown()
+        throws JBIException
+    {
+        stop();
+        super.shutDown();
+        if ( ( container != null ) && ( container.getManagementContext() != null ) )
+        {
+            container.getManagementContext().unregisterSystemService( this );
+        }
+    }
 
-	public JBIContainer getContainer() {
-		return this.container;
-	}
+    protected abstract Class getServiceMBean();
+
+    public JBIContainer getContainer()
+    {
+        return container;
+    }
 }

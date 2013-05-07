@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@page import="java.io.*"%>
 <%
 	String srcPath = request.getParameter("srcPath");
@@ -20,14 +21,16 @@
 <HTML>
 <HEAD>
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
-<LINK REL="STYLESHEET"  TYPE="text/css" HREF="../desktop/css/stylesheet.css" TITLE="Style">
+<LINK REL="STYLESHEET" TYPE="text/css"
+	HREF="../desktop/css/stylesheet.css" TITLE="Style">
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 </HEAD>
 <BODY>
-<%=content %>
-<script type="text/javascript">
+	<%=content %>
+	<script type="text/javascript">
 	var srcPath = "<%=srcPath%>";
 	var links = document.getElementsByTagName("A");
 	

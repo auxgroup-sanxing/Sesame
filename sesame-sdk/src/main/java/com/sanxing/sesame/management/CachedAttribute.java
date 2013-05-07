@@ -9,82 +9,111 @@ import javax.management.MBeanException;
 
 import org.apache.commons.beanutils.PropertyUtilsBean;
 
-public class CachedAttribute {
-	private Object bean;
-	private String name;
-	private Attribute attribute;
-	private MBeanAttributeInfo attributeInfo;
-	private PropertyDescriptor propertyDescriptor;
+public class CachedAttribute
+{
+    private Object bean;
 
-	public CachedAttribute(Attribute attr) {
-		this.attribute = attr;
-		this.name = attr.getName();
-	}
+    private String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private Attribute attribute;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private MBeanAttributeInfo attributeInfo;
 
-	public Attribute getAttribute() {
-		return this.attribute;
-	}
+    private PropertyDescriptor propertyDescriptor;
 
-	public void setAttribute(Attribute attribute) {
-		this.attribute = attribute;
-	}
+    public CachedAttribute( Attribute attr )
+    {
+        attribute = attr;
+        name = attr.getName();
+    }
 
-	public void updateValue(PropertyUtilsBean beanUtil) throws MBeanException {
-		try {
-			Object value = beanUtil.getProperty(this.bean, getName());
-			if (value != this.attribute.getValue())
-				this.attribute = new Attribute(getName(), value);
-		} catch (IllegalAccessException e) {
-			throw new MBeanException(e);
-		} catch (InvocationTargetException e) {
-			throw new MBeanException(e);
-		} catch (NoSuchMethodException e) {
-			throw new MBeanException(e);
-		}
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void updateAttribute(PropertyUtilsBean beanUtils, Attribute attr)
-			throws IllegalAccessException, InvocationTargetException,
-			NoSuchMethodException {
-		if ((this.attribute != null) && (this.propertyDescriptor != null)) {
-			beanUtils.setProperty(this.bean, getName(), attr.getValue());
-		}
-		this.attribute = attr;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public void updateAttributeValue(Object value) {
-		this.attribute = new Attribute(this.attribute.getName(), value);
-	}
+    public Attribute getAttribute()
+    {
+        return attribute;
+    }
 
-	public Object getBean() {
-		return this.bean;
-	}
+    public void setAttribute( Attribute attribute )
+    {
+        this.attribute = attribute;
+    }
 
-	public void setBean(Object bean) {
-		this.bean = bean;
-	}
+    public void updateValue( PropertyUtilsBean beanUtil )
+        throws MBeanException
+    {
+        try
+        {
+            Object value = beanUtil.getProperty( bean, getName() );
+            if ( value != attribute.getValue() )
+            {
+                attribute = new Attribute( getName(), value );
+            }
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new MBeanException( e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            throw new MBeanException( e );
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new MBeanException( e );
+        }
+    }
 
-	public PropertyDescriptor getPropertyDescriptor() {
-		return this.propertyDescriptor;
-	}
+    public void updateAttribute( PropertyUtilsBean beanUtils, Attribute attr )
+        throws IllegalAccessException, InvocationTargetException, NoSuchMethodException
+    {
+        if ( ( attribute != null ) && ( propertyDescriptor != null ) )
+        {
+            beanUtils.setProperty( bean, getName(), attr.getValue() );
+        }
+        attribute = attr;
+    }
 
-	public void setPropertyDescriptor(PropertyDescriptor propertyDescriptor) {
-		this.propertyDescriptor = propertyDescriptor;
-	}
+    public void updateAttributeValue( Object value )
+    {
+        attribute = new Attribute( attribute.getName(), value );
+    }
 
-	public MBeanAttributeInfo getAttributeInfo() {
-		return this.attributeInfo;
-	}
+    public Object getBean()
+    {
+        return bean;
+    }
 
-	public void setAttributeInfo(MBeanAttributeInfo attributeInfo) {
-		this.attributeInfo = attributeInfo;
-	}
+    public void setBean( Object bean )
+    {
+        this.bean = bean;
+    }
+
+    public PropertyDescriptor getPropertyDescriptor()
+    {
+        return propertyDescriptor;
+    }
+
+    public void setPropertyDescriptor( PropertyDescriptor propertyDescriptor )
+    {
+        this.propertyDescriptor = propertyDescriptor;
+    }
+
+    public MBeanAttributeInfo getAttributeInfo()
+    {
+        return attributeInfo;
+    }
+
+    public void setAttributeInfo( MBeanAttributeInfo attributeInfo )
+    {
+        this.attributeInfo = attributeInfo;
+    }
 }

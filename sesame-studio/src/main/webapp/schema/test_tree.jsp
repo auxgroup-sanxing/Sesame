@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@page import="java.io.File"%>
 <%@page import="java.util.*"%>
 <%@page import="org.json.*"%>
@@ -7,25 +8,27 @@
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>模式编辑</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="../package/schema/resources/SchemaPanel.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../package/schema/resources/SchemaPanel.css" />
 
 <style type="text/css">
-html, body {
-font:normal 12px arial, verdana;
-	margin:0;
-	padding:0;
+html,body {
+	font: normal 12px arial, verdana;
+	margin: 0;
+	padding: 0;
 	border: 0 none;
 	overflow: auto;
-	cursor:default; 
-	width:100%; 
-	height:100%;
+	cursor: default;
+	width: 100%;
+	height: 100%;
 }
 
 .hilited {
-	background: highlight; 
+	background: highlight;
 	color: highlighttext;
 }
 </style>

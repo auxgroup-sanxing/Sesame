@@ -1,143 +1,190 @@
 package com.sanxing.sesame.engine.context;
 
-import bsh.EvalError;
-import bsh.Interpreter;
-import com.sanxing.sesame.engine.action.beanshell.BeanShellContext;
-import com.sanxing.sesame.engine.action.callout.Reverter;
-import com.sanxing.sesame.engine.action.jdbc.ConnectionUtil;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.transaction.TransactionManager;
 
-public class ExecutionContext {
-	public static final int STATUS_NORMAL = 0;
-	public static final int STATUS_ERRORHANDLING = 1;
-	private int status;
-	private List<TransactionManager> beginedTMS = new LinkedList();
+import bsh.EvalError;
+import bsh.Interpreter;
 
-	private Reverter reverter = new Reverter();
-	private String uuid;
-	private DataContext dataCtx;
-	private boolean doCutpoint = false;
+import com.sanxing.sesame.engine.action.beanshell.BeanShellContext;
+import com.sanxing.sesame.engine.action.callout.Reverter;
+import com.sanxing.sesame.engine.action.jdbc.ConnectionUtil;
 
-	private Map<String, Object> context = new HashMap();
-	private TransactionManager currentTM;
-	private AtomicBoolean debugging = new AtomicBoolean(false);
+public class ExecutionContext
+{
+    public static final int STATUS_NORMAL = 0;
 
-	private ArrayBlockingQueue<String> actQueue = new ArrayBlockingQueue(1);
-	private Interpreter bsh;
-	private boolean terminated = false;
+    public static final int STATUS_ERRORHANDLING = 1;
 
-	public String getCurrentAction() throws InterruptedException {
-		return ((String) this.actQueue.take());
-	}
+    private int status;
 
-	public void setCurrentAction(String currentAction)
-			throws InterruptedException {
-		this.actQueue.put(currentAction);
-	}
+    private final List<TransactionManager> beginedTMS = new LinkedList();
 
-	public ExecutionContext(String uuid) {
-		this.uuid = uuid;
-		this.dataCtx = DataContext.getInstance(uuid);
-		this.dataCtx.setExecutionContext(this);
-		this.bsh = new Interpreter();
-	}
+    private final Reverter reverter = new Reverter();
 
-	public TransactionManager getCurrentTM() {
-		return this.currentTM;
-	}
+    private final String uuid;
 
-	public void setCurrentTM(TransactionManager currentTM) {
-		this.beginedTMS.add(currentTM);
-		this.currentTM = currentTM;
-	}
+    private final DataContext dataCtx;
 
-	public Interpreter getBshInterpreter() {
-		return this.bsh;
-	}
+    private boolean doCutpoint = false;
 
-	public void close() {
-		this.dataCtx.close();
-		ConnectionUtil.clean(this.uuid);
-		this.actQueue.clear();
-		BeanShellContext bsc = (BeanShellContext) get("beanshell.context");
-		if (bsc == null)
-			return;
-		try {
-			bsc.close();
-		} catch (EvalError e) {
-			e.printStackTrace();
-		}
-	}
+    private final Map<String, Object> context = new HashMap();
 
-	public Reverter getReverter() {
-		return this.reverter;
-	}
+    private TransactionManager currentTM;
 
-	public String getUuid() {
-		return this.uuid;
-	}
+    private final AtomicBoolean debugging = new AtomicBoolean( false );
 
-	public void put(String key, Object value) {
-		this.context.put(key, value);
-	}
+    private final ArrayBlockingQueue<String> actQueue = new ArrayBlockingQueue( 1 );
 
-	public Object get(String key) {
-		return this.context.get(key);
-	}
+    private final Interpreter bsh;
 
-	public boolean isDoCutpoint() {
-		return this.doCutpoint;
-	}
+    private boolean terminated = false;
 
-	public void setDoCutpoint(boolean doCutpoint) {
-		this.doCutpoint = doCutpoint;
-	}
+    public String getCurrentAction()
+        throws InterruptedException
+    {
+        return actQueue.take();
+    }
 
-	public DataContext getDataContext() {
-		return this.dataCtx;
-	}
+    public void setCurrentAction( String currentAction )
+        throws InterruptedException
+    {
+        actQueue.put( currentAction );
+    }
 
-	public int getStatus() {
-		return this.status;
-	}
+    public ExecutionContext( String uuid )
+    {
+        this.uuid = uuid;
+        dataCtx = DataContext.getInstance( uuid );
+        dataCtx.setExecutionContext( this );
+        bsh = new Interpreter();
+    }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+    public TransactionManager getCurrentTM()
+    {
+        return currentTM;
+    }
 
-	public boolean isDebugging() {
-		return this.debugging.get();
-	}
+    public void setCurrentTM( TransactionManager currentTM )
+    {
+        beginedTMS.add( currentTM );
+        this.currentTM = currentTM;
+    }
 
-	public void openDebugging() {
-		this.debugging.set(true);
-	}
+    public Interpreter getBshInterpreter()
+    {
+        return bsh;
+    }
 
-	public void closeDebugging() {
-		this.debugging.set(false);
-	}
+    public void close()
+    {
+        dataCtx.close();
+        ConnectionUtil.clean( uuid );
+        actQueue.clear();
+        BeanShellContext bsc = (BeanShellContext) get( "beanshell.context" );
+        if ( bsc == null )
+        {
+            return;
+        }
+        try
+        {
+            bsc.close();
+        }
+        catch ( EvalError e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public boolean isDehydrated() {
-		return DehydrateManager.isDehydrated(getUuid());
-	}
+    public Reverter getReverter()
+    {
+        return reverter;
+    }
 
-	public void terminate() {
-		this.terminated = true;
-	}
+    public String getUuid()
+    {
+        return uuid;
+    }
 
-	public boolean isTerminated() {
-		return this.terminated;
-	}
+    public void put( String key, Object value )
+    {
+        context.put( key, value );
+    }
 
-	public static void main(String[] args) {
-		for (int i = 0; i < 1000; ++i)
-			for (int j = 0; j < 10; ++j)
-				new Interpreter();
-	}
+    public Object get( String key )
+    {
+        return context.get( key );
+    }
+
+    public boolean isDoCutpoint()
+    {
+        return doCutpoint;
+    }
+
+    public void setDoCutpoint( boolean doCutpoint )
+    {
+        this.doCutpoint = doCutpoint;
+    }
+
+    public DataContext getDataContext()
+    {
+        return dataCtx;
+    }
+
+    public int getStatus()
+    {
+        return status;
+    }
+
+    public void setStatus( int status )
+    {
+        this.status = status;
+    }
+
+    public boolean isDebugging()
+    {
+        return debugging.get();
+    }
+
+    public void openDebugging()
+    {
+        debugging.set( true );
+    }
+
+    public void closeDebugging()
+    {
+        debugging.set( false );
+    }
+
+    public boolean isDehydrated()
+    {
+        return DehydrateManager.isDehydrated( getUuid() );
+    }
+
+    public void terminate()
+    {
+        terminated = true;
+    }
+
+    public boolean isTerminated()
+    {
+        return terminated;
+    }
+
+    public static void main( String[] args )
+    {
+        for ( int i = 0; i < 1000; ++i )
+        {
+            for ( int j = 0; j < 10; ++j )
+            {
+                new Interpreter();
+            }
+        }
+    }
 }

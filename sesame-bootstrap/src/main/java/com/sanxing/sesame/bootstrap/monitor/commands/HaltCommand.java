@@ -25,9 +25,9 @@ public class HaltCommand
     @Override
     public boolean execute()
     {
-        ShutdownHelper.halt(666);
+        ShutdownHelper.halt( 666 );
 
-        throw new Error("Unreachable statement");
+        throw new Error( "Unreachable statement" );
     }
 
 }

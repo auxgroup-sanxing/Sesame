@@ -1,66 +1,86 @@
 package com.sanxing.sesame.exceptions;
 
-public class SystemException extends RuntimeException implements KeyedErr {
-	private static final long serialVersionUID = 1371868851426481962L;
-	private String errorCode = "99999";
+public class SystemException
+    extends RuntimeException
+    implements KeyedErr
+{
+    private static final long serialVersionUID = 1371868851426481962L;
 
-	private String moduleName = "99";
-	private String[] errMsgArgs;
+    private String errorCode = "99999";
 
-	public static void registerErrMsgs(String fileName) {
-		ErrMessages.addErrorMsgFile(fileName);
-	}
+    private String moduleName = "99";
 
-	public String getErrorCode() {
-		return this.errorCode;
-	}
+    private String[] errMsgArgs;
 
-	public String getErrKey() {
-		return getGlobalErrCode();
-	}
+    public static void registerErrMsgs( String fileName )
+    {
+        ErrMessages.addErrorMsgFile( fileName );
+    }
 
-	public String getGlobalErrCode() {
-		return this.moduleName + "." + this.errorCode;
-	}
+    public String getErrorCode()
+    {
+        return errorCode;
+    }
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+    @Override
+    public String getErrKey()
+    {
+        return getGlobalErrCode();
+    }
 
-	public String getModuleName() {
-		return this.moduleName;
-	}
+    public String getGlobalErrCode()
+    {
+        return moduleName + "." + errorCode;
+    }
 
-	public void setModuleName(String moduleName) {
-		this.moduleName = moduleName;
-	}
+    public void setErrorCode( String errorCode )
+    {
+        this.errorCode = errorCode;
+    }
 
-	public String[] getErrMsgArgs() {
-		return this.errMsgArgs;
-	}
+    public String getModuleName()
+    {
+        return moduleName;
+    }
 
-	public void setErrMsgArgs(String[] errMsgArgs) {
-		this.errMsgArgs = errMsgArgs;
-	}
+    public void setModuleName( String moduleName )
+    {
+        this.moduleName = moduleName;
+    }
 
-	public SystemException() {
-	}
+    public String[] getErrMsgArgs()
+    {
+        return errMsgArgs;
+    }
 
-	public SystemException(String moduleName, String errorCode, Throwable cause) {
-		super(cause);
-		this.errorCode = errorCode;
-		this.moduleName = moduleName;
-	}
+    public void setErrMsgArgs( String[] errMsgArgs )
+    {
+        this.errMsgArgs = errMsgArgs;
+    }
 
-	public SystemException(Throwable cause) {
-		super(cause);
-	}
+    public SystemException()
+    {
+    }
 
-	public String getMessage() {
-		if (getErrMsgArgs() == null) {
-			return ErrMessages.getErrMsg(getModuleName(), getErrorCode());
-		}
-		return ErrMessages.getErrMsg(getModuleName(), getErrorCode(),
-				getErrMsgArgs());
-	}
+    public SystemException( String moduleName, String errorCode, Throwable cause )
+    {
+        super( cause );
+        this.errorCode = errorCode;
+        this.moduleName = moduleName;
+    }
+
+    public SystemException( Throwable cause )
+    {
+        super( cause );
+    }
+
+    @Override
+    public String getMessage()
+    {
+        if ( getErrMsgArgs() == null )
+        {
+            return ErrMessages.getErrMsg( getModuleName(), getErrorCode() );
+        }
+        return ErrMessages.getErrMsg( getModuleName(), getErrorCode(), getErrMsgArgs() );
+    }
 }

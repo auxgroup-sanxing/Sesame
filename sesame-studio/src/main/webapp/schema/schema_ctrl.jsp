@@ -1,12 +1,14 @@
 <%@page language="java" contentType="text/xml; charset=utf-8"%>
 
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="java.io.*, java.util.*, java.util.regex.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="javax.xml.namespace.QName"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.apache.ws.commons.schema.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*, org.jdom.filter.Filter"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*, org.jdom.filter.Filter"%>
 <%@page import="org.json.*"%>
 
 <%!

@@ -1,135 +1,184 @@
 package com.sanxing.sesame.mbean;
 
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.jbi.JBIException;
+import javax.management.JMException;
+import javax.management.MBeanAttributeInfo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sanxing.sesame.container.EnvironmentContext;
 import com.sanxing.sesame.container.JBIContainer;
 import com.sanxing.sesame.management.AttributeInfoHelper;
 import com.sanxing.sesame.util.FileUtil;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
-import javax.jbi.JBIException;
-import javax.management.JMException;
-import javax.management.MBeanAttributeInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class AutoDeploymentService extends BaseSystemService implements
-		AutoDeploymentServiceMBean {
-	private static final Logger LOG = LoggerFactory.getLogger(AutoDeploymentService.class);
-	private EnvironmentContext environmentContext;
-	private boolean monitorInstallationDirectory;
-	private boolean monitorDeploymentDirectory;
-	private int monitorInterval;
-	private AtomicBoolean started;
-	private Timer statsTimer;
-	private TimerTask timerTask;
-	private ArchiveManager archiveManager;
+public class AutoDeploymentService
+    extends BaseSystemService
+    implements AutoDeploymentServiceMBean
+{
+    private static final Logger LOG = LoggerFactory.getLogger( AutoDeploymentService.class );
 
-	public AutoDeploymentService() {
-		this.monitorInstallationDirectory = true;
-		this.monitorDeploymentDirectory = true;
-		this.monitorInterval = 10;
+    private EnvironmentContext environmentContext;
 
-		this.started = new AtomicBoolean(false);
-	}
+    private boolean monitorInstallationDirectory;
 
-	public String getDescription() {
-		return "automatically installs and deploys JBI Archives";
-	}
+    private boolean monitorDeploymentDirectory;
 
-	public boolean isMonitorInstallationDirectory() {
-		return this.monitorInstallationDirectory;
-	}
+    private int monitorInterval;
 
-	public void setMonitorInstallationDirectory(
-			boolean monitorInstallationDirectory) {
-		this.monitorInstallationDirectory = monitorInstallationDirectory;
-	}
+    private final AtomicBoolean started;
 
-	public boolean isMonitorDeploymentDirectory() {
-		return this.monitorDeploymentDirectory;
-	}
+    private Timer statsTimer;
 
-	public void setMonitorDeploymentDirectory(boolean monitorDeploymentDirectory) {
-		this.monitorDeploymentDirectory = monitorDeploymentDirectory;
-	}
+    private TimerTask timerTask;
 
-	public int getMonitorInterval() {
-		return this.monitorInterval;
-	}
+    private ArchiveManager archiveManager;
 
-	public void setMonitorInterval(int monitorInterval) {
-		this.monitorInterval = monitorInterval;
-	}
+    public AutoDeploymentService()
+    {
+        monitorInstallationDirectory = true;
+        monitorDeploymentDirectory = true;
+        monitorInterval = 10;
 
-	public void start() throws JBIException {
-		super.start();
-		if (this.started.compareAndSet(false, true))
-			scheduleDirectoryTimer();
-	}
+        started = new AtomicBoolean( false );
+    }
 
-	public void stop() throws JBIException {
-		if (this.started.compareAndSet(true, false)) {
-			super.stop();
-			if (this.timerTask != null)
-				this.timerTask.cancel();
-		}
-	}
+    @Override
+    public String getDescription()
+    {
+        return "automatically installs and deploys JBI Archives";
+    }
 
-	public void init(JBIContainer container) throws JBIException {
-		super.init(container);
-		this.environmentContext = container.getEnvironmentContext();
-		this.archiveManager = container.getArchiveManager();
+    public boolean isMonitorInstallationDirectory()
+    {
+        return monitorInstallationDirectory;
+    }
 
-		if (this.environmentContext.getTmpDir() != null)
-			FileUtil.deleteFile(this.environmentContext.getTmpDir());
-	}
+    public void setMonitorInstallationDirectory( boolean monitorInstallationDirectory )
+    {
+        this.monitorInstallationDirectory = monitorInstallationDirectory;
+    }
 
-	protected Class<AutoDeploymentServiceMBean> getServiceMBean() {
-		return AutoDeploymentServiceMBean.class;
-	}
+    public boolean isMonitorDeploymentDirectory()
+    {
+        return monitorDeploymentDirectory;
+    }
 
-	public MBeanAttributeInfo[] getAttributeInfos() throws JMException {
-		AttributeInfoHelper helper = new AttributeInfoHelper();
-		helper.addAttribute(getObjectToManage(),
-				"monitorInstallationDirectory",
-				"Periodically monitor the Installation directory");
-		helper.addAttribute(getObjectToManage(), "monitorInterval",
-				"Interval (secs) before monitoring");
-		return AttributeInfoHelper.join(super.getAttributeInfos(),
-				helper.getAttributeInfos());
-	}
+    public void setMonitorDeploymentDirectory( boolean monitorDeploymentDirectory )
+    {
+        this.monitorDeploymentDirectory = monitorDeploymentDirectory;
+    }
 
-	private void scheduleDirectoryTimer() {
-		if ((isMonitorInstallationDirectory())
-				|| (isMonitorDeploymentDirectory())) {
-			if (this.statsTimer == null) {
-				this.statsTimer = new Timer(true);
-			}
-			if (this.timerTask != null) {
-				this.timerTask.cancel();
-			}
-			this.timerTask = new TimerTask() {
-				public void run() {
-					if (!(AutoDeploymentService.this.isStarted()))
-						return;
-					try {
-						if (AutoDeploymentService.this
-								.isMonitorInstallationDirectory()) {
-							AutoDeploymentService.this.archiveManager
-									.scanInstallDir();
-						}
-						if (AutoDeploymentService.this
-								.isMonitorDeploymentDirectory())
-							AutoDeploymentService.this.archiveManager
-									.scanDeployDir();
-					} catch (Throwable t) {
-						AutoDeploymentService.LOG.error(t.getMessage(), t);
-					}
-				}
-			};
-			long interval = this.monitorInterval * 1000;
-			this.statsTimer.scheduleAtFixedRate(this.timerTask, 0L, interval);
-		}
-	}
+    public int getMonitorInterval()
+    {
+        return monitorInterval;
+    }
+
+    public void setMonitorInterval( int monitorInterval )
+    {
+        this.monitorInterval = monitorInterval;
+    }
+
+    @Override
+    public void start()
+        throws JBIException
+    {
+        super.start();
+        if ( started.compareAndSet( false, true ) )
+        {
+            scheduleDirectoryTimer();
+        }
+    }
+
+    @Override
+    public void stop()
+        throws JBIException
+    {
+        if ( started.compareAndSet( true, false ) )
+        {
+            super.stop();
+            if ( timerTask != null )
+            {
+                timerTask.cancel();
+            }
+        }
+    }
+
+    @Override
+    public void init( JBIContainer container )
+        throws JBIException
+    {
+        super.init( container );
+        environmentContext = container.getEnvironmentContext();
+        archiveManager = container.getArchiveManager();
+
+        if ( environmentContext.getTmpDir() != null )
+        {
+            FileUtil.deleteFile( environmentContext.getTmpDir() );
+        }
+    }
+
+    @Override
+    protected Class<AutoDeploymentServiceMBean> getServiceMBean()
+    {
+        return AutoDeploymentServiceMBean.class;
+    }
+
+    @Override
+    public MBeanAttributeInfo[] getAttributeInfos()
+        throws JMException
+    {
+        AttributeInfoHelper helper = new AttributeInfoHelper();
+        helper.addAttribute( getObjectToManage(), "monitorInstallationDirectory",
+            "Periodically monitor the Installation directory" );
+        helper.addAttribute( getObjectToManage(), "monitorInterval", "Interval (secs) before monitoring" );
+        return AttributeInfoHelper.join( super.getAttributeInfos(), helper.getAttributeInfos() );
+    }
+
+    private void scheduleDirectoryTimer()
+    {
+        if ( ( isMonitorInstallationDirectory() ) || ( isMonitorDeploymentDirectory() ) )
+        {
+            if ( statsTimer == null )
+            {
+                statsTimer = new Timer( true );
+            }
+            if ( timerTask != null )
+            {
+                timerTask.cancel();
+            }
+            timerTask = new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    if ( !( AutoDeploymentService.this.isStarted() ) )
+                    {
+                        return;
+                    }
+                    try
+                    {
+                        if ( AutoDeploymentService.this.isMonitorInstallationDirectory() )
+                        {
+                            archiveManager.scanInstallDir();
+                        }
+                        if ( AutoDeploymentService.this.isMonitorDeploymentDirectory() )
+                        {
+                            archiveManager.scanDeployDir();
+                        }
+                    }
+                    catch ( Throwable t )
+                    {
+                        AutoDeploymentService.LOG.error( t.getMessage(), t );
+                    }
+                }
+            };
+            long interval = monitorInterval * 1000;
+            statsTimer.scheduleAtFixedRate( timerTask, 0L, interval );
+        }
+    }
 }

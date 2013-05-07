@@ -5,7 +5,8 @@
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

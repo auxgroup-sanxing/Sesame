@@ -24,155 +24,213 @@ import com.sanxing.sesame.exception.FaultException;
 import com.sanxing.sesame.exception.NotInitialisedYetException;
 import com.sanxing.sesame.management.BaseLifeCycle;
 
-public abstract class BaseComponent extends BaseLifeCycle implements
-		ComponentLifeCycle {
-	protected Logger logger = LoggerFactory.getLogger(BaseComponent.class);
-	private ComponentContext context;
-	private ObjectName extensionMBeanName;
-	private QName service;
-	private String endpoint;
-	private MessageExchangeFactory exchangeFactory;
-	private String name = null;
-	private String description = "POJO Component";
-	private ServiceEndpoint serviceEndpoint;
-	private DeliveryChannel channel;
+public abstract class BaseComponent
+    extends BaseLifeCycle
+    implements ComponentLifeCycle
+{
+    protected Logger logger = LoggerFactory.getLogger( BaseComponent.class );
 
-	protected BaseComponent() {
-	}
+    private ComponentContext context;
 
-	protected BaseComponent(QName service, String endpoint) {
-		this.service = service;
-		this.endpoint = endpoint;
-	}
+    private ObjectName extensionMBeanName;
 
-	public String getName() {
-		return ((this.name == null) ? super.getName() : this.name);
-	}
+    private QName service;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String endpoint;
 
-	public String getDescription() {
-		return this.description;
-	}
+    private MessageExchangeFactory exchangeFactory;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    private String name = null;
 
-	public void init(ComponentContext cc) throws JBIException {
-		this.context = cc;
-		this.channel = this.context.getDeliveryChannel();
-		init();
-		if ((this.service != null) && (this.endpoint != null))
-			this.serviceEndpoint = this.context.activateEndpoint(this.service,
-					this.endpoint);
-	}
+    private String description = "POJO Component";
 
-	public void shutDown() throws JBIException {
-		if (this.serviceEndpoint != null) {
-			this.context.deactivateEndpoint(this.serviceEndpoint);
-		}
-		this.exchangeFactory = null;
-		super.shutDown();
-	}
+    private ServiceEndpoint serviceEndpoint;
 
-	public ObjectName getExtensionMBeanName() {
-		return this.extensionMBeanName;
-	}
+    private DeliveryChannel channel;
 
-	public void setExtensionMBeanName(ObjectName extensionMBeanName) {
-		this.extensionMBeanName = extensionMBeanName;
-	}
+    protected BaseComponent()
+    {
+    }
 
-	public ComponentContext getContext() {
-		return this.context;
-	}
+    protected BaseComponent( QName service, String endpoint )
+    {
+        this.service = service;
+        this.endpoint = endpoint;
+    }
 
-	public QName getService() {
-		return this.service;
-	}
+    @Override
+    public String getName()
+    {
+        return ( ( name == null ) ? super.getName() : name );
+    }
 
-	public void setService(QName service) {
-		this.service = service;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public String getEndpoint() {
-		return this.endpoint;
-	}
+    @Override
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
 
-	public MessageExchangeFactory getExchangeFactory()
-			throws MessagingException {
-		if ((this.exchangeFactory == null) && (this.context != null)) {
-			this.exchangeFactory = getDeliveryChannel().createExchangeFactory();
-		}
-		return this.exchangeFactory;
-	}
+    @Override
+    public void init( ComponentContext cc )
+        throws JBIException
+    {
+        context = cc;
+        channel = context.getDeliveryChannel();
+        init();
+        if ( ( service != null ) && ( endpoint != null ) )
+        {
+            serviceEndpoint = context.activateEndpoint( service, endpoint );
+        }
+    }
 
-	public DeliveryChannel getDeliveryChannel() throws MessagingException {
-		if (this.channel == null) {
-			throw new NotInitialisedYetException();
-		}
-		return this.channel;
-	}
+    @Override
+    public void shutDown()
+        throws JBIException
+    {
+        if ( serviceEndpoint != null )
+        {
+            context.deactivateEndpoint( serviceEndpoint );
+        }
+        exchangeFactory = null;
+        super.shutDown();
+    }
 
-	protected void init() throws JBIException {
-		super.init();
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        return extensionMBeanName;
+    }
 
-	public void done(MessageExchange exchange) throws MessagingException {
-		exchange.setStatus(ExchangeStatus.DONE);
-		getDeliveryChannel().send(exchange);
-	}
+    public void setExtensionMBeanName( ObjectName extensionMBeanName )
+    {
+        this.extensionMBeanName = extensionMBeanName;
+    }
 
-	public void send(MessageExchange exchange) throws MessagingException {
-		getDeliveryChannel().send(exchange);
-	}
+    public ComponentContext getContext()
+    {
+        return context;
+    }
 
-	public boolean sendSync(MessageExchange exchange) throws MessagingException {
-		return getDeliveryChannel().sendSync(exchange);
-	}
+    public QName getService()
+    {
+        return service;
+    }
 
-	public boolean sendSync(MessageExchange exchange, long timeMillis)
-			throws MessagingException {
-		return getDeliveryChannel().sendSync(exchange, timeMillis);
-	}
+    public void setService( QName service )
+    {
+        this.service = service;
+    }
 
-	public void answer(MessageExchange exchange, NormalizedMessage answer)
-			throws MessagingException {
-		exchange.setMessage(answer, "out");
-		getDeliveryChannel().send(exchange);
-	}
+    public String getEndpoint()
+    {
+        return endpoint;
+    }
 
-	public void fail(MessageExchange exchange, Fault fault)
-			throws MessagingException {
-		if ((exchange instanceof InOnly) || (fault == null))
-			exchange.setError(new FaultException(
-					"Fault occured for in-only exchange", exchange, fault));
-		else {
-			exchange.setFault(fault);
-		}
-		getDeliveryChannel().send(exchange);
-	}
+    public void setEndpoint( String endpoint )
+    {
+        this.endpoint = endpoint;
+    }
 
-	public void fail(MessageExchange exchange, Exception error)
-			throws MessagingException {
-		if ((exchange instanceof InOnly)
-				|| (!(error instanceof FaultException))) {
-			exchange.setError(error);
-		} else {
-			FaultException faultException = (FaultException) error;
-			exchange.setFault(faultException.getFault());
-		}
-		getDeliveryChannel().send(exchange);
-	}
+    public MessageExchangeFactory getExchangeFactory()
+        throws MessagingException
+    {
+        if ( ( exchangeFactory == null ) && ( context != null ) )
+        {
+            exchangeFactory = getDeliveryChannel().createExchangeFactory();
+        }
+        return exchangeFactory;
+    }
 
-	protected boolean isInAndOut(MessageExchange exchange) {
-		return ((exchange instanceof InOut) || (exchange instanceof InOptionalOut));
-	}
+    public DeliveryChannel getDeliveryChannel()
+        throws MessagingException
+    {
+        if ( channel == null )
+        {
+            throw new NotInitialisedYetException();
+        }
+        return channel;
+    }
+
+    @Override
+    protected void init()
+        throws JBIException
+    {
+        super.init();
+    }
+
+    public void done( MessageExchange exchange )
+        throws MessagingException
+    {
+        exchange.setStatus( ExchangeStatus.DONE );
+        getDeliveryChannel().send( exchange );
+    }
+
+    public void send( MessageExchange exchange )
+        throws MessagingException
+    {
+        getDeliveryChannel().send( exchange );
+    }
+
+    public boolean sendSync( MessageExchange exchange )
+        throws MessagingException
+    {
+        return getDeliveryChannel().sendSync( exchange );
+    }
+
+    public boolean sendSync( MessageExchange exchange, long timeMillis )
+        throws MessagingException
+    {
+        return getDeliveryChannel().sendSync( exchange, timeMillis );
+    }
+
+    public void answer( MessageExchange exchange, NormalizedMessage answer )
+        throws MessagingException
+    {
+        exchange.setMessage( answer, "out" );
+        getDeliveryChannel().send( exchange );
+    }
+
+    public void fail( MessageExchange exchange, Fault fault )
+        throws MessagingException
+    {
+        if ( ( exchange instanceof InOnly ) || ( fault == null ) )
+        {
+            exchange.setError( new FaultException( "Fault occured for in-only exchange", exchange, fault ) );
+        }
+        else
+        {
+            exchange.setFault( fault );
+        }
+        getDeliveryChannel().send( exchange );
+    }
+
+    public void fail( MessageExchange exchange, Exception error )
+        throws MessagingException
+    {
+        if ( ( exchange instanceof InOnly ) || ( !( error instanceof FaultException ) ) )
+        {
+            exchange.setError( error );
+        }
+        else
+        {
+            FaultException faultException = (FaultException) error;
+            exchange.setFault( faultException.getFault() );
+        }
+        getDeliveryChannel().send( exchange );
+    }
+
+    protected boolean isInAndOut( MessageExchange exchange )
+    {
+        return ( ( exchange instanceof InOut ) || ( exchange instanceof InOptionalOut ) );
+    }
 }

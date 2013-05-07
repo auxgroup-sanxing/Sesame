@@ -6,202 +6,275 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
 import java.net.SocketException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class SesameFTP {
-	private FTPClient ftpClient;
-	public static final int BINARY_FILE_TYPE = 2;
-	public static final int ASCII_FILE_TYPE = 0;
+public class SesameFTP
+{
+    private static final Logger LOG = LoggerFactory.getLogger( SesameFTP.class );
 
-	public void connectServer(URL url) throws SocketException, IOException {
-		String server = url.getHost();
-		int port = url.getPort();
+    private FTPClient ftpClient;
 
-		String userInfo = url.getUserInfo();
-		int index = (userInfo != null) ? userInfo.indexOf(58) : 0;
-		String user = (index > 0) ? userInfo.substring(0, index) : userInfo;
-		String password = (index > 0) ? user.substring(index + 1) : "";
-		String path = url.getPath();
-		connectServer(server, port, user, password, path);
-	}
+    public static final int BINARY_FILE_TYPE = 2;
 
-	public void connectServer(String server, int port, String user,
-			String password, String path) throws SocketException, IOException {
-		this.ftpClient = new FTPClient();
-		this.ftpClient.connect(server, port);
-		System.out.println("Connected to " + server + ".");
-		System.out.println(this.ftpClient.getReplyCode());
-		this.ftpClient.login(user, password);
+    public static final int ASCII_FILE_TYPE = 0;
 
-		if (path.length() != 0)
-			this.ftpClient.changeWorkingDirectory(path);
-	}
+    public void connectServer( URL url )
+        throws SocketException, IOException
+    {
+        String server = url.getHost();
+        int port = url.getPort();
 
-	public void setFileType(int fileType) throws IOException {
-		this.ftpClient.setFileType(fileType);
-	}
+        String userInfo = url.getUserInfo();
+        int index = ( userInfo != null ) ? userInfo.indexOf( 58 ) : 0;
+        String user = ( index > 0 ) ? userInfo.substring( 0, index ) : userInfo;
+        String password = ( index > 0 ) ? user.substring( index + 1 ) : "";
+        String path = url.getPath();
+        connectServer( server, port, user, password, path );
+    }
 
-	public void closeServer() throws IOException {
-		if (this.ftpClient.isConnected())
-			this.ftpClient.disconnect();
-	}
+    public void connectServer( String server, int port, String user, String password, String path )
+        throws SocketException, IOException
+    {
+        ftpClient = new FTPClient();
+        ftpClient.connect( server, port );
+        LOG.info( "Connected to " + server + "." );
+        LOG.info( "" + ftpClient.getReplyCode() );
+        ftpClient.login( user, password );
 
-	public boolean changeDirectory(String path) throws IOException {
-		return this.ftpClient.changeWorkingDirectory(path);
-	}
+        if ( path.length() != 0 )
+        {
+            ftpClient.changeWorkingDirectory( path );
+        }
+    }
 
-	public boolean createDirectory(String pathname) throws IOException {
-		return this.ftpClient.makeDirectory(pathname);
-	}
+    public void setFileType( int fileType )
+        throws IOException
+    {
+        ftpClient.setFileType( fileType );
+    }
 
-	public boolean mkdirs(String pathname) throws IOException {
-		if (this.ftpClient.makeDirectory(pathname)) {
-			return true;
-		}
+    public void closeServer()
+        throws IOException
+    {
+        if ( ftpClient.isConnected() )
+        {
+            ftpClient.disconnect();
+        }
+    }
 
-		int index = pathname.lastIndexOf(47);
-		if (index > 0) {
-			if (mkdirs(pathname.substring(0, index))) {
-				return this.ftpClient.makeDirectory(pathname);
-			}
+    public boolean changeDirectory( String path )
+        throws IOException
+    {
+        return ftpClient.changeWorkingDirectory( path );
+    }
 
-			return false;
-		}
+    public boolean createDirectory( String pathname )
+        throws IOException
+    {
+        return ftpClient.makeDirectory( pathname );
+    }
 
-		return false;
-	}
+    public boolean mkdirs( String pathname )
+        throws IOException
+    {
+        if ( ftpClient.makeDirectory( pathname ) )
+        {
+            return true;
+        }
 
-	public boolean removeDirectory(String path) throws IOException {
-		return this.ftpClient.removeDirectory(path);
-	}
+        int index = pathname.lastIndexOf( 47 );
+        if ( index > 0 )
+        {
+            if ( mkdirs( pathname.substring( 0, index ) ) )
+            {
+                return ftpClient.makeDirectory( pathname );
+            }
 
-	public boolean removeDirectory(String path, boolean isAll)
-			throws IOException {
-		if (!(isAll)) {
-			return removeDirectory(path);
-		}
+            return false;
+        }
 
-		FTPFile[] ftpFileArr = this.ftpClient.listFiles(path);
-		if ((ftpFileArr == null) || (ftpFileArr.length == 0)) {
-			return removeDirectory(path);
-		}
+        return false;
+    }
 
-		for (FTPFile ftpFile : ftpFileArr) {
-			String name = ftpFile.getName();
-			if (ftpFile.isDirectory()) {
-				System.out.println("* [sD]Delete subPath [" + path + "/" + name
-						+ "]");
-				removeDirectory(path + "/" + name, true);
-			} else if (ftpFile.isFile()) {
-				System.out.println("* [sF]Delete file [" + path + "/" + name
-						+ "]");
-				deleteFile(path + "/" + name);
-			} else {
-				if (ftpFile.isSymbolicLink()) {
-					continue;
-				}
-				ftpFile.isUnknown();
-			}
-		}
+    public boolean removeDirectory( String path )
+        throws IOException
+    {
+        return ftpClient.removeDirectory( path );
+    }
 
-		return this.ftpClient.removeDirectory(path);
-	}
+    public boolean removeDirectory( String path, boolean isAll )
+        throws IOException
+    {
+        if ( !( isAll ) )
+        {
+            return removeDirectory( path );
+        }
 
-	public boolean existDirectory(String path) throws IOException {
-		boolean flag = false;
-		FTPFile[] ftpFileArr = this.ftpClient.listFiles(path);
-		for (FTPFile ftpFile : ftpFileArr) {
-			if ((ftpFile.isDirectory())
-					&& (ftpFile.getName().equalsIgnoreCase(path))) {
-				flag = true;
-				break;
-			}
-		}
-		return flag;
-	}
+        FTPFile[] ftpFileArr = ftpClient.listFiles( path );
+        if ( ( ftpFileArr == null ) || ( ftpFileArr.length == 0 ) )
+        {
+            return removeDirectory( path );
+        }
 
-	public List<String> getFileList(String path) throws IOException {
-		FTPFile[] ftpFiles = this.ftpClient.listFiles(path);
+        for ( FTPFile ftpFile : ftpFileArr )
+        {
+            String name = ftpFile.getName();
+            if ( ftpFile.isDirectory() )
+            {
+                LOG.info( "* [sD]Delete subPath [" + path + "/" + name + "]" );
+                removeDirectory( path + "/" + name, true );
+            }
+            else if ( ftpFile.isFile() )
+            {
+                LOG.info( "* [sF]Delete file [" + path + "/" + name + "]" );
+                deleteFile( path + "/" + name );
+            }
+            else
+            {
+                if ( ftpFile.isSymbolicLink() )
+                {
+                    continue;
+                }
+                ftpFile.isUnknown();
+            }
+        }
 
-		List retList = new ArrayList();
-		if ((ftpFiles == null) || (ftpFiles.length == 0)) {
-			return retList;
-		}
-		for (FTPFile ftpFile : ftpFiles) {
-			if (ftpFile.isFile()) {
-				retList.add(ftpFile.getName());
-			}
-		}
-		return retList;
-	}
+        return ftpClient.removeDirectory( path );
+    }
 
-	public boolean deleteFile(String pathName) throws IOException {
-		return this.ftpClient.deleteFile(pathName);
-	}
+    public boolean existDirectory( String path )
+        throws IOException
+    {
+        boolean flag = false;
+        FTPFile[] ftpFileArr = ftpClient.listFiles( path );
+        for ( FTPFile ftpFile : ftpFileArr )
+        {
+            if ( ( ftpFile.isDirectory() ) && ( ftpFile.getName().equalsIgnoreCase( path ) ) )
+            {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
 
-	public boolean uploadFile(String fileName, String newName)
-			throws IOException {
-		boolean flag = false;
-		InputStream iStream = null;
-		try {
-			iStream = new FileInputStream(fileName);
-			flag = this.ftpClient.storeFile(newName, iStream);
-		} catch (IOException e) {
-			flag = false;
-			return flag;
-		} finally {
-			if (iStream != null) {
-				iStream.close();
-			}
-		}
-		return flag;
-	}
+    public List<String> getFileList( String path )
+        throws IOException
+    {
+        FTPFile[] ftpFiles = ftpClient.listFiles( path );
 
-	public boolean uploadFile(String fileName) throws IOException {
-		return uploadFile(fileName, fileName);
-	}
+        List retList = new ArrayList();
+        if ( ( ftpFiles == null ) || ( ftpFiles.length == 0 ) )
+        {
+            return retList;
+        }
+        for ( FTPFile ftpFile : ftpFiles )
+        {
+            if ( ftpFile.isFile() )
+            {
+                retList.add( ftpFile.getName() );
+            }
+        }
+        return retList;
+    }
 
-	public boolean uploadFile(InputStream iStream, String newName)
-			throws IOException {
-		boolean flag = false;
-		try {
-			flag = this.ftpClient.storeFile(newName, iStream);
-		} catch (IOException e) {
-			flag = false;
-			return flag;
-		} finally {
-			if (iStream != null) {
-				iStream.close();
-			}
-		}
-		return flag;
-	}
+    public boolean deleteFile( String pathName )
+        throws IOException
+    {
+        return ftpClient.deleteFile( pathName );
+    }
 
-	public boolean download(String remoteFileName, String localFileName)
-			throws IOException {
-		boolean flag = false;
-		File outfile = new File(localFileName);
-		OutputStream oStream = null;
-		try {
-			oStream = new FileOutputStream(outfile);
-			flag = this.ftpClient.retrieveFile(remoteFileName, oStream);
-		} catch (IOException e) {
-			flag = false;
-			return flag;
-		} finally {
-			if(oStream != null)
-				oStream.close();
-		}
-		return flag;
-	}
+    public boolean uploadFile( String fileName, String newName )
+        throws IOException
+    {
+        boolean flag = false;
+        InputStream iStream = null;
+        try
+        {
+            iStream = new FileInputStream( fileName );
+            flag = ftpClient.storeFile( newName, iStream );
+        }
+        catch ( IOException e )
+        {
+            flag = false;
+            return flag;
+        }
+        finally
+        {
+            if ( iStream != null )
+            {
+                iStream.close();
+            }
+        }
+        return flag;
+    }
 
-	public InputStream downFile(String sourceFileName) throws IOException {
-		return this.ftpClient.retrieveFileStream(sourceFileName);
-	}
+    public boolean uploadFile( String fileName )
+        throws IOException
+    {
+        return uploadFile( fileName, fileName );
+    }
+
+    public boolean uploadFile( InputStream iStream, String newName )
+        throws IOException
+    {
+        boolean flag = false;
+        try
+        {
+            flag = ftpClient.storeFile( newName, iStream );
+        }
+        catch ( IOException e )
+        {
+            flag = false;
+            return flag;
+        }
+        finally
+        {
+            if ( iStream != null )
+            {
+                iStream.close();
+            }
+        }
+        return flag;
+    }
+
+    public boolean download( String remoteFileName, String localFileName )
+        throws IOException
+    {
+        boolean flag = false;
+        File outfile = new File( localFileName );
+        OutputStream oStream = null;
+        try
+        {
+            oStream = new FileOutputStream( outfile );
+            flag = ftpClient.retrieveFile( remoteFileName, oStream );
+        }
+        catch ( IOException e )
+        {
+            flag = false;
+            return flag;
+        }
+        finally
+        {
+            if ( oStream != null )
+            {
+                oStream.close();
+            }
+        }
+        return flag;
+    }
+
+    public InputStream downFile( String sourceFileName )
+        throws IOException
+    {
+        return ftpClient.retrieveFileStream( sourceFileName );
+    }
 }

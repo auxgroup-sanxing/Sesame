@@ -1,20 +1,30 @@
 package com.sanxing.sesame.engine.action.flow;
 
-import com.sanxing.sesame.engine.action.AbstractAction;
-import com.sanxing.sesame.engine.context.DataContext;
 import org.jdom.Element;
 
-public class KillTimeAction extends AbstractAction {
-	long waitTime = 0L;
+import com.sanxing.sesame.engine.action.AbstractAction;
+import com.sanxing.sesame.engine.context.DataContext;
 
-	public void doinit(Element config) {
-		this.waitTime = Integer.parseInt(config.getAttributeValue("wait"));
-	}
+public class KillTimeAction
+    extends AbstractAction
+{
+    long waitTime = 0L;
 
-	public void dowork(DataContext config) {
-		try {
-			Thread.sleep(this.waitTime);
-		} catch (InterruptedException localInterruptedException) {
-		}
-	}
+    @Override
+    public void doinit( Element config )
+    {
+        waitTime = Integer.parseInt( config.getAttributeValue( "wait" ) );
+    }
+
+    @Override
+    public void dowork( DataContext config )
+    {
+        try
+        {
+            Thread.sleep( waitTime );
+        }
+        catch ( InterruptedException localInterruptedException )
+        {
+        }
+    }
 }

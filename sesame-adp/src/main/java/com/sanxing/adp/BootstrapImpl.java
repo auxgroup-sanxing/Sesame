@@ -1,31 +1,51 @@
 package com.sanxing.adp;
 
-import com.sanxing.sesame.exception.NotInitialisedYetException;
 import javax.jbi.JBIException;
 import javax.jbi.component.Bootstrap;
 import javax.jbi.component.InstallationContext;
 import javax.management.ObjectName;
 
-public class BootstrapImpl implements Bootstrap {
-	private InstallationContext installContext;
-	private ObjectName extensionMBeanName;
+import com.sanxing.sesame.exception.NotInitialisedYetException;
 
-	public void cleanUp() throws JBIException {
-	}
+public class BootstrapImpl
+    implements Bootstrap
+{
+    private InstallationContext installContext;
 
-	public ObjectName getExtensionMBeanName() {
-		return this.extensionMBeanName;
-	}
+    private ObjectName extensionMBeanName;
 
-	public void init(InstallationContext ctx) throws JBIException {
-		this.installContext = ctx;
-	}
+    @Override
+    public void cleanUp()
+        throws JBIException
+    {
+    }
 
-	public void onInstall() throws JBIException {
-		if (this.installContext == null)
-			throw new NotInitialisedYetException();
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        return extensionMBeanName;
+    }
 
-	public void onUninstall() throws JBIException {
-	}
+    @Override
+    public void init( InstallationContext ctx )
+        throws JBIException
+    {
+        installContext = ctx;
+    }
+
+    @Override
+    public void onInstall()
+        throws JBIException
+    {
+        if ( installContext == null )
+        {
+            throw new NotInitialisedYetException();
+        }
+    }
+
+    @Override
+    public void onUninstall()
+        throws JBIException
+    {
+    }
 }

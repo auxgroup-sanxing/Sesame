@@ -7,11 +7,12 @@
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.jdom.Element"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.jdom.xpath.*" %>
+<%@page import="org.jdom.xpath.*"%>
 <%@page import="com.sanxing.studio.utils.CommonUtil"%>
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="org.jdom.Document"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%! 
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

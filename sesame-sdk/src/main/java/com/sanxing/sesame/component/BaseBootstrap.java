@@ -7,26 +7,45 @@ import javax.management.ObjectName;
 
 import com.sanxing.sesame.exception.NotInitialisedYetException;
 
-public class BaseBootstrap implements Bootstrap {
-	private InstallationContext installContext;
-	private ObjectName extensionMBeanName;
+public class BaseBootstrap
+    implements Bootstrap
+{
+    private InstallationContext installContext;
 
-	public void cleanUp() throws JBIException {
-	}
+    private ObjectName extensionMBeanName;
 
-	public ObjectName getExtensionMBeanName() {
-		return this.extensionMBeanName;
-	}
+    @Override
+    public void cleanUp()
+        throws JBIException
+    {
+    }
 
-	public void init(InstallationContext ctx) throws JBIException {
-		this.installContext = ctx;
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        return extensionMBeanName;
+    }
 
-	public void onInstall() throws JBIException {
-		if (this.installContext == null)
-			throw new NotInitialisedYetException();
-	}
+    @Override
+    public void init( InstallationContext ctx )
+        throws JBIException
+    {
+        installContext = ctx;
+    }
 
-	public void onUninstall() throws JBIException {
-	}
+    @Override
+    public void onInstall()
+        throws JBIException
+    {
+        if ( installContext == null )
+        {
+            throw new NotInitialisedYetException();
+        }
+    }
+
+    @Override
+    public void onUninstall()
+        throws JBIException
+    {
+    }
 }

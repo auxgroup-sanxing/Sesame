@@ -1,36 +1,52 @@
 package com.sanxing.sesame.servicedesc;
 
-import com.sanxing.sesame.mbean.ComponentNameSpace;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
+
 import org.w3c.dom.DocumentFragment;
 
-public class ExternalEndpoint extends AbstractEndpoint {
-	private static final long serialVersionUID = 4257588916448457889L;
-	protected final ServiceEndpoint se;
+import com.sanxing.sesame.mbean.ComponentNameSpace;
 
-	public ExternalEndpoint(ComponentNameSpace cns, ServiceEndpoint se) {
-		super(cns);
-		this.se = se;
-	}
+public class ExternalEndpoint
+    extends AbstractEndpoint
+{
+    private static final long serialVersionUID = 4257588916448457889L;
 
-	public DocumentFragment getAsReference(QName operationName) {
-		return this.se.getAsReference(operationName);
-	}
+    protected final ServiceEndpoint se;
 
-	public String getEndpointName() {
-		return this.se.getEndpointName();
-	}
+    public ExternalEndpoint( ComponentNameSpace cns, ServiceEndpoint se )
+    {
+        super( cns );
+        this.se = se;
+    }
 
-	public QName[] getInterfaces() {
-		return this.se.getInterfaces();
-	}
+    @Override
+    public DocumentFragment getAsReference( QName operationName )
+    {
+        return se.getAsReference( operationName );
+    }
 
-	public QName getServiceName() {
-		return this.se.getServiceName();
-	}
+    @Override
+    public String getEndpointName()
+    {
+        return se.getEndpointName();
+    }
 
-	protected String getClassifier() {
-		return "external";
-	}
+    @Override
+    public QName[] getInterfaces()
+    {
+        return se.getInterfaces();
+    }
+
+    @Override
+    public QName getServiceName()
+    {
+        return se.getServiceName();
+    }
+
+    @Override
+    protected String getClassifier()
+    {
+        return "external";
+    }
 }

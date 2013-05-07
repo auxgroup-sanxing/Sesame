@@ -6,24 +6,26 @@
 <head>
 <title>Sesame Development Studio</title>
 
-<META http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<META http-equiv="Pragma" content="no-cache"/>
-<META http-equiv="Cache-Control" content="no-cache"/>
-<META http-equiv="Expires" content="0"/>
+<META http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<META http-equiv="Pragma" content="no-cache" />
+<META http-equiv="Cache-Control" content="no-cache" />
+<META http-equiv="Expires" content="0" />
 
-<link rel="icon" href="images/sanxing.ico" type="image/x-icon"/>
-<link rel="shortcut icon" href="images/sanxing.ico" type="image/x-icon"/>
-<link rel="Bookmark" href="images/sanxing.ico" type="image/x-icon"/>
-<link rel="stylesheet" type="text/css" href="ext-Ajax/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="ext-Ajax/resources/css/xtheme-gray.css" />
+<link rel="icon" href="images/sanxing.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="images/sanxing.ico" type="image/x-icon" />
+<link rel="Bookmark" href="images/sanxing.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css"
+	href="ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="ext-Ajax/resources/css/xtheme-gray.css" />
 
 <style type="text/css">
-
 </style>
 
 <script type="text/javascript" src="ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 <script type="text/javascript" src="package/secure/md5.js"></script>
 <script type="text/javascript">
 
@@ -157,7 +159,8 @@
 </script>
 </head>
 
-<body style="background: #ffffff url('images/studio.png')  top center no-repeat;" >
+<body
+	style="background: #ffffff url('images/studio.png') top center no-repeat;">
 
 </body>
 </html>

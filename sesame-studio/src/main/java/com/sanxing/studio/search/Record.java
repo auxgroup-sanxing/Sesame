@@ -3,69 +3,89 @@ package com.sanxing.studio.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Record implements SearcherName, Comparable<Record> {
-	public List<Column> columns;
-	private String searcherName;
+public abstract class Record
+    implements SearcherName, Comparable<Record>
+{
+    public List<Column> columns;
 
-	public Record() {
-		this.columns = new ArrayList();
-	}
+    private String searcherName;
 
-	public void addField(Column column) {
-		this.columns.add(column);
-	}
+    public Record()
+    {
+        columns = new ArrayList();
+    }
 
-	public List<Column> getColumns() {
-		return this.columns;
-	}
+    public void addField( Column column )
+    {
+        columns.add( column );
+    }
 
-	public Column getColumnByName(String name) {
-		for (Column e : getColumns()) {
-			if (e.getName().equalsIgnoreCase(name)) {
-				return e;
-			}
-		}
-		return null;
-	}
+    public List<Column> getColumns()
+    {
+        return columns;
+    }
 
-	public abstract Column getNameColumn();
+    public Column getColumnByName( String name )
+    {
+        for ( Column e : getColumns() )
+        {
+            if ( e.getName().equalsIgnoreCase( name ) )
+            {
+                return e;
+            }
+        }
+        return null;
+    }
 
-	public abstract Column getDescriptionColumn();
+    public abstract Column getNameColumn();
 
-	public void setIndexAnalyzed(boolean indexAnalyzed) {
-		for (Column column : this.columns)
-			column.setIndexAnalyzed(indexAnalyzed);
-	}
+    public abstract Column getDescriptionColumn();
 
-	public void join(Record base, boolean indexAnalyzed) {
-		List<Column> baseColumns = base.getColumns();
-		for (Column e : baseColumns) {
-			Column ne = new Column(e);
-			ne.setIndexAnalyzed(indexAnalyzed);
-			this.columns.add(ne);
-		}
-	}
+    public void setIndexAnalyzed( boolean indexAnalyzed )
+    {
+        for ( Column column : columns )
+        {
+            column.setIndexAnalyzed( indexAnalyzed );
+        }
+    }
 
-	public void setSearcherName(String searcherName) {
-		this.searcherName = searcherName;
-	}
+    public void join( Record base, boolean indexAnalyzed )
+    {
+        List<Column> baseColumns = base.getColumns();
+        for ( Column e : baseColumns )
+        {
+            Column ne = new Column( e );
+            ne.setIndexAnalyzed( indexAnalyzed );
+            columns.add( ne );
+        }
+    }
 
-	public String getType() {
-		return getSearcherName();
-	}
+    public void setSearcherName( String searcherName )
+    {
+        this.searcherName = searcherName;
+    }
 
-	public int compareTo(Record o) {
-		return -1;
-	}
+    public String getType()
+    {
+        return getSearcherName();
+    }
 
-	public String toString() {
-		String name = "{";
-		for (Column column : this.columns) {
-			name = name + column.getName() + "=" + column.getValue()
-					+ " isIndexAnalyzed=" + column.isIndexAnalyzed();
-			name = name + "\t";
-		}
-		name = name + "}";
-		return name;
-	}
+    @Override
+    public int compareTo( Record o )
+    {
+        return -1;
+    }
+
+    @Override
+    public String toString()
+    {
+        String name = "{";
+        for ( Column column : columns )
+        {
+            name = name + column.getName() + "=" + column.getValue() + " isIndexAnalyzed=" + column.isIndexAnalyzed();
+            name = name + "\t";
+        }
+        name = name + "}";
+        return name;
+    }
 }

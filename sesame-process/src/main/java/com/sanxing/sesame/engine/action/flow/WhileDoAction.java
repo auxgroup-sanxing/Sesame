@@ -1,64 +1,83 @@
 package com.sanxing.sesame.engine.action.flow;
 
+import java.util.Iterator;
+
+import org.jdom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionUtil;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.util.Iterator;
-import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jdom.Element;
 
-public class WhileDoAction extends AbstractAction implements Constant {
-	private static final Logger LOG = LoggerFactory.getLogger(WhileDoAction.class);
-	private String xpath;
-	private Element actionEl;
-	private Element contextEl;
+public class WhileDoAction
+    extends AbstractAction
+    implements Constant
+{
+    private static final Logger LOG = LoggerFactory.getLogger( WhileDoAction.class );
 
-	public void doinit(Element actionEl) {
-		this.xpath = actionEl.getChildTextTrim("xpath");
-		this.actionEl = actionEl;
-		this.contextEl = new Element("context");
-	}
+    private String xpath;
 
-	public void dowork(DataContext ctx) {
-		ExecutionContext executionContext = ctx.getExecutionContext();
+    private Element actionEl;
 
-		while (getFlag(ctx))
-			try {
-				Iterator iter = this.actionEl.getChild("do").getChildren()
-						.iterator();
+    private Element contextEl;
 
-				ActionUtil.bachInvoke(ctx, iter);
+    @Override
+    public void doinit( Element actionEl )
+    {
+        xpath = actionEl.getChildTextTrim( "xpath" );
+        this.actionEl = actionEl;
+        contextEl = new Element( "context" );
+    }
 
-				if (executionContext.isDebugging()) {
-					Element xpathEl = this.actionEl.getChild("xpath");
-					synchronized (executionContext) {
-						executionContext.setCurrentAction(xpathEl
-								.getAttributeValue("id", ""));
-						LOG.debug("[Action id="
-								+ xpathEl.getAttributeValue("id")
-								+ "] I am waiting..." + getName());
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        ExecutionContext executionContext = ctx.getExecutionContext();
 
-						executionContext.wait();
-					}
-				}
-			} catch (BreakException e) {
-			} catch (InterruptedException localInterruptedException) {
-			}
-	}
+        while ( getFlag( ctx ) )
+        {
+            try
+            {
+                Iterator iter = actionEl.getChild( "do" ).getChildren().iterator();
 
-	private boolean getFlag(DataContext ctx) {
-		Variable booleanVar = select(this.contextEl, this.xpath, ctx);
-		boolean bool = ((Boolean) booleanVar.get()).booleanValue();
-		return bool;
-	}
+                ActionUtil.bachInvoke( ctx, iter );
 
-	public void doworkInDehydrateState(DataContext context) {
-		Iterator iter = this.actionEl.getChild("do").getChildren().iterator();
-		ActionUtil.bachInvoke(context, iter);
-	}
+                if ( executionContext.isDebugging() )
+                {
+                    Element xpathEl = actionEl.getChild( "xpath" );
+                    synchronized ( executionContext )
+                    {
+                        executionContext.setCurrentAction( xpathEl.getAttributeValue( "id", "" ) );
+                        LOG.debug( "[Action id=" + xpathEl.getAttributeValue( "id" ) + "] I am waiting..." + getName() );
+
+                        executionContext.wait();
+                    }
+                }
+            }
+            catch ( BreakException e )
+            {
+            }
+            catch ( InterruptedException localInterruptedException )
+            {
+            }
+        }
+    }
+
+    private boolean getFlag( DataContext ctx )
+    {
+        Variable booleanVar = select( contextEl, xpath, ctx );
+        boolean bool = ( (Boolean) booleanVar.get() ).booleanValue();
+        return bool;
+    }
+
+    @Override
+    public void doworkInDehydrateState( DataContext context )
+    {
+        Iterator iter = actionEl.getChild( "do" ).getChildren().iterator();
+        ActionUtil.bachInvoke( context, iter );
+    }
 }

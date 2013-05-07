@@ -1,55 +1,76 @@
 package com.sanxing.sesame.servicedesc;
 
 import javax.xml.namespace.QName;
+
 import org.w3c.dom.DocumentFragment;
 
-public class LinkedEndpoint extends AbstractEndpoint {
-	private static final long serialVersionUID = 4615848436197469611L;
-	private final QName fromService;
-	private final String fromEndpoint;
-	private final QName toService;
-	private final String toEndpoint;
-	private final String linkType;
+public class LinkedEndpoint
+    extends AbstractEndpoint
+{
+    private static final long serialVersionUID = 4615848436197469611L;
 
-	public LinkedEndpoint(QName fromService, String fromEndpoint,
-			QName toService, String toEndpoint, String linkType) {
-		super(null);
-		this.fromService = fromService;
-		this.fromEndpoint = fromEndpoint;
-		this.toService = toService;
-		this.toEndpoint = toEndpoint;
-		this.linkType = linkType;
-	}
+    private final QName fromService;
 
-	public DocumentFragment getAsReference(QName operationName) {
-		return EndpointReferenceBuilder.getReference(this);
-	}
+    private final String fromEndpoint;
 
-	public String getEndpointName() {
-		return this.fromEndpoint;
-	}
+    private final QName toService;
 
-	public QName[] getInterfaces() {
-		return null;
-	}
+    private final String toEndpoint;
 
-	public QName getServiceName() {
-		return this.fromService;
-	}
+    private final String linkType;
 
-	public String getLinkType() {
-		return this.linkType;
-	}
+    public LinkedEndpoint( QName fromService, String fromEndpoint, QName toService, String toEndpoint, String linkType )
+    {
+        super( null );
+        this.fromService = fromService;
+        this.fromEndpoint = fromEndpoint;
+        this.toService = toService;
+        this.toEndpoint = toEndpoint;
+        this.linkType = linkType;
+    }
 
-	public String getToEndpoint() {
-		return this.toEndpoint;
-	}
+    @Override
+    public DocumentFragment getAsReference( QName operationName )
+    {
+        return EndpointReferenceBuilder.getReference( this );
+    }
 
-	public QName getToService() {
-		return this.toService;
-	}
+    @Override
+    public String getEndpointName()
+    {
+        return fromEndpoint;
+    }
 
-	protected String getClassifier() {
-		return "linked";
-	}
+    @Override
+    public QName[] getInterfaces()
+    {
+        return null;
+    }
+
+    @Override
+    public QName getServiceName()
+    {
+        return fromService;
+    }
+
+    public String getLinkType()
+    {
+        return linkType;
+    }
+
+    public String getToEndpoint()
+    {
+        return toEndpoint;
+    }
+
+    public QName getToService()
+    {
+        return toService;
+    }
+
+    @Override
+    protected String getClassifier()
+    {
+        return "linked";
+    }
 }

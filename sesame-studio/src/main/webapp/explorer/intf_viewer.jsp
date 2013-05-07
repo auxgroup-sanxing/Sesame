@@ -1,11 +1,13 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="java.io.*"%>
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
-<%@page import="java.net.URLDecoder" %>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page import="java.net.URLDecoder"%>
 
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -24,19 +26,21 @@ String projectDesc = (request.getParameter("projectDesc") == null) ? "" :request
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>公共接口面板</title>
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
-<script type="text/javascript" src="../package/ux/InlineToolbarTabPanel.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../package/ux/InlineToolbarTabPanel.js"></script>
 <script type="text/javascript" src="../package/xml/xdom.js"></script>
 <style type="text/css">
-
 </style>
 </head>
 
 <body>
-<script type="text/javascript">
+	<script type="text/javascript">
 	var intf = '<%=intf%>';
 	var intfId = '<%=intfId%>';
 	var intfDesc = '<%=URLDecoder.decode(intfDesc, "UTF-8")%>';
@@ -47,7 +51,7 @@ String projectDesc = (request.getParameter("projectDesc") == null) ? "" :request
 	} else {
 		location.href='../error404.jsp';
 	}
- </script>	
- <script type="text/javascript" src="intf_viewer.js"></script>
- </body>
+ </script>
+	<script type="text/javascript" src="intf_viewer.js"></script>
+</body>
 </html>

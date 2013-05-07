@@ -1,96 +1,116 @@
 package com.sanxing.sesame.core.api;
 
-import com.sanxing.sesame.classloader.JarFileClassLoader;
-import com.sanxing.sesame.core.BaseServer;
-import com.sanxing.sesame.core.Env;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
 
-public class ContainerContext {
-	private static Map<String, ContainerContext> instances = new HashMap();
-	private MBeanServer mbeanServer;
-	private Map<Object, Object> context = new HashMap();
-	private Env env;
-	private InitialContext serverContext;
-	private String containerName;
-	private ClassLoader containerCLassLoader = null;
-	private BaseServer server;
+import com.sanxing.sesame.classloader.JarFileClassLoader;
+import com.sanxing.sesame.core.BaseServer;
+import com.sanxing.sesame.core.Env;
 
-	public static ContainerContext getInstance(String containerName) {
-		ContainerContext answer = (ContainerContext) instances
-				.get(containerName);
-		if (answer == null) {
-			throw new RuntimeException("unkown container");
-		}
-		return answer;
-	}
+public class ContainerContext
+{
+    private static Map<String, ContainerContext> instances = new HashMap();
 
-	public ContainerContext(String containerName, Env env,
-			InitialContext serverContext, MBeanServer mbeanServer,
-			BaseServer _server) {
-		this.containerName = containerName;
-		this.env = env;
-		this.serverContext = serverContext;
-		instances.put(containerName, this);
-		this.mbeanServer = mbeanServer;
-		this.server = _server;
+    private final MBeanServer mbeanServer;
 
-		JarFileClassLoader classLoader = new JarFileClassLoader(new URL[0],
-				Thread.currentThread().getContextClassLoader(), false,
-				new String[0], new String[] { "java.", "javax." });
+    private final Map<Object, Object> context = new HashMap();
 
-		File libDir = new File(getContainerDir(), "lib");
-		File classesDir = new File(getContainerDir(), "classes");
+    private final Env env;
 
-		classLoader.addJarDir(libDir);
-		classLoader.addClassesDir(classesDir);
-		this.containerCLassLoader = classLoader;
-	}
+    private final InitialContext serverContext;
 
-	public void put(Object key, Object value) {
-		this.context.put(key, value);
-	}
+    private final String containerName;
 
-	public Object get(Object key) {
-		return this.context.get(key);
-	}
+    private ClassLoader containerCLassLoader = null;
 
-	public Env getEnv() {
-		return this.env;
-	}
+    private final BaseServer server;
 
-	public MBeanServer getMbeanServer() {
-		return this.mbeanServer;
-	}
+    public static ContainerContext getInstance( String containerName )
+    {
+        ContainerContext answer = instances.get( containerName );
+        if ( answer == null )
+        {
+            throw new RuntimeException( "unkown container" );
+        }
+        return answer;
+    }
 
-	public InitialContext getServerJNDIContext() {
-		return this.serverContext;
-	}
+    public ContainerContext( String containerName, Env env, InitialContext serverContext, MBeanServer mbeanServer,
+                             BaseServer _server )
+    {
+        this.containerName = containerName;
+        this.env = env;
+        this.serverContext = serverContext;
+        instances.put( containerName, this );
+        this.mbeanServer = mbeanServer;
+        server = _server;
 
-	public File getContainerDir() {
-		File file = new File(this.env.getHomeDir(), "work/containers/"
-				+ this.containerName);
-		if (!(file.exists())) {
-			file.mkdirs();
-			new File(file, "lib").mkdir();
-			new File(file, "classes").mkdir();
-		}
-		return file;
-	}
+        JarFileClassLoader classLoader =
+            new JarFileClassLoader( new URL[0], Thread.currentThread().getContextClassLoader(), false, new String[0],
+                new String[] { "java.", "javax." } );
 
-	public ClassLoader getContainerClassLoader() {
-		return this.containerCLassLoader;
-	}
+        File libDir = new File( getContainerDir(), "lib" );
+        File classesDir = new File( getContainerDir(), "classes" );
 
-	public String getContainerName() {
-		return this.containerName;
-	}
+        classLoader.addJarDir( libDir );
+        classLoader.addClassesDir( classesDir );
+        containerCLassLoader = classLoader;
+    }
 
-	public BaseServer getServer() {
-		return this.server;
-	}
+    public void put( Object key, Object value )
+    {
+        context.put( key, value );
+    }
+
+    public Object get( Object key )
+    {
+        return context.get( key );
+    }
+
+    public Env getEnv()
+    {
+        return env;
+    }
+
+    public MBeanServer getMbeanServer()
+    {
+        return mbeanServer;
+    }
+
+    public InitialContext getServerJNDIContext()
+    {
+        return serverContext;
+    }
+
+    public File getContainerDir()
+    {
+        File file = new File( env.getHomeDir(), "work/containers/" + containerName );
+        if ( !( file.exists() ) )
+        {
+            file.mkdirs();
+            new File( file, "lib" ).mkdir();
+            new File( file, "classes" ).mkdir();
+        }
+        return file;
+    }
+
+    public ClassLoader getContainerClassLoader()
+    {
+        return containerCLassLoader;
+    }
+
+    public String getContainerName()
+    {
+        return containerName;
+    }
+
+    public BaseServer getServer()
+    {
+        return server;
+    }
 }

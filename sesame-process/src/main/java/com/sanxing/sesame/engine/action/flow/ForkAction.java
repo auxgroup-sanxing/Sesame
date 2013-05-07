@@ -1,35 +1,48 @@
 package com.sanxing.sesame.engine.action.flow;
 
-import com.sanxing.sesame.engine.action.AbstractAction;
-import com.sanxing.sesame.engine.context.DataContext;
-import java.io.PrintStream;
 import org.jdom.Element;
 
-public class ForkAction extends AbstractAction {
-	Element config;
+import com.sanxing.sesame.engine.action.AbstractAction;
+import com.sanxing.sesame.engine.context.DataContext;
 
-	public void doinit(Element config) {
-		this.config = config;
-	}
+public class ForkAction
+    extends AbstractAction
+{
+    Element config;
 
-	public void dowork(DataContext ctx) {
-	}
+    @Override
+    public void doinit( Element config )
+    {
+        this.config = config;
+    }
 
-	public static void main(String[] args) {
-		try {
-			Runnable run = new Runnable() {
-				public void run() {
-					System.out.println("hello");
-				}
-			};
-			Thread worker = new Thread(run);
-			worker.start();
-			Thread.currentThread();
-			Thread.sleep(1000L);
-			worker.join();
-			System.out.println("ok");
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+    @Override
+    public void dowork( DataContext ctx )
+    {
+    }
+
+    public static void main( String[] args )
+    {
+        try
+        {
+            Runnable run = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    System.out.println( "hello" );
+                }
+            };
+            Thread worker = new Thread( run );
+            worker.start();
+            Thread.currentThread();
+            Thread.sleep( 1000L );
+            worker.join();
+            System.out.println( "ok" );
+        }
+        catch ( InterruptedException e )
+        {
+            e.printStackTrace();
+        }
+    }
 }

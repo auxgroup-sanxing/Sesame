@@ -20,7 +20,8 @@
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProject"%>
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProjectBuilder"%>
@@ -29,11 +30,12 @@
 <%@page import="com.sanxing.studio.team.*"%>
 <%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.studio.IllegalNameException"%>
-<%@page import="com.ibm.wsdl.extensions.schema.*" %>
-<%@page import="com.ibm.wsdl.extensions.soap.*" %>
+<%@page import="com.ibm.wsdl.extensions.schema.*"%>
+<%@page import="com.ibm.wsdl.extensions.soap.*"%>
 <%@page import="com.ibm.wsdl.ImportImpl"%>
 <%@page import="java.net.*"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%!private static final String BINDING_FILE = "binding.xml";
 
 private final Logger logger = LoggerFactory.getLogger(this.getClass());

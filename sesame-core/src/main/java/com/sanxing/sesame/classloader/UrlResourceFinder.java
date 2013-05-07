@@ -3,7 +3,6 @@ package com.sanxing.sesame.classloader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -16,236 +15,305 @@ import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.StringTokenizer;
 import java.util.jar.Attributes;
-import java.util.jar.Attributes.Name;
 import java.util.jar.Manifest;
 
-public class UrlResourceFinder implements ResourceFinder {
-	private final Object lock = new Object();
-	private final LinkedHashSet<URL> urls = new LinkedHashSet();
-	private final LinkedHashMap<URL, ResourceLocation> classPath = new LinkedHashMap();
-	private final LinkedHashSet<File> watchedFiles = new LinkedHashSet();
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	private boolean destroyed = false;
+public class UrlResourceFinder
+    implements ResourceFinder
+{
+    private static final Logger LOG = LoggerFactory.getLogger( UrlResourceFinder.class );
 
-	public UrlResourceFinder() {
-	}
+    private final Object lock = new Object();
 
-	public UrlResourceFinder(URL[] urls) {
-		addUrls(urls);
-	}
+    private final LinkedHashSet<URL> urls = new LinkedHashSet();
 
-	public void destroy() {
-		synchronized (this.lock) {
-			if (this.destroyed) {
-				return;
-			}
-			this.destroyed = true;
-			this.urls.clear();
-			for (ResourceLocation resourceLocation : this.classPath.values()) {
-				resourceLocation.close();
-			}
-			this.classPath.clear();
-		}
-	}
+    private final LinkedHashMap<URL, ResourceLocation> classPath = new LinkedHashMap();
 
-	public ResourceHandle getResource(String resourceName) {
-		synchronized (this.lock) {
-			if (this.destroyed) {
-				return null;
-			}
-			for (Map.Entry entry : getClassPath().entrySet()) {
-				ResourceLocation resourceLocation = (ResourceLocation) entry
-						.getValue();
-				ResourceHandle resourceHandle = resourceLocation
-						.getResourceHandle(resourceName);
-				if ((resourceHandle != null)
-						&& (!(resourceHandle.isDirectory()))) {
-					return resourceHandle;
-				}
-			}
-		}
-		return null;
-	}
+    private final LinkedHashSet<File> watchedFiles = new LinkedHashSet();
 
-	public URL findResource(String resourceName) {
-		synchronized (this.lock) {
-			if (this.destroyed) {
-				return null;
-			}
-			for (Map.Entry entry : getClassPath().entrySet()) {
-				ResourceLocation resourceLocation = (ResourceLocation) entry
-						.getValue();
-				ResourceHandle resourceHandle = resourceLocation
-						.getResourceHandle(resourceName);
-				if (resourceHandle != null) {
-					return resourceHandle.getUrl();
-				}
-			}
-		}
-		return null;
-	}
+    private boolean destroyed = false;
 
-	public Enumeration findResources(String resourceName) {
-		synchronized (this.lock) {
-			return new ResourceEnumeration(new ArrayList(getClassPath()
-					.values()), resourceName);
-		}
-	}
+    public UrlResourceFinder()
+    {
+    }
 
-	public void addUrl(URL url) {
-		addUrls(Collections.singletonList(url));
-	}
+    public UrlResourceFinder( URL[] urls )
+    {
+        addUrls( urls );
+    }
 
-	public URL[] getUrls() {
-		synchronized (this.lock) {
-			return ((URL[]) this.urls.toArray(new URL[this.urls.size()]));
-		}
-	}
+    public void destroy()
+    {
+        synchronized ( lock )
+        {
+            if ( destroyed )
+            {
+                return;
+            }
+            destroyed = true;
+            urls.clear();
+            for ( ResourceLocation resourceLocation : classPath.values() )
+            {
+                resourceLocation.close();
+            }
+            classPath.clear();
+        }
+    }
 
-	protected void addUrls(URL[] urls) {
-		addUrls(Arrays.asList(urls));
-	}
+    @Override
+    public ResourceHandle getResource( String resourceName )
+    {
+        synchronized ( lock )
+        {
+            if ( destroyed )
+            {
+                return null;
+            }
+            for ( Map.Entry entry : getClassPath().entrySet() )
+            {
+                ResourceLocation resourceLocation = (ResourceLocation) entry.getValue();
+                ResourceHandle resourceHandle = resourceLocation.getResourceHandle( resourceName );
+                if ( ( resourceHandle != null ) && ( !( resourceHandle.isDirectory() ) ) )
+                {
+                    return resourceHandle;
+                }
+            }
+        }
+        return null;
+    }
 
-	protected void addUrls(List<URL> urls) {
-		synchronized (this.lock) {
-			if (this.destroyed) {
-				throw new IllegalStateException(
-						"UrlResourceFinder has been destroyed");
-			}
+    @Override
+    public URL findResource( String resourceName )
+    {
+        synchronized ( lock )
+        {
+            if ( destroyed )
+            {
+                return null;
+            }
+            for ( Map.Entry entry : getClassPath().entrySet() )
+            {
+                ResourceLocation resourceLocation = (ResourceLocation) entry.getValue();
+                ResourceHandle resourceHandle = resourceLocation.getResourceHandle( resourceName );
+                if ( resourceHandle != null )
+                {
+                    return resourceHandle.getUrl();
+                }
+            }
+        }
+        return null;
+    }
 
-			boolean shouldRebuild = this.urls.addAll(urls);
-			if (shouldRebuild)
-				rebuildClassPath();
-		}
-	}
+    @Override
+    public Enumeration findResources( String resourceName )
+    {
+        synchronized ( lock )
+        {
+            return new ResourceEnumeration( new ArrayList( getClassPath().values() ), resourceName );
+        }
+    }
 
-	private LinkedHashMap<URL, ResourceLocation> getClassPath() {
-		assert (Thread.holdsLock(this.lock)) : "This method can only be called while holding the lock";
+    public void addUrl( URL url )
+    {
+        addUrls( Collections.singletonList( url ) );
+    }
 
-		for (File file : this.watchedFiles) {
-			if (file.canRead()) {
-				rebuildClassPath();
-				break;
-			}
-		}
+    public URL[] getUrls()
+    {
+        synchronized ( lock )
+        {
+            return urls.toArray( new URL[urls.size()] );
+        }
+    }
 
-		return this.classPath;
-	}
+    protected void addUrls( URL[] urls )
+    {
+        addUrls( Arrays.asList( urls ) );
+    }
 
-	private void rebuildClassPath() {
-		assert (Thread.holdsLock(this.lock)) : "This method can only be called while holding the lock";
+    protected void addUrls( List<URL> urls )
+    {
+        synchronized ( lock )
+        {
+            if ( destroyed )
+            {
+                throw new IllegalStateException( "UrlResourceFinder has been destroyed" );
+            }
 
-		Map existingJarFiles = new LinkedHashMap(this.classPath);
-		this.classPath.clear();
+            boolean shouldRebuild = this.urls.addAll( urls );
+            if ( shouldRebuild )
+            {
+                rebuildClassPath();
+            }
+        }
+    }
 
-		LinkedList locationStack = new LinkedList(this.urls);
-		ResourceLocation resourceLocation;
-		try {
-			while (!(locationStack.isEmpty())) {
-				URL url = (URL) locationStack.removeFirst();
+    private LinkedHashMap<URL, ResourceLocation> getClassPath()
+    {
+        assert ( Thread.holdsLock( lock ) ) : "This method can only be called while holding the lock";
 
-				if (this.classPath.containsKey(url)) {
-					continue;
-				}
+        for ( File file : watchedFiles )
+        {
+            if ( file.canRead() )
+            {
+                rebuildClassPath();
+                break;
+            }
+        }
 
-				resourceLocation = (ResourceLocation) existingJarFiles.remove(url);
+        return classPath;
+    }
 
-				if (resourceLocation == null) {
-					try {
-						File file = cacheUrl(url);
-						resourceLocation = createResourceLocation(url, file);
-					} catch (FileNotFoundException e) {
-						if ("file".equals(url.getProtocol())) {
-							File file = new File(url.getPath());
-							this.watchedFiles.add(file);
-						}
-						continue;
-					} catch (IOException ignored) {
-						continue;
-					} catch (UnsupportedOperationException ex) {
-						System.out.println("The protocol for the JAR file's URL is not supported" + ex);
-						continue;
-					}
+    private void rebuildClassPath()
+    {
+        assert ( Thread.holdsLock( lock ) ) : "This method can only be called while holding the lock";
 
-				} 
-				this.classPath.put(resourceLocation.getCodeSource(), resourceLocation);
+        Map existingJarFiles = new LinkedHashMap( classPath );
+        classPath.clear();
 
-				List manifestClassPath = getManifestClassPath(resourceLocation);
-				locationStack.addAll(0, manifestClassPath);
-			}
-		} catch (Error e) {
-			destroy();
-			throw e;
-		}
+        LinkedList locationStack = new LinkedList( urls );
+        ResourceLocation resourceLocation;
+        try
+        {
+            while ( !( locationStack.isEmpty() ) )
+            {
+                URL url = (URL) locationStack.removeFirst();
 
-		for (ResourceLocation location : (Collection<ResourceLocation>) existingJarFiles.values())
-			location.close();
-	}
+                if ( classPath.containsKey( url ) )
+                {
+                    continue;
+                }
 
-	protected File cacheUrl(URL url) throws IOException {
-		if (!("file".equals(url.getProtocol()))) {
-			throw new UnsupportedOperationException(
-					"Only local file jars are supported " + url);
-		}
+                resourceLocation = (ResourceLocation) existingJarFiles.remove( url );
 
-		File file = new File(url.getPath());
-		if (!(file.exists())) {
-			throw new FileNotFoundException(file.getAbsolutePath());
-		}
-		if (!(file.canRead())) {
-			throw new IOException("File is not readable: "
-					+ file.getAbsolutePath());
-		}
-		return file;
-	}
+                if ( resourceLocation == null )
+                {
+                    try
+                    {
+                        File file = cacheUrl( url );
+                        resourceLocation = createResourceLocation( url, file );
+                    }
+                    catch ( FileNotFoundException e )
+                    {
+                        if ( "file".equals( url.getProtocol() ) )
+                        {
+                            File file = new File( url.getPath() );
+                            watchedFiles.add( file );
+                        }
+                        continue;
+                    }
+                    catch ( IOException ignored )
+                    {
+                        continue;
+                    }
+                    catch ( UnsupportedOperationException ex )
+                    {
+                        LOG.error( "The protocol for the JAR file's URL is not supported" + ex );
+                        continue;
+                    }
 
-	protected ResourceLocation createResourceLocation(URL codeSource,
-			File cacheFile) throws IOException {
-		if (!(cacheFile.exists())) {
-			throw new FileNotFoundException(cacheFile.getAbsolutePath());
-		}
-		if (!(cacheFile.canRead()))
-			throw new IOException("File is not readable: "
-					+ cacheFile.getAbsolutePath());
-		ResourceLocation resourceLocation;
-		if (cacheFile.isDirectory()) {
-			resourceLocation = new DirectoryResourceLocation(cacheFile);
-		} else
-			resourceLocation = new JarResourceLocation(codeSource, cacheFile);
+                }
+                classPath.put( resourceLocation.getCodeSource(), resourceLocation );
 
-		return resourceLocation;
-	}
+                List manifestClassPath = getManifestClassPath( resourceLocation );
+                locationStack.addAll( 0, manifestClassPath );
+            }
+        }
+        catch ( Error e )
+        {
+            destroy();
+            throw e;
+        }
 
-	private List<URL> getManifestClassPath(ResourceLocation resourceLocation) {
-		try {
-			Manifest manifest = resourceLocation.getManifest();
-			if (manifest == null) {
-				return Collections.EMPTY_LIST;
-			}
+        for ( ResourceLocation location : (Collection<ResourceLocation>) existingJarFiles.values() )
+        {
+            location.close();
+        }
+    }
 
-			String manifestClassPath = manifest.getMainAttributes().getValue(
-					Attributes.Name.CLASS_PATH);
-			if (manifestClassPath == null) {
-				return Collections.EMPTY_LIST;
-			}
+    protected File cacheUrl( URL url )
+        throws IOException
+    {
+        if ( !( "file".equals( url.getProtocol() ) ) )
+        {
+            throw new UnsupportedOperationException( "Only local file jars are supported " + url );
+        }
 
-			URL codeSource = resourceLocation.getCodeSource();
-			LinkedList classPathUrls = new LinkedList();
-			for (StringTokenizer tokenizer = new StringTokenizer(
-					manifestClassPath, " "); tokenizer.hasMoreTokens();) {
-				String entry = tokenizer.nextToken();
-				try {
-					URL entryUrl = new URL(codeSource, entry);
-					classPathUrls.addLast(entryUrl);
-				} catch (MalformedURLException localMalformedURLException) {
-				}
-			}
-			return classPathUrls;
-		} catch (IOException ignored) {
-		}
-		return Collections.EMPTY_LIST;
-	}
+        File file = new File( url.getPath() );
+        if ( !( file.exists() ) )
+        {
+            throw new FileNotFoundException( file.getAbsolutePath() );
+        }
+        if ( !( file.canRead() ) )
+        {
+            throw new IOException( "File is not readable: " + file.getAbsolutePath() );
+        }
+        return file;
+    }
+
+    protected ResourceLocation createResourceLocation( URL codeSource, File cacheFile )
+        throws IOException
+    {
+        if ( !( cacheFile.exists() ) )
+        {
+            throw new FileNotFoundException( cacheFile.getAbsolutePath() );
+        }
+        if ( !( cacheFile.canRead() ) )
+        {
+            throw new IOException( "File is not readable: " + cacheFile.getAbsolutePath() );
+        }
+        ResourceLocation resourceLocation;
+        if ( cacheFile.isDirectory() )
+        {
+            resourceLocation = new DirectoryResourceLocation( cacheFile );
+        }
+        else
+        {
+            resourceLocation = new JarResourceLocation( codeSource, cacheFile );
+        }
+
+        return resourceLocation;
+    }
+
+    private List<URL> getManifestClassPath( ResourceLocation resourceLocation )
+    {
+        try
+        {
+            Manifest manifest = resourceLocation.getManifest();
+            if ( manifest == null )
+            {
+                return Collections.EMPTY_LIST;
+            }
+
+            String manifestClassPath = manifest.getMainAttributes().getValue( Attributes.Name.CLASS_PATH );
+            if ( manifestClassPath == null )
+            {
+                return Collections.EMPTY_LIST;
+            }
+
+            URL codeSource = resourceLocation.getCodeSource();
+            LinkedList classPathUrls = new LinkedList();
+            for ( StringTokenizer tokenizer = new StringTokenizer( manifestClassPath, " " ); tokenizer.hasMoreTokens(); )
+            {
+                String entry = tokenizer.nextToken();
+                try
+                {
+                    URL entryUrl = new URL( codeSource, entry );
+                    classPathUrls.addLast( entryUrl );
+                }
+                catch ( MalformedURLException localMalformedURLException )
+                {
+                }
+            }
+            return classPathUrls;
+        }
+        catch ( IOException ignored )
+        {
+        }
+        return Collections.EMPTY_LIST;
+    }
 }

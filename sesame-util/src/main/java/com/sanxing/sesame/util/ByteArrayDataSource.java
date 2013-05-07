@@ -5,39 +5,58 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
+
 import javax.activation.DataSource;
 
-public class ByteArrayDataSource implements DataSource, Serializable {
-	private static final long serialVersionUID = 1L;
-	private byte[] data;
-	private String type;
-	private String name = "unused";
+public class ByteArrayDataSource
+    implements DataSource, Serializable
+{
+    private static final long serialVersionUID = 1L;
 
-	public ByteArrayDataSource(byte[] data, String type) {
-		this.data = data;
-		this.type = type;
-	}
+    private final byte[] data;
 
-	public InputStream getInputStream() throws IOException {
-		if (this.data == null) {
-			throw new IOException("no data");
-		}
-		return new ByteArrayInputStream(this.data);
-	}
+    private final String type;
 
-	public OutputStream getOutputStream() throws IOException {
-		throw new IOException("getOutputStream() not supported");
-	}
+    private String name = "unused";
 
-	public String getContentType() {
-		return this.type;
-	}
+    public ByteArrayDataSource( byte[] data, String type )
+    {
+        this.data = data;
+        this.type = type;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public InputStream getInputStream()
+        throws IOException
+    {
+        if ( data == null )
+        {
+            throw new IOException( "no data" );
+        }
+        return new ByteArrayInputStream( data );
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public OutputStream getOutputStream()
+        throws IOException
+    {
+        throw new IOException( "getOutputStream() not supported" );
+    }
+
+    @Override
+    public String getContentType()
+    {
+        return type;
+    }
+
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 }

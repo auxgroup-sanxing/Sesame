@@ -1,11 +1,5 @@
 package com.sanxing.sesame.messaging;
 
-import com.sanxing.sesame.exception.RuntimeJBIException;
-import com.sanxing.sesame.jaxp.BytesSource;
-import com.sanxing.sesame.jaxp.SourceTransformer;
-import com.sanxing.sesame.jaxp.StringSource;
-import com.sanxing.sesame.util.ByteArrayDataSource;
-import com.sanxing.sesame.util.FileUtil;
 import java.io.ByteArrayOutputStream;
 import java.io.Externalizable;
 import java.io.IOException;
@@ -14,9 +8,9 @@ import java.io.ObjectOutput;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.jbi.messaging.Fault;
@@ -29,214 +23,310 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamSource;
 
-public class NormalizedMessageImpl implements NormalizedMessage, Externalizable {
-	private static final long serialVersionUID = 9179194301410526549L;
-	private static final SourceTransformer TRANSFORMER = new SourceTransformer();
-	protected transient MessageExchangeImpl exchange;
-	private transient Source content;
-	private transient Object body;
-	private Subject securitySubject;
-	private Map properties;
-	private Map attachments;
+import com.sanxing.sesame.exception.RuntimeJBIException;
+import com.sanxing.sesame.jaxp.BytesSource;
+import com.sanxing.sesame.jaxp.SourceTransformer;
+import com.sanxing.sesame.jaxp.StringSource;
+import com.sanxing.sesame.util.ByteArrayDataSource;
+import com.sanxing.sesame.util.FileUtil;
 
-	public NormalizedMessageImpl() {
-	}
+public class NormalizedMessageImpl
+    implements NormalizedMessage, Externalizable
+{
+    private static final long serialVersionUID = 9179194301410526549L;
 
-	public NormalizedMessageImpl(MessageExchangeImpl exchange) {
-		this.exchange = exchange;
-	}
+    private static final SourceTransformer TRANSFORMER = new SourceTransformer();
 
-	public Source getContent() {
-		if ((this.content == null) && (this.body != null)) {
-			try {
-				getMarshaler().marshal(this.exchange, this, this.body);
-			} catch (MessagingException e) {
-				throw new RuntimeJBIException(e);
-			}
-		}
-		return this.content;
-	}
+    protected transient MessageExchangeImpl exchange;
 
-	public void setContent(Source source) {
-		this.content = source;
-	}
+    private transient Source content;
 
-	public Subject getSecuritySubject() {
-		return this.securitySubject;
-	}
+    private transient Object body;
 
-	public void setSecuritySubject(Subject securitySubject) {
-		this.securitySubject = securitySubject;
-	}
+    private Subject securitySubject;
 
-	public Object getProperty(String name) {
-		if (this.properties != null) {
-			return this.properties.get(name);
-		}
-		return null;
-	}
+    private Map properties;
 
-	public Set getPropertyNames() {
-		if (this.properties != null) {
-			return Collections.unmodifiableSet(this.properties.keySet());
-		}
-		return Collections.EMPTY_SET;
-	}
+    private Map attachments;
 
-	public void setProperty(String name, Object value) {
-		if (value == null) {
-			if (this.properties != null)
-				this.properties.remove(name);
-		} else
-			getProperties().put(name, value);
-	}
+    public NormalizedMessageImpl()
+    {
+    }
 
-	public void addAttachment(String id, DataHandler handler) {
-		getAttachments().put(id, handler.getDataSource());
-	}
+    public NormalizedMessageImpl( MessageExchangeImpl exchange )
+    {
+        this.exchange = exchange;
+    }
 
-	public DataHandler getAttachment(String id) {
-		if ((this.attachments != null) && (this.attachments.get(id) != null)) {
-			return new DataHandler((DataSource) this.attachments.get(id));
-		}
-		return null;
-	}
+    @Override
+    public Source getContent()
+    {
+        if ( ( content == null ) && ( body != null ) )
+        {
+            try
+            {
+                getMarshaler().marshal( exchange, this, body );
+            }
+            catch ( MessagingException e )
+            {
+                throw new RuntimeJBIException( e );
+            }
+        }
+        return content;
+    }
 
-	public Iterator listAttachments() {
-		if (this.attachments != null) {
-			return this.attachments.keySet().iterator();
-		}
-		return Collections.EMPTY_LIST.iterator();
-	}
+    @Override
+    public void setContent( Source source )
+    {
+        content = source;
+    }
 
-	public void removeAttachment(String id) {
-		if (this.attachments != null)
-			this.attachments.remove(id);
-	}
+    @Override
+    public Subject getSecuritySubject()
+    {
+        return securitySubject;
+    }
 
-	public Set getAttachmentNames() {
-		if (this.attachments != null) {
-			return Collections.unmodifiableSet(this.attachments.keySet());
-		}
-		return Collections.EMPTY_SET;
-	}
+    @Override
+    public void setSecuritySubject( Subject securitySubject )
+    {
+        this.securitySubject = securitySubject;
+    }
 
-	public String toString() {
-		return super.toString() + "{properties: " + getProperties() + "}";
-	}
+    @Override
+    public Object getProperty( String name )
+    {
+        if ( properties != null )
+        {
+            return properties.get( name );
+        }
+        return null;
+    }
 
-	public Object getBody() throws MessagingException {
-		if (this.body == null) {
-			this.body = getMarshaler().unmarshal(this.exchange, this);
-		}
-		return this.body;
-	}
+    @Override
+    public Set getPropertyNames()
+    {
+        if ( properties != null )
+        {
+            return Collections.unmodifiableSet( properties.keySet() );
+        }
+        return Collections.EMPTY_SET;
+    }
 
-	public Object getBody(PojoMarshaler marshaler) throws MessagingException {
-		return marshaler.unmarshal(this.exchange, this);
-	}
+    @Override
+    public void setProperty( String name, Object value )
+    {
+        if ( value == null )
+        {
+            if ( properties != null )
+            {
+                properties.remove( name );
+            }
+        }
+        else
+        {
+            getProperties().put( name, value );
+        }
+    }
 
-	public void setBody(Object body) throws MessagingException {
-		this.body = body;
-	}
+    @Override
+    public void addAttachment( String id, DataHandler handler )
+    {
+        getAttachments().put( id, handler.getDataSource() );
+    }
 
-	public String getBodyText() throws TransformerException {
-		return TRANSFORMER.toString(getContent());
-	}
+    @Override
+    public DataHandler getAttachment( String id )
+    {
+        if ( ( attachments != null ) && ( attachments.get( id ) != null ) )
+        {
+            return new DataHandler( (DataSource) attachments.get( id ) );
+        }
+        return null;
+    }
 
-	public void setBodyText(String xml) {
-		setContent(new StringSource(xml));
-	}
+    public Iterator listAttachments()
+    {
+        if ( attachments != null )
+        {
+            return attachments.keySet().iterator();
+        }
+        return Collections.EMPTY_LIST.iterator();
+    }
 
-	public PojoMarshaler getMarshaler() {
-		return this.exchange.getMarshaler();
-	}
+    @Override
+    public void removeAttachment( String id )
+    {
+        if ( attachments != null )
+        {
+            attachments.remove( id );
+        }
+    }
 
-	public MessageExchange getExchange() {
-		return this.exchange;
-	}
+    @Override
+    public Set getAttachmentNames()
+    {
+        if ( attachments != null )
+        {
+            return Collections.unmodifiableSet( attachments.keySet() );
+        }
+        return Collections.EMPTY_SET;
+    }
 
-	public Fault createFault() throws MessagingException {
-		return getExchange().createFault();
-	}
+    @Override
+    public String toString()
+    {
+        return super.toString() + "{properties: " + getProperties() + "}";
+    }
 
-	protected Map getProperties() {
-		if (this.properties == null) {
-			this.properties = createPropertiesMap();
-		}
-		return this.properties;
-	}
+    public Object getBody()
+        throws MessagingException
+    {
+        if ( body == null )
+        {
+            body = getMarshaler().unmarshal( exchange, this );
+        }
+        return body;
+    }
 
-	protected Map getAttachments() {
-		if (this.attachments == null) {
-			this.attachments = createAttachmentsMap();
-		}
-		return this.attachments;
-	}
+    public Object getBody( PojoMarshaler marshaler )
+        throws MessagingException
+    {
+        return marshaler.unmarshal( exchange, this );
+    }
 
-	protected void setAttachments(Map attachments) {
-		this.attachments = attachments;
-	}
+    public void setBody( Object body )
+        throws MessagingException
+    {
+        this.body = body;
+    }
 
-	protected void setProperties(Map properties) {
-		this.properties = properties;
-	}
+    public String getBodyText()
+        throws TransformerException
+    {
+        return TRANSFORMER.toString( getContent() );
+    }
 
-	protected Map createPropertiesMap() {
-		return new HashMap();
-	}
+    public void setBodyText( String xml )
+    {
+        setContent( new StringSource( xml ) );
+    }
 
-	protected Map createAttachmentsMap() {
-		return new HashMap();
-	}
+    public PojoMarshaler getMarshaler()
+    {
+        return exchange.getMarshaler();
+    }
 
-	public void writeExternal(ObjectOutput out) throws IOException {
-		try {
-			convertAttachments();
-			out.writeObject(this.attachments);
-			out.writeObject(this.properties);
-			String src = TRANSFORMER.toString(this.content);
-			out.writeObject(src);
+    public MessageExchange getExchange()
+    {
+        return exchange;
+    }
 
-			if ((((this.content instanceof StreamSource) || (this.content instanceof SAXSource)))
-					&& (!(this.content instanceof StringSource))
-					&& (!(this.content instanceof BytesSource))) {
-				this.content = new StringSource(src);
-			}
-		} catch (TransformerException e) {
-			throw ((IOException) new IOException(
-					"Could not transform content to string").initCause(e));
-		}
-	}
+    public Fault createFault()
+        throws MessagingException
+    {
+        return getExchange().createFault();
+    }
 
-	private void convertAttachments() throws IOException {
-		if (this.attachments != null) {
-			Map newAttachments = createAttachmentsMap();
-			for (Iterator it = this.attachments.keySet().iterator(); it
-					.hasNext();) {
-				String name = (String) it.next();
-				DataSource ds = (DataSource) this.attachments.get(name);
-				if (ds instanceof ByteArrayDataSource) {
-					newAttachments.put(name, ds);
-				} else {
-					ByteArrayOutputStream baos = new ByteArrayOutputStream();
-					FileUtil.copyInputStream(ds.getInputStream(), baos);
-					ByteArrayDataSource bads = new ByteArrayDataSource(
-							baos.toByteArray(), ds.getContentType());
-					bads.setName(ds.getName());
-					newAttachments.put(name, bads);
-				}
-			}
-			this.attachments = newAttachments;
-		}
-	}
+    protected Map getProperties()
+    {
+        if ( properties == null )
+        {
+            properties = createPropertiesMap();
+        }
+        return properties;
+    }
 
-	public void readExternal(ObjectInput in) throws IOException,
-			ClassNotFoundException {
-		this.attachments = ((Map) in.readObject());
-		this.properties = ((Map) in.readObject());
-		String src = (String) in.readObject();
-		if (src != null)
-			this.content = new StringSource(src);
-	}
+    protected Map getAttachments()
+    {
+        if ( attachments == null )
+        {
+            attachments = createAttachmentsMap();
+        }
+        return attachments;
+    }
+
+    protected void setAttachments( Map attachments )
+    {
+        this.attachments = attachments;
+    }
+
+    protected void setProperties( Map properties )
+    {
+        this.properties = properties;
+    }
+
+    protected Map createPropertiesMap()
+    {
+        return new HashMap();
+    }
+
+    protected Map createAttachmentsMap()
+    {
+        return new HashMap();
+    }
+
+    @Override
+    public void writeExternal( ObjectOutput out )
+        throws IOException
+    {
+        try
+        {
+            convertAttachments();
+            out.writeObject( attachments );
+            out.writeObject( properties );
+            String src = TRANSFORMER.toString( content );
+            out.writeObject( src );
+
+            if ( ( ( ( content instanceof StreamSource ) || ( content instanceof SAXSource ) ) )
+                && ( !( content instanceof StringSource ) ) && ( !( content instanceof BytesSource ) ) )
+            {
+                content = new StringSource( src );
+            }
+        }
+        catch ( TransformerException e )
+        {
+            throw ( (IOException) new IOException( "Could not transform content to string" ).initCause( e ) );
+        }
+    }
+
+    private void convertAttachments()
+        throws IOException
+    {
+        if ( attachments != null )
+        {
+            Map newAttachments = createAttachmentsMap();
+            for ( Iterator it = attachments.keySet().iterator(); it.hasNext(); )
+            {
+                String name = (String) it.next();
+                DataSource ds = (DataSource) attachments.get( name );
+                if ( ds instanceof ByteArrayDataSource )
+                {
+                    newAttachments.put( name, ds );
+                }
+                else
+                {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    FileUtil.copyInputStream( ds.getInputStream(), baos );
+                    ByteArrayDataSource bads = new ByteArrayDataSource( baos.toByteArray(), ds.getContentType() );
+                    bads.setName( ds.getName() );
+                    newAttachments.put( name, bads );
+                }
+            }
+            attachments = newAttachments;
+        }
+    }
+
+    @Override
+    public void readExternal( ObjectInput in )
+        throws IOException, ClassNotFoundException
+    {
+        attachments = ( (Map) in.readObject() );
+        properties = ( (Map) in.readObject() );
+        String src = (String) in.readObject();
+        if ( src != null )
+        {
+            content = new StringSource( src );
+        }
+    }
 }

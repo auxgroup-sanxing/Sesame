@@ -1,58 +1,75 @@
 package com.sanxing.sesame.jmx.mbean.managed;
 
-import com.sanxing.sesame.jmx.FilePackage;
-import com.sanxing.sesame.jmx.mbean.admin.FileServerMBean;
-import com.sanxing.sesame.core.Env;
-import com.sanxing.sesame.core.Platform;
-import com.sanxing.sesame.core.api.MBeanHelper;
-import com.sanxing.sesame.util.FileUtil;
 import java.io.File;
 import java.io.FileOutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FileClient implements FileClientMBean {
-	private static Logger LOG = LoggerFactory.getLogger(FileClient.class);
+import com.sanxing.sesame.core.Platform;
+import com.sanxing.sesame.core.api.MBeanHelper;
+import com.sanxing.sesame.jmx.FilePackage;
+import com.sanxing.sesame.jmx.mbean.admin.FileServerMBean;
+import com.sanxing.sesame.util.FileUtil;
 
-	public String fetchFile(String fileName) {
-		int index = fileName.lastIndexOf("\\");
-		if (index == -1) {
-			index = fileName.lastIndexOf("/");
-		}
-		if (index == -1) {
-			index = 0;
-		}
-		File homeDir = Platform.getEnv().getHomeDir();
-		File file = new File(homeDir, "work/temp/"
-				+ fileName.substring((index == 0) ? 0 : index + 1));
-		FileUtil.buildDirectory(file.getParentFile());
+public class FileClient
+    implements FileClientMBean
+{
+    private static Logger LOG = LoggerFactory.getLogger( FileClient.class );
 
-		if (LOG.isDebugEnabled())
-			LOG.debug("Target file name is ---> " + file);
-		FilePackage filePackage = new FilePackage(fileName);
-		filePackage.setCurrentPackage(1L);
-		filePackage.setPageSize(10240L);
-		try {
-			FileServerMBean fileServer = (FileServerMBean) MBeanHelper
-					.getAdminMBean(FileServerMBean.class, "file-server");
+    @Override
+    public String fetchFile( String fileName )
+    {
+        int index = fileName.lastIndexOf( "\\" );
+        if ( index == -1 )
+        {
+            index = fileName.lastIndexOf( "/" );
+        }
+        if ( index == -1 )
+        {
+            index = 0;
+        }
+        File homeDir = Platform.getEnv().getHomeDir();
+        File file = new File( homeDir, "work/temp/" + fileName.substring( ( index == 0 ) ? 0 : index + 1 ) );
+        FileUtil.buildDirectory( file.getParentFile() );
 
-			FileOutputStream fos = new FileOutputStream(file);
-			try {
-				do {
-					filePackage = fileServer.transfer(filePackage);
-					fos.write(filePackage.getPackageData());
-				} while (!(filePackage.isEnd()));
-			} finally {
-				fos.close();
-			}
-		} catch (Exception e) {
-			LOG.error(e.getMessage(), e);
-		}
+        if ( LOG.isDebugEnabled() )
+        {
+            LOG.debug( "Target file name is ---> " + file );
+        }
+        FilePackage filePackage = new FilePackage( fileName );
+        filePackage.setCurrentPackage( 1L );
+        filePackage.setPageSize( 10240L );
+        try
+        {
+            FileServerMBean fileServer = MBeanHelper.getAdminMBean( FileServerMBean.class, "file-server" );
 
-		return file.getAbsolutePath();
-	}
+            FileOutputStream fos = new FileOutputStream( file );
+            try
+            {
+                do
+                {
+                    filePackage = fileServer.transfer( filePackage );
+                    fos.write( filePackage.getPackageData() );
+                }
+                while ( !( filePackage.isEnd() ) );
+            }
+            finally
+            {
+                fos.close();
+            }
+        }
+        catch ( Exception e )
+        {
+            LOG.error( e.getMessage(), e );
+        }
 
-	public String getDescription() {
-		return "文件传输客户端";
-	}
+        return file.getAbsolutePath();
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "文件传输客户端";
+    }
 }

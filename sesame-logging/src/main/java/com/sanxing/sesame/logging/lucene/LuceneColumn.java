@@ -1,43 +1,54 @@
 package com.sanxing.sesame.logging.lucene;
 
-public class LuceneColumn {
-	private String name;
-	private String value;
-	private boolean indexAnalyzed;
+public class LuceneColumn
+{
+    private String name;
 
-	public LuceneColumn(String name, String value, boolean analyzed) {
-		this.name = name;
-		this.value = value;
-		this.indexAnalyzed = analyzed;
-	}
+    private String value;
 
-	public LuceneColumn(LuceneColumn col) {
-		this.name = col.name;
-		this.value = col.value;
-		this.indexAnalyzed = col.indexAnalyzed;
-	}
+    private boolean indexAnalyzed;
 
-	public boolean isIndexAnalyzed() {
-		return this.indexAnalyzed;
-	}
+    public LuceneColumn( String name, String value, boolean analyzed )
+    {
+        this.name = name;
+        this.value = value;
+        indexAnalyzed = analyzed;
+    }
 
-	public void setIndexAnalyzed(boolean indexAnalyzed) {
-		this.indexAnalyzed = indexAnalyzed;
-	}
+    public LuceneColumn( LuceneColumn col )
+    {
+        name = col.name;
+        value = col.value;
+        indexAnalyzed = col.indexAnalyzed;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public boolean isIndexAnalyzed()
+    {
+        return indexAnalyzed;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setIndexAnalyzed( boolean indexAnalyzed )
+    {
+        this.indexAnalyzed = indexAnalyzed;
+    }
 
-	public String getValue() {
-		return this.value;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue( String value )
+    {
+        this.value = value;
+    }
 }

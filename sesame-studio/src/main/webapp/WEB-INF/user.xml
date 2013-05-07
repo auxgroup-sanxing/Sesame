@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="GBK"?>
 <users role-play="false">
-  <roles />
-  <user userid="root" passwd="" fullname="超级用户" userlevel="S" />
-  <user userid="zhoushangjie" fullname="周尚杰" passwd="ehDK3Z8JAwmtXujJ7h/SExmqWaEuNmd00MM8pYvHZUaXYTY4q+sZALDiJWVhJlzj+3h7XZ6VSuhzbczZgbIGIsJjlKhPm4IvDpgP1bDpJH2LFgfbu6j64wjSQRVXsYYF6qbStGwr4Xi308Wbo+k1hN07UNGNO3J+ONTAr+B7DeA=" userlevel="S" userdsr="AAAA.gif" />
+	<roles />
+	<user userid="root" passwd="" fullname="超级用户" userlevel="S" />
+	<user userid="zhoushangjie" fullname="周尚杰"
+		passwd="ehDK3Z8JAwmtXujJ7h/SExmqWaEuNmd00MM8pYvHZUaXYTY4q+sZALDiJWVhJlzj+3h7XZ6VSuhzbczZgbIGIsJjlKhPm4IvDpgP1bDpJH2LFgfbu6j64wjSQRVXsYYF6qbStGwr4Xi308Wbo+k1hN07UNGNO3J+ONTAr+B7DeA="
+		userlevel="S" userdsr="AAAA.gif" />
 </users>
 

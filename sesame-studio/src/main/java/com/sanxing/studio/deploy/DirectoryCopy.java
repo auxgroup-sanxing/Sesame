@@ -5,57 +5,69 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 
-public class DirectoryCopy {
-	FileInputStream FIS;
-	FileOutputStream FOS;
-	static String srcfile = "D:/aaa";
-	static String desfile = "D:/bbb";
+public class DirectoryCopy
+{
+    FileInputStream FIS;
 
-	public static boolean copyDirectory(String SrcDirectoryPath,
-			String DesDirectoryPath) {
-		try {
-			File F0 = new File(DesDirectoryPath);
-			if (!(F0.exists())) {
-				new File(DesDirectoryPath).mkdirs();
-			}
-			File F = new File(SrcDirectoryPath);
+    FileOutputStream FOS;
 
-			FilenameFilter filter = new FilenameFilter() {
-				public boolean accept(File dir, String name) {
-					return ((!(name.endsWith(".svn"))) && (!(name
-							.endsWith(".java"))));
-				}
-			};
-			File[] allFile = F.listFiles(filter);
-			int totalNum = allFile.length;
-			String srcName = "";
-			String desName = "";
-			int currentFile = 0;
+    static String srcfile = "D:/aaa";
 
-			for (currentFile = 0; currentFile < totalNum; ++currentFile) {
-				if (!(allFile[currentFile].isDirectory())) {
-					srcName = allFile[currentFile].toString();
-					desName = DesDirectoryPath + File.separator
-							+ allFile[currentFile].getName();
+    static String desfile = "D:/bbb";
 
-					FileCopy FC = new FileCopy();
-					FC.copyFile(srcName, desName);
-				} else {
-					if (copyDirectory(
-							allFile[currentFile].getPath().toString(),
-							DesDirectoryPath + File.separator
-									+ allFile[currentFile].getName().toString())) {
-						continue;
-					}
+    public static boolean copyDirectory( String SrcDirectoryPath, String DesDirectoryPath )
+    {
+        try
+        {
+            File F0 = new File( DesDirectoryPath );
+            if ( !( F0.exists() ) )
+            {
+                new File( DesDirectoryPath ).mkdirs();
+            }
+            File F = new File( SrcDirectoryPath );
 
-					throw new Exception("SubDirectory Copy Error!");
-				}
-			}
+            FilenameFilter filter = new FilenameFilter()
+            {
+                @Override
+                public boolean accept( File dir, String name )
+                {
+                    return ( ( !( name.endsWith( ".svn" ) ) ) && ( !( name.endsWith( ".java" ) ) ) );
+                }
+            };
+            File[] allFile = F.listFiles( filter );
+            int totalNum = allFile.length;
+            String srcName = "";
+            String desName = "";
+            int currentFile = 0;
 
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
-	}
+            for ( currentFile = 0; currentFile < totalNum; ++currentFile )
+            {
+                if ( !( allFile[currentFile].isDirectory() ) )
+                {
+                    srcName = allFile[currentFile].toString();
+                    desName = DesDirectoryPath + File.separator + allFile[currentFile].getName();
+
+                    FileCopy FC = new FileCopy();
+                    FC.copyFile( srcName, desName );
+                }
+                else
+                {
+                    if ( copyDirectory( allFile[currentFile].getPath().toString(), DesDirectoryPath + File.separator
+                        + allFile[currentFile].getName().toString() ) )
+                    {
+                        continue;
+                    }
+
+                    throw new Exception( "SubDirectory Copy Error!" );
+                }
+            }
+
+            return true;
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

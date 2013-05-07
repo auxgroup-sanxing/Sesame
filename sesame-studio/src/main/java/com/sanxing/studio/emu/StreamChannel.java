@@ -4,22 +4,28 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public abstract class StreamChannel {
-	private InputStream in;
-	private OutputStream out;
+public abstract class StreamChannel
+{
+    private final InputStream in;
 
-	public StreamChannel(InputStream in, OutputStream out) {
-		this.in = in;
-		this.out = out;
-	}
+    private final OutputStream out;
 
-	public InputStream getInput() {
-		return this.in;
-	}
+    public StreamChannel( InputStream in, OutputStream out )
+    {
+        this.in = in;
+        this.out = out;
+    }
 
-	public OutputStream getOutput() {
-		return this.out;
-	}
+    public InputStream getInput()
+    {
+        return in;
+    }
 
-	public abstract void close() throws IOException;
+    public OutputStream getOutput()
+    {
+        return out;
+    }
+
+    public abstract void close()
+        throws IOException;
 }

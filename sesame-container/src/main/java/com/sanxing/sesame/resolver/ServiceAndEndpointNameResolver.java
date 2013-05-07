@@ -1,52 +1,65 @@
 package com.sanxing.sesame.resolver;
 
-import com.sanxing.sesame.exception.NoServiceAvailableException;
 import javax.jbi.JBIException;
 import javax.jbi.component.ComponentContext;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
-public class ServiceAndEndpointNameResolver extends EndpointResolverSupport {
-	private QName serviceName;
-	private String endpointName;
+import com.sanxing.sesame.exception.NoServiceAvailableException;
 
-	public ServiceAndEndpointNameResolver() {
-	}
+public class ServiceAndEndpointNameResolver
+    extends EndpointResolverSupport
+{
+    private QName serviceName;
 
-	public ServiceAndEndpointNameResolver(QName serviceName, String endpointName) {
-		this.serviceName = serviceName;
-		this.endpointName = endpointName;
-	}
+    private String endpointName;
 
-	public ServiceEndpoint[] resolveAvailableEndpoints(
-			ComponentContext context, MessageExchange exchange)
-			throws JBIException {
-		ServiceEndpoint endpoint = context.getEndpoint(this.serviceName,
-				this.endpointName);
-		if (endpoint != null) {
-			return new ServiceEndpoint[] { endpoint };
-		}
-		return new ServiceEndpoint[0];
-	}
+    public ServiceAndEndpointNameResolver()
+    {
+    }
 
-	public QName getServiceName() {
-		return this.serviceName;
-	}
+    public ServiceAndEndpointNameResolver( QName serviceName, String endpointName )
+    {
+        this.serviceName = serviceName;
+        this.endpointName = endpointName;
+    }
 
-	public void setServiceName(QName serviceName) {
-		this.serviceName = serviceName;
-	}
+    @Override
+    public ServiceEndpoint[] resolveAvailableEndpoints( ComponentContext context, MessageExchange exchange )
+        throws JBIException
+    {
+        ServiceEndpoint endpoint = context.getEndpoint( serviceName, endpointName );
+        if ( endpoint != null )
+        {
+            return new ServiceEndpoint[] { endpoint };
+        }
+        return new ServiceEndpoint[0];
+    }
 
-	public String getEndpointName() {
-		return this.endpointName;
-	}
+    public QName getServiceName()
+    {
+        return serviceName;
+    }
 
-	public void setEndpointName(String endpointName) {
-		this.endpointName = endpointName;
-	}
+    public void setServiceName( QName serviceName )
+    {
+        this.serviceName = serviceName;
+    }
 
-	protected JBIException createServiceUnavailableException() {
-		return new NoServiceAvailableException(this.serviceName);
-	}
+    public String getEndpointName()
+    {
+        return endpointName;
+    }
+
+    public void setEndpointName( String endpointName )
+    {
+        this.endpointName = endpointName;
+    }
+
+    @Override
+    protected JBIException createServiceUnavailableException()
+    {
+        return new NoServiceAvailableException( serviceName );
+    }
 }

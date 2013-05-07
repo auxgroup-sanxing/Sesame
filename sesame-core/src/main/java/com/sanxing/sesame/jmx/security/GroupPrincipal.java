@@ -2,42 +2,59 @@ package com.sanxing.sesame.jmx.security;
 
 import java.security.Principal;
 
-public class GroupPrincipal implements Principal {
-	public static final GroupPrincipal ANY = new GroupPrincipal("*");
-	private final String name;
-	private transient int hash;
+public class GroupPrincipal
+    implements Principal
+{
+    public static final GroupPrincipal ANY = new GroupPrincipal( "*" );
 
-	public GroupPrincipal(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("name cannot be null");
-		}
-		this.name = name;
-	}
+    private final String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private transient int hash;
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if ((o == null) || (super.getClass() != o.getClass())) {
-			return false;
-		}
-		GroupPrincipal that = (GroupPrincipal) o;
+    public GroupPrincipal( String name )
+    {
+        if ( name == null )
+        {
+            throw new IllegalArgumentException( "name cannot be null" );
+        }
+        this.name = name;
+    }
 
-		return (this.name.equals(that.name));
-	}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
-	public int hashCode() {
-		if (this.hash == 0) {
-			this.hash = this.name.hashCode();
-		}
-		return this.hash;
-	}
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( ( o == null ) || ( super.getClass() != o.getClass() ) )
+        {
+            return false;
+        }
+        GroupPrincipal that = (GroupPrincipal) o;
 
-	public String toString() {
-		return this.name;
-	}
+        return ( name.equals( that.name ) );
+    }
+
+    @Override
+    public int hashCode()
+    {
+        if ( hash == 0 )
+        {
+            hash = name.hashCode();
+        }
+        return hash;
+    }
+
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

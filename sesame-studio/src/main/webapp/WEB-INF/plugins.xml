@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="GBK"?>
 <plugins version="1.0">
-  <menus>
-    <menu  id="dpmMenu" text="数据处理">
-      <item id="comm_cmd" text="任务管理" url="../system/console_cmd.jsp?condition=kindid=0" />
-      <item id="comm_dd" text="任务监视" url="../system/console_cmd.jsp?condition=kindid=1" />
-      <separator/>
-      <item id="term_msg" text="信息管理" url="../management/table_paging.jsp?table=term_msg" />
-    </menu>
-    <menu  id="sysMenu" text="系统">
-      <item id="err_codedict" text="错误代码表" url="../management/table_paging.jsp?table=err_codedict" />
-      <item id="retcodemap" text="错误码对照表" url="../management/table_paging.jsp?table=retcodemap" />
-    </menu>
-  </menus>
-  <views>
-  	<view id="taskexpl" title="任务管理" url="../taskexpl.html"/>
-  </views>
+	<menus>
+		<menu id="dpmMenu" text="数据处理">
+			<item id="comm_cmd" text="任务管理"
+				url="../system/console_cmd.jsp?condition=kindid=0" />
+			<item id="comm_dd" text="任务监视"
+				url="../system/console_cmd.jsp?condition=kindid=1" />
+			<separator />
+			<item id="term_msg" text="信息管理"
+				url="../management/table_paging.jsp?table=term_msg" />
+		</menu>
+		<menu id="sysMenu" text="系统">
+			<item id="err_codedict" text="错误代码表"
+				url="../management/table_paging.jsp?table=err_codedict" />
+			<item id="retcodemap" text="错误码对照表"
+				url="../management/table_paging.jsp?table=retcodemap" />
+		</menu>
+	</menus>
+	<views>
+		<view id="taskexpl" title="任务管理" url="../taskexpl.html" />
+	</views>
 </plugins>
 

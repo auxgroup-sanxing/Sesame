@@ -2,16 +2,20 @@
 <html>
 <head>
 <title>赋值Action配置帮助文档</title>
-<link rel="stylesheet" type="text/css" href="css/helpdoc.css" media="all"/>
+<link rel="stylesheet" type="text/css" href="css/helpdoc.css"
+	media="all" />
 </head>
 <body>
 	<div id="wrapper">
 		<div id="maincontent">
 			<h1>赋值Action配置帮助文档</h1>
 			<div class="example">
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign11.jpg"/></p>
+				<p>
+					<img style="border: 1px solid #8EA4C1; width: 360px"
+						src="images/assign11.jpg" />
+				</p>
 			</div>
-			
+
 			<div>
 				<h2>配置项说明</h2>
 				<table class="dataintable">
@@ -38,77 +42,136 @@
 						</tr>
 					</tbody>
 				</table>
+			</div>
+			<div>
+				<td>我们看到有八种类型可以操作，代表被赋值的变量的value类型。ELEMENT（元素）意味着变量可以赋值XML元素这样的类型，</td>
+				<br />
+				<td>同理，依次是文本，CDATA类型（被解析器忽略的特殊字符集），XML属性，命名空间，列表，布尔型，字符串，数值型。</td>
+				<br />
+				<td>变量名称就是我们要操作的变量名称。例如a</td>
+				<td>源变量时我们已有的可以操作的变量，比如我们定义的request，或者以后定义的其他变量。</td>
+				<br />
+				<td>XPATH是我们指定源变量里相应的信息。比如哪个节点，哪个属性。（详见XPATH手册）</td>
+				<br />
+				<td>如果我们想独立赋值，可以源变量为空，在值后面制定变量的值。</td>
+				<br />
+				<td>下面是比较常用的类型的配置信息以及黑盒测试结果。</td>
+				<br />
+				<td><serial></serial>是系统自动生成的流水号,可以当做一个变量进行操作.</td>
+				<br />
+				<td>所有类型的赋值有两种方式，一种是通过源变量，另外一种是通过源变量为空对后面的值进行赋值。当通过源变量赋值的时候，会根据XPATH主动匹配XPATH指定的类型，类型的指定将没有限制作用。</td>
+				<br />
+				<td>Ps：修改完了记得保存。</td>
+				<br />
+
+				<td>Element（元素）支持两种形式的赋值</td>
+				<br /> <br />
+				<td>有源变量</td>
+				<div class="example">
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign12.jpg" />
+					</p>
+					<td>Element 无源变量</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign13.jpg" />
+					</p>
+
+					<td>如果选择是元素但是赋值却不是XML格式就会报错</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign14.jpg" />
+					</p>
+					<br /> <br />
+
+					<td>TEXT类型也支持两种方式的赋值</td>
+					<br />
+					<td>有源变量</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign15.jpg" />
+					</p>
+
+					<td>无源变量</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign16.jpg" />
+					</p>
+					<td>如果value里面有<> 这样的符号就需要用CDATA类型了</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign17.jpg" />
+					</p>
+					<td>ATTRIBUTE（属性）也支持两种形式的赋值</td>
+					<br />
+					<td>有源变量</td>
+					<br />
+					<td>XPATH中对属性的引用用@符号，详细请见XPATH手册</td>
+					<br />
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign18.jpg" />
+					</p>
+
+					<td>上图是只对根节点下ID节点NAME的属性值 看结果：</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign19.jpg" />
+					</p>
+
+					<td>可以看出属性的格式是以冒号（：）分隔左边是属性名，右边是属性值</td>
+					<br />
+					<td>同理，在不用源变量赋值的时候要符合同样的格式。如下图：</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign20.jpg" />
+					</p>
+
+					<td>结果：</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign21.jpg" />
+					</p>
+					<td>NAMESPACE（命名空间）只支持没有源变量的赋值方式</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign22.jpg" />
+					</p>
+
+					<td>命名空间是以冒号（：）分隔，前面是前缀，后面是URI。并且不能有空格，因为是以冒号为标志的。空格会被认为是前缀或者URI的一部分。</td>
+
+					<td>看结果</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign23.jpg" />
+					</p>
+					<td>LIST（列表）支持通过源变量赋值的方式</td>
+					<td>当指定的XPATH不止一个节点时，会自动匹配LIST类型。</td>
+					<td>指定的ID节点有两个，所以变量LIST会显示SIZE为2。如图：</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign25.jpg" />
+					</p>
+					<td>BOOLEAN（逻辑型）只支持通过源变量赋值的方式。</td>
+					<br />
+					<td>如图：</td>
+					<td>给boolean变量赋值passwd的值。</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign26.jpg" />
+					</p>
+					<td>STRING（字符型）处理方式同TEXT类型，不再详述。量</td>
+					<td>NUMBER（数值型）只支持通过源变量赋值的方式</td>
+					<td>如图：</td>
+					<td>如果PASSWD的值是NUMBER类型，会自动匹配NUMBER类型</td>
+					<p>
+						<img style="border: 1px solid #8EA4C1; width: 360px"
+							src="images/assign27.jpg" />
+					</p>
+					<td>赋值适用于这样的场景，源变量赋值以后将随着赋值变量的改变而改变，如果还想对源变量进行一些操作，请先用克隆。</td>
+				</div>
+			</div>
 		</div>
-		<div>
-		<td>我们看到有八种类型可以操作，代表被赋值的变量的value类型。ELEMENT（元素）意味着变量可以赋值XML元素这样的类型，</td><br />
-		<td>同理，依次是文本，CDATA类型（被解析器忽略的特殊字符集），XML属性，命名空间，列表，布尔型，字符串，数值型。</td><br />
- 		<td>变量名称就是我们要操作的变量名称。例如a</td>
-		<td>源变量时我们已有的可以操作的变量，比如我们定义的request，或者以后定义的其他变量。</td><br />
-		<td>XPATH是我们指定源变量里相应的信息。比如哪个节点，哪个属性。（详见XPATH手册）</td><br />
-		<td>如果我们想独立赋值，可以源变量为空，在值后面制定变量的值。</td><br />
-		<td>下面是比较常用的类型的配置信息以及黑盒测试结果。</td><br />
-		<td><serial></serial>是系统自动生成的流水号,可以当做一个变量进行操作.</td><br />
-		<td>所有类型的赋值有两种方式，一种是通过源变量，另外一种是通过源变量为空对后面的值进行赋值。当通过源变量赋值的时候，会根据XPATH主动匹配XPATH指定的类型，类型的指定将没有限制作用。</td><br />
-		<td>Ps：修改完了记得保存。</td><br />
-		
-		<td>Element（元素）支持两种形式的赋值</td><br />
-		<br />
-		<td>有源变量</td>
-		<div class="example">
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign12.jpg"/></p>
-		<td>Element 无源变量</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign13.jpg"/></p>
-			
-		<td>如果选择是元素但是赋值却不是XML格式就会报错</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign14.jpg"/></p>
-			<br/>	
-			<br/>	
-			
-		<td>TEXT类型也支持两种方式的赋值</td><br />
-		<td>有源变量</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign15.jpg"/></p>
-			
-		<td>无源变量</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign16.jpg"/></p>
-		<td>如果value里面有<> 这样的符号就需要用CDATA类型了</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign17.jpg"/></p>	
-		<td>ATTRIBUTE（属性）也支持两种形式的赋值</td><br />
-		<td>有源变量</td><br />
-		<td>XPATH中对属性的引用用@符号，详细请见XPATH手册</td><br />
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign18.jpg"/></p>
-		
-		<td>上图是只对根节点下ID节点NAME的属性值 看结果：</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign19.jpg"/></p>
-		
-		<td>可以看出属性的格式是以冒号（：）分隔左边是属性名，右边是属性值</td><br />
-		<td>同理，在不用源变量赋值的时候要符合同样的格式。如下图：</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign20.jpg"/></p>
-		
-		<td>结果：</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign21.jpg"/></p>
-		<td>NAMESPACE（命名空间）只支持没有源变量的赋值方式</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign22.jpg"/></p>
-		
-		<td>命名空间是以冒号（：）分隔，前面是前缀，后面是URI。并且不能有空格，因为是以冒号为标志的。空格会被认为是前缀或者URI的一部分。</td>
-		
-		<td>看结果</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign23.jpg"/></p>
-		<td>LIST（列表）支持通过源变量赋值的方式</td>
-		<td>当指定的XPATH不止一个节点时，会自动匹配LIST类型。</td>
-		<td>指定的ID节点有两个，所以变量LIST会显示SIZE为2。如图：</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign25.jpg"/></p>
-		<td>BOOLEAN（逻辑型）只支持通过源变量赋值的方式。</td><br />
-		<td>如图：</td>
-		<td>给boolean变量赋值passwd的值。</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign26.jpg"/></p>
-		<td>STRING（字符型）处理方式同TEXT类型，不再详述。量</td>
-		<td>NUMBER（数值型）只支持通过源变量赋值的方式</td>
-		<td>如图：</td>
-		<td>如果PASSWD的值是NUMBER类型，会自动匹配NUMBER类型</td>
-				<p><img style="border:1px solid #8EA4C1;width:360px" src="images/assign27.jpg"/></p>
-		<td>赋值适用于这样的场景，源变量赋值以后将随着赋值变量的改变而改变，如果还想对源变量进行一些操作，请先用克隆。</td>
-		</div>
-	</div>
-	</div>
 </body>
 </html>

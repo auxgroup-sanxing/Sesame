@@ -1,59 +1,74 @@
 package com.sanxing.sesame.deployment;
 
-public class SharedLibrary {
-	private String classLoaderDelegation = "parent-first";
-	private String version;
-	private Identification identification;
-	private ClassPath sharedLibraryClassPath;
-	private String callbackClazz;
+public class SharedLibrary
+{
+    private String classLoaderDelegation = "parent-first";
 
-	public String getClassLoaderDelegation() {
-		return this.classLoaderDelegation;
-	}
+    private String version;
 
-	public void setClassLoaderDelegation(String classLoaderDelegation) {
-		this.classLoaderDelegation = classLoaderDelegation;
-	}
+    private Identification identification;
 
-	public String getVersion() {
-		return this.version;
-	}
+    private ClassPath sharedLibraryClassPath;
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    private String callbackClazz;
 
-	public Identification getIdentification() {
-		return this.identification;
-	}
+    public String getClassLoaderDelegation()
+    {
+        return classLoaderDelegation;
+    }
 
-	public void setIdentification(Identification identification) {
-		this.identification = identification;
-	}
+    public void setClassLoaderDelegation( String classLoaderDelegation )
+    {
+        this.classLoaderDelegation = classLoaderDelegation;
+    }
 
-	public ClassPath getSharedLibraryClassPath() {
-		return this.sharedLibraryClassPath;
-	}
+    public String getVersion()
+    {
+        return version;
+    }
 
-	public void setSharedLibraryClassPath(ClassPath sharedLibraryClassPath) {
-		this.sharedLibraryClassPath = sharedLibraryClassPath;
-	}
+    public void setVersion( String version )
+    {
+        this.version = version;
+    }
 
-	public boolean isParentFirstClassLoaderDelegation() {
-		return ((this.classLoaderDelegation != null) && (this.classLoaderDelegation
-				.equalsIgnoreCase("parent-first")));
-	}
+    public Identification getIdentification()
+    {
+        return identification;
+    }
 
-	public boolean isSelfFirstClassLoaderDelegation() {
-		return ((this.classLoaderDelegation != null) && (this.classLoaderDelegation
-				.equalsIgnoreCase("self-first")));
-	}
+    public void setIdentification( Identification identification )
+    {
+        this.identification = identification;
+    }
 
-	public String getCallbackClazz() {
-		return this.callbackClazz;
-	}
+    public ClassPath getSharedLibraryClassPath()
+    {
+        return sharedLibraryClassPath;
+    }
 
-	public void setCallbackClazz(String callbackClazz) {
-		this.callbackClazz = callbackClazz;
-	}
+    public void setSharedLibraryClassPath( ClassPath sharedLibraryClassPath )
+    {
+        this.sharedLibraryClassPath = sharedLibraryClassPath;
+    }
+
+    public boolean isParentFirstClassLoaderDelegation()
+    {
+        return ( ( classLoaderDelegation != null ) && ( classLoaderDelegation.equalsIgnoreCase( "parent-first" ) ) );
+    }
+
+    public boolean isSelfFirstClassLoaderDelegation()
+    {
+        return ( ( classLoaderDelegation != null ) && ( classLoaderDelegation.equalsIgnoreCase( "self-first" ) ) );
+    }
+
+    public String getCallbackClazz()
+    {
+        return callbackClazz;
+    }
+
+    public void setCallbackClazz( String callbackClazz )
+    {
+        this.callbackClazz = callbackClazz;
+    }
 }

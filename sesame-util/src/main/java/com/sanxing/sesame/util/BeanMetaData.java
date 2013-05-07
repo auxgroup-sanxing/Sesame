@@ -1,83 +1,99 @@
 package com.sanxing.sesame.util;
 
-import com.sanxing.sesame.collection.IgnoreCaseMap;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class BeanMetaData {
-	private Map<String, Method> readMethodMap = new IgnoreCaseMap();
-	private Map<String, Method> writeMethodMap = new IgnoreCaseMap();
-	private List<String> propNames = new ArrayList();
+import com.sanxing.sesame.collection.IgnoreCaseMap;
 
-	public void initMetaData(Class clazz) {
-		Method[] methods = clazz.getMethods();
-		for (int i = 0; i < methods.length; ++i) {
-			Method method = methods[i];
-			String methodName = method.getName();
-			String propName = getPropNameByReadMethod(methodName, method);
-			if (propName != null) {
-				this.readMethodMap.put(propName, method);
-				this.propNames.add(propName);
-			} else {
-				propName = getPropNameByWriteMethod(methodName, method);
-				if (propName != null)
-					this.writeMethodMap.put(propName, method);
-			}
-		}
-	}
+public class BeanMetaData
+{
+    private final Map<String, Method> readMethodMap = new IgnoreCaseMap();
 
-	public Iterator<String> getPropNameIterator() {
-		return this.propNames.iterator();
-	}
+    private final Map<String, Method> writeMethodMap = new IgnoreCaseMap();
 
-	private String getPropNameByReadMethod(String methodName, Method method) {
-		String propName = null;
-		if ((methodName.startsWith("get"))
-				&& (!(methodName.equals("getClass")))
-				&& (methodName.length() > 3)
-				&& (method.getParameterTypes().length == 0)) {
-			propName = methodName.substring(3);
-			return propName;
-		}
+    private final List<String> propNames = new ArrayList();
 
-		if ((methodName.startsWith("is")) && (methodName.length() > 2)
-				&& (method.getParameterTypes().length == 0)) {
-			propName = methodName.substring(2);
-			return propName;
-		}
+    public void initMetaData( Class clazz )
+    {
+        Method[] methods = clazz.getMethods();
+        for ( int i = 0; i < methods.length; ++i )
+        {
+            Method method = methods[i];
+            String methodName = method.getName();
+            String propName = getPropNameByReadMethod( methodName, method );
+            if ( propName != null )
+            {
+                readMethodMap.put( propName, method );
+                propNames.add( propName );
+            }
+            else
+            {
+                propName = getPropNameByWriteMethod( methodName, method );
+                if ( propName != null )
+                {
+                    writeMethodMap.put( propName, method );
+                }
+            }
+        }
+    }
 
-		return propName;
-	}
+    public Iterator<String> getPropNameIterator()
+    {
+        return propNames.iterator();
+    }
 
-	private String getPropNameByWriteMethod(String methodName, Method method) {
-		String propName = null;
-		if ((methodName.startsWith("set")) && (methodName.length() > 3)
-				&& (method.getParameterTypes().length == 1)) {
-			propName = methodName.substring(3);
-		}
+    private String getPropNameByReadMethod( String methodName, Method method )
+    {
+        String propName = null;
+        if ( ( methodName.startsWith( "get" ) ) && ( !( methodName.equals( "getClass" ) ) )
+            && ( methodName.length() > 3 ) && ( method.getParameterTypes().length == 0 ) )
+        {
+            propName = methodName.substring( 3 );
+            return propName;
+        }
 
-		return propName;
-	}
+        if ( ( methodName.startsWith( "is" ) ) && ( methodName.length() > 2 )
+            && ( method.getParameterTypes().length == 0 ) )
+        {
+            propName = methodName.substring( 2 );
+            return propName;
+        }
 
-	public Method getReadMethod(String propName) {
-		Method method = (Method) this.readMethodMap.get(propName);
-		if (method == null) {
-			method = (Method) this.readMethodMap.get(propName.replaceAll("_",
-					""));
-		}
-		return method;
-	}
+        return propName;
+    }
 
-	public Method getWriteMethod(String propName) {
-		Method method = (Method) this.writeMethodMap.get(propName);
-		if (method == null) {
-			method = (Method) this.writeMethodMap.get(propName.replaceAll("_",
-					""));
-		}
-		return method;
-	}
+    private String getPropNameByWriteMethod( String methodName, Method method )
+    {
+        String propName = null;
+        if ( ( methodName.startsWith( "set" ) ) && ( methodName.length() > 3 )
+            && ( method.getParameterTypes().length == 1 ) )
+        {
+            propName = methodName.substring( 3 );
+        }
+
+        return propName;
+    }
+
+    public Method getReadMethod( String propName )
+    {
+        Method method = readMethodMap.get( propName );
+        if ( method == null )
+        {
+            method = readMethodMap.get( propName.replaceAll( "_", "" ) );
+        }
+        return method;
+    }
+
+    public Method getWriteMethod( String propName )
+    {
+        Method method = writeMethodMap.get( propName );
+        if ( method == null )
+        {
+            method = writeMethodMap.get( propName.replaceAll( "_", "" ) );
+        }
+        return method;
+    }
 }

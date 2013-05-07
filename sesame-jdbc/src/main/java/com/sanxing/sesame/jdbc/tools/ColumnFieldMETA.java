@@ -1,64 +1,83 @@
 package com.sanxing.sesame.jdbc.tools;
 
-public class ColumnFieldMETA {
-	private String fieldName;
-	private String columnName;
-	private String columnType;
-	private int length;
-	private String desc;
-	private boolean pk;
+public class ColumnFieldMETA
+{
+    private String fieldName;
 
-	public boolean isPk() {
-		return this.pk;
-	}
+    private String columnName;
 
-	public void setPk(boolean pk) {
-		this.pk = pk;
-	}
+    private String columnType;
 
-	public String getFieldName() {
-		return this.fieldName;
-	}
+    private int length;
 
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
-	}
+    private String desc;
 
-	public String getColumnName() {
-		return this.columnName;
-	}
+    private boolean pk;
 
-	public void setColumnName(String columnName) {
-		this.columnName = columnName;
-	}
+    public boolean isPk()
+    {
+        return pk;
+    }
 
-	public int getLength() {
-		return this.length;
-	}
+    public void setPk( boolean pk )
+    {
+        this.pk = pk;
+    }
 
-	public void setLength(int length) {
-		this.length = length;
-	}
+    public String getFieldName()
+    {
+        return fieldName;
+    }
 
-	public String getDesc() {
-		return this.desc;
-	}
+    public void setFieldName( String fieldName )
+    {
+        this.fieldName = fieldName;
+    }
 
-	public void setDesc(String desc) {
-		this.desc = desc;
-	}
+    public String getColumnName()
+    {
+        return columnName;
+    }
 
-	public String getColumnType() {
-		return this.columnType;
-	}
+    public void setColumnName( String columnName )
+    {
+        this.columnName = columnName;
+    }
 
-	public void setColumnType(String columnType) {
-		this.columnType = columnType;
-	}
+    public int getLength()
+    {
+        return length;
+    }
 
-	public String toString() {
-		return "FieldMETA [columnName=" + this.columnName + ", columnType="
-				+ this.columnType + ", desc=" + this.desc + ", fieldName="
-				+ this.fieldName + ", length=" + this.length + "]";
-	}
+    public void setLength( int length )
+    {
+        this.length = length;
+    }
+
+    public String getDesc()
+    {
+        return desc;
+    }
+
+    public void setDesc( String desc )
+    {
+        this.desc = desc;
+    }
+
+    public String getColumnType()
+    {
+        return columnType;
+    }
+
+    public void setColumnType( String columnType )
+    {
+        this.columnType = columnType;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "FieldMETA [columnName=" + columnName + ", columnType=" + columnType + ", desc=" + desc + ", fieldName="
+            + fieldName + ", length=" + length + "]";
+    }
 }

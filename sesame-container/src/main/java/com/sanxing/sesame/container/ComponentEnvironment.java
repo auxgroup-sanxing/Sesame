@@ -1,52 +1,68 @@
 package com.sanxing.sesame.container;
 
-import com.sanxing.sesame.mbean.ComponentMBeanImpl;
 import java.io.File;
 
-public class ComponentEnvironment {
-	private File installRoot;
-	private File workspaceRoot;
-	private File componentRoot;
-	private File stateFile;
-	private ComponentMBeanImpl localConnector;
+import com.sanxing.sesame.mbean.ComponentMBeanImpl;
 
-	public File getInstallRoot() {
-		return this.installRoot;
-	}
+public class ComponentEnvironment
+{
+    private File installRoot;
 
-	public void setInstallRoot(File installRoot) {
-		this.installRoot = installRoot;
-	}
+    private File workspaceRoot;
 
-	public File getWorkspaceRoot() {
-		return this.workspaceRoot;
-	}
+    private File componentRoot;
 
-	public void setWorkspaceRoot(File workspaceRoot) {
-		this.workspaceRoot = workspaceRoot;
-	}
+    private File stateFile;
 
-	public ComponentMBeanImpl getLocalConnector() {
-		return this.localConnector;
-	}
+    private ComponentMBeanImpl localConnector;
 
-	public void setLocalConnector(ComponentMBeanImpl localConnector) {
-		this.localConnector = localConnector;
-	}
+    public File getInstallRoot()
+    {
+        return installRoot;
+    }
 
-	public File getComponentRoot() {
-		return this.componentRoot;
-	}
+    public void setInstallRoot( File installRoot )
+    {
+        this.installRoot = installRoot;
+    }
 
-	public void setComponentRoot(File componentRoot) {
-		this.componentRoot = componentRoot;
-	}
+    public File getWorkspaceRoot()
+    {
+        return workspaceRoot;
+    }
 
-	public File getStateFile() {
-		return this.stateFile;
-	}
+    public void setWorkspaceRoot( File workspaceRoot )
+    {
+        this.workspaceRoot = workspaceRoot;
+    }
 
-	public void setStateFile(File stateFile) {
-		this.stateFile = stateFile;
-	}
+    public ComponentMBeanImpl getLocalConnector()
+    {
+        return localConnector;
+    }
+
+    public void setLocalConnector( ComponentMBeanImpl localConnector )
+    {
+        this.localConnector = localConnector;
+    }
+
+    public File getComponentRoot()
+    {
+        return componentRoot;
+    }
+
+    public void setComponentRoot( File componentRoot )
+    {
+        this.componentRoot = componentRoot;
+    }
+
+    public File getStateFile()
+    {
+        return stateFile;
+    }
+
+    public void setStateFile( File stateFile )
+    {
+        this.stateFile = stateFile;
+    }
 }

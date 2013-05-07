@@ -1,137 +1,175 @@
 package com.sanxing.sesame.mbean;
 
-import com.sanxing.sesame.classloader.JarFileClassLoader;
-import com.sanxing.sesame.deployment.ClassPath;
-import com.sanxing.sesame.deployment.Identification;
-import com.sanxing.sesame.management.AttributeInfoHelper;
-import com.sanxing.sesame.management.MBeanInfoProvider;
-import com.sanxing.sesame.sharelib.ShareLibCallback;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanOperationInfo;
 
-public class SharedLibrary implements SharedLibraryMBean, MBeanInfoProvider {
-	private com.sanxing.sesame.deployment.SharedLibrary library;
-	private File installationDir;
-	private ClassLoader classLoader;
-	private ShareLibCallback callback;
+import com.sanxing.sesame.classloader.JarFileClassLoader;
+import com.sanxing.sesame.deployment.ClassPath;
+import com.sanxing.sesame.management.AttributeInfoHelper;
+import com.sanxing.sesame.management.MBeanInfoProvider;
+import com.sanxing.sesame.sharelib.ShareLibCallback;
 
-	public SharedLibrary(com.sanxing.sesame.deployment.SharedLibrary library,
-			File installationDir) {
-		this.library = library;
-		this.installationDir = installationDir;
-		this.classLoader = createClassLoader();
-		String strCallBackClazz = library.getCallbackClazz();
-		if (strCallBackClazz != null) {
-			ClassLoader oldOne = Thread.currentThread().getContextClassLoader();
-			try {
-				Thread.currentThread().setContextClassLoader(this.classLoader);
-				if ((library.getCallbackClazz() != null)
-						&& (library.getCallbackClazz().length() > 0)) {
-					ShareLibCallback callback = (ShareLibCallback) this.classLoader
-							.loadClass(library.getCallbackClazz())
-							.newInstance();
+public class SharedLibrary
+    implements SharedLibraryMBean, MBeanInfoProvider
+{
+    private final com.sanxing.sesame.deployment.SharedLibrary library;
 
-					this.callback = callback;
-					callback.onInstall(installationDir);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				Thread.currentThread().setContextClassLoader(oldOne);
-			}
-		}
-	}
+    private final File installationDir;
 
-	public void dispose() {
-		ClassLoader oldOne = Thread.currentThread().getContextClassLoader();
-		Thread.currentThread().setContextClassLoader(this.classLoader);
-		if (this.callback != null) {
-			this.callback.onDispose(this.installationDir);
-		}
+    private ClassLoader classLoader;
 
-		Thread.currentThread().setContextClassLoader(oldOne);
+    private ShareLibCallback callback;
 
-		if (this.classLoader instanceof JarFileClassLoader) {
-			((JarFileClassLoader) this.classLoader).destroy();
-		}
-		this.classLoader = null;
-	}
+    public SharedLibrary( com.sanxing.sesame.deployment.SharedLibrary library, File installationDir )
+    {
+        this.library = library;
+        this.installationDir = installationDir;
+        classLoader = createClassLoader();
+        String strCallBackClazz = library.getCallbackClazz();
+        if ( strCallBackClazz != null )
+        {
+            ClassLoader oldOne = Thread.currentThread().getContextClassLoader();
+            try
+            {
+                Thread.currentThread().setContextClassLoader( classLoader );
+                if ( ( library.getCallbackClazz() != null ) && ( library.getCallbackClazz().length() > 0 ) )
+                {
+                    ShareLibCallback callback =
+                        (ShareLibCallback) classLoader.loadClass( library.getCallbackClazz() ).newInstance();
 
-	public com.sanxing.sesame.deployment.SharedLibrary getLibrary() {
-		return this.library;
-	}
+                    this.callback = callback;
+                    callback.onInstall( installationDir );
+                }
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                Thread.currentThread().setContextClassLoader( oldOne );
+            }
+        }
+    }
 
-	public ClassLoader getClassLoader() {
-		return this.classLoader;
-	}
+    public void dispose()
+    {
+        ClassLoader oldOne = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader( classLoader );
+        if ( callback != null )
+        {
+            callback.onDispose( installationDir );
+        }
 
-	private ClassLoader createClassLoader() {
-		boolean parentFirst = this.library.isParentFirstClassLoaderDelegation();
+        Thread.currentThread().setContextClassLoader( oldOne );
 
-		ClassLoader parent = super.getClass().getClassLoader();
+        if ( classLoader instanceof JarFileClassLoader )
+        {
+            ( (JarFileClassLoader) classLoader ).destroy();
+        }
+        classLoader = null;
+    }
 
-		ClassPath cp = this.library.getSharedLibraryClassPath();
-		String[] classPathNames = cp.getPathElements();
-		URL[] urls = new URL[classPathNames.length];
-		for (int i = 0; i < classPathNames.length; ++i) {
-			File file = new File(this.installationDir, classPathNames[i]);
-			try {
-				urls[i] = file.toURL();
-			} catch (MalformedURLException e) {
-				throw new IllegalArgumentException(classPathNames[i], e);
-			}
-		}
-		return new JarFileClassLoader(urls, parent, !(parentFirst),
-				new String[0], new String[] { "java.", "javax." });
-	}
+    public com.sanxing.sesame.deployment.SharedLibrary getLibrary()
+    {
+        return library;
+    }
 
-	public String getDescription() {
-		return this.library.getIdentification().getDescription();
-	}
+    public ClassLoader getClassLoader()
+    {
+        return classLoader;
+    }
 
-	public String getName() {
-		return this.library.getIdentification().getName();
-	}
+    private ClassLoader createClassLoader()
+    {
+        boolean parentFirst = library.isParentFirstClassLoaderDelegation();
 
-	public String getVersion() {
-		return this.library.getVersion();
-	}
+        ClassLoader parent = super.getClass().getClassLoader();
 
-	public Object getObjectToManage() {
-		return this;
-	}
+        ClassPath cp = library.getSharedLibraryClassPath();
+        String[] classPathNames = cp.getPathElements();
+        URL[] urls = new URL[classPathNames.length];
+        for ( int i = 0; i < classPathNames.length; ++i )
+        {
+            File file = new File( installationDir, classPathNames[i] );
+            try
+            {
+                urls[i] = file.toURL();
+            }
+            catch ( MalformedURLException e )
+            {
+                throw new IllegalArgumentException( classPathNames[i], e );
+            }
+        }
+        return new JarFileClassLoader( urls, parent, !( parentFirst ), new String[0],
+            new String[] { "java.", "javax." } );
+    }
 
-	public MBeanAttributeInfo[] getAttributeInfos() throws JMException {
-		AttributeInfoHelper helper = new AttributeInfoHelper();
-		helper.addAttribute(getObjectToManage(), "name",
-				"name of the shared library");
+    @Override
+    public String getDescription()
+    {
+        return library.getIdentification().getDescription();
+    }
 
-		helper.addAttribute(getObjectToManage(), "description",
-				"description of this shared library");
+    @Override
+    public String getName()
+    {
+        return library.getIdentification().getName();
+    }
 
-		helper.addAttribute(getObjectToManage(), "version",
-				"version of this shared library");
+    @Override
+    public String getVersion()
+    {
+        return library.getVersion();
+    }
 
-		return helper.getAttributeInfos();
-	}
+    @Override
+    public Object getObjectToManage()
+    {
+        return this;
+    }
 
-	public MBeanOperationInfo[] getOperationInfos() throws JMException {
-		return null;
-	}
+    @Override
+    public MBeanAttributeInfo[] getAttributeInfos()
+        throws JMException
+    {
+        AttributeInfoHelper helper = new AttributeInfoHelper();
+        helper.addAttribute( getObjectToManage(), "name", "name of the shared library" );
 
-	public String getSubType() {
-		return null;
-	}
+        helper.addAttribute( getObjectToManage(), "description", "description of this shared library" );
 
-	public String getType() {
-		return "SharedLibrary";
-	}
+        helper.addAttribute( getObjectToManage(), "version", "version of this shared library" );
 
-	public void setPropertyChangeListener(PropertyChangeListener l) {
-	}
+        return helper.getAttributeInfos();
+    }
+
+    @Override
+    public MBeanOperationInfo[] getOperationInfos()
+        throws JMException
+    {
+        return null;
+    }
+
+    @Override
+    public String getSubType()
+    {
+        return null;
+    }
+
+    @Override
+    public String getType()
+    {
+        return "SharedLibrary";
+    }
+
+    @Override
+    public void setPropertyChangeListener( PropertyChangeListener l )
+    {
+    }
 }

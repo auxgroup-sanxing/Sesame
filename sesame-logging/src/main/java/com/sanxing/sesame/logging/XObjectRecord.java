@@ -1,92 +1,120 @@
 package com.sanxing.sesame.logging;
 
-import com.sanxing.sesame.jaxp.XSLTUtil;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+
 import org.jdom.Document;
 import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 
-public class XObjectRecord extends LogRecord {
-	private static final long serialVersionUID = -8558705391039405674L;
-	private String encoding = System.getProperty("file.encoding");
+import com.sanxing.sesame.jaxp.XSLTUtil;
 
-	private boolean callout = false;
+public class XObjectRecord
+    extends LogRecord
+{
+    private static final long serialVersionUID = -8558705391039405674L;
 
-	public XObjectRecord(long serial, Source source) {
-		setSerial(serial);
+    private String encoding = System.getProperty( "file.encoding" );
 
-		if (source == null) {
-			setDocument(null);
-		} else if (source instanceof JDOMSource) {
-			setDocument(((JDOMSource) source).getDocument());
-		} else {
-			JDOMResult result = new JDOMResult();
-			try {
-				Transformer transformer = XSLTUtil.getTransformerfactory()
-						.newTransformer();
+    private boolean callout = false;
 
-				transformer.transform(source, result);
-				setDocument(result.getDocument());
-			} catch (TransformerConfigurationException e) {
-				setContent(e);
-			} catch (TransformerException e) {
-				setContent(e);
-			}
-		}
-	}
+    public XObjectRecord( long serial, Source source )
+    {
+        setSerial( serial );
 
-	public void setDocument(Document document) {
-		setContent(document);
-	}
+        if ( source == null )
+        {
+            setDocument( null );
+        }
+        else if ( source instanceof JDOMSource )
+        {
+            setDocument( ( (JDOMSource) source ).getDocument() );
+        }
+        else
+        {
+            JDOMResult result = new JDOMResult();
+            try
+            {
+                Transformer transformer = XSLTUtil.getTransformerfactory().newTransformer();
 
-	public Document getDocument() {
-		if (getContent() instanceof Document) {
-			return ((Document) getContent());
-		}
+                transformer.transform( source, result );
+                setDocument( result.getDocument() );
+            }
+            catch ( TransformerConfigurationException e )
+            {
+                setContent( e );
+            }
+            catch ( TransformerException e )
+            {
+                setContent( e );
+            }
+        }
+    }
 
-		return null;
-	}
+    public void setDocument( Document document )
+    {
+        setContent( document );
+    }
 
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
-	}
+    public Document getDocument()
+    {
+        if ( getContent() instanceof Document )
+        {
+            return ( (Document) getContent() );
+        }
 
-	public String getEncoding() {
-		return this.encoding;
-	}
+        return null;
+    }
 
-	public boolean isCallout() {
-		return this.callout;
-	}
+    public void setEncoding( String encoding )
+    {
+        this.encoding = encoding;
+    }
 
-	public void setCallout(boolean callout) {
-		this.callout = callout;
-	}
+    public String getEncoding()
+    {
+        return encoding;
+    }
 
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append("{");
-		buf.append(" serial: " + getSerial());
-		if (getServiceName() != null) {
-			buf.append(", serviceUnit: '" + getServiceName() + "'");
-		}
-		if (getAction() != null) {
-			buf.append(", action: '" + getAction() + "'");
-		}
-		buf.append(", content: ");
-		Document document = getDocument();
-		if (document == null) {
-			buf.append(getContent());
-		} else {
-			XMLOutputter outputter = new XMLOutputter();
-			buf.append(outputter.outputString(document.getRootElement()));
-		}
-		buf.append(" }");
-		return buf.toString();
-	}
+    public boolean isCallout()
+    {
+        return callout;
+    }
+
+    public void setCallout( boolean callout )
+    {
+        this.callout = callout;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "{" );
+        buf.append( " serial: " + getSerial() );
+        if ( getServiceName() != null )
+        {
+            buf.append( ", serviceUnit: '" + getServiceName() + "'" );
+        }
+        if ( getAction() != null )
+        {
+            buf.append( ", action: '" + getAction() + "'" );
+        }
+        buf.append( ", content: " );
+        Document document = getDocument();
+        if ( document == null )
+        {
+            buf.append( getContent() );
+        }
+        else
+        {
+            XMLOutputter outputter = new XMLOutputter();
+            buf.append( outputter.outputString( document.getRootElement() ) );
+        }
+        buf.append( " }" );
+        return buf.toString();
+    }
 }

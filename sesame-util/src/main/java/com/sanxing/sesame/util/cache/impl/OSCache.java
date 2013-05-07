@@ -1,60 +1,82 @@
 package com.sanxing.sesame.util.cache.impl;
 
+import com.opensymphony.oscache.base.NeedsRefreshException;
+import com.opensymphony.oscache.general.GeneralCacheAdministrator;
 import com.sanxing.sesame.util.cache.Cache;
 import com.sanxing.sesame.util.cache.NoSuchObjectException;
 import com.sanxing.sesame.util.cache.PeristenceBackend;
-import com.opensymphony.oscache.base.NeedsRefreshException;
-import com.opensymphony.oscache.general.GeneralCacheAdministrator;
 
-public class OSCache implements Cache {
-	private PeristenceBackend back;
-	private String group;
-	static GeneralCacheAdministrator cache = new GeneralCacheAdministrator();
+public class OSCache
+    implements Cache
+{
+    private final PeristenceBackend back;
 
-	OSCache(PeristenceBackend back, String name) {
-		this.back = back;
-		this.group = name;
-	}
+    private final String group;
 
-	public PeristenceBackend getBackend() {
-		return this.back;
-	}
+    static GeneralCacheAdministrator cache = new GeneralCacheAdministrator();
 
-	public Object get(String key) throws NoSuchObjectException {
-		Object obj = null;
-		try {
-			obj = cache.getFromCache(this.group + "_" + key);
-		} catch (NeedsRefreshException e) {
-			boolean updated = false;
-			try {
-				obj = this.back.getFromPersitence(key);
-				cache.putInCache(this.group + "_" + key, obj,
-						new String[] { this.group });
-				updated = true;
-			} catch (Exception ee) {
-				ee.printStackTrace();
-				obj = e.getCacheContent();
-				if (!(updated)) {
-					cache.cancelUpdate(this.group + "_" + key);
-				}
-			}
-		}
-		if (obj == null) {
-			throw new NoSuchObjectException(key);
-		}
-		return obj;
-	}
+    OSCache( PeristenceBackend back, String name )
+    {
+        this.back = back;
+        group = name;
+    }
 
-	public void flushAll() {
-		cache.flushGroup(this.group);
-	}
+    @Override
+    public PeristenceBackend getBackend()
+    {
+        return back;
+    }
 
-	public void put(String key, Object obj) {
-		cache.putInCache(this.group + "_" + key, obj,
-				new String[] { this.group });
-	}
+    @Override
+    public Object get( String key )
+        throws NoSuchObjectException
+    {
+        Object obj = null;
+        try
+        {
+            obj = cache.getFromCache( group + "_" + key );
+        }
+        catch ( NeedsRefreshException e )
+        {
+            boolean updated = false;
+            try
+            {
+                obj = back.getFromPersitence( key );
+                cache.putInCache( group + "_" + key, obj, new String[] { group } );
+                updated = true;
+            }
+            catch ( Exception ee )
+            {
+                ee.printStackTrace();
+                obj = e.getCacheContent();
+                if ( !( updated ) )
+                {
+                    cache.cancelUpdate( group + "_" + key );
+                }
+            }
+        }
+        if ( obj == null )
+        {
+            throw new NoSuchObjectException( key );
+        }
+        return obj;
+    }
 
-	public void flush(String key) {
-		cache.flushEntry(this.group + "_" + key);
-	}
+    @Override
+    public void flushAll()
+    {
+        cache.flushGroup( group );
+    }
+
+    @Override
+    public void put( String key, Object obj )
+    {
+        cache.putInCache( group + "_" + key, obj, new String[] { group } );
+    }
+
+    @Override
+    public void flush( String key )
+    {
+        cache.flushEntry( group + "_" + key );
+    }
 }

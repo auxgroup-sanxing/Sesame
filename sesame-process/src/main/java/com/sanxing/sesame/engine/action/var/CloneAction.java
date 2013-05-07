@@ -1,25 +1,35 @@
 package com.sanxing.sesame.engine.action.var;
 
+import org.jdom.Element;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import org.jdom.Element;
 
-public class CloneAction extends AbstractAction implements Constant {
-	String targetVarName;
-	String xPath;
-	String sourceVarName;
+public class CloneAction
+    extends AbstractAction
+    implements Constant
+{
+    String targetVarName;
 
-	public void doinit(Element config) {
-		this.sourceVarName = config.getAttributeValue("var");
-		this.targetVarName = config.getAttributeValue("to-var");
-		this.xPath = config.getChildTextTrim("xpath");
-	}
+    String xPath;
 
-	public void dowork(DataContext ctx) {
-		Variable var = getVariable(ctx, this.sourceVarName, this.xPath);
-		Variable target = (Variable) var.clone();
-		ctx.addVariable(this.targetVarName, target);
-	}
+    String sourceVarName;
+
+    @Override
+    public void doinit( Element config )
+    {
+        sourceVarName = config.getAttributeValue( "var" );
+        targetVarName = config.getAttributeValue( "to-var" );
+        xPath = config.getChildTextTrim( "xpath" );
+    }
+
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        Variable var = getVariable( ctx, sourceVarName, xPath );
+        Variable target = (Variable) var.clone();
+        ctx.addVariable( targetVarName, target );
+    }
 }

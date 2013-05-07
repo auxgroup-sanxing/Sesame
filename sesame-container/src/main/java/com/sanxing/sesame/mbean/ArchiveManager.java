@@ -1,26 +1,5 @@
 package com.sanxing.sesame.mbean;
 
-import com.sanxing.sesame.container.EnvironmentContext;
-import com.sanxing.sesame.container.JBIContainer;
-import com.sanxing.sesame.deployment.Component;
-import com.sanxing.sesame.deployment.Descriptor;
-import com.sanxing.sesame.deployment.DescriptorFactory;
-import com.sanxing.sesame.deployment.Identification;
-import com.sanxing.sesame.deployment.ServiceAssembly;
-import com.sanxing.sesame.deployment.ServiceUnit;
-import com.sanxing.sesame.deployment.SharedLibrary;
-import com.sanxing.sesame.deployment.SharedLibraryList;
-import com.sanxing.sesame.deployment.Target;
-import com.sanxing.sesame.jmx.mbean.admin.ClusterAdminMBean;
-import com.sanxing.sesame.management.ManagementSupport;
-import com.sanxing.sesame.management.ManagementSupport.Message;
-import com.sanxing.sesame.core.Env;
-import com.sanxing.sesame.core.Platform;
-import com.sanxing.sesame.core.api.MBeanHelper;
-import com.sanxing.sesame.platform.events.ArchiveEvent;
-import com.sanxing.sesame.router.Router;
-import com.sanxing.sesame.util.FileUtil;
-import com.sanxing.sesame.util.XmlPersistenceSupport;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,674 +12,844 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipFile;
+
 import javax.jbi.JBIException;
 import javax.jbi.management.DeploymentException;
 import javax.jbi.management.LifeCycleMBean;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ArchiveManager extends BaseSystemService {
-	private static Logger LOG = LoggerFactory.getLogger(ArchiveManager.class);
-	private boolean monitorInstallationDirectory;
-	private boolean monitorDeploymentDirectory;
-	private static String filePrefix = "file:///";
-	private InstallationService installationService;
-	private DeploymentService deploymentService;
-	private EnvironmentContext environmentContext;
-	private Map<File, ArchiveEntry> pendingComponents;
-	private Map<File, ArchiveEntry> pendingSAs;
-	private Map<String, ArchiveEntry> installFileMap;
-	private Map<String, ArchiveEntry> deployFileMap;
-	private Set<ArchiveEvent> publishedEvents;
-	private String extensions;
+import com.sanxing.sesame.container.EnvironmentContext;
+import com.sanxing.sesame.container.JBIContainer;
+import com.sanxing.sesame.core.Platform;
+import com.sanxing.sesame.core.api.MBeanHelper;
+import com.sanxing.sesame.deployment.Component;
+import com.sanxing.sesame.deployment.Descriptor;
+import com.sanxing.sesame.deployment.DescriptorFactory;
+import com.sanxing.sesame.deployment.ServiceAssembly;
+import com.sanxing.sesame.jmx.mbean.admin.ClusterAdminMBean;
+import com.sanxing.sesame.management.ManagementSupport;
+import com.sanxing.sesame.platform.events.ArchiveEvent;
+import com.sanxing.sesame.util.FileUtil;
+import com.sanxing.sesame.util.XmlPersistenceSupport;
 
-	public ArchiveManager() {
-		this.monitorInstallationDirectory = true;
+public class ArchiveManager
+    extends BaseSystemService
+{
+    private static Logger LOG = LoggerFactory.getLogger( ArchiveManager.class );
 
-		this.monitorDeploymentDirectory = true;
+    private boolean monitorInstallationDirectory;
 
-		this.pendingComponents = new ConcurrentHashMap();
+    private boolean monitorDeploymentDirectory;
 
-		this.pendingSAs = new ConcurrentHashMap();
+    private static String filePrefix = "file:///";
 
-		this.publishedEvents = new HashSet();
+    private InstallationService installationService;
 
-		this.extensions = ".zip,.jar";
-	}
+    private DeploymentService deploymentService;
 
-	public Set<ArchiveEvent> getPublishedEvents() {
-		return this.publishedEvents;
-	}
+    private EnvironmentContext environmentContext;
 
-	public Map<String, ArchiveEntry> getInstallFileMap() {
-		return this.installFileMap;
-	}
+    private final Map<File, ArchiveEntry> pendingComponents;
 
-	public void setInstallFileMap(Map<String, ArchiveEntry> installFileMap) {
-		this.installFileMap = installFileMap;
-	}
+    private final Map<File, ArchiveEntry> pendingSAs;
 
-	public Map<String, ArchiveEntry> getDeployFileMap() {
-		return this.deployFileMap;
-	}
+    private Map<String, ArchiveEntry> installFileMap;
 
-	public void setDeployFileMap(Map<String, ArchiveEntry> deployFileMap) {
-		this.deployFileMap = deployFileMap;
-	}
+    private Map<String, ArchiveEntry> deployFileMap;
 
-	public void init(JBIContainer cont) throws JBIException {
-		super.init(cont);
-		this.deploymentService = this.container.getDeploymentService();
-		this.installationService = this.container.getInstallationService();
-		this.environmentContext = this.container.getEnvironmentContext();
-		initializeFileMaps();
-	}
+    private final Set<ArchiveEvent> publishedEvents;
 
-	public boolean isMonitorInstallationDirectory() {
-		return this.monitorInstallationDirectory;
-	}
+    private final String extensions;
 
-	public void setMonitorInstallationDirectory(
-			boolean monitorInstallationDirectory) {
-		this.monitorInstallationDirectory = monitorInstallationDirectory;
-	}
+    public ArchiveManager()
+    {
+        monitorInstallationDirectory = true;
 
-	public boolean isMonitorDeploymentDirectory() {
-		return this.monitorDeploymentDirectory;
-	}
+        monitorDeploymentDirectory = true;
 
-	public void setMonitorDeploymentDirectory(boolean monitorDeploymentDirectory) {
-		this.monitorDeploymentDirectory = monitorDeploymentDirectory;
-	}
+        pendingComponents = new ConcurrentHashMap();
 
-	public void updateArchive(String location, ArchiveEntry entry,
-			boolean autoStart) throws DeploymentException {
-		File tmpDir = null;
-		try {
-			tmpDir = unpackLocation(this.environmentContext.getTmpDir(),
-					location);
-		} catch (Exception e) {
-			throw failure("deploy", "Unable to unpack archive: " + location, e);
-		}
+        pendingSAs = new ConcurrentHashMap();
 
-		if (tmpDir == null) {
-			throw failure("deploy", "Unable to find jbi descriptor: "
-					+ location);
-		}
-		Descriptor root = null;
-		try {
-			root = DescriptorFactory.buildDescriptor(tmpDir);
-		} catch (Exception e) {
-			throw failure("deploy", "Unable to build jbi descriptor: "
-					+ location, e);
-		}
+        publishedEvents = new HashSet();
 
-		if (root == null) {
-			throw failure("deploy", "Unable to find jbi descriptor: "
-					+ location);
-		}
+        extensions = ".zip,.jar";
+    }
 
-		if ((Platform.getEnv().isAdmin()) && (Platform.getEnv().isProduction())) {
-			ClusterAdminMBean admin = (ClusterAdminMBean) MBeanHelper
-					.getAdminMBean(ClusterAdminMBean.class, "cluster-manager");
-			ArchiveEntry eventEntry = new ArchiveEntry();
-			eventEntry.setLocation(location);
-			eventEntry.setName(entry.getName());
-			eventEntry.setLastModified(entry.getLastModified());
-			ArchiveEvent ae = new ArchiveEvent(eventEntry);
-			admin.notifyNeighbors(ae);
+    public Set<ArchiveEvent> getPublishedEvents()
+    {
+        return publishedEvents;
+    }
 
-			if (root.getComponent() != null)
-				persistState(new File(location).getParentFile(),
-						this.installFileMap);
-			else if (root.getSharedLibrary() != null)
-				persistState(new File(location).getParentFile(),
-						this.installFileMap);
-			else if (root.getServiceAssembly() != null) {
-				persistState(new File(location).getParentFile(),
-						this.deployFileMap);
-			}
-			tmpDir.delete();
+    public Map<String, ArchiveEntry> getInstallFileMap()
+    {
+        return installFileMap;
+    }
 
-			this.publishedEvents.add(ae);
-		} else {
-			try {
-				this.container.getRouter().suspend();
-				if (root.getComponent() != null) {
-					updateComponent(entry, autoStart, tmpDir, root);
-					persistState(new File(location).getParentFile(),
-							this.installFileMap);
-				} else if (root.getSharedLibrary() != null) {
-					updateSharedLibrary(entry, tmpDir, root);
-					persistState(new File(location).getParentFile(),
-							this.installFileMap);
-				} else if (root.getServiceAssembly() != null) {
-					updateServiceAssembly(entry, autoStart, tmpDir, root);
-					persistState(new File(location).getParentFile(),
-							this.deployFileMap);
-				}
-			} finally {
-				this.container.getRouter().resume();
-			}
-		}
-	}
+    public void setInstallFileMap( Map<String, ArchiveEntry> installFileMap )
+    {
+        this.installFileMap = installFileMap;
+    }
 
-	protected DeploymentException failure(String task, String info) {
-		return failure(task, info, null, null);
-	}
+    public Map<String, ArchiveEntry> getDeployFileMap()
+    {
+        return deployFileMap;
+    }
 
-	protected DeploymentException failure(String task, String info, Exception e) {
-		return failure(task, info, e, null);
-	}
+    public void setDeployFileMap( Map<String, ArchiveEntry> deployFileMap )
+    {
+        this.deployFileMap = deployFileMap;
+    }
 
-	protected DeploymentException failure(String task, String info,
-			Exception e, List componentResults) {
-		ManagementSupport.Message msg = new ManagementSupport.Message();
-		msg.setTask(task);
-		msg.setResult("FAILED");
-		msg.setType("ERROR");
-		msg.setException(e);
-		msg.setMessage(info);
-		return new DeploymentException(
-				ManagementSupport.createFrameworkMessage(msg, componentResults));
-	}
+    @Override
+    public void init( JBIContainer cont )
+        throws JBIException
+    {
+        super.init( cont );
+        deploymentService = container.getDeploymentService();
+        installationService = container.getInstallationService();
+        environmentContext = container.getEnvironmentContext();
+        initializeFileMaps();
+    }
 
-	protected void updateSharedLibrary(ArchiveEntry entry, File tmpDir,
-			Descriptor root) throws DeploymentException {
-		String libraryName = root.getSharedLibrary().getIdentification()
-				.getName();
-		entry.type = "library";
-		entry.name = libraryName;
-		try {
-			if (this.container.getRegistry().getSharedLibrary(libraryName) != null) {
-				this.container.getRegistry().unregisterSharedLibrary(
-						libraryName);
-				this.environmentContext
-						.removeSharedLibraryDirectory(libraryName);
-			}
-			this.installationService.doInstallSharedLibrary(tmpDir,
-					root.getSharedLibrary());
-			checkPendingComponents();
-		} catch (Exception e) {
-			String errStr = "Failed to update SharedLibrary: " + libraryName;
-			LOG.error(errStr, e);
-			throw new DeploymentException(errStr, e);
-		}
-	}
+    public boolean isMonitorInstallationDirectory()
+    {
+        return monitorInstallationDirectory;
+    }
 
-	protected Set<String> getComponentNames(ServiceAssembly sa) {
-		Set names = new HashSet();
-		if ((sa.getServiceUnits() != null) && (sa.getServiceUnits().length > 0)) {
-			for (int i = 0; i < sa.getServiceUnits().length; ++i) {
-				names.add(sa.getServiceUnits()[i].getTarget()
-						.getComponentName());
-			}
-		}
-		return names;
-	}
+    public void setMonitorInstallationDirectory( boolean monitorInstallationDirectory )
+    {
+        this.monitorInstallationDirectory = monitorInstallationDirectory;
+    }
 
-	private void checkPendingComponents() {
-		Set<File> installedComponents = new HashSet();
-		for (Map.Entry me : this.pendingComponents.entrySet()) {
-			ArchiveEntry entry = (ArchiveEntry) me.getValue();
-			boolean canInstall = true;
-			for (String libraryName : entry.dependencies) {
-				if (this.container.getRegistry().getSharedLibrary(libraryName) == null) {
-					canInstall = false;
-					break;
-				}
-			}
-			if (canInstall) {
-				File tmp = (File) me.getKey();
-				installedComponents.add(tmp);
-				try {
-					Descriptor root = DescriptorFactory.buildDescriptor(tmp);
-					this.installationService.install(tmp, null, root, true);
-				} catch (Exception e) {
-					String errStr = "Failed to update Component: "
-							+ tmp.getName();
-					LOG.error(errStr, e);
-				}
-			}
-		}
-		if (installedComponents.isEmpty())
-			return;
-		for (File f : installedComponents) {
-			ArchiveEntry entry = (ArchiveEntry) this.pendingComponents
-					.remove(f);
-			entry.pending = false;
-		}
+    public boolean isMonitorDeploymentDirectory()
+    {
+        return monitorDeploymentDirectory;
+    }
 
-		persistState(this.environmentContext.getDeploymentDir(),
-				this.deployFileMap);
-		persistState(this.environmentContext.getInstallationDir(),
-				this.installFileMap);
+    public void setMonitorDeploymentDirectory( boolean monitorDeploymentDirectory )
+    {
+        this.monitorDeploymentDirectory = monitorDeploymentDirectory;
+    }
 
-		checkPendingSAs();
-	}
+    public void updateArchive( String location, ArchiveEntry entry, boolean autoStart )
+        throws DeploymentException
+    {
+        File tmpDir = null;
+        try
+        {
+            tmpDir = unpackLocation( environmentContext.getTmpDir(), location );
+        }
+        catch ( Exception e )
+        {
+            throw failure( "deploy", "Unable to unpack archive: " + location, e );
+        }
 
-	protected void updateServiceAssembly(ArchiveEntry entry, boolean autoStart,
-			File tmpDir, Descriptor root) throws DeploymentException {
-		ServiceAssembly sa = root.getServiceAssembly();
-		String name = sa.getIdentification().getName();
-		entry.type = "assembly";
-		entry.name = name;
-		try {
-			if (this.deploymentService.isSaDeployed(name)) {
-				this.deploymentService.shutDown(name);
-				this.deploymentService.undeploy(name);
-			}
+        if ( tmpDir == null )
+        {
+            throw failure( "deploy", "Unable to find jbi descriptor: " + location );
+        }
+        Descriptor root = null;
+        try
+        {
+            root = DescriptorFactory.buildDescriptor( tmpDir );
+        }
+        catch ( Exception e )
+        {
+            throw failure( "deploy", "Unable to build jbi descriptor: " + location, e );
+        }
 
-			entry.dependencies = getComponentNames(sa);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("SA dependencies: " + entry.dependencies);
-			}
-			String missings = null;
-			boolean canDeploy = true;
-			for (String componentName : entry.dependencies) {
-				if (this.container.getRegistry().getComponent(componentName) == null) {
-					canDeploy = false;
-					if (missings != null)
-						missings = missings + ", " + componentName;
-					else {
-						missings = componentName;
-					}
-				}
-			}
-			if (canDeploy) {
-				this.deploymentService.deployServiceAssembly(tmpDir, sa);
-				if (autoStart) {
-					this.deploymentService.start(name);
-				}
-			} else {
-				entry.pending = true;
-				LOG.warn("Components "
-						+ missings
-						+ " are not installed yet: the service assembly "
-						+ name
-						+ " deployment is suspended and will be resumed once the listed components are installed");
+        if ( root == null )
+        {
+            throw failure( "deploy", "Unable to find jbi descriptor: " + location );
+        }
 
-				this.pendingSAs.put(tmpDir, entry);
+        if ( ( Platform.getEnv().isAdmin() ) && ( Platform.getEnv().isProduction() ) )
+        {
+            ClusterAdminMBean admin = MBeanHelper.getAdminMBean( ClusterAdminMBean.class, "cluster-manager" );
+            ArchiveEntry eventEntry = new ArchiveEntry();
+            eventEntry.setLocation( location );
+            eventEntry.setName( entry.getName() );
+            eventEntry.setLastModified( entry.getLastModified() );
+            ArchiveEvent ae = new ArchiveEvent( eventEntry );
+            admin.notifyNeighbors( ae );
 
-				throw ManagementSupport
-						.failure("deploy", missings + "组件未安装！");
-			}
-		} catch (Exception e) {
-			String errStr = "Failed to update Service Assembly: " + name;
-			LOG.error(errStr, e);
-			throw new DeploymentException(errStr, e);
-		}
-	}
+            if ( root.getComponent() != null )
+            {
+                persistState( new File( location ).getParentFile(), installFileMap );
+            }
+            else if ( root.getSharedLibrary() != null )
+            {
+                persistState( new File( location ).getParentFile(), installFileMap );
+            }
+            else if ( root.getServiceAssembly() != null )
+            {
+                persistState( new File( location ).getParentFile(), deployFileMap );
+            }
+            tmpDir.delete();
 
-	protected void updateComponent(ArchiveEntry entry, boolean autoStart,
-			File tmpDir, Descriptor root) throws DeploymentException {
-		Component comp = root.getComponent();
-		String componentName = comp.getIdentification().getName();
-		entry.type = "component";
-		entry.name = componentName;
-		try {
-			if (this.container.getRegistry().getComponent(componentName) != null) {
-				this.installationService.loadInstaller(componentName);
-				this.installationService.unloadInstaller(componentName, true);
-			}
+            publishedEvents.add( ae );
+        }
+        else
+        {
+            try
+            {
+                container.getRouter().suspend();
+                if ( root.getComponent() != null )
+                {
+                    updateComponent( entry, autoStart, tmpDir, root );
+                    persistState( new File( location ).getParentFile(), installFileMap );
+                }
+                else if ( root.getSharedLibrary() != null )
+                {
+                    updateSharedLibrary( entry, tmpDir, root );
+                    persistState( new File( location ).getParentFile(), installFileMap );
+                }
+                else if ( root.getServiceAssembly() != null )
+                {
+                    updateServiceAssembly( entry, autoStart, tmpDir, root );
+                    persistState( new File( location ).getParentFile(), deployFileMap );
+                }
+            }
+            finally
+            {
+                container.getRouter().resume();
+            }
+        }
+    }
 
-			entry.dependencies = getSharedLibraryNames(comp);
-			if (LOG.isDebugEnabled()) {
-				LOG.debug("Component dependencies: " + entry.dependencies);
-			}
-			String missings = null;
-			boolean canInstall = true;
-			for (String libraryName : entry.dependencies) {
-				if (this.container.getRegistry().getSharedLibrary(libraryName) == null) {
-					canInstall = false;
-					if (missings != null)
-						missings = missings + ", " + libraryName;
-					else {
-						missings = libraryName;
-					}
-				}
-			}
-			if (canInstall) {
-				this.installationService.install(tmpDir, null, root, autoStart);
-				checkPendingSAs();
-			} else {
-				entry.pending = true;
-				LOG.warn("Shared libraries "
-						+ missings
-						+ " are not installed yet: the component"
-						+ componentName
-						+ " installation is suspended and will be resumed once the listed shared libraries are installed");
+    protected DeploymentException failure( String task, String info )
+    {
+        return failure( task, info, null, null );
+    }
 
-				this.pendingComponents.put(tmpDir, entry);
-			}
-		} catch (DeploymentException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new DeploymentException("Failed to update Component: "
-					+ componentName, e);
-		}
-	}
+    protected DeploymentException failure( String task, String info, Exception e )
+    {
+        return failure( task, info, e, null );
+    }
 
-	private void checkPendingSAs() {
-		Set<File> deployedSas = new HashSet();
-		for (Map.Entry me : this.pendingSAs.entrySet()) {
-			ArchiveEntry entry = (ArchiveEntry) me.getValue();
-			boolean canDeploy = true;
-			for (String componentName : entry.dependencies) {
-				if (this.container.getRegistry().getComponent(componentName) == null) {
-					canDeploy = false;
-					break;
-				}
-			}
-			if (canDeploy) {
-				File tmp = (File) me.getKey();
-				deployedSas.add(tmp);
-				try {
-					Descriptor root = DescriptorFactory.buildDescriptor(tmp);
-					this.deploymentService.deployServiceAssembly(tmp,
-							root.getServiceAssembly());
-					this.deploymentService.start(root.getServiceAssembly()
-							.getIdentification().getName());
-				} catch (Exception e) {
-					String errStr = "Failed to update Service Assembly: "
-							+ tmp.getName();
-					LOG.error(errStr, e);
-				}
-			}
-		}
-		if (deployedSas.isEmpty())
-			return;
-		for (File f : deployedSas) {
-			ArchiveEntry entry = (ArchiveEntry) this.pendingSAs.remove(f);
-			entry.pending = false;
-		}
+    protected DeploymentException failure( String task, String info, Exception e, List componentResults )
+    {
+        ManagementSupport.Message msg = new ManagementSupport.Message();
+        msg.setTask( task );
+        msg.setResult( "FAILED" );
+        msg.setType( "ERROR" );
+        msg.setException( e );
+        msg.setMessage( info );
+        return new DeploymentException( ManagementSupport.createFrameworkMessage( msg, componentResults ) );
+    }
 
-		persistState(this.environmentContext.getDeploymentDir(),
-				this.deployFileMap);
-		persistState(this.environmentContext.getInstallationDir(),
-				this.installFileMap);
-	}
+    protected void updateSharedLibrary( ArchiveEntry entry, File tmpDir, Descriptor root )
+        throws DeploymentException
+    {
+        String libraryName = root.getSharedLibrary().getIdentification().getName();
+        entry.type = "library";
+        entry.name = libraryName;
+        try
+        {
+            if ( container.getRegistry().getSharedLibrary( libraryName ) != null )
+            {
+                container.getRegistry().unregisterSharedLibrary( libraryName );
+                environmentContext.removeSharedLibraryDirectory( libraryName );
+            }
+            installationService.doInstallSharedLibrary( tmpDir, root.getSharedLibrary() );
+            checkPendingComponents();
+        }
+        catch ( Exception e )
+        {
+            String errStr = "Failed to update SharedLibrary: " + libraryName;
+            LOG.error( errStr, e );
+            throw new DeploymentException( errStr, e );
+        }
+    }
 
-	public void scanInstallDir() {
-		scanDir(this.environmentContext.getInstallationDir(),
-				this.installFileMap);
-	}
+    protected Set<String> getComponentNames( ServiceAssembly sa )
+    {
+        Set names = new HashSet();
+        if ( ( sa.getServiceUnits() != null ) && ( sa.getServiceUnits().length > 0 ) )
+        {
+            for ( int i = 0; i < sa.getServiceUnits().length; ++i )
+            {
+                names.add( sa.getServiceUnits()[i].getTarget().getComponentName() );
+            }
+        }
+        return names;
+    }
 
-	public void scanDeployDir() {
-		scanDir(this.environmentContext.getDeploymentDir(), this.deployFileMap);
-	}
+    private void checkPendingComponents()
+    {
+        Set<File> installedComponents = new HashSet();
+        for ( Map.Entry me : pendingComponents.entrySet() )
+        {
+            ArchiveEntry entry = (ArchiveEntry) me.getValue();
+            boolean canInstall = true;
+            for ( String libraryName : entry.dependencies )
+            {
+                if ( container.getRegistry().getSharedLibrary( libraryName ) == null )
+                {
+                    canInstall = false;
+                    break;
+                }
+            }
+            if ( canInstall )
+            {
+                File tmp = (File) me.getKey();
+                installedComponents.add( tmp );
+                try
+                {
+                    Descriptor root = DescriptorFactory.buildDescriptor( tmp );
+                    installationService.install( tmp, null, root, true );
+                }
+                catch ( Exception e )
+                {
+                    String errStr = "Failed to update Component: " + tmp.getName();
+                    LOG.error( errStr, e );
+                }
+            }
+        }
+        if ( installedComponents.isEmpty() )
+        {
+            return;
+        }
+        for ( File f : installedComponents )
+        {
+            ArchiveEntry entry = pendingComponents.remove( f );
+            entry.pending = false;
+        }
 
-	private void scanDir(File root, Map<String, ArchiveEntry> fileMap) {
-		List tmpList = new ArrayList();
-		if ((root != null) && (root.exists()) && (root.isDirectory())) {
-			File[] files = root.listFiles();
-			if (files != null) {
-				for (int i = 0; i < files.length; ++i) {
-					File file = files[i];
-					tmpList.add(file.getName());
-					if ((isAllowedExtension(file.getName()))
-							&& (isAvailable(file))) {
-						ArchiveEntry lastEntry = (ArchiveEntry) fileMap
-								.get(file.getName());
-						if ((lastEntry != null)
-								&& (file.lastModified() <= lastEntry.lastModified
-										.getTime()))
-							continue;
-						try {
-							ArchiveEntry entry = new ArchiveEntry();
-							entry.location = file.getName();
-							entry.lastModified = new Date(file.lastModified());
-							fileMap.put(file.getName(), entry);
-							LOG.info("Directory: " + root.getName()
-									+ ": Archive changed: processing "
-									+ file.getName() + " ...");
-							updateArchive(file.getAbsolutePath(), entry, true);
-							LOG.info("Directory: " + root.getName()
-									+ ": Finished installation of archive:  "
-									+ file.getName());
-						} catch (Exception e) {
-							LOG.warn("Directory: " + root.getName()
-									+ ": Automatic install of " + file
-									+ " failed", e);
-						}
-					}
-				}
+        persistState( environmentContext.getDeploymentDir(), deployFileMap );
+        persistState( environmentContext.getInstallationDir(), installFileMap );
 
-			}
+        checkPendingSAs();
+    }
 
-			Map map = new HashMap(fileMap);
-			for (Object location : map.keySet()) {
-				if (!(tmpList.contains(location))) {
-					ArchiveEntry entry = (ArchiveEntry) fileMap
-							.remove(location);
-					try {
-						LOG.info("Location " + location
-								+ " no longer exists - removing ...");
-						removeArchive(entry);
-					} catch (DeploymentException e) {
-						LOG.error("Failed to removeArchive: " + location, e);
-					}
-				}
-			}
-			if (!(map.equals(fileMap)))
-				persistState(root, fileMap);
-		}
-	}
+    protected void updateServiceAssembly( ArchiveEntry entry, boolean autoStart, File tmpDir, Descriptor root )
+        throws DeploymentException
+    {
+        ServiceAssembly sa = root.getServiceAssembly();
+        String name = sa.getIdentification().getName();
+        entry.type = "assembly";
+        entry.name = name;
+        try
+        {
+            if ( deploymentService.isSaDeployed( name ) )
+            {
+                deploymentService.shutDown( name );
+                deploymentService.undeploy( name );
+            }
 
-	public void persistState(File root, Map<String, ArchiveEntry> map) {
-		try {
-			File file = new File(this.environmentContext.getJbiRootDir(),
-					root.getName() + ".xml");
-			XmlPersistenceSupport.write(file, map);
-		} catch (IOException e) {
-			LOG.error("Failed to persist file state to: " + root, e);
-		}
-	}
+            entry.dependencies = getComponentNames( sa );
+            if ( LOG.isDebugEnabled() )
+            {
+                LOG.debug( "SA dependencies: " + entry.dependencies );
+            }
+            String missings = null;
+            boolean canDeploy = true;
+            for ( String componentName : entry.dependencies )
+            {
+                if ( container.getRegistry().getComponent( componentName ) == null )
+                {
+                    canDeploy = false;
+                    if ( missings != null )
+                    {
+                        missings = missings + ", " + componentName;
+                    }
+                    else
+                    {
+                        missings = componentName;
+                    }
+                }
+            }
+            if ( canDeploy )
+            {
+                deploymentService.deployServiceAssembly( tmpDir, sa );
+                if ( autoStart )
+                {
+                    deploymentService.start( name );
+                }
+            }
+            else
+            {
+                entry.pending = true;
+                LOG.warn( "Components " + missings + " are not installed yet: the service assembly " + name
+                    + " deployment is suspended and will be resumed once the listed components are installed" );
 
-	private Map<String, ArchiveEntry> readState(File root) {
-		Map result = new HashMap();
-		try {
-			File file = new File(this.environmentContext.getJbiRootDir(),
-					root.getName() + ".xml");
-			if (file.exists())
-				result = (Map) XmlPersistenceSupport.read(file);
-			else
-				LOG.debug("State file doesn't exist: " + file.getPath());
-		} catch (Exception e) {
-			LOG.error("Failed to read file state from: " + root, e);
-		}
-		return result;
-	}
+                pendingSAs.put( tmpDir, entry );
 
-	private void initializeFileMaps() {
-		if (isMonitorInstallationDirectory()) {
-			try {
-				this.installFileMap = readState(this.environmentContext
-						.getInstallationDir());
-				removePendingEntries(this.installFileMap);
-			} catch (Exception e) {
-				LOG.error("Failed to read installed state", e);
-			}
-		}
-		if (!(isMonitorDeploymentDirectory()))
-			return;
-		try {
-			this.deployFileMap = readState(this.environmentContext
-					.getDeploymentDir());
-			removePendingEntries(this.deployFileMap);
-		} catch (Exception e) {
-			LOG.error("Failed to read deployed state", e);
-		}
-	}
+                throw ManagementSupport.failure( "deploy", missings + "组件未安装！" );
+            }
+        }
+        catch ( Exception e )
+        {
+            String errStr = "Failed to update Service Assembly: " + name;
+            LOG.error( errStr, e );
+            throw new DeploymentException( errStr, e );
+        }
+    }
 
-	private void removePendingEntries(Map<String, ArchiveEntry> map) {
-		Set pendings = new HashSet();
-		for (Map.Entry e : map.entrySet()) {
-			if (((ArchiveEntry) e.getValue()).pending) {
-				pendings.add(e.getKey());
-			}
-		}
-		for (Object s : pendings)
-			map.remove(s);
-	}
+    protected void updateComponent( ArchiveEntry entry, boolean autoStart, File tmpDir, Descriptor root )
+        throws DeploymentException
+    {
+        Component comp = root.getComponent();
+        String componentName = comp.getIdentification().getName();
+        entry.type = "component";
+        entry.name = componentName;
+        try
+        {
+            if ( container.getRegistry().getComponent( componentName ) != null )
+            {
+                installationService.loadInstaller( componentName );
+                installationService.unloadInstaller( componentName, true );
+            }
 
-	protected Set<String> getSharedLibraryNames(Component comp) {
-		Set names = new HashSet();
-		if ((comp.getSharedLibraries() != null)
-				&& (comp.getSharedLibraries().length > 0)) {
-			for (int i = 0; i < comp.getSharedLibraries().length; ++i) {
-				names.add(comp.getSharedLibraries()[i].getName());
-			}
-		}
-		return names;
-	}
+            entry.dependencies = getSharedLibraryNames( comp );
+            if ( LOG.isDebugEnabled() )
+            {
+                LOG.debug( "Component dependencies: " + entry.dependencies );
+            }
+            String missings = null;
+            boolean canInstall = true;
+            for ( String libraryName : entry.dependencies )
+            {
+                if ( container.getRegistry().getSharedLibrary( libraryName ) == null )
+                {
+                    canInstall = false;
+                    if ( missings != null )
+                    {
+                        missings = missings + ", " + libraryName;
+                    }
+                    else
+                    {
+                        missings = libraryName;
+                    }
+                }
+            }
+            if ( canInstall )
+            {
+                installationService.install( tmpDir, null, root, autoStart );
+                checkPendingSAs();
+            }
+            else
+            {
+                entry.pending = true;
+                LOG.warn( "Shared libraries " + missings + " are not installed yet: the component" + componentName
+                    + " installation is suspended and will be resumed once the listed shared libraries are installed" );
 
-	public static File unpackLocation(File tmpRoot, String location)
-			throws DeploymentException {
-		File tmpDir = null;
-		File file = null;
-		try {
-			if (location.startsWith(filePrefix)) {
-				String os = System.getProperty("os.name");
-				if (os.startsWith("Windows")) {
-					location = location.replace('\\', '/');
-					location = location.replaceAll(" ", "%20");
-				}
-				URI uri = new URI(location);
-				file = new File(uri);
-			} else {
-				file = new File(location);
-			}
-			if (file.isDirectory()) {
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Deploying an exploded jar/zip, we will create a temporary jar for it.");
-				}
+                pendingComponents.put( tmpDir, entry );
+            }
+        }
+        catch ( DeploymentException e )
+        {
+            throw e;
+        }
+        catch ( Exception e )
+        {
+            throw new DeploymentException( "Failed to update Component: " + componentName, e );
+        }
+    }
 
-				File newFile = new File(tmpRoot.getAbsolutePath()
-						+ "/exploded.jar");
-				newFile.delete();
-				FileUtil.zipDir(file.getAbsolutePath(),
-						newFile.getAbsolutePath());
-				file = newFile;
-				if (LOG.isDebugEnabled()) {
-					LOG.debug("Deployment will now work from "
-							+ file.getAbsolutePath());
-				}
-			}
-			if (!(file.exists())) {
-				try {
-					URL url = new URL(location);
-					String fileName = url.getFile();
-					if (fileName == null) {
-						throw new DeploymentException("Location: " + location
-								+ " is not an archive");
-					}
-					file = FileUtil.unpackArchive(url, tmpRoot);
-				} catch (MalformedURLException e) {
-					throw new DeploymentException(e);
-				}
-			}
-			if (FileUtil.archiveContainsEntry(file, "jbi.xml")) {
-				tmpDir = FileUtil
-						.createUniqueDirectory(tmpRoot, file.getName());
-				FileUtil.unpackArchive(file, tmpDir);
-				if (LOG.isDebugEnabled())
-					LOG.debug("Unpacked archive " + location + " to " + tmpDir);
-			}
-		} catch (IOException e) {
-			throw new DeploymentException(e);
-		} catch (URISyntaxException ex) {
-			throw new DeploymentException(ex);
-		}
-		return tmpDir;
-	}
+    private void checkPendingSAs()
+    {
+        Set<File> deployedSas = new HashSet();
+        for ( Map.Entry me : pendingSAs.entrySet() )
+        {
+            ArchiveEntry entry = (ArchiveEntry) me.getValue();
+            boolean canDeploy = true;
+            for ( String componentName : entry.dependencies )
+            {
+                if ( container.getRegistry().getComponent( componentName ) == null )
+                {
+                    canDeploy = false;
+                    break;
+                }
+            }
+            if ( canDeploy )
+            {
+                File tmp = (File) me.getKey();
+                deployedSas.add( tmp );
+                try
+                {
+                    Descriptor root = DescriptorFactory.buildDescriptor( tmp );
+                    deploymentService.deployServiceAssembly( tmp, root.getServiceAssembly() );
+                    deploymentService.start( root.getServiceAssembly().getIdentification().getName() );
+                }
+                catch ( Exception e )
+                {
+                    String errStr = "Failed to update Service Assembly: " + tmp.getName();
+                    LOG.error( errStr, e );
+                }
+            }
+        }
+        if ( deployedSas.isEmpty() )
+        {
+            return;
+        }
+        for ( File f : deployedSas )
+        {
+            ArchiveEntry entry = pendingSAs.remove( f );
+            entry.pending = false;
+        }
 
-	protected Class getServiceMBean() {
-		return LifeCycleMBean.class;
-	}
+        persistState( environmentContext.getDeploymentDir(), deployFileMap );
+        persistState( environmentContext.getInstallationDir(), installFileMap );
+    }
 
-	public String getDescription() {
-		return "archiva manager";
-	}
+    public void scanInstallDir()
+    {
+        scanDir( environmentContext.getInstallationDir(), installFileMap );
+    }
 
-	public void removeArchive(ArchiveEntry entry) throws DeploymentException {
-		LOG.info("Attempting to remove archive at: " + entry.location);
-		try {
-			this.container.getRouter().suspend();
-			if ("component".equals(entry.type)) {
-				LOG.info("Uninstalling component: " + entry.name);
+    public void scanDeployDir()
+    {
+        scanDir( environmentContext.getDeploymentDir(), deployFileMap );
+    }
 
-				this.installationService.loadInstaller(entry.name);
+    private void scanDir( File root, Map<String, ArchiveEntry> fileMap )
+    {
+        List tmpList = new ArrayList();
+        if ( ( root != null ) && ( root.exists() ) && ( root.isDirectory() ) )
+        {
+            File[] files = root.listFiles();
+            if ( files != null )
+            {
+                for ( int i = 0; i < files.length; ++i )
+                {
+                    File file = files[i];
+                    tmpList.add( file.getName() );
+                    if ( ( isAllowedExtension( file.getName() ) ) && ( isAvailable( file ) ) )
+                    {
+                        ArchiveEntry lastEntry = fileMap.get( file.getName() );
+                        if ( ( lastEntry != null ) && ( file.lastModified() <= lastEntry.lastModified.getTime() ) )
+                        {
+                            continue;
+                        }
+                        try
+                        {
+                            ArchiveEntry entry = new ArchiveEntry();
+                            entry.location = file.getName();
+                            entry.lastModified = new Date( file.lastModified() );
+                            fileMap.put( file.getName(), entry );
+                            LOG.info( "Directory: " + root.getName() + ": Archive changed: processing "
+                                + file.getName() + " ..." );
+                            updateArchive( file.getAbsolutePath(), entry, true );
+                            LOG.info( "Directory: " + root.getName() + ": Finished installation of archive:  "
+                                + file.getName() );
+                        }
+                        catch ( Exception e )
+                        {
+                            LOG.warn( "Directory: " + root.getName() + ": Automatic install of " + file + " failed", e );
+                        }
+                    }
+                }
 
-				this.installationService.unloadInstaller(entry.name, true);
-			}
-			if ("library".equals(entry.type)) {
-				LOG.info("Removing shared library: " + entry.name);
-				this.installationService.uninstallSharedLibrary(entry.name);
-			}
-			if ("assembly".equals(entry.type)) {
-				LOG.info("Undeploying service assembly " + entry.name);
-				try {
-					if (this.deploymentService.isSaDeployed(entry.name)) {
-						this.deploymentService.shutDown(entry.name);
-						this.deploymentService.undeploy(entry.name);
-					}
-				} catch (Exception e) {
-					String errStr = "Failed to update service assembly: "
-							+ entry.name;
-					LOG.error(errStr, e);
-					throw new DeploymentException(errStr, e);
-				}
-			}
-		} finally {
-			this.container.getRouter().resume();
-		}
-	}
+            }
 
-	public String getExtensions() {
-		return this.extensions;
-	}
+            Map map = new HashMap( fileMap );
+            for ( Object location : map.keySet() )
+            {
+                if ( !( tmpList.contains( location ) ) )
+                {
+                    ArchiveEntry entry = fileMap.remove( location );
+                    try
+                    {
+                        LOG.info( "Location " + location + " no longer exists - removing ..." );
+                        removeArchive( entry );
+                    }
+                    catch ( DeploymentException e )
+                    {
+                        LOG.error( "Failed to removeArchive: " + location, e );
+                    }
+                }
+            }
+            if ( !( map.equals( fileMap ) ) )
+            {
+                persistState( root, fileMap );
+            }
+        }
+    }
 
-	public boolean isAllowedExtension(String file) {
-		String[] ext = this.extensions.split(",");
-		for (int i = 0; i < ext.length; ++i) {
-			if (file.endsWith(ext[i])) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public void persistState( File root, Map<String, ArchiveEntry> map )
+    {
+        try
+        {
+            File file = new File( environmentContext.getJbiRootDir(), root.getName() + ".xml" );
+            XmlPersistenceSupport.write( file, map );
+        }
+        catch ( IOException e )
+        {
+            LOG.error( "Failed to persist file state to: " + root, e );
+        }
+    }
 
-	private boolean isAvailable(File file) {
-		long targetLength = file.length();
-		try {
-			Thread.sleep(100L);
-		} catch (InterruptedException e) {
-		}
-		long target2Length = file.length();
+    private Map<String, ArchiveEntry> readState( File root )
+    {
+        Map result = new HashMap();
+        try
+        {
+            File file = new File( environmentContext.getJbiRootDir(), root.getName() + ".xml" );
+            if ( file.exists() )
+            {
+                result = (Map) XmlPersistenceSupport.read( file );
+            }
+            else
+            {
+                LOG.debug( "State file doesn't exist: " + file.getPath() );
+            }
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Failed to read file state from: " + root, e );
+        }
+        return result;
+    }
 
-		if (targetLength != target2Length) {
-			LOG.warn("File is still being copied, deployment deferred to next cycle: "
-					+ file.getName());
-			return false;
-		}
+    private void initializeFileMaps()
+    {
+        if ( isMonitorInstallationDirectory() )
+        {
+            try
+            {
+                installFileMap = readState( environmentContext.getInstallationDir() );
+                removePendingEntries( installFileMap );
+            }
+            catch ( Exception e )
+            {
+                LOG.error( "Failed to read installed state", e );
+            }
+        }
+        if ( !( isMonitorDeploymentDirectory() ) )
+        {
+            return;
+        }
+        try
+        {
+            deployFileMap = readState( environmentContext.getDeploymentDir() );
+            removePendingEntries( deployFileMap );
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Failed to read deployed state", e );
+        }
+    }
 
-		try {
-			ZipFile zip = new ZipFile(file);
-			zip.size();
-			zip.close();
-		} catch (IOException e) {
-			LOG.warn("Unable to open deployment file, deployment deferred to next cycle: "
-					+ file.getName());
-			return false;
-		}
-		return true;
-	}
+    private void removePendingEntries( Map<String, ArchiveEntry> map )
+    {
+        Set pendings = new HashSet();
+        for ( Map.Entry e : map.entrySet() )
+        {
+            if ( ( (ArchiveEntry) e.getValue() ).pending )
+            {
+                pendings.add( e.getKey() );
+            }
+        }
+        for ( Object s : pendings )
+        {
+            map.remove( s );
+        }
+    }
 
-	public static void main(String[] args) {
-	}
+    protected Set<String> getSharedLibraryNames( Component comp )
+    {
+        Set names = new HashSet();
+        if ( ( comp.getSharedLibraries() != null ) && ( comp.getSharedLibraries().length > 0 ) )
+        {
+            for ( int i = 0; i < comp.getSharedLibraries().length; ++i )
+            {
+                names.add( comp.getSharedLibraries()[i].getName() );
+            }
+        }
+        return names;
+    }
+
+    public static File unpackLocation( File tmpRoot, String location )
+        throws DeploymentException
+    {
+        File tmpDir = null;
+        File file = null;
+        try
+        {
+            if ( location.startsWith( filePrefix ) )
+            {
+                String os = System.getProperty( "os.name" );
+                if ( os.startsWith( "Windows" ) )
+                {
+                    location = location.replace( '\\', '/' );
+                    location = location.replaceAll( " ", "%20" );
+                }
+                URI uri = new URI( location );
+                file = new File( uri );
+            }
+            else
+            {
+                file = new File( location );
+            }
+            if ( file.isDirectory() )
+            {
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "Deploying an exploded jar/zip, we will create a temporary jar for it." );
+                }
+
+                File newFile = new File( tmpRoot.getAbsolutePath() + "/exploded.jar" );
+                newFile.delete();
+                FileUtil.zipDir( file.getAbsolutePath(), newFile.getAbsolutePath() );
+                file = newFile;
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "Deployment will now work from " + file.getAbsolutePath() );
+                }
+            }
+            if ( !( file.exists() ) )
+            {
+                try
+                {
+                    URL url = new URL( location );
+                    String fileName = url.getFile();
+                    if ( fileName == null )
+                    {
+                        throw new DeploymentException( "Location: " + location + " is not an archive" );
+                    }
+                    file = FileUtil.unpackArchive( url, tmpRoot );
+                }
+                catch ( MalformedURLException e )
+                {
+                    throw new DeploymentException( e );
+                }
+            }
+            if ( FileUtil.archiveContainsEntry( file, "jbi.xml" ) )
+            {
+                tmpDir = FileUtil.createUniqueDirectory( tmpRoot, file.getName() );
+                FileUtil.unpackArchive( file, tmpDir );
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "Unpacked archive " + location + " to " + tmpDir );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            throw new DeploymentException( e );
+        }
+        catch ( URISyntaxException ex )
+        {
+            throw new DeploymentException( ex );
+        }
+        return tmpDir;
+    }
+
+    @Override
+    protected Class getServiceMBean()
+    {
+        return LifeCycleMBean.class;
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "archiva manager";
+    }
+
+    public void removeArchive( ArchiveEntry entry )
+        throws DeploymentException
+    {
+        LOG.info( "Attempting to remove archive at: " + entry.location );
+        try
+        {
+            container.getRouter().suspend();
+            if ( "component".equals( entry.type ) )
+            {
+                LOG.info( "Uninstalling component: " + entry.name );
+
+                installationService.loadInstaller( entry.name );
+
+                installationService.unloadInstaller( entry.name, true );
+            }
+            if ( "library".equals( entry.type ) )
+            {
+                LOG.info( "Removing shared library: " + entry.name );
+                installationService.uninstallSharedLibrary( entry.name );
+            }
+            if ( "assembly".equals( entry.type ) )
+            {
+                LOG.info( "Undeploying service assembly " + entry.name );
+                try
+                {
+                    if ( deploymentService.isSaDeployed( entry.name ) )
+                    {
+                        deploymentService.shutDown( entry.name );
+                        deploymentService.undeploy( entry.name );
+                    }
+                }
+                catch ( Exception e )
+                {
+                    String errStr = "Failed to update service assembly: " + entry.name;
+                    LOG.error( errStr, e );
+                    throw new DeploymentException( errStr, e );
+                }
+            }
+        }
+        finally
+        {
+            container.getRouter().resume();
+        }
+    }
+
+    public String getExtensions()
+    {
+        return extensions;
+    }
+
+    public boolean isAllowedExtension( String file )
+    {
+        String[] ext = extensions.split( "," );
+        for ( int i = 0; i < ext.length; ++i )
+        {
+            if ( file.endsWith( ext[i] ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean isAvailable( File file )
+    {
+        long targetLength = file.length();
+        try
+        {
+            Thread.sleep( 100L );
+        }
+        catch ( InterruptedException e )
+        {
+        }
+        long target2Length = file.length();
+
+        if ( targetLength != target2Length )
+        {
+            LOG.warn( "File is still being copied, deployment deferred to next cycle: " + file.getName() );
+            return false;
+        }
+
+        try
+        {
+            ZipFile zip = new ZipFile( file );
+            zip.size();
+            zip.close();
+        }
+        catch ( IOException e )
+        {
+            LOG.warn( "Unable to open deployment file, deployment deferred to next cycle: " + file.getName() );
+            return false;
+        }
+        return true;
+    }
+
+    public static void main( String[] args )
+    {
+    }
 }

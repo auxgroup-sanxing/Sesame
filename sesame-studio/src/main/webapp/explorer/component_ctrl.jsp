@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%@page import="org.jdom.xpath.XPath"%>
 <%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>

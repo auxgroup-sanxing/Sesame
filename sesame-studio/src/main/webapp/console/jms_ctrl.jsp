@@ -6,7 +6,8 @@
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%! 
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

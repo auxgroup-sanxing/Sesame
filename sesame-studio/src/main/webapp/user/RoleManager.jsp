@@ -1,5 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<%@page language="java" contentType="text/html; charset=utf-8" errorPage="../exception.jsp"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	errorPage="../exception.jsp"%>
 <%@page import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.studio.action.*"%>
@@ -35,10 +36,28 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>角色管理</title>
 <style type="text/css">
-	BODY { background-color: white; }
-	TD { font-size: 12px; vertical-align: top; }
-	.user { border-style:solid;  border-width:1px; border-color: white; cursor: pointer; width: 50%;}
-	.userHilite { border-style:solid;  border-width: 1px; border-color: blue; }
+BODY {
+	background-color: white;
+}
+
+TD {
+	font-size: 12px;
+	vertical-align: top;
+}
+
+.user {
+	border-style: solid;
+	border-width: 1px;
+	border-color: white;
+	cursor: pointer;
+	width: 50%;
+}
+
+.userHilite {
+	border-style: solid;
+	border-width: 1px;
+	border-color: blue;
+}
 </style>
 <script type="text/javascript">
 	
@@ -48,9 +67,14 @@
 <script type="text/javascript" src="../ext-Ajax/ext-core.js"></script>
 </head>
 <body>
-	<p><b>角色管理</b></p>
+	<p>
+		<b>角色管理</b>
+	</p>
 	<table style="margin: 0px 0px 5px 0px;">
-		<tr><td><img src="../images/icons/user_add.png"></td><td><a onclick='href="RoleEdit.jsp"' href="goto:" target="_self">创建新角色</a></td></tr>
+		<tr>
+			<td><img src="../images/icons/user_add.png"></td>
+			<td><a onclick='href="RoleEdit.jsp"' href="goto:" target="_self">创建新角色</a></td>
+		</tr>
 	</table>
 	<%
 		JSONArray result = new JSONArray();
@@ -69,34 +93,35 @@
 			result.put(obj);
 		}
 	%>
-	<table style="width:100%; border: 1px dotted gray;">
-	<%
+	<table style="width: 100%; border: 1px dotted gray;">
+		<%
 		for (int i=0,len=result.length(); i<len;)
 		{
 		%>
-			<tr>
+		<tr>
 			<%
 			for (int j=0; j<2; j++)
 			{
 				if (i >= len) break;
 				JSONObject role = result.getJSONObject(i);
 			%>
-			<td  class="user" title="修改角色信息" onmouseover="Ext.get(this).addClass('userHilite');" onmouseout="Ext.get(this).removeClass('userHilite');"
+			<td class="user" title="修改角色信息"
+				onmouseover="Ext.get(this).addClass('userHilite');"
+				onmouseout="Ext.get(this).removeClass('userHilite');"
 				onclick="window.open('RoleEdit.jsp?roleid=<%=role.getString("id")%>&rolename=<%=role.getString("name")%>&desc=<%=role.optString("desc")%>', '_self')">
-				<table><tr>
-					<td><img src="<%="../images/icons/user.png"%>"></td>
-					<td>
-						<b><%=role.getString("name") %></b>
-						(<%=role.optString("id") %>)<br/>
-						<i><%=role.optString("desc")%></i>
-					</td>
-				</tr></table>
+				<table>
+					<tr>
+						<td><img src="<%="../images/icons/user.png"%>"></td>
+						<td><b><%=role.getString("name") %></b> (<%=role.optString("id") %>)<br />
+							<i><%=role.optString("desc")%></i></td>
+					</tr>
+				</table>
 			</td>
 			<%
 			i++;
 			}
 			%>
-			</tr>
+		</tr>
 		<%
 		}
 	}

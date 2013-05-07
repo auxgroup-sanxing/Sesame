@@ -3,80 +3,107 @@ package com.sanxing.sesame.jaxp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.xml.namespace.NamespaceContext;
+
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-public class W3CNamespaceContext implements NamespaceContext {
-	private Element currentNode;
+public class W3CNamespaceContext
+    implements NamespaceContext
+{
+    private Element currentNode;
 
-	public String getNamespaceURI(String prefix) {
-		String name = prefix;
-		if (name.length() == 0)
-			name = "xmlns";
-		else {
-			name = "xmlns:" + prefix;
-		}
-		return getNamespaceURI(this.currentNode, name);
-	}
+    @Override
+    public String getNamespaceURI( String prefix )
+    {
+        String name = prefix;
+        if ( name.length() == 0 )
+        {
+            name = "xmlns";
+        }
+        else
+        {
+            name = "xmlns:" + prefix;
+        }
+        return getNamespaceURI( currentNode, name );
+    }
 
-	private String getNamespaceURI(Element e, String name) {
-		Attr attr = e.getAttributeNode(name);
-		if (attr == null) {
-			Node n = e.getParentNode();
-			if ((n instanceof Element) && (n != e))
-				return getNamespaceURI((Element) n, name);
-		} else {
-			return attr.getValue();
-		}
+    private String getNamespaceURI( Element e, String name )
+    {
+        Attr attr = e.getAttributeNode( name );
+        if ( attr == null )
+        {
+            Node n = e.getParentNode();
+            if ( ( n instanceof Element ) && ( n != e ) )
+            {
+                return getNamespaceURI( (Element) n, name );
+            }
+        }
+        else
+        {
+            return attr.getValue();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public String getPrefix(String uri) {
-		return getPrefix(this.currentNode, uri);
-	}
+    @Override
+    public String getPrefix( String uri )
+    {
+        return getPrefix( currentNode, uri );
+    }
 
-	private String getPrefix(Element e, String uri) {
-		NamedNodeMap attributes = e.getAttributes();
-		for (int i = 0; i < attributes.getLength(); ++i) {
-			Attr a = (Attr) attributes.item(i);
+    private String getPrefix( Element e, String uri )
+    {
+        NamedNodeMap attributes = e.getAttributes();
+        for ( int i = 0; i < attributes.getLength(); ++i )
+        {
+            Attr a = (Attr) attributes.item( i );
 
-			String val = a.getValue();
-			if ((val != null) && (val.equals(uri))) {
-				String name = a.getNodeName();
-				if ("xmlns".equals(name)) {
-					return "";
-				}
-				return name.substring(6);
-			}
+            String val = a.getValue();
+            if ( ( val != null ) && ( val.equals( uri ) ) )
+            {
+                String name = a.getNodeName();
+                if ( "xmlns".equals( name ) )
+                {
+                    return "";
+                }
+                return name.substring( 6 );
+            }
 
-		}
+        }
 
-		Node n = e.getParentNode();
-		if ((n instanceof Element) && (n != e)) {
-			return getPrefix((Element) n, uri);
-		}
+        Node n = e.getParentNode();
+        if ( ( n instanceof Element ) && ( n != e ) )
+        {
+            return getPrefix( (Element) n, uri );
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public Iterator getPrefixes(String uri) {
-		List prefixes = new ArrayList();
-		String prefix = getPrefix(uri);
-		if (prefix != null) {
-			prefixes.add(prefix);
-		}
-		return prefixes.iterator();
-	}
+    @Override
+    public Iterator getPrefixes( String uri )
+    {
+        List prefixes = new ArrayList();
+        String prefix = getPrefix( uri );
+        if ( prefix != null )
+        {
+            prefixes.add( prefix );
+        }
+        return prefixes.iterator();
+    }
 
-	public Element getElement() {
-		return this.currentNode;
-	}
+    public Element getElement()
+    {
+        return currentNode;
+    }
 
-	public void setElement(Element node) {
-		this.currentNode = node;
-	}
+    public void setElement( Element node )
+    {
+        currentNode = node;
+    }
 }

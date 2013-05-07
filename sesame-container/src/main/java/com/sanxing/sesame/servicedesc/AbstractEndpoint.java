@@ -1,44 +1,58 @@
 package com.sanxing.sesame.servicedesc;
 
-import com.sanxing.sesame.mbean.ComponentNameSpace;
 import java.io.Serializable;
+
 import javax.jbi.servicedesc.ServiceEndpoint;
 
-public abstract class AbstractEndpoint implements ServiceEndpoint, Serializable {
-	private static final long serialVersionUID = -591733214139930976L;
-	private ComponentNameSpace componentName;
-	private String key;
-	private String uniqueKey;
+import com.sanxing.sesame.mbean.ComponentNameSpace;
 
-	public AbstractEndpoint(ComponentNameSpace componentName) {
-		this.componentName = componentName;
-	}
+public abstract class AbstractEndpoint
+    implements ServiceEndpoint, Serializable
+{
+    private static final long serialVersionUID = -591733214139930976L;
 
-	protected AbstractEndpoint() {
-	}
+    private ComponentNameSpace componentName;
 
-	public ComponentNameSpace getComponentNameSpace() {
-		return this.componentName;
-	}
+    private String key;
 
-	public void setComponentName(ComponentNameSpace componentName) {
-		this.componentName = componentName;
-	}
+    private String uniqueKey;
 
-	public String getKey() {
-		if (this.key == null) {
-			this.key = EndpointSupport.getKey(getServiceName(),
-					getEndpointName());
-		}
-		return this.key;
-	}
+    public AbstractEndpoint( ComponentNameSpace componentName )
+    {
+        this.componentName = componentName;
+    }
 
-	public String getUniqueKey() {
-		if (this.uniqueKey == null) {
-			this.uniqueKey = getClassifier() + ":" + getKey();
-		}
-		return this.uniqueKey;
-	}
+    protected AbstractEndpoint()
+    {
+    }
 
-	protected abstract String getClassifier();
+    public ComponentNameSpace getComponentNameSpace()
+    {
+        return componentName;
+    }
+
+    public void setComponentName( ComponentNameSpace componentName )
+    {
+        this.componentName = componentName;
+    }
+
+    public String getKey()
+    {
+        if ( key == null )
+        {
+            key = EndpointSupport.getKey( getServiceName(), getEndpointName() );
+        }
+        return key;
+    }
+
+    public String getUniqueKey()
+    {
+        if ( uniqueKey == null )
+        {
+            uniqueKey = getClassifier() + ":" + getKey();
+        }
+        return uniqueKey;
+    }
+
+    protected abstract String getClassifier();
 }

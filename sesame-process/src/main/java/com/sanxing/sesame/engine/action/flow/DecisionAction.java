@@ -1,64 +1,78 @@
 package com.sanxing.sesame.engine.action.flow;
 
+import java.util.Iterator;
+import java.util.List;
+
+import org.jdom.Element;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionUtil;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.util.Iterator;
-import java.util.List;
-import org.jdom.Element;
 
-public class DecisionAction extends AbstractAction {
-	private Element actionEl;
-	private Element contextEl;
+public class DecisionAction
+    extends AbstractAction
+{
+    private Element actionEl;
 
-	public void doinit(Element actionEl) {
-		this.actionEl = actionEl;
-		this.contextEl = new Element("context");
-	}
+    private Element contextEl;
 
-	public void dowork(DataContext ctx) {
-		boolean exit = false;
+    @Override
+    public void doinit( Element actionEl )
+    {
+        this.actionEl = actionEl;
+        contextEl = new Element( "context" );
+    }
 
-		List list = this.actionEl.getChildren("if");
-		for (Iterator iter = list.iterator(); iter.hasNext();) {
-			Element ifEl = (Element) iter.next();
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        boolean exit = false;
 
-			String xpath = ifEl.getChildTextTrim("xpath");
-			Variable booleanVar = select(this.contextEl, xpath, ctx);
-			Boolean bool = (Boolean) booleanVar.get();
-			Element thenEl = ifEl.getChild("then");
-			if (bool.booleanValue()) {
-				Iterator actions = thenEl.getChildren().iterator();
-				ActionUtil.bachInvoke(ctx, actions);
-				exit = true;
-				break;
-			}
-		}
+        List list = actionEl.getChildren( "if" );
+        for ( Iterator iter = list.iterator(); iter.hasNext(); )
+        {
+            Element ifEl = (Element) iter.next();
 
-		if ((!(exit)) && (this.actionEl.getChild("default") != null)) {
-			Iterator actions = this.actionEl.getChild("default").getChildren()
-					.iterator();
-			ActionUtil.bachInvoke(ctx, actions);
-		}
-	}
+            String xpath = ifEl.getChildTextTrim( "xpath" );
+            Variable booleanVar = select( contextEl, xpath, ctx );
+            Boolean bool = (Boolean) booleanVar.get();
+            Element thenEl = ifEl.getChild( "then" );
+            if ( bool.booleanValue() )
+            {
+                Iterator actions = thenEl.getChildren().iterator();
+                ActionUtil.bachInvoke( ctx, actions );
+                exit = true;
+                break;
+            }
+        }
 
-	public void doworkInDehydrateState(DataContext context) {
-		boolean exit = false;
+        if ( ( !( exit ) ) && ( actionEl.getChild( "default" ) != null ) )
+        {
+            Iterator actions = actionEl.getChild( "default" ).getChildren().iterator();
+            ActionUtil.bachInvoke( ctx, actions );
+        }
+    }
 
-		List list = this.actionEl.getChildren("if");
+    @Override
+    public void doworkInDehydrateState( DataContext context )
+    {
+        boolean exit = false;
 
-		for (int i = 0; i < list.size(); ++i) {
-			Element ifEl = (Element) list.get(i);
-			Element thenEl = ifEl.getChild("then");
-			Iterator actions = thenEl.getChildren().iterator();
-			ActionUtil.bachInvoke(context, actions);
-		}
+        List list = actionEl.getChildren( "if" );
 
-		if (this.actionEl.getChild("default") != null) {
-			Iterator actions = this.actionEl.getChild("default").getChildren()
-					.iterator();
-			ActionUtil.bachInvoke(context, actions);
-		}
-	}
+        for ( int i = 0; i < list.size(); ++i )
+        {
+            Element ifEl = (Element) list.get( i );
+            Element thenEl = ifEl.getChild( "then" );
+            Iterator actions = thenEl.getChildren().iterator();
+            ActionUtil.bachInvoke( context, actions );
+        }
+
+        if ( actionEl.getChild( "default" ) != null )
+        {
+            Iterator actions = actionEl.getChild( "default" ).getChildren().iterator();
+            ActionUtil.bachInvoke( context, actions );
+        }
+    }
 }

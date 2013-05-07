@@ -4,14 +4,19 @@ import javax.jbi.component.Component;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.servicedesc.ServiceEndpoint;
 
-public class ProducerComponentEndpointFilter implements EndpointFilter {
-	private Component component;
+public class ProducerComponentEndpointFilter
+    implements EndpointFilter
+{
+    private final Component component;
 
-	public ProducerComponentEndpointFilter(Component component) {
-		this.component = component;
-	}
+    public ProducerComponentEndpointFilter( Component component )
+    {
+        this.component = component;
+    }
 
-	public boolean evaluate(ServiceEndpoint endpoint, MessageExchange exchange) {
-		return this.component.isExchangeWithProviderOkay(endpoint, exchange);
-	}
+    @Override
+    public boolean evaluate( ServiceEndpoint endpoint, MessageExchange exchange )
+    {
+        return component.isExchangeWithProviderOkay( endpoint, exchange );
+    }
 }

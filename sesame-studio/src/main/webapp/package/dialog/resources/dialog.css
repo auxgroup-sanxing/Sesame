@@ -17,17 +17,17 @@
 }
 
 .x-dialog-item {
-    padding: 2px;
-    white-space: nowrap;
-    overflow: hidden;
+	padding: 2px;
+	white-space: nowrap;
+	overflow: hidden;
 }
 
 .x-dialog-over {
+	
 }
 
 .x-dialog-selected {
-    background: #DFEDFF;
-    border: 1px solid #6593cf;
-    padding: 1px;
+	background: #DFEDFF;
+	border: 1px solid #6593cf;
+	padding: 1px;
 }
-

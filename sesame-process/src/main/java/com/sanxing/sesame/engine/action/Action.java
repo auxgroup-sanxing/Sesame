@@ -1,14 +1,16 @@
 package com.sanxing.sesame.engine.action;
 
-import com.sanxing.sesame.engine.context.DataContext;
 import org.jdom.Element;
 
-public abstract interface Action {
-	public abstract String getName();
+import com.sanxing.sesame.engine.context.DataContext;
 
-	public abstract void init(Element paramElement);
+public abstract interface Action
+{
+    public abstract String getName();
 
-	public abstract void work(DataContext paramDataContext);
+    public abstract void init( Element paramElement );
 
-	public abstract boolean isRollbackable();
+    public abstract void work( DataContext paramDataContext );
+
+    public abstract boolean isRollbackable();
 }

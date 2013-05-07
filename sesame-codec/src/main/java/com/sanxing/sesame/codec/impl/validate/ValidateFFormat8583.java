@@ -2,130 +2,151 @@ package com.sanxing.sesame.codec.impl.validate;
 
 import com.sanxing.sesame.binding.codec.FormatException;
 
-public class ValidateFFormat8583 {
-	private int len;
-	private char blank = ' ';
-	private String align;
-	private String endian;
-	private int compress = 0;
-	private int id = 0;
+public class ValidateFFormat8583
+{
+    private int len;
 
-	public ValidateFFormat8583(org.jdom.Element element, org.jdom.Element format)
-			throws FormatException {
-		String type = element.getAttributeValue("type");
-		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		if ("string".equals(type)) {
-			String lenStr = format.getAttributeValue("length");
-			this.len = ValidateField.validateLength(
-					element.getAttributeValue("name"), lenStr);
+    private char blank = ' ';
 
-			this.align = format.getAttributeValue("align", "L");
-			this.align = ValidateField.validateAlign(
-					element.getAttributeValue("name"), this.align);
+    private String align;
 
-			String blankStr = format.getAttributeValue("blank");
-			this.blank = ValidateField.validateBlank(
-					element.getAttributeValue("name"), this.blank, blankStr);
+    private String endian;
 
-			String compressStr = format.getAttributeValue("compress");
-			this.compress = ValidateField.validateCompress(
-					element.getAttributeValue("name"), compressStr);
-		} else if ("int".equals(type)) {
-			this.endian = format.getAttributeValue("endian", "big");
-			this.endian = ValidateField.validateEndian(
-					element.getAttributeValue("name"), this.endian);
-		} else if ("hexBinary".equals(type)) {
-			String lenStr = format.getAttributeValue("length");
-			this.len = ValidateField.validateLength(
-					element.getAttributeValue("name"), lenStr);
-		} else {
-			throw new FormatException("element:["
-					+ element.getAttributeValue("name")
-					+ "],attribute type is:[" + type + "] error!");
-		}
-	}
+    private int compress = 0;
 
-	public ValidateFFormat8583(String elementName, org.jdom.Element format,
-			String type) throws FormatException {
-		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		if ("string".equals(type)) {
-			String lenStr = format.getAttributeValue("length");
-			this.len = ValidateField.validateLength(elementName, lenStr);
+    private int id = 0;
 
-			this.align = format.getAttributeValue("align", "L");
-			this.align = ValidateField.validateAlign(elementName, this.align);
+    public ValidateFFormat8583( org.jdom.Element element, org.jdom.Element format )
+        throws FormatException
+    {
+        String type = element.getAttributeValue( "type" );
+        id = Integer.parseInt( format.getAttributeValue( "id" ) );
+        if ( "string".equals( type ) )
+        {
+            String lenStr = format.getAttributeValue( "length" );
+            len = ValidateField.validateLength( element.getAttributeValue( "name" ), lenStr );
 
-			String blankStr = format.getAttributeValue("blank");
-			this.blank = ValidateField.validateBlank(elementName, this.blank,
-					blankStr);
+            align = format.getAttributeValue( "align", "L" );
+            align = ValidateField.validateAlign( element.getAttributeValue( "name" ), align );
 
-			String compressStr = format.getAttributeValue("compress");
-			this.compress = ValidateField.validateCompress(elementName,
-					compressStr);
-		} else if ("int".equals(type)) {
-			this.endian = format.getAttributeValue("endian", "big");
-			this.endian = ValidateField
-					.validateEndian(elementName, this.endian);
-		} else if ("hexBinary".equals(type)) {
-			String lenStr = format.getAttributeValue("length");
-			this.len = ValidateField.validateLength(elementName, lenStr);
-		} else {
-			throw new FormatException("element:[" + elementName
-					+ "],attribute type is:[" + type + "] error!");
-		}
-	}
+            String blankStr = format.getAttributeValue( "blank" );
+            blank = ValidateField.validateBlank( element.getAttributeValue( "name" ), blank, blankStr );
 
-	public ValidateFFormat8583(String elementType, String elementName,
-			org.w3c.dom.Element format) throws FormatException {
-		this.id = Integer.parseInt(format.getAttribute("id"));
-		if ("string".equals(elementType)) {
-			String lenStr = format.getAttribute("length");
-			this.len = ValidateField.validateLength(elementName, lenStr);
+            String compressStr = format.getAttributeValue( "compress" );
+            compress = ValidateField.validateCompress( element.getAttributeValue( "name" ), compressStr );
+        }
+        else if ( "int".equals( type ) )
+        {
+            endian = format.getAttributeValue( "endian", "big" );
+            endian = ValidateField.validateEndian( element.getAttributeValue( "name" ), endian );
+        }
+        else if ( "hexBinary".equals( type ) )
+        {
+            String lenStr = format.getAttributeValue( "length" );
+            len = ValidateField.validateLength( element.getAttributeValue( "name" ), lenStr );
+        }
+        else
+        {
+            throw new FormatException( "element:[" + element.getAttributeValue( "name" ) + "],attribute type is:["
+                + type + "] error!" );
+        }
+    }
 
-			this.align = format.getAttribute("align");
-			this.align = ValidateField.validateAlign(elementName, this.align);
+    public ValidateFFormat8583( String elementName, org.jdom.Element format, String type )
+        throws FormatException
+    {
+        id = Integer.parseInt( format.getAttributeValue( "id" ) );
+        if ( "string".equals( type ) )
+        {
+            String lenStr = format.getAttributeValue( "length" );
+            len = ValidateField.validateLength( elementName, lenStr );
 
-			String blankStr = format.getAttribute("blank");
-			this.blank = ValidateField.validateBlank(elementName, this.blank,
-					blankStr);
+            align = format.getAttributeValue( "align", "L" );
+            align = ValidateField.validateAlign( elementName, align );
 
-			String compressStr = format.getAttribute("compress");
-			this.compress = ValidateField.validateCompress(elementName,
-					compressStr);
-		} else if ("int".equals(elementType)) {
-			this.endian = format.getAttribute("endian");
-			this.endian = ValidateField
-					.validateEndian(elementName, this.endian);
-		} else if ("hexBinary".equals(elementType)) {
-			String lenStr = format.getAttribute("length");
-			this.len = ValidateField.validateLength(elementName, lenStr);
-		} else {
-			throw new FormatException("element:[" + elementName
-					+ "],attribute type is:[" + elementType + "] error!");
-		}
-	}
+            String blankStr = format.getAttributeValue( "blank" );
+            blank = ValidateField.validateBlank( elementName, blank, blankStr );
 
-	public String getAlign() {
-		return this.align;
-	}
+            String compressStr = format.getAttributeValue( "compress" );
+            compress = ValidateField.validateCompress( elementName, compressStr );
+        }
+        else if ( "int".equals( type ) )
+        {
+            endian = format.getAttributeValue( "endian", "big" );
+            endian = ValidateField.validateEndian( elementName, endian );
+        }
+        else if ( "hexBinary".equals( type ) )
+        {
+            String lenStr = format.getAttributeValue( "length" );
+            len = ValidateField.validateLength( elementName, lenStr );
+        }
+        else
+        {
+            throw new FormatException( "element:[" + elementName + "],attribute type is:[" + type + "] error!" );
+        }
+    }
 
-	public char getBlank() {
-		return this.blank;
-	}
+    public ValidateFFormat8583( String elementType, String elementName, org.w3c.dom.Element format )
+        throws FormatException
+    {
+        id = Integer.parseInt( format.getAttribute( "id" ) );
+        if ( "string".equals( elementType ) )
+        {
+            String lenStr = format.getAttribute( "length" );
+            len = ValidateField.validateLength( elementName, lenStr );
 
-	public int getCompress() {
-		return this.compress;
-	}
+            align = format.getAttribute( "align" );
+            align = ValidateField.validateAlign( elementName, align );
 
-	public String getEndian() {
-		return this.endian;
-	}
+            String blankStr = format.getAttribute( "blank" );
+            blank = ValidateField.validateBlank( elementName, blank, blankStr );
 
-	public int getLen() {
-		return this.len;
-	}
+            String compressStr = format.getAttribute( "compress" );
+            compress = ValidateField.validateCompress( elementName, compressStr );
+        }
+        else if ( "int".equals( elementType ) )
+        {
+            endian = format.getAttribute( "endian" );
+            endian = ValidateField.validateEndian( elementName, endian );
+        }
+        else if ( "hexBinary".equals( elementType ) )
+        {
+            String lenStr = format.getAttribute( "length" );
+            len = ValidateField.validateLength( elementName, lenStr );
+        }
+        else
+        {
+            throw new FormatException( "element:[" + elementName + "],attribute type is:[" + elementType + "] error!" );
+        }
+    }
 
-	public int getId() {
-		return this.id;
-	}
+    public String getAlign()
+    {
+        return align;
+    }
+
+    public char getBlank()
+    {
+        return blank;
+    }
+
+    public int getCompress()
+    {
+        return compress;
+    }
+
+    public String getEndian()
+    {
+        return endian;
+    }
+
+    public int getLen()
+    {
+        return len;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
 }

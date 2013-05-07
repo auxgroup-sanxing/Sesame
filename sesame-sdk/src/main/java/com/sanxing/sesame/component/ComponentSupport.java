@@ -26,137 +26,177 @@ import com.sanxing.sesame.exception.NoInMessageAvailableException;
 import com.sanxing.sesame.management.ManagementSupport;
 import com.sanxing.sesame.service.ServiceUnit;
 
-public abstract class ComponentSupport extends BaseComponent implements
-		Component {
-	private ClassLoader classLoader;
-	private ComponentLifeCycle lifeCycle;
-	private ServiceUnitManager serviceUnitManager;
-	private Properties properties = new Properties();
+public abstract class ComponentSupport
+    extends BaseComponent
+    implements Component
+{
+    private ClassLoader classLoader;
 
-	protected ComponentSupport() {
-		this.classLoader = Thread.currentThread().getContextClassLoader();
-	}
+    private ComponentLifeCycle lifeCycle;
 
-	protected ComponentSupport(QName service, String endpoint) {
-		super(service, endpoint);
-	}
+    private ServiceUnitManager serviceUnitManager;
 
-	protected void init() throws JBIException {
-		super.init();
+    private final Properties properties = new Properties();
 
-		File installFolder = new File(getContext().getInstallRoot());
-		File propertyFile = new File(installFolder, ".properties");
-		if (!(propertyFile.exists()))
-			return;
-		try {
-			InputStream in = new FileInputStream(propertyFile);
-			try {
-				this.properties.load(in);
-			} finally {
-				in.close();
-			}
-		} catch (IOException e) {
-			this.logger.error(e.getMessage(), e);
-		}
-	}
+    protected ComponentSupport()
+    {
+        classLoader = Thread.currentThread().getContextClassLoader();
+    }
 
-	public ComponentLifeCycle getLifeCycle() {
-		synchronized (this) {
-			if (this.lifeCycle == null) {
-				this.lifeCycle = createComponentLifeCycle();
-			}
-		}
-		return this.lifeCycle;
-	}
+    protected ComponentSupport( QName service, String endpoint )
+    {
+        super( service, endpoint );
+    }
 
-	public ServiceUnitManager getServiceUnitManager() {
-		synchronized (this) {
-			if (this.serviceUnitManager == null) {
-				ServiceUnitManager temp = createServiceUnitManager();
+    @Override
+    protected void init()
+        throws JBIException
+    {
+        super.init();
 
-				if (temp != null) {
-					this.serviceUnitManager = new UnitManagerProxy(this, temp);
-				}
-			}
-		}
-		return this.serviceUnitManager;
-	}
+        File installFolder = new File( getContext().getInstallRoot() );
+        File propertyFile = new File( installFolder, ".properties" );
+        if ( !( propertyFile.exists() ) )
+        {
+            return;
+        }
+        try
+        {
+            InputStream in = new FileInputStream( propertyFile );
+            try
+            {
+                properties.load( in );
+            }
+            finally
+            {
+                in.close();
+            }
+        }
+        catch ( IOException e )
+        {
+            logger.error( e.getMessage(), e );
+        }
+    }
 
-	public Document getServiceDescription(ServiceEndpoint endpoint) {
-		UnitManagerProxy sumProxy = (UnitManagerProxy) getServiceUnitManager();
-		if (sumProxy == null) {
-			return null;
-		}
+    @Override
+    public ComponentLifeCycle getLifeCycle()
+    {
+        synchronized ( this )
+        {
+            if ( lifeCycle == null )
+            {
+                lifeCycle = createComponentLifeCycle();
+            }
+        }
+        return lifeCycle;
+    }
 
-		ServiceUnit serviceUnit = sumProxy.getServiceUnit(endpoint
-				.getEndpointName());
-		if (serviceUnit != null) {
-			try {
-				WSDLWriter writer = WSDLFactory.newInstance().newWSDLWriter();
-				Document doc = writer.getDocument(serviceUnit.getDefinition());
-				doc.setDocumentURI(serviceUnit.getDefinition()
-						.getDocumentBaseURI());
-				return doc;
-			} catch (WSDLException e) {
-				return null;
-			}
-		}
-		return null;
-	}
+    @Override
+    public ServiceUnitManager getServiceUnitManager()
+    {
+        synchronized ( this )
+        {
+            if ( serviceUnitManager == null )
+            {
+                ServiceUnitManager temp = createServiceUnitManager();
 
-	public boolean isExchangeWithConsumerOkay(ServiceEndpoint endpoint,
-			MessageExchange exchange) {
-		return true;
-	}
+                if ( temp != null )
+                {
+                    serviceUnitManager = new UnitManagerProxy( this, temp );
+                }
+            }
+        }
+        return serviceUnitManager;
+    }
 
-	public boolean isExchangeWithProviderOkay(ServiceEndpoint endpoint,
-			MessageExchange exchange) {
-		return true;
-	}
+    @Override
+    public Document getServiceDescription( ServiceEndpoint endpoint )
+    {
+        UnitManagerProxy sumProxy = (UnitManagerProxy) getServiceUnitManager();
+        if ( sumProxy == null )
+        {
+            return null;
+        }
 
-	protected abstract ServiceUnitManager createServiceUnitManager();
+        ServiceUnit serviceUnit = sumProxy.getServiceUnit( endpoint.getEndpointName() );
+        if ( serviceUnit != null )
+        {
+            try
+            {
+                WSDLWriter writer = WSDLFactory.newInstance().newWSDLWriter();
+                Document doc = writer.getDocument( serviceUnit.getDefinition() );
+                doc.setDocumentURI( serviceUnit.getDefinition().getDocumentBaseURI() );
+                return doc;
+            }
+            catch ( WSDLException e )
+            {
+                return null;
+            }
+        }
+        return null;
+    }
 
-	protected String getProperty(String name) {
-		return this.properties.getProperty(name);
-	}
+    @Override
+    public boolean isExchangeWithConsumerOkay( ServiceEndpoint endpoint, MessageExchange exchange )
+    {
+        return true;
+    }
 
-	protected Enumeration<String> propertyNames() {
-		return (Enumeration<String>) this.properties.propertyNames();
-	}
+    @Override
+    public boolean isExchangeWithProviderOkay( ServiceEndpoint endpoint, MessageExchange exchange )
+    {
+        return true;
+    }
 
-	protected ServiceUnit getServiceUnit(String serviceUnitName) {
-		return ((UnitManagerProxy) this.serviceUnitManager)
-				.getServiceUnit(serviceUnitName);
-	}
+    protected abstract ServiceUnitManager createServiceUnitManager();
 
-	protected ServiceUnit getServiceUnit(QName serviceName) {
-		return ((UnitManagerProxy) this.serviceUnitManager)
-				.getServiceUnit(serviceName);
-	}
+    protected String getProperty( String name )
+    {
+        return properties.getProperty( name );
+    }
 
-	protected ComponentLifeCycle createComponentLifeCycle() {
-		return this;
-	}
+    protected Enumeration<String> propertyNames()
+    {
+        return (Enumeration<String>) properties.propertyNames();
+    }
 
-	protected NormalizedMessage getInMessage(MessageExchange exchange)
-			throws NoInMessageAvailableException {
-		NormalizedMessage message = exchange.getMessage("in");
-		if (message == null) {
-			throw new NoInMessageAvailableException(exchange);
-		}
-		return message;
-	}
+    protected ServiceUnit getServiceUnit( String serviceUnitName )
+    {
+        return ( (UnitManagerProxy) serviceUnitManager ).getServiceUnit( serviceUnitName );
+    }
 
-	protected ClassLoader getClassLoader() {
-		return this.classLoader;
-	}
+    protected ServiceUnit getServiceUnit( QName serviceName )
+    {
+        return ( (UnitManagerProxy) serviceUnitManager ).getServiceUnit( serviceName );
+    }
 
-	public DeploymentException taskFailure(String task, String info) {
-		return ManagementSupport.componentFailure(task, getContext()
-				.getComponentName(), info);
-	}
+    protected ComponentLifeCycle createComponentLifeCycle()
+    {
+        return this;
+    }
 
-	public abstract boolean isBindingComponent();
+    protected NormalizedMessage getInMessage( MessageExchange exchange )
+        throws NoInMessageAvailableException
+    {
+        NormalizedMessage message = exchange.getMessage( "in" );
+        if ( message == null )
+        {
+            throw new NoInMessageAvailableException( exchange );
+        }
+        return message;
+    }
 
-	public abstract boolean isEngineComponent();
+    protected ClassLoader getClassLoader()
+    {
+        return classLoader;
+    }
+
+    public DeploymentException taskFailure( String task, String info )
+    {
+        return ManagementSupport.componentFailure( task, getContext().getComponentName(), info );
+    }
+
+    public abstract boolean isBindingComponent();
+
+    public abstract boolean isEngineComponent();
 }

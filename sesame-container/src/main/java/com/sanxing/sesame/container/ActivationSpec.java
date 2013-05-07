@@ -1,5 +1,10 @@
 package com.sanxing.sesame.container;
 
+import java.io.Serializable;
+import java.util.Arrays;
+
+import javax.xml.namespace.QName;
+
 import com.sanxing.sesame.messaging.PojoMarshaler;
 import com.sanxing.sesame.resolver.EndpointChooser;
 import com.sanxing.sesame.resolver.EndpointResolver;
@@ -7,221 +12,279 @@ import com.sanxing.sesame.resolver.InterfaceNameEndpointResolver;
 import com.sanxing.sesame.resolver.ServiceAndEndpointNameResolver;
 import com.sanxing.sesame.resolver.ServiceNameEndpointResolver;
 import com.sanxing.sesame.resolver.URIResolver;
-import java.io.Serializable;
-import java.util.Arrays;
-import javax.xml.namespace.QName;
 
-public class ActivationSpec implements Serializable {
-	static final long serialVersionUID = 8458586342841647313L;
-	private String id;
-	private String componentName;
-	private Object component;
-	private QName service;
-	private QName interfaceName;
-	private QName operation;
-	private String endpoint;
-	private transient EndpointResolver destinationResolver;
-	private transient EndpointChooser interfaceChooser;
-	private transient EndpointChooser serviceChooser;
-	private QName destinationService;
-	private QName destinationInterface;
-	private QName destinationOperation;
-	private String destinationEndpoint;
-	private transient PojoMarshaler marshaler;
-	private SubscriptionSpec[] subscriptions = new SubscriptionSpec[0];
-	private boolean failIfNoDestinationEndpoint = true;
-	private Boolean persistent;
-	private String destinationUri;
+public class ActivationSpec
+    implements Serializable
+{
+    static final long serialVersionUID = 8458586342841647313L;
 
-	public ActivationSpec() {
-	}
+    private String id;
 
-	public ActivationSpec(Object component) {
-		this.component = component;
-	}
+    private String componentName;
 
-	public ActivationSpec(String id, Object component) {
-		this.id = id;
-		this.component = component;
-	}
+    private Object component;
 
-	public String getId() {
-		return this.id;
-	}
+    private QName service;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    private QName interfaceName;
 
-	public String getComponentName() {
-		return this.componentName;
-	}
+    private QName operation;
 
-	public void setComponentName(String componentName) {
-		this.componentName = componentName;
-	}
+    private String endpoint;
 
-	public Object getComponent() {
-		return this.component;
-	}
+    private transient EndpointResolver destinationResolver;
 
-	public void setComponent(Object component) {
-		this.component = component;
-	}
+    private transient EndpointChooser interfaceChooser;
 
-	public QName getService() {
-		return this.service;
-	}
+    private transient EndpointChooser serviceChooser;
 
-	public void setService(QName service) {
-		this.service = service;
-	}
+    private QName destinationService;
 
-	public String getEndpoint() {
-		return this.endpoint;
-	}
+    private QName destinationInterface;
 
-	public void setEndpoint(String endpoint) {
-		this.endpoint = endpoint;
-	}
+    private QName destinationOperation;
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    private String destinationEndpoint;
 
-	public void setInterfaceName(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    private transient PojoMarshaler marshaler;
 
-	public QName getOperation() {
-		return this.operation;
-	}
+    private final SubscriptionSpec[] subscriptions = new SubscriptionSpec[0];
 
-	public void setOperation(QName operation) {
-		this.operation = operation;
-	}
+    private boolean failIfNoDestinationEndpoint = true;
 
-	public EndpointResolver getDestinationResolver() {
-		if (this.destinationResolver == null) {
-			this.destinationResolver = createEndpointResolver();
-		}
-		return this.destinationResolver;
-	}
+    private Boolean persistent;
 
-	public void setDestinationResolver(EndpointResolver destinationResolver) {
-		this.destinationResolver = destinationResolver;
-	}
+    private String destinationUri;
 
-	public EndpointChooser getInterfaceChooser() {
-		return this.interfaceChooser;
-	}
+    public ActivationSpec()
+    {
+    }
 
-	public void setInterfaceChooser(EndpointChooser interfaceChooser) {
-		this.interfaceChooser = interfaceChooser;
-	}
+    public ActivationSpec( Object component )
+    {
+        this.component = component;
+    }
 
-	public EndpointChooser getServiceChooser() {
-		return this.serviceChooser;
-	}
+    public ActivationSpec( String id, Object component )
+    {
+        this.id = id;
+        this.component = component;
+    }
 
-	public void setServiceChooser(EndpointChooser serviceChooser) {
-		this.serviceChooser = serviceChooser;
-	}
+    public String getId()
+    {
+        return id;
+    }
 
-	public QName getDestinationService() {
-		return this.destinationService;
-	}
+    public void setId( String id )
+    {
+        this.id = id;
+    }
 
-	public void setDestinationService(QName destinationService) {
-		this.destinationService = destinationService;
-	}
+    public String getComponentName()
+    {
+        return componentName;
+    }
 
-	public QName getDestinationInterface() {
-		return this.destinationInterface;
-	}
+    public void setComponentName( String componentName )
+    {
+        this.componentName = componentName;
+    }
 
-	public void setDestinationInterface(QName destinationInterface) {
-		this.destinationInterface = destinationInterface;
-	}
+    public Object getComponent()
+    {
+        return component;
+    }
 
-	public QName getDestinationOperation() {
-		return this.destinationOperation;
-	}
+    public void setComponent( Object component )
+    {
+        this.component = component;
+    }
 
-	public void setDestinationOperation(QName destinationOperation) {
-		this.destinationOperation = destinationOperation;
-	}
+    public QName getService()
+    {
+        return service;
+    }
 
-	public String getDestinationEndpoint() {
-		return this.destinationEndpoint;
-	}
+    public void setService( QName service )
+    {
+        this.service = service;
+    }
 
-	public void setDestinationEndpoint(String destinationEndpoint) {
-		this.destinationEndpoint = destinationEndpoint;
-	}
+    public String getEndpoint()
+    {
+        return endpoint;
+    }
 
-	public PojoMarshaler getMarshaler() {
-		return this.marshaler;
-	}
+    public void setEndpoint( String endpoint )
+    {
+        this.endpoint = endpoint;
+    }
 
-	public void setMarshaler(PojoMarshaler marshaler) {
-		this.marshaler = marshaler;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	public boolean isFailIfNoDestinationEndpoint() {
-		return this.failIfNoDestinationEndpoint;
-	}
+    public void setInterfaceName( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
 
-	public void setFailIfNoDestinationEndpoint(
-			boolean failIfNoDestinationEndpoint) {
-		this.failIfNoDestinationEndpoint = failIfNoDestinationEndpoint;
-	}
+    public QName getOperation()
+    {
+        return operation;
+    }
 
-	protected EndpointResolver createEndpointResolver() {
-		if (this.destinationService != null) {
-			if (this.destinationEndpoint != null) {
-				return new ServiceAndEndpointNameResolver(
-						this.destinationService, this.destinationEndpoint);
-			}
-			return new ServiceNameEndpointResolver(this.destinationService);
-		}
-		if (this.destinationInterface != null)
-			return new InterfaceNameEndpointResolver(this.destinationInterface);
-		if (this.destinationUri != null) {
-			return new URIResolver(this.destinationUri);
-		}
-		return null;
-	}
+    public void setOperation( QName operation )
+    {
+        this.operation = operation;
+    }
 
-	public Boolean getPersistent() {
-		return this.persistent;
-	}
+    public EndpointResolver getDestinationResolver()
+    {
+        if ( destinationResolver == null )
+        {
+            destinationResolver = createEndpointResolver();
+        }
+        return destinationResolver;
+    }
 
-	public void setPersistent(Boolean persistent) {
-		this.persistent = persistent;
-	}
+    public void setDestinationResolver( EndpointResolver destinationResolver )
+    {
+        this.destinationResolver = destinationResolver;
+    }
 
-	public String getDestinationUri() {
-		return this.destinationUri;
-	}
+    public EndpointChooser getInterfaceChooser()
+    {
+        return interfaceChooser;
+    }
 
-	public void setDestinationUri(String destinationUri) {
-		this.destinationUri = destinationUri;
-	}
+    public void setInterfaceChooser( EndpointChooser interfaceChooser )
+    {
+        this.interfaceChooser = interfaceChooser;
+    }
 
-	public String toString() {
-		return "ActivationSpec [component=" + this.component
-				+ ", componentName=" + this.componentName
-				+ ", destinationEndpoint=" + this.destinationEndpoint
-				+ ", destinationInterface=" + this.destinationInterface
-				+ ", destinationOperation=" + this.destinationOperation
-				+ ", destinationService=" + this.destinationService
-				+ ", destinationUri=" + this.destinationUri + ", endpoint="
-				+ this.endpoint + ", failIfNoDestinationEndpoint="
-				+ this.failIfNoDestinationEndpoint + ", id=" + this.id
-				+ ", interfaceName=" + this.interfaceName + ", operation="
-				+ this.operation + ", persistent=" + this.persistent
-				+ ", service=" + this.service + ", subscriptions="
-				+ Arrays.toString(this.subscriptions) + "]";
-	}
+    public EndpointChooser getServiceChooser()
+    {
+        return serviceChooser;
+    }
+
+    public void setServiceChooser( EndpointChooser serviceChooser )
+    {
+        this.serviceChooser = serviceChooser;
+    }
+
+    public QName getDestinationService()
+    {
+        return destinationService;
+    }
+
+    public void setDestinationService( QName destinationService )
+    {
+        this.destinationService = destinationService;
+    }
+
+    public QName getDestinationInterface()
+    {
+        return destinationInterface;
+    }
+
+    public void setDestinationInterface( QName destinationInterface )
+    {
+        this.destinationInterface = destinationInterface;
+    }
+
+    public QName getDestinationOperation()
+    {
+        return destinationOperation;
+    }
+
+    public void setDestinationOperation( QName destinationOperation )
+    {
+        this.destinationOperation = destinationOperation;
+    }
+
+    public String getDestinationEndpoint()
+    {
+        return destinationEndpoint;
+    }
+
+    public void setDestinationEndpoint( String destinationEndpoint )
+    {
+        this.destinationEndpoint = destinationEndpoint;
+    }
+
+    public PojoMarshaler getMarshaler()
+    {
+        return marshaler;
+    }
+
+    public void setMarshaler( PojoMarshaler marshaler )
+    {
+        this.marshaler = marshaler;
+    }
+
+    public boolean isFailIfNoDestinationEndpoint()
+    {
+        return failIfNoDestinationEndpoint;
+    }
+
+    public void setFailIfNoDestinationEndpoint( boolean failIfNoDestinationEndpoint )
+    {
+        this.failIfNoDestinationEndpoint = failIfNoDestinationEndpoint;
+    }
+
+    protected EndpointResolver createEndpointResolver()
+    {
+        if ( destinationService != null )
+        {
+            if ( destinationEndpoint != null )
+            {
+                return new ServiceAndEndpointNameResolver( destinationService, destinationEndpoint );
+            }
+            return new ServiceNameEndpointResolver( destinationService );
+        }
+        if ( destinationInterface != null )
+        {
+            return new InterfaceNameEndpointResolver( destinationInterface );
+        }
+        if ( destinationUri != null )
+        {
+            return new URIResolver( destinationUri );
+        }
+        return null;
+    }
+
+    public Boolean getPersistent()
+    {
+        return persistent;
+    }
+
+    public void setPersistent( Boolean persistent )
+    {
+        this.persistent = persistent;
+    }
+
+    public String getDestinationUri()
+    {
+        return destinationUri;
+    }
+
+    public void setDestinationUri( String destinationUri )
+    {
+        this.destinationUri = destinationUri;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ActivationSpec [component=" + component + ", componentName=" + componentName + ", destinationEndpoint="
+            + destinationEndpoint + ", destinationInterface=" + destinationInterface + ", destinationOperation="
+            + destinationOperation + ", destinationService=" + destinationService + ", destinationUri="
+            + destinationUri + ", endpoint=" + endpoint + ", failIfNoDestinationEndpoint="
+            + failIfNoDestinationEndpoint + ", id=" + id + ", interfaceName=" + interfaceName + ", operation="
+            + operation + ", persistent=" + persistent + ", service=" + service + ", subscriptions="
+            + Arrays.toString( subscriptions ) + "]";
+    }
 }

@@ -2,23 +2,30 @@ package com.sanxing.sesame.jmx.mbean.admin;
 
 import java.io.Serializable;
 
-public class JMSServerInfo implements Serializable {
-	private String name;
-	private int port;
+public class JMSServerInfo
+    implements Serializable
+{
+    private String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private int port;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public int getPort() {
-		return this.port;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public void setPort(int port) {
-		this.port = port;
-	}
+    public int getPort()
+    {
+        return port;
+    }
+
+    public void setPort( int port )
+    {
+        this.port = port;
+    }
 }

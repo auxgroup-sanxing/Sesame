@@ -1,6 +1,6 @@
 <%@page language="java" contentType="text/html; charset=utf-8"%>
 <%@page import="java.util.*"%>
-<%@page import="javax.security.auth.*" %>
+<%@page import="javax.security.auth.*"%>
 <%@page import="org.json.*"%>
 <%@page import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.auth.*"%>

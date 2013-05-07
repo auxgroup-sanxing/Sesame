@@ -1,88 +1,115 @@
 package com.sanxing.sesame.engine.action.callout;
 
-import com.sanxing.sesame.engine.action.flow.exceptions.Catcher;
-import com.sanxing.sesame.engine.context.DataContext;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class Reverse implements Comparable<Reverse> {
-	private String group;
-	private int index;
-	private List<CatchClause> clauses = new ArrayList();
-	private DataContext snapshot;
+import com.sanxing.sesame.engine.action.flow.exceptions.Catcher;
+import com.sanxing.sesame.engine.context.DataContext;
 
-	public int compareTo(Reverse o) {
-		if (this.index == o.index)
-			return 0;
-		if (this.index < o.index) {
-			return -1;
-		}
-		return 1;
-	}
+public class Reverse
+    implements Comparable<Reverse>
+{
+    private String group;
 
-	public CatchClause getClause(String exceptionKey) {
-		for (Iterator iter = this.clauses.iterator(); iter.hasNext();) {
-			CatchClause clause = (CatchClause) iter.next();
-			if (Catcher.isCatchable(exceptionKey, clause.getExceptionKeys())) {
-				return clause;
-			}
-		}
-		return null;
-	}
+    private int index;
 
-	public void put(String[] catches, List<?> actions, boolean instantly) {
-		CatchClause clause = new CatchClause();
-		clause.catches = catches;
-		clause.actions = actions;
-		clause.instantly = instantly;
-		this.clauses.add(clause);
-	}
+    private final List<CatchClause> clauses = new ArrayList();
 
-	public String getGroup() {
-		return this.group;
-	}
+    private DataContext snapshot;
 
-	public void setGroup(String group) {
-		this.group = group;
-	}
+    @Override
+    public int compareTo( Reverse o )
+    {
+        if ( index == o.index )
+        {
+            return 0;
+        }
+        if ( index < o.index )
+        {
+            return -1;
+        }
+        return 1;
+    }
 
-	public int getIndex() {
-		return this.index;
-	}
+    public CatchClause getClause( String exceptionKey )
+    {
+        for ( Object element : clauses )
+        {
+            CatchClause clause = (CatchClause) element;
+            if ( Catcher.isCatchable( exceptionKey, clause.getExceptionKeys() ) )
+            {
+                return clause;
+            }
+        }
+        return null;
+    }
 
-	public void setIndex(int index) {
-		this.index = index;
-	}
+    public void put( String[] catches, List<?> actions, boolean instantly )
+    {
+        CatchClause clause = new CatchClause();
+        clause.catches = catches;
+        clause.actions = actions;
+        clause.instantly = instantly;
+        clauses.add( clause );
+    }
 
-	public DataContext getSnapshot() {
-		return this.snapshot;
-	}
+    public String getGroup()
+    {
+        return group;
+    }
 
-	public void setSnapshot(DataContext snapshot) {
-		this.snapshot = snapshot;
-	}
+    public void setGroup( String group )
+    {
+        this.group = group;
+    }
 
-	public String toString() {
-		return "Reverse [index=" + this.index + ", group=" + this.group
-				+ ", catches=" + this.clauses + "]";
-	}
+    public int getIndex()
+    {
+        return index;
+    }
 
-	public static class CatchClause {
-		private String[] catches;
-		private List<?> actions;
-		private boolean instantly;
+    public void setIndex( int index )
+    {
+        this.index = index;
+    }
 
-		public String[] getExceptionKeys() {
-			return this.catches;
-		}
+    public DataContext getSnapshot()
+    {
+        return snapshot;
+    }
 
-		public List<?> getActions() {
-			return this.actions;
-		}
+    public void setSnapshot( DataContext snapshot )
+    {
+        this.snapshot = snapshot;
+    }
 
-		public boolean isInstantly() {
-			return this.instantly;
-		}
-	}
+    @Override
+    public String toString()
+    {
+        return "Reverse [index=" + index + ", group=" + group + ", catches=" + clauses + "]";
+    }
+
+    public static class CatchClause
+    {
+        private String[] catches;
+
+        private List<?> actions;
+
+        private boolean instantly;
+
+        public String[] getExceptionKeys()
+        {
+            return catches;
+        }
+
+        public List<?> getActions()
+        {
+            return actions;
+        }
+
+        public boolean isInstantly()
+        {
+            return instantly;
+        }
+    }
 }

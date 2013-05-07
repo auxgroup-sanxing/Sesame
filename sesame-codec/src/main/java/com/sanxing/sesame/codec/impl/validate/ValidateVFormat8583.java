@@ -1,145 +1,158 @@
 package com.sanxing.sesame.codec.impl.validate;
 
-import com.sanxing.sesame.binding.codec.FormatException;
 import org.jdom.Namespace;
-import org.w3c.dom.NodeList;
 
-public class ValidateVFormat8583 {
-	private int headLen;
-	private char headBlank = ' ';
-	private String headAlign;
-	private int headCompress = 0;
-	private int compress = 0;
-	private int headRadix = 10;
-	private int id = 0;
+import com.sanxing.sesame.binding.codec.FormatException;
 
-	public ValidateVFormat8583(org.jdom.Element element,
-			org.jdom.Element format, Namespace xsd) throws FormatException {
-		String elementName = element.getAttributeValue("name");
+public class ValidateVFormat8583
+{
+    private int headLen;
 
-		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		org.jdom.Element head = format.getChild("head", xsd);
-		if (head == null)
-			throw new FormatException("element:[" + elementName
-					+ "],element format,do not define child element[head]!");
+    private char headBlank = ' ';
 
-		String headLenStr = head.getAttributeValue("length");
-		this.headLen = ValidateField.validateLength(elementName, headLenStr);
+    private String headAlign;
 
-		String headCompressStr = head.getAttributeValue("compress");
-		this.headCompress = ValidateField.validateCompress(elementName,
-				headCompressStr);
+    private int headCompress = 0;
 
-		String blankStr = head.getAttributeValue("blank");
-		this.headBlank = ValidateField.validateBlank(elementName,
-				this.headBlank, blankStr);
+    private int compress = 0;
 
-		this.headAlign = head.getAttributeValue("align");
-		this.headAlign = ValidateField.validateAlign(elementName,
-				this.headAlign);
+    private final int headRadix = 10;
 
-		int headRadix = 0;
-		headRadix = ValidateField.validateRadix(
-				head.getAttributeValue("radix"), headRadix);
+    private int id = 0;
 
-		if (!("string".equals(element.getAttributeValue("type"))))
-			return;
-		this.compress = ValidateField.validateCompress(elementName,
-				format.getAttributeValue("compress"));
-	}
+    public ValidateVFormat8583( org.jdom.Element element, org.jdom.Element format, Namespace xsd )
+        throws FormatException
+    {
+        String elementName = element.getAttributeValue( "name" );
 
-	public ValidateVFormat8583(String elementName, String type,
-			org.jdom.Element format, Namespace xsd) throws FormatException {
-		this.id = Integer.parseInt(format.getAttributeValue("id"));
-		org.jdom.Element head = format.getChild("head", xsd);
-		if (head == null)
-			throw new FormatException("element:[" + elementName
-					+ "],element format,do not define child element[head]!");
+        id = Integer.parseInt( format.getAttributeValue( "id" ) );
+        org.jdom.Element head = format.getChild( "head", xsd );
+        if ( head == null )
+        {
+            throw new FormatException( "element:[" + elementName
+                + "],element format,do not define child element[head]!" );
+        }
 
-		String headLenStr = head.getAttributeValue("length");
-		this.headLen = ValidateField.validateLength(elementName, headLenStr);
+        String headLenStr = head.getAttributeValue( "length" );
+        headLen = ValidateField.validateLength( elementName, headLenStr );
 
-		String headCompressStr = head.getAttributeValue("compress");
-		this.headCompress = ValidateField.validateCompress(elementName,
-				headCompressStr);
+        String headCompressStr = head.getAttributeValue( "compress" );
+        headCompress = ValidateField.validateCompress( elementName, headCompressStr );
 
-		String blankStr = head.getAttributeValue("blank");
-		this.headBlank = ValidateField.validateBlank(elementName,
-				this.headBlank, blankStr);
+        String blankStr = head.getAttributeValue( "blank" );
+        headBlank = ValidateField.validateBlank( elementName, headBlank, blankStr );
 
-		this.headAlign = head.getAttributeValue("align");
-		this.headAlign = ValidateField.validateAlign(elementName,
-				this.headAlign);
+        headAlign = head.getAttributeValue( "align" );
+        headAlign = ValidateField.validateAlign( elementName, headAlign );
 
-		int headRadix = 0;
-		headRadix = ValidateField.validateRadix(
-				head.getAttributeValue("radix"), headRadix);
+        int headRadix = 0;
+        headRadix = ValidateField.validateRadix( head.getAttributeValue( "radix" ), headRadix );
 
-		if (!("string".equals(type)))
-			return;
-		this.compress = ValidateField.validateCompress(elementName,
-				format.getAttributeValue("compress"));
-	}
+        if ( !( "string".equals( element.getAttributeValue( "type" ) ) ) )
+        {
+            return;
+        }
+        compress = ValidateField.validateCompress( elementName, format.getAttributeValue( "compress" ) );
+    }
 
-	public ValidateVFormat8583(String elementType, String elementName,
-			org.w3c.dom.Element format) throws FormatException {
-		this.id = Integer.parseInt(format.getAttribute("id"));
-		org.w3c.dom.Element head = (org.w3c.dom.Element) format
-				.getElementsByTagName("head").item(0);
-		if (head == null)
-			throw new FormatException("element:[" + elementName
-					+ "],element format,do not define child element[head]!");
+    public ValidateVFormat8583( String elementName, String type, org.jdom.Element format, Namespace xsd )
+        throws FormatException
+    {
+        id = Integer.parseInt( format.getAttributeValue( "id" ) );
+        org.jdom.Element head = format.getChild( "head", xsd );
+        if ( head == null )
+        {
+            throw new FormatException( "element:[" + elementName
+                + "],element format,do not define child element[head]!" );
+        }
 
-		String headLenStr = head.getAttribute("length");
-		this.headLen = ValidateField.validateLength(elementName, headLenStr);
+        String headLenStr = head.getAttributeValue( "length" );
+        headLen = ValidateField.validateLength( elementName, headLenStr );
 
-		String headCompressStr = head.getAttribute("compress");
-		this.headCompress = ValidateField.validateCompress(elementName,
-				headCompressStr);
+        String headCompressStr = head.getAttributeValue( "compress" );
+        headCompress = ValidateField.validateCompress( elementName, headCompressStr );
 
-		String blankStr = head.getAttribute("blank");
-		this.headBlank = ValidateField.validateBlank(elementName,
-				this.headBlank, blankStr);
+        String blankStr = head.getAttributeValue( "blank" );
+        headBlank = ValidateField.validateBlank( elementName, headBlank, blankStr );
 
-		this.headAlign = head.getAttribute("align");
-		this.headAlign = ValidateField.validateAlign(elementName,
-				this.headAlign);
+        headAlign = head.getAttributeValue( "align" );
+        headAlign = ValidateField.validateAlign( elementName, headAlign );
 
-		int headRadix = 0;
-		headRadix = ValidateField.validateRadix(head.getAttribute("radix"),
-				headRadix);
+        int headRadix = 0;
+        headRadix = ValidateField.validateRadix( head.getAttributeValue( "radix" ), headRadix );
 
-		if (!("string".equals(elementType)))
-			return;
-		this.compress = ValidateField.validateCompress(elementName,
-				format.getAttribute("compress"));
-	}
+        if ( !( "string".equals( type ) ) )
+        {
+            return;
+        }
+        compress = ValidateField.validateCompress( elementName, format.getAttributeValue( "compress" ) );
+    }
 
-	public int getCompress() {
-		return this.compress;
-	}
+    public ValidateVFormat8583( String elementType, String elementName, org.w3c.dom.Element format )
+        throws FormatException
+    {
+        id = Integer.parseInt( format.getAttribute( "id" ) );
+        org.w3c.dom.Element head = (org.w3c.dom.Element) format.getElementsByTagName( "head" ).item( 0 );
+        if ( head == null )
+        {
+            throw new FormatException( "element:[" + elementName
+                + "],element format,do not define child element[head]!" );
+        }
 
-	public String getHeadAlign() {
-		return this.headAlign;
-	}
+        String headLenStr = head.getAttribute( "length" );
+        headLen = ValidateField.validateLength( elementName, headLenStr );
 
-	public char getHeadBlank() {
-		return this.headBlank;
-	}
+        String headCompressStr = head.getAttribute( "compress" );
+        headCompress = ValidateField.validateCompress( elementName, headCompressStr );
 
-	public int getHeadCompress() {
-		return this.headCompress;
-	}
+        String blankStr = head.getAttribute( "blank" );
+        headBlank = ValidateField.validateBlank( elementName, headBlank, blankStr );
 
-	public int getHeadLen() {
-		return this.headLen;
-	}
+        headAlign = head.getAttribute( "align" );
+        headAlign = ValidateField.validateAlign( elementName, headAlign );
 
-	public int getHeadRadix() {
-		return this.headRadix;
-	}
+        int headRadix = 0;
+        headRadix = ValidateField.validateRadix( head.getAttribute( "radix" ), headRadix );
 
-	public int getId() {
-		return this.id;
-	}
+        if ( !( "string".equals( elementType ) ) )
+        {
+            return;
+        }
+        compress = ValidateField.validateCompress( elementName, format.getAttribute( "compress" ) );
+    }
+
+    public int getCompress()
+    {
+        return compress;
+    }
+
+    public String getHeadAlign()
+    {
+        return headAlign;
+    }
+
+    public char getHeadBlank()
+    {
+        return headBlank;
+    }
+
+    public int getHeadCompress()
+    {
+        return headCompress;
+    }
+
+    public int getHeadLen()
+    {
+        return headLen;
+    }
+
+    public int getHeadRadix()
+    {
+        return headRadix;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
 }

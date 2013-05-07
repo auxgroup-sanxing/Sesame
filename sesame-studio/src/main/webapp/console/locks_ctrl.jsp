@@ -2,17 +2,19 @@
 <%@page import="org.tmatesoft.svn.core.SVNLock"%>
 <%@page import="com.sanxing.studio.team.svn.SVNSynchronizer"%>
 <%@page import="com.sanxing.studio.team.SCM"%>
-<%@page import="com.sanxing.studio.team.ThreeWaySynchronizer"%><%@page import="com.sanxing.studio.*"%>
+<%@page import="com.sanxing.studio.team.ThreeWaySynchronizer"%><%@page
+	import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.sesame.transport.*"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
 <%@page import="java.net.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.json.*" %>
+<%@page import="org.json.*"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
 
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());

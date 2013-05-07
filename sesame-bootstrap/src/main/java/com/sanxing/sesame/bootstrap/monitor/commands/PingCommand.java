@@ -4,8 +4,8 @@
  */
 package com.sanxing.sesame.bootstrap.monitor.commands;
 
-import com.sanxing.sesame.bootstrap.monitor.CommandMonitorThread;
 import com.sanxing.sesame.bootstrap.log.LogProxy;
+import com.sanxing.sesame.bootstrap.monitor.CommandMonitorThread;
 
 /**
  * Responds to pings (by doing nothing).

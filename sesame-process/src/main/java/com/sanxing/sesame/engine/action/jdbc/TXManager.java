@@ -2,18 +2,21 @@ package com.sanxing.sesame.engine.action.jdbc;
 
 import java.sql.Connection;
 
-public abstract interface TXManager {
-	public static final int BEGIN = 0;
-	public static final int COMMITED = 1;
-	public static final int ROLLBACK = 2;
+public abstract interface TXManager
+{
+    public static final int BEGIN = 0;
 
-	public abstract void begin();
+    public static final int COMMITED = 1;
 
-	public abstract void commit();
+    public static final int ROLLBACK = 2;
 
-	public abstract void rollback();
+    public abstract void begin();
 
-	public abstract Connection getConnection();
+    public abstract void commit();
 
-	public abstract int getStatus();
+    public abstract void rollback();
+
+    public abstract Connection getConnection();
+
+    public abstract int getStatus();
 }

@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.studio.emu.*"%>
 <%@page import="java.io.*, java.util.*"%>
@@ -6,7 +7,8 @@
 <%@page import="java.sql.*"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.*"%>
 <%@page import="org.json.*"%>
 
 <%!

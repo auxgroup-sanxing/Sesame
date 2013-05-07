@@ -5,55 +5,73 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ResourceEnumeration implements Enumeration {
-	private Iterator iterator;
-	private final String resourceName;
-	private Object next;
+public class ResourceEnumeration
+    implements Enumeration
+{
+    private Iterator iterator;
 
-	public ResourceEnumeration(Collection resourceLocations, String resourceName) {
-		this.iterator = resourceLocations.iterator();
-		this.resourceName = resourceName;
-	}
+    private final String resourceName;
 
-	public boolean hasMoreElements() {
-		fetchNext();
-		return (this.next != null);
-	}
+    private Object next;
 
-	public Object nextElement() {
-		fetchNext();
+    public ResourceEnumeration( Collection resourceLocations, String resourceName )
+    {
+        iterator = resourceLocations.iterator();
+        this.resourceName = resourceName;
+    }
 
-		Object next = this.next;
-		this.next = null;
+    @Override
+    public boolean hasMoreElements()
+    {
+        fetchNext();
+        return ( next != null );
+    }
 
-		if (next == null) {
-			throw new NoSuchElementException();
-		}
-		return next;
-	}
+    @Override
+    public Object nextElement()
+    {
+        fetchNext();
 
-	private void fetchNext() {
-		if (this.iterator == null) {
-			return;
-		}
-		if (this.next != null)
-			return;
-		try {
-			do {
-				ResourceLocation resourceLocation = (ResourceLocation) this.iterator
-						.next();
-				ResourceHandle resourceHandle = resourceLocation
-						.getResourceHandle(this.resourceName);
-				if (resourceHandle != null) {
-					this.next = resourceHandle.getUrl();
-					return;
-				}
-			} while (this.iterator.hasNext());
+        Object next = this.next;
+        this.next = null;
 
-			this.iterator = null;
-		} catch (IllegalStateException e) {
-			this.iterator = null;
-			throw e;
-		}
-	}
+        if ( next == null )
+        {
+            throw new NoSuchElementException();
+        }
+        return next;
+    }
+
+    private void fetchNext()
+    {
+        if ( iterator == null )
+        {
+            return;
+        }
+        if ( next != null )
+        {
+            return;
+        }
+        try
+        {
+            do
+            {
+                ResourceLocation resourceLocation = (ResourceLocation) iterator.next();
+                ResourceHandle resourceHandle = resourceLocation.getResourceHandle( resourceName );
+                if ( resourceHandle != null )
+                {
+                    next = resourceHandle.getUrl();
+                    return;
+                }
+            }
+            while ( iterator.hasNext() );
+
+            iterator = null;
+        }
+        catch ( IllegalStateException e )
+        {
+            iterator = null;
+            throw e;
+        }
+    }
 }

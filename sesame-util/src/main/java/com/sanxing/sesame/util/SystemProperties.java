@@ -1,94 +1,115 @@
 package com.sanxing.sesame.util;
 
-import com.sanxing.sesame.exceptions.ErrMessages;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SystemProperties {
-	private static SystemProperties _instance = new SystemProperties();
-	public static final String TMP_DIR = "java.io.tmpdir";
-	private Map<String, String> _props = new ConcurrentHashMap();
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-	public static String get(String key, String defaultValue) {
-		return GetterUtil.get(get(key), defaultValue);
-	}
+import com.sanxing.sesame.exceptions.ErrMessages;
 
-	public static String get(String key) {
-		String value = (String) _instance._props.get(key);
+public class SystemProperties
+{
+    private static final Logger LOG = LoggerFactory.getLogger( SystemProperties.class );
 
-		if (value == null) {
-			value = System.getProperty(key);
-		}
+    private static SystemProperties _instance = new SystemProperties();
 
-		return value;
-	}
+    public static final String TMP_DIR = "java.io.tmpdir";
 
-	public static String[] getArray(String key) {
-		String value = get(key);
+    private final Map<String, String> _props = new ConcurrentHashMap();
 
-		if (value == null) {
-			return new String[0];
-		}
-		return StringUtil.split(value);
-	}
+    public static String get( String key, String defaultValue )
+    {
+        return GetterUtil.get( get( key ), defaultValue );
+    }
 
-	private SystemProperties() {
-		Properties sys = System.getProperties();
-		Enumeration keys = sys.keys();
-		while (keys.hasMoreElements()) {
-			String key = (String) keys.nextElement();
-			this._props.put(key, sys.getProperty(key));
-		}
-		String defaultFileName = System.getProperty(
-				"sesame.application.properties",
-				"/conf/application.properties");
-		parsePropertyFile(defaultFileName);
+    public static String get( String key )
+    {
+        String value = _instance._props.get( key );
 
-		String appFiles = GetterUtil
-				.get((String) this._props
-						.get("sesame.application.ext.properties"), "");
+        if ( value == null )
+        {
+            value = System.getProperty( key );
+        }
 
-		String[] fileNames = appFiles.split(",");
-		for (String file : fileNames)
-			parsePropertyFile(file);
-	}
+        return value;
+    }
 
-	private void parsePropertyFile(String fileName) {
-		System.out.println("parsing property file [" + fileName + "]");
-		try {
-			InputStream input;
-			if (fileName.startsWith("$classpath")) {
-				fileName = fileName.substring(11);
-				input = ErrMessages.class.getClassLoader().getResourceAsStream(
-						fileName);
-			} else {
-				input = new FileInputStream(new File(
-						System.getProperty("SESAME_HOME"), fileName));
-			}
+    public static String[] getArray( String key )
+    {
+        String value = get( key );
 
-			Properties properites = new Properties();
+        if ( value == null )
+        {
+            return new String[0];
+        }
+        return StringUtil.split( value );
+    }
 
-			properites.load(input);
-			Enumeration enumer = properites.propertyNames();
+    private SystemProperties()
+    {
+        Properties sys = System.getProperties();
+        Enumeration keys = sys.keys();
+        while ( keys.hasMoreElements() )
+        {
+            String key = (String) keys.nextElement();
+            _props.put( key, sys.getProperty( key ) );
+        }
+        String defaultFileName = System.getProperty( "sesame.application.properties", "/conf/application.properties" );
+        parsePropertyFile( defaultFileName );
 
-			while (enumer.hasMoreElements()) {
-				String key = (String) enumer.nextElement();
-				String value = properites.getProperty(key);
-				if (System.getProperty("sesame.property.overide.sequence",
-						"last").equals("last")) {
-					this._props.put(key, value);
-				} else if (!(this._props.containsKey(key)))
-					this._props.put(key, value);
-			}
-		} catch (Exception e) {
-			System.out.println("Load app propertie failed! [" + fileName + "]");
-		}
-	}
+        String appFiles = GetterUtil.get( _props.get( "sesame.application.ext.properties" ), "" );
+
+        String[] fileNames = appFiles.split( "," );
+        for ( String file : fileNames )
+        {
+            parsePropertyFile( file );
+        }
+    }
+
+    private void parsePropertyFile( String fileName )
+    {
+        LOG.info( "parsing property file [" + fileName + "]" );
+        try
+        {
+            InputStream input;
+            if ( fileName.startsWith( "$classpath" ) )
+            {
+                fileName = fileName.substring( 11 );
+                input = ErrMessages.class.getClassLoader().getResourceAsStream( fileName );
+            }
+            else
+            {
+                input = new FileInputStream( new File( System.getProperty( "SESAME_HOME" ), fileName ) );
+            }
+
+            Properties properites = new Properties();
+
+            properites.load( input );
+            Enumeration enumer = properites.propertyNames();
+
+            while ( enumer.hasMoreElements() )
+            {
+                String key = (String) enumer.nextElement();
+                String value = properites.getProperty( key );
+                if ( System.getProperty( "sesame.property.overide.sequence", "last" ).equals( "last" ) )
+                {
+                    _props.put( key, value );
+                }
+                else if ( !( _props.containsKey( key ) ) )
+                {
+                    _props.put( key, value );
+                }
+            }
+        }
+        catch ( Exception e )
+        {
+            LOG.error( "Load app propertie failed! [" + fileName + "]" );
+        }
+    }
 }

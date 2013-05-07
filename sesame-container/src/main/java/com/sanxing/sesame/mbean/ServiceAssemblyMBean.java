@@ -2,24 +2,30 @@ package com.sanxing.sesame.mbean;
 
 import javax.management.ObjectName;
 
-public abstract interface ServiceAssemblyMBean {
-	public static final String STARTED = "Started";
-	public static final String SHUTDOWN = "Shutdown";
-	public static final String STOPPED = "Stopped";
+public abstract interface ServiceAssemblyMBean
+{
+    public static final String STARTED = "Started";
 
-	public abstract String getName();
+    public static final String SHUTDOWN = "Shutdown";
 
-	public abstract String getDescription();
+    public static final String STOPPED = "Stopped";
 
-	public abstract String getCurrentState();
+    public abstract String getName();
 
-	public abstract String getDescriptor();
+    public abstract String getDescription();
 
-	public abstract ObjectName[] getServiceUnits();
+    public abstract String getCurrentState();
 
-	public abstract String start() throws Exception;
+    public abstract String getDescriptor();
 
-	public abstract String stop() throws Exception;
+    public abstract ObjectName[] getServiceUnits();
 
-	public abstract String shutDown() throws Exception;
+    public abstract String start()
+        throws Exception;
+
+    public abstract String stop()
+        throws Exception;
+
+    public abstract String shutDown()
+        throws Exception;
 }

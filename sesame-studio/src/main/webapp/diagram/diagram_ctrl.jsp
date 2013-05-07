@@ -1,4 +1,5 @@
-<%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page
+	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
 <%@page import="org.xml.sax.InputSource"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
@@ -15,7 +16,8 @@
 <%@page import="org.jdom.input.SAXBuilder"%>
 <%@page import="javax.xml.transform.stream.StreamSource"%>
 
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!private Logger logger = LoggerFactory.getLogger(this.getClass());
 

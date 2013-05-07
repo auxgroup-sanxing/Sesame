@@ -5,134 +5,168 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SearcherUtil extends WSDLParser {
-	private static SearcherUtil _instance;
-	private Map<String, LuceneSearcher> indexMap = new HashMap();
+public class SearcherUtil
+    extends WSDLParser
+{
+    private static SearcherUtil _instance;
 
-	private final String[] indexNames = { "project", "service", "interface",
-			"operation", "message", "element" };
-	private String indexRootPath;
-	static Logger logger = LoggerFactory.getLogger(SearcherUtil.class.getName());
+    private final Map<String, LuceneSearcher> indexMap = new HashMap();
 
-	public static synchronized SearcherUtil getInstance(String indexRootPath) {
-		if (_instance == null) {
-			_instance = new SearcherUtil(indexRootPath);
-		}
-		return _instance;
-	}
+    private final String[] indexNames = { "project", "service", "interface", "operation", "message", "element" };
 
-	public void buildIndexes(String projectRootPath) {
-		File curPath = new File(projectRootPath);
+    private final String indexRootPath;
 
-		for (File file : curPath.listFiles()) {
-			if (file.getName().equals("unit.wsdl") == true) {
-				Record projectRecord = getProjectRecord(getProjJbiFile(file));
+    static Logger logger = LoggerFactory.getLogger( SearcherUtil.class.getName() );
 
-				Record stdRecord = getStdRecord(file);
-				RecordCollector recCollector = getWSDLRecords(new File(
-						file.getAbsolutePath()));
+    public static synchronized SearcherUtil getInstance( String indexRootPath )
+    {
+        if ( _instance == null )
+        {
+            _instance = new SearcherUtil( indexRootPath );
+        }
+        return _instance;
+    }
 
-				recCollector.joinRecord(projectRecord, false);
-				addRecord(recCollector, stdRecord);
-			} else if (file.getName().equals("jbi.xml") == true) {
-				Record projectRecord = getProjectRecord(file);
-				if (projectRecord != null) {
-					addRecord(projectRecord);
-				}
-			}
-			if (file.isDirectory())
-				buildIndexes(file.getAbsolutePath());
-		}
-	}
+    public void buildIndexes( String projectRootPath )
+    {
+        File curPath = new File( projectRootPath );
 
-	public void closeIndexs() {
-		for (String name : this.indexMap.keySet()) {
-			LuceneSearcher searcher = (LuceneSearcher) this.indexMap.get(name);
-			searcher.closeIndex();
-		}
-	}
+        for ( File file : curPath.listFiles() )
+        {
+            if ( file.getName().equals( "unit.wsdl" ) == true )
+            {
+                Record projectRecord = getProjectRecord( getProjJbiFile( file ) );
 
-	private Set<Record> search(String queryString, int maxHits) {
-		Set records = new TreeSet();
-		for (String name : this.indexMap.keySet()) {
-			LuceneSearcher searcher = (LuceneSearcher) this.indexMap.get(name);
-			Set recs = searcher.search(queryString, maxHits);
-			if (recs != null) {
-				records.addAll(recs);
-			}
-		}
-		return records;
-	}
+                Record stdRecord = getStdRecord( file );
+                RecordCollector recCollector = getWSDLRecords( new File( file.getAbsolutePath() ) );
 
-	public Set<Record> search(String queryString, int maxHits, String[] filters) {
-		Set records = new TreeSet();
-		if ((filters != null) && (filters.length > 0)) {
-			for (String type : filters) {
-				LuceneSearcher searcher = (LuceneSearcher) this.indexMap
-						.get(type);
-				if (searcher != null) {
-					Set recs = searcher.search(queryString, maxHits);
-					if (recs != null)
-						records.addAll(recs);
-				}
-			}
-		} else {
-			records = search(queryString, maxHits);
-		}
-		return records;
-	}
+                recCollector.joinRecord( projectRecord, false );
+                addRecord( recCollector, stdRecord );
+            }
+            else if ( file.getName().equals( "jbi.xml" ) == true )
+            {
+                Record projectRecord = getProjectRecord( file );
+                if ( projectRecord != null )
+                {
+                    addRecord( projectRecord );
+                }
+            }
+            if ( file.isDirectory() )
+            {
+                buildIndexes( file.getAbsolutePath() );
+            }
+        }
+    }
 
-	private SearcherUtil(String indexRootPath) {
-		this.indexRootPath = indexRootPath;
-	}
+    public void closeIndexs()
+    {
+        for ( String name : indexMap.keySet() )
+        {
+            LuceneSearcher searcher = indexMap.get( name );
+            searcher.closeIndex();
+        }
+    }
 
-	public void init() {
-		cleanup();
-		for (String indexName : this.indexNames) {
-			LuceneSearcher index = new LuceneSearcher(this.indexRootPath + "/"
-					+ indexName);
+    private Set<Record> search( String queryString, int maxHits )
+    {
+        Set records = new TreeSet();
+        for ( String name : indexMap.keySet() )
+        {
+            LuceneSearcher searcher = indexMap.get( name );
+            Set recs = searcher.search( queryString, maxHits );
+            if ( recs != null )
+            {
+                records.addAll( recs );
+            }
+        }
+        return records;
+    }
 
-			index.setName(indexName);
-			index.createIndex();
-			this.indexMap.put(indexName, index);
-		}
-	}
+    public Set<Record> search( String queryString, int maxHits, String[] filters )
+    {
+        Set records = new TreeSet();
+        if ( ( filters != null ) && ( filters.length > 0 ) )
+        {
+            for ( String type : filters )
+            {
+                LuceneSearcher searcher = indexMap.get( type );
+                if ( searcher != null )
+                {
+                    Set recs = searcher.search( queryString, maxHits );
+                    if ( recs != null )
+                    {
+                        records.addAll( recs );
+                    }
+                }
+            }
+        }
+        else
+        {
+            records = search( queryString, maxHits );
+        }
+        return records;
+    }
 
-	public void cleanup() {
-		Iterator it = this.indexMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry o = (Map.Entry) it.next();
-			LuceneSearcher index = (LuceneSearcher) o.getValue();
-			index.cleanup();
-		}
-		this.indexMap.clear();
-	}
+    private SearcherUtil( String indexRootPath )
+    {
+        this.indexRootPath = indexRootPath;
+    }
 
-	private void addRecord(RecordCollector recCollector, Record stdRecord) {
-		Map collectorMap = recCollector.getRecordMap();
-		Iterator it = collectorMap.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry o = (Map.Entry) it.next();
-			List<Record> obj = (List) o.getValue();
-			for (Record record : obj) {
-				record.join(stdRecord, true);
-				addRecord(record);
-			}
-		}
-	}
+    public void init()
+    {
+        cleanup();
+        for ( String indexName : indexNames )
+        {
+            LuceneSearcher index = new LuceneSearcher( indexRootPath + "/" + indexName );
 
-	private LuceneSearcher getSearcherByName(String name) {
-		return ((LuceneSearcher) this.indexMap.get(name));
-	}
+            index.setName( indexName );
+            index.createIndex();
+            indexMap.put( indexName, index );
+        }
+    }
 
-	private void addRecord(Record record) {
-		LuceneSearcher searcher = getSearcherByName(record.getSearcherName());
-		searcher.addIndex(record);
-	}
+    public void cleanup()
+    {
+        Iterator it = indexMap.entrySet().iterator();
+        while ( it.hasNext() )
+        {
+            Map.Entry o = (Map.Entry) it.next();
+            LuceneSearcher index = (LuceneSearcher) o.getValue();
+            index.cleanup();
+        }
+        indexMap.clear();
+    }
+
+    private void addRecord( RecordCollector recCollector, Record stdRecord )
+    {
+        Map collectorMap = recCollector.getRecordMap();
+        Iterator it = collectorMap.entrySet().iterator();
+        while ( it.hasNext() )
+        {
+            Map.Entry o = (Map.Entry) it.next();
+            List<Record> obj = (List) o.getValue();
+            for ( Record record : obj )
+            {
+                record.join( stdRecord, true );
+                addRecord( record );
+            }
+        }
+    }
+
+    private LuceneSearcher getSearcherByName( String name )
+    {
+        return indexMap.get( name );
+    }
+
+    private void addRecord( Record record )
+    {
+        LuceneSearcher searcher = getSearcherByName( record.getSearcherName() );
+        searcher.addIndex( record );
+    }
 }

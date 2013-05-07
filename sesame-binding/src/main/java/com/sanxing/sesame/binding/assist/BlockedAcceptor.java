@@ -1,10 +1,19 @@
 package com.sanxing.sesame.binding.assist;
 
+import java.io.IOException;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.concurrent.Executor;
+
+import javax.jbi.messaging.MessagingException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sanxing.sesame.binding.BindingException;
 import com.sanxing.sesame.binding.codec.BinaryResult;
 import com.sanxing.sesame.binding.codec.BinarySource;
 import com.sanxing.sesame.binding.context.MessageContext;
-import com.sanxing.sesame.binding.context.MessageContext.Mode;
 import com.sanxing.sesame.binding.transport.Acceptor;
 import com.sanxing.sesame.binding.transport.BaseTransport;
 import com.sanxing.sesame.executors.ExecutorFactory;
@@ -12,115 +21,140 @@ import com.sanxing.sesame.logging.BufferRecord;
 import com.sanxing.sesame.logging.Log;
 import com.sanxing.sesame.logging.LogFactory;
 import com.sanxing.sesame.logging.PerfRecord;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.concurrent.Executor;
-import javax.jbi.messaging.MessagingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public abstract class BlockedAcceptor extends BaseTransport implements
-		Acceptor, Runnable {
-	public static final int DEFAULT_BUFFER_CAPACITY = 4096;
-	private static Logger LOG = LoggerFactory.getLogger(BlockedAcceptor.class);
-	private Thread acceptThread;
-	private Executor executor;
-	private boolean active = false;
+public abstract class BlockedAcceptor
+    extends BaseTransport
+    implements Acceptor, Runnable
+{
+    public static final int DEFAULT_BUFFER_CAPACITY = 4096;
 
-	protected Map<Object, PipeLine> pipelines = new Hashtable();
+    private static Logger LOG = LoggerFactory.getLogger( BlockedAcceptor.class );
 
-	protected abstract PipeLine accept() throws IOException;
+    private Thread acceptThread;
 
-	protected abstract byte[] allocate(int paramInt);
+    private Executor executor;
 
-	protected abstract int getBufferSize();
+    private boolean active = false;
 
-	public synchronized void open() throws IOException {
-		this.active = true;
-		this.executor = ExecutorFactory.getFactory().createExecutor(
-				"transports.BlockAcceptor");
-		this.acceptThread = new Thread(this);
-		this.acceptThread.start();
-	}
+    protected Map<Object, PipeLine> pipelines = new Hashtable();
 
-	public synchronized void close() throws IOException {
-		this.active = false;
-		try {
-			if (this.acceptThread != null)
-				this.acceptThread.interrupt();
-		} finally {
-			this.acceptThread = null;
-			this.executor = null;
-		}
-	}
+    protected abstract PipeLine accept()
+        throws IOException;
 
-	protected BinaryResult doSend(String contextPath, BinarySource source)
-			throws MessagingException, BindingException {
-		BinaryResult result = new BinaryResult();
-		result.setEncoding(getCharacterEncoding());
-		MessageContext message = new MessageContext(this, source);
-		message.setResult(result);
-		message.setPath(contextPath);
-		message.setMode(MessageContext.Mode.BLOCK);
+    protected abstract byte[] allocate( int paramInt );
 
-		postMessage(message);
+    protected abstract int getBufferSize();
 
-		return result;
-	}
+    @Override
+    public synchronized void open()
+        throws IOException
+    {
+        active = true;
+        executor = ExecutorFactory.getFactory().createExecutor( "transports.BlockAcceptor" );
+        acceptThread = new Thread( this );
+        acceptThread.start();
+    }
 
-	public void run() {
-		while (isActive())
-			try {
-				PipeLine pipeline = accept();
-				this.executor.execute(new BlockedWorker(this, pipeline));
-			} catch (IOException e) {
-				if (this.active)
-					LOG.error(e.getMessage(), e);
-			}
-	}
+    @Override
+    public synchronized void close()
+        throws IOException
+    {
+        active = false;
+        try
+        {
+            if ( acceptThread != null )
+            {
+                acceptThread.interrupt();
+            }
+        }
+        finally
+        {
+            acceptThread = null;
+            executor = null;
+        }
+    }
 
-	public boolean isActive() {
-		return this.active;
-	}
+    protected BinaryResult doSend( String contextPath, BinarySource source )
+        throws MessagingException, BindingException
+    {
+        BinaryResult result = new BinaryResult();
+        result.setEncoding( getCharacterEncoding() );
+        MessageContext message = new MessageContext( this, source );
+        message.setResult( result );
+        message.setPath( contextPath );
+        message.setMode( MessageContext.Mode.BLOCK );
 
-	public void reply(MessageContext context) throws IOException {
-		Log log = LogFactory.getLog("sesame.binding");
+        postMessage( message );
 
-		if (context.getResult() instanceof BinaryResult) {
-			BinaryResult result = (BinaryResult) context.getResult();
-			BufferRecord rec = new BufferRecord(
-					context.getSerial().longValue(), result.getBytes());
+        return result;
+    }
 
-			log.info(
-					"[REPLY][BINARY]-----------------------------------------",
-					rec);
-		}
+    @Override
+    public void run()
+    {
+        while ( isActive() )
+        {
+            try
+            {
+                PipeLine pipeline = accept();
+                executor.execute( new BlockedWorker( this, pipeline ) );
+            }
+            catch ( IOException e )
+            {
+                if ( active )
+                {
+                    LOG.error( e.getMessage(), e );
+                }
+            }
+        }
+    }
 
-		PipeLine pipeline = (PipeLine) this.pipelines.get(context.getSerial());
-		if (pipeline != null) {
-			this.pipelines.remove(context.getSerial());
-			try {
-				BinaryResult result = (BinaryResult) context.getResult();
-				byte[] bytes = result.getBytes();
-				if (context.getException() != null) {
-					LOG.error(context.getException().getMessage(),
-							context.getException());
-				}
-				pipeline.write(bytes, 0, bytes.length);
-			} finally {
-				pipeline.close();
-			}
-		}
+    @Override
+    public boolean isActive()
+    {
+        return active;
+    }
 
-		Long startTime = (Long) context.getProperty("sendTime");
+    @Override
+    public void reply( MessageContext context )
+        throws IOException
+    {
+        Log log = LogFactory.getLog( "sesame.binding" );
 
-		Log sensor = LogFactory.getLog("sesame.system.sensor");
-		PerfRecord rec = new PerfRecord();
-		rec.setSerial(context.getSerial().longValue());
-		rec.setElapsedTime(System.currentTimeMillis() - startTime.longValue());
-		sensor.info(
-				"--------------------------------------------------------------------total time--",
-				rec);
-	}
+        if ( context.getResult() instanceof BinaryResult )
+        {
+            BinaryResult result = (BinaryResult) context.getResult();
+            BufferRecord rec = new BufferRecord( context.getSerial().longValue(), result.getBytes() );
+
+            log.info( "[REPLY][BINARY]-----------------------------------------", rec );
+        }
+
+        PipeLine pipeline = pipelines.get( context.getSerial() );
+        if ( pipeline != null )
+        {
+            pipelines.remove( context.getSerial() );
+            try
+            {
+                BinaryResult result = (BinaryResult) context.getResult();
+                byte[] bytes = result.getBytes();
+                if ( context.getException() != null )
+                {
+                    LOG.error( context.getException().getMessage(), context.getException() );
+                }
+                pipeline.write( bytes, 0, bytes.length );
+            }
+            finally
+            {
+                pipeline.close();
+            }
+        }
+
+        Long startTime = (Long) context.getProperty( "sendTime" );
+
+        Log sensor = LogFactory.getLog( "sesame.system.sensor" );
+        PerfRecord rec = new PerfRecord();
+        rec.setSerial( context.getSerial().longValue() );
+        rec.setElapsedTime( System.currentTimeMillis() - startTime.longValue() );
+        sensor.info( "--------------------------------------------------------------------total time--", rec );
+    }
 }

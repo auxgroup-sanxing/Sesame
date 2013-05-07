@@ -1,215 +1,232 @@
 <?xml version="1.0" encoding="GBK"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/flow-actions" xmlns:tns="http://www.example.org/flow-actions" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/flow-actions"
+	xmlns:tns="http://www.example.org/flow-actions" elementFormDefault="qualified">
 
-    <complexType name="callout">
-    	<sequence>
-    		<element name="address" type="tns:address" minOccurs="1" maxOccurs="1">
-    			<annotation>
-    				<documentation>
-    					目标服务的地址，界面上是下拉选择上的， 人工书写不太合适
-    				</documentation>
-    			</annotation></element>
-    		<element name="use-var" type="string" minOccurs="1" maxOccurs="1">
-    			<annotation>
-    				<documentation>使用这个变量进行call-out</documentation>
-    			</annotation></element>
-    	</sequence>
-    </complexType>
+	<complexType name="callout">
+		<sequence>
+			<element name="address" type="tns:address" minOccurs="1"
+				maxOccurs="1">
+				<annotation>
+					<documentation>
+						目标服务的地址，界面上是下拉选择上的， 人工书写不太合适
+					</documentation>
+				</annotation>
+			</element>
+			<element name="use-var" type="string" minOccurs="1"
+				maxOccurs="1">
+				<annotation>
+					<documentation>使用这个变量进行call-out</documentation>
+				</annotation>
+			</element>
+		</sequence>
+	</complexType>
 
-    <complexType name="address">
-    	<sequence>
-    		<element name="service-name" type="string" minOccurs="1" maxOccurs="1"></element>
-    		<element name="interface-name" type="string" minOccurs="1" maxOccurs="1"></element>
-    		<element name="operation-name" type="string" minOccurs="1" maxOccurs="1"></element>
-    	</sequence>
-    </complexType>
+	<complexType name="address">
+		<sequence>
+			<element name="service-name" type="string" minOccurs="1"
+				maxOccurs="1"></element>
+			<element name="interface-name" type="string" minOccurs="1"
+				maxOccurs="1"></element>
+			<element name="operation-name" type="string" minOccurs="1"
+				maxOccurs="1"></element>
+		</sequence>
+	</complexType>
 
-    <complexType name="log">
-    	<sequence>
-    		<element name="xpath" type="string">
-    		</element>
-    	</sequence>
-    	<attribute name="name" type="string">
-    		<annotation>
-    			<documentation>logger的名字</documentation>
-    		</annotation></attribute>
-    	<attribute name="var" type="string">
-    		<annotation>
-    			<documentation>被记录的变量名称</documentation>
-    		</annotation></attribute>
-    	<attribute name="msg" type="string">
-    		<annotation>
-    			<documentation>附加的消息</documentation>
-    		</annotation></attribute>
-    	<attribute name="level" use="required">
+	<complexType name="log">
+		<sequence>
+			<element name="xpath" type="string">
+			</element>
+		</sequence>
+		<attribute name="name" type="string">
+			<annotation>
+				<documentation>logger的名字</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="var" type="string">
+			<annotation>
+				<documentation>被记录的变量名称</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="msg" type="string">
+			<annotation>
+				<documentation>附加的消息</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="level" use="required">
 
-    		<annotation>
-    			<documentation>日志的级别</documentation>
-    		</annotation>
-    		<simpleType>
-    			<restriction base="string">
-    				<enumeration value="log"></enumeration>
-    				<enumeration value="debug"></enumeration>
-    				<enumeration value="warn"></enumeration>
-    				<enumeration value="error"></enumeration>
-    				<enumeration value="fine"></enumeration>
-    				<enumeration value="fatal"></enumeration>
-    			</restriction>
-    		</simpleType>
-    	</attribute>
-    </complexType>
+			<annotation>
+				<documentation>日志的级别</documentation>
+			</annotation>
+			<simpleType>
+				<restriction base="string">
+					<enumeration value="log"></enumeration>
+					<enumeration value="debug"></enumeration>
+					<enumeration value="warn"></enumeration>
+					<enumeration value="error"></enumeration>
+					<enumeration value="fine"></enumeration>
+					<enumeration value="fatal"></enumeration>
+				</restriction>
+			</simpleType>
+		</attribute>
+	</complexType>
 
-    <complexType name="fork">
-    	<sequence>
-    		<element name="branch" type="tns:actions" minOccurs="0" maxOccurs="unbounded"></element>
-    	</sequence>
-    </complexType>
+	<complexType name="fork">
+		<sequence>
+			<element name="branch" type="tns:actions" minOccurs="0"
+				maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
 
 
-    <complexType name="for-each">
-    	<sequence>
-    		<element name="xpath" type="string">
-    			<annotation>
-    				<documentation>这个xpath必须返回一个list</documentation>
-    			</annotation></element>
-    		<element name="actions" type="tns:actions">
-    			<annotation>
-    				<documentation>actions in each step</documentation>
-    			</annotation></element>
-    	</sequence>
-    	<attribute name="var" type="string">
-    		<annotation>
-    			<documentation>xpath执行的变量</documentation>
-    		</annotation></attribute>
-    	<attribute name="as" type="string">
-    		<annotation>
-    			<documentation>当前的循环变量，list.get(i)</documentation>
-    		</annotation></attribute>
-    </complexType>
+	<complexType name="for-each">
+		<sequence>
+			<element name="xpath" type="string">
+				<annotation>
+					<documentation>这个xpath必须返回一个list</documentation>
+				</annotation>
+			</element>
+			<element name="actions" type="tns:actions">
+				<annotation>
+					<documentation>actions in each step</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="var" type="string">
+			<annotation>
+				<documentation>xpath执行的变量</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="as" type="string">
+			<annotation>
+				<documentation>当前的循环变量，list.get(i)</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
 
-   
 
-    <complexType name="while">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    		<element name="do" type="tns:actions"></element>
-    	</sequence>
-    	<attribute name="var" type="string"></attribute>
-    </complexType>
 
-    <complexType name="actions">
-    	<sequence>
-    		<element name="while" type="tns:while" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="for-each" type="tns:for-each" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="log" type="tns:log" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="call-out" type="tns:callout" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="if" type="tns:if" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="rename" type="tns:rename" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="assign" type="tns:assign" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="append" type="tns:assign" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="delete" type="tns:delete" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="clone" type="tns:clone" minOccurs="0"
-    			maxOccurs="unbounded">
-    		</element>
-    		<element name="fork" type="tns:actions" minOccurs="0" maxOccurs="unbounded"></element>
-    	</sequence>
-    </complexType>
+	<complexType name="while">
+		<sequence>
+			<element name="xpath" type="string"></element>
+			<element name="do" type="tns:actions"></element>
+		</sequence>
+		<attribute name="var" type="string"></attribute>
+	</complexType>
 
-    <complexType name="if">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    		<element name="then" type="tns:actions"></element>
-    		<element name="else-if" type="tns:if" minOccurs="0" maxOccurs="unbounded"></element>
-    	</sequence>
-    	<attribute name="var" type="string"></attribute>
-    </complexType>
+	<complexType name="actions">
+		<sequence>
+			<element name="while" type="tns:while" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="for-each" type="tns:for-each" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="log" type="tns:log" minOccurs="0" maxOccurs="unbounded">
+			</element>
+			<element name="call-out" type="tns:callout" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="if" type="tns:if" minOccurs="0" maxOccurs="unbounded">
+			</element>
+			<element name="rename" type="tns:rename" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="assign" type="tns:assign" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="append" type="tns:assign" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="delete" type="tns:delete" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="clone" type="tns:clone" minOccurs="0"
+				maxOccurs="unbounded">
+			</element>
+			<element name="fork" type="tns:actions" minOccurs="0"
+				maxOccurs="unbounded"></element>
+		</sequence>
+	</complexType>
 
-    <complexType name="assign">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    		<element name="raw-value" type="string">
-    			<annotation>
-    				<documentation>
-    					如果type是 attribute
-    					<raw-value>
+	<complexType name="if">
+		<sequence>
+			<element name="xpath" type="string"></element>
+			<element name="then" type="tns:actions"></element>
+			<element name="else-if" type="tns:if" minOccurs="0"
+				maxOccurs="unbounded"></element>
+		</sequence>
+		<attribute name="var" type="string"></attribute>
+	</complexType>
+
+	<complexType name="assign">
+		<sequence>
+			<element name="xpath" type="string"></element>
+			<element name="raw-value" type="string">
+				<annotation>
+					<documentation>
+						如果type是 attribute
+						<raw-value>
     						<![CDATA[age:18]]>
-    					</raw-value>
-    				</documentation>
-    			</annotation></element>
-    	</sequence>
-    	<attribute name="var" type="string" use="optional">
-    		<annotation>
-    			<documentation>被执行xpath的变量</documentation>
-    		</annotation>
-    	</attribute>
-    	<attribute name="to-var" type="string" use="required">
-    		<annotation>
-    			<documentation>目标变量</documentation>
-    		</annotation>
-    	</attribute>
-    	<attribute name="type" type="tns:var-type">
-    		<annotation>
-    			<documentation>
-    				在没有source-var xpath设定的时候 设定raw-value的类型
-    			</documentation>
-    		</annotation>
-    	
-    	</attribute>
+						</raw-value>
+					</documentation>
+				</annotation>
+			</element>
+		</sequence>
+		<attribute name="var" type="string" use="optional">
+			<annotation>
+				<documentation>被执行xpath的变量</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="to-var" type="string" use="required">
+			<annotation>
+				<documentation>目标变量</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="type" type="tns:var-type">
+			<annotation>
+				<documentation>
+					在没有source-var xpath设定的时候 设定raw-value的类型
+				</documentation>
+			</annotation>
 
-    </complexType>
+		</attribute>
 
-    <complexType name="clone">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    	</sequence>
-    	<attribute name="var" type="string"></attribute>
-    	<attribute name="to-var" type="string"></attribute>
-    </complexType>
+	</complexType>
 
-    <complexType name="delete">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    	</sequence>
-    	<attribute name="var" type="string"></attribute>
-    </complexType>
+	<complexType name="clone">
+		<sequence>
+			<element name="xpath" type="string"></element>
+		</sequence>
+		<attribute name="var" type="string"></attribute>
+		<attribute name="to-var" type="string"></attribute>
+	</complexType>
 
-    <complexType name="rename">
-    	<sequence>
-    		<element name="xpath" type="string"></element>
-    	</sequence>
-    	<attribute name="var" type="string"></attribute>
-    	<attribute name="to-name" type="string"></attribute>
-    </complexType>
+	<complexType name="delete">
+		<sequence>
+			<element name="xpath" type="string"></element>
+		</sequence>
+		<attribute name="var" type="string"></attribute>
+	</complexType>
 
-    <element name="flow" type="tns:actions"></element>
+	<complexType name="rename">
+		<sequence>
+			<element name="xpath" type="string"></element>
+		</sequence>
+		<attribute name="var" type="string"></attribute>
+		<attribute name="to-name" type="string"></attribute>
+	</complexType>
+
+	<element name="flow" type="tns:actions"></element>
 
 
 
-    <simpleType name="var-type">
-    	<restriction base="string">
-    		<enumeration value="element"></enumeration>
-    		<enumeration value="attribute"></enumeration>
-    		<enumeration value="namespace"></enumeration>
-    		<enumeration value="text"></enumeration>
-    		<enumeration value="cdata"></enumeration>
-    	</restriction>
-    </simpleType>
+	<simpleType name="var-type">
+		<restriction base="string">
+			<enumeration value="element"></enumeration>
+			<enumeration value="attribute"></enumeration>
+			<enumeration value="namespace"></enumeration>
+			<enumeration value="text"></enumeration>
+			<enumeration value="cdata"></enumeration>
+		</restriction>
+	</simpleType>
 </schema>

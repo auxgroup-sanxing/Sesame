@@ -2,42 +2,58 @@ package com.sanxing.sesame.jmx.security;
 
 import java.security.Principal;
 
-public class UserPrincipal implements Principal {
-	private final String name;
-	private transient int hash;
+public class UserPrincipal
+    implements Principal
+{
+    private final String name;
 
-	public UserPrincipal(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("name cannot be null");
-		}
-		this.name = name;
-	}
+    private transient int hash;
 
-	public String getName() {
-		return this.name;
-	}
+    public UserPrincipal( String name )
+    {
+        if ( name == null )
+        {
+            throw new IllegalArgumentException( "name cannot be null" );
+        }
+        this.name = name;
+    }
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if ((o == null) || (super.getClass() != o.getClass())) {
-			return false;
-		}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
-		UserPrincipal that = (UserPrincipal) o;
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( ( o == null ) || ( super.getClass() != o.getClass() ) )
+        {
+            return false;
+        }
 
-		return (this.name.equals(that.name));
-	}
+        UserPrincipal that = (UserPrincipal) o;
 
-	public int hashCode() {
-		if (this.hash == 0) {
-			this.hash = this.name.hashCode();
-		}
-		return this.hash;
-	}
+        return ( name.equals( that.name ) );
+    }
 
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public int hashCode()
+    {
+        if ( hash == 0 )
+        {
+            hash = name.hashCode();
+        }
+        return hash;
+    }
+
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 }

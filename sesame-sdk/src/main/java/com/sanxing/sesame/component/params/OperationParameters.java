@@ -6,39 +6,48 @@ import java.util.List;
 
 import org.jdom.Element;
 
-public class OperationParameters extends HashMap<String, Parameter> {
-	private String operationName;
-	private static final long serialVersionUID = 6681588165577452559L;
+public class OperationParameters
+    extends HashMap<String, Parameter>
+{
+    private final String operationName;
 
-	public OperationParameters(String operationName) {
-		this.operationName = operationName;
-	}
+    private static final long serialVersionUID = 6681588165577452559L;
 
-	public String getOperationName() {
-		return this.operationName;
-	}
+    public OperationParameters( String operationName )
+    {
+        this.operationName = operationName;
+    }
 
-	public Element toElement() {
-		Element root = new Element("operation-params");
-		root.setAttribute("name", this.operationName);
-		Iterator keys = keySet().iterator();
-		while (keys.hasNext()) {
-			String key = (String) keys.next();
-			Parameter param = (Parameter) get(key);
-			root.addContent(param.toElement());
-		}
-		return root;
-	}
+    public String getOperationName()
+    {
+        return operationName;
+    }
 
-	public static OperationParameters fromElement(Element element) {
-		String operationName = element.getAttributeValue("name");
-		OperationParameters op = new OperationParameters(operationName);
-		List<Element> params = element.getChildren("param");
-		for (Element paramEle : params) {
-			Parameter param = Parameter.fromElement(paramEle);
-			op.put(param.getName(), param);
-		}
+    public Element toElement()
+    {
+        Element root = new Element( "operation-params" );
+        root.setAttribute( "name", operationName );
+        Iterator keys = keySet().iterator();
+        while ( keys.hasNext() )
+        {
+            String key = (String) keys.next();
+            Parameter param = get( key );
+            root.addContent( param.toElement() );
+        }
+        return root;
+    }
 
-		return op;
-	}
+    public static OperationParameters fromElement( Element element )
+    {
+        String operationName = element.getAttributeValue( "name" );
+        OperationParameters op = new OperationParameters( operationName );
+        List<Element> params = element.getChildren( "param" );
+        for ( Element paramEle : params )
+        {
+            Parameter param = Parameter.fromElement( paramEle );
+            op.put( param.getName(), param );
+        }
+
+        return op;
+    }
 }

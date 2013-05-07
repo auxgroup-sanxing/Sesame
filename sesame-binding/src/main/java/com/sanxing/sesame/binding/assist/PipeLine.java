@@ -4,53 +4,73 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class PipeLine {
-	private InputStream in;
-	private OutputStream out;
-	private boolean closed = false;
+public class PipeLine
+{
+    private final InputStream in;
 
-	public PipeLine(InputStream input, OutputStream output) {
-		this.in = input;
-		this.out = output;
-	}
+    private final OutputStream out;
 
-	public InputStream getInput() {
-		return this.in;
-	}
+    private boolean closed = false;
 
-	public OutputStream getOutput() {
-		return this.out;
-	}
+    public PipeLine( InputStream input, OutputStream output )
+    {
+        in = input;
+        out = output;
+    }
 
-	public boolean isClosed() {
-		return this.closed;
-	}
+    public InputStream getInput()
+    {
+        return in;
+    }
 
-	public void close() throws IOException {
-		this.closed = true;
-	}
+    public OutputStream getOutput()
+    {
+        return out;
+    }
 
-	public int extractHead() throws IOException {
-		return -1;
-	}
+    public boolean isClosed()
+    {
+        return closed;
+    }
 
-	public byte[] exportHead(int len) throws IOException {
-		return new byte[0];
-	}
+    public void close()
+        throws IOException
+    {
+        closed = true;
+    }
 
-	public int read(byte[] buffer) throws IOException {
-		return this.in.read(buffer);
-	}
+    public int extractHead()
+        throws IOException
+    {
+        return -1;
+    }
 
-	public void read(byte[] buffer, int off, int len) throws IOException {
-		len += off;
-		int l;
-		for (int p = off; (l = this.in.read(buffer, p, len - p)) < len - p;) {
-			p += l;
-		}
-	}
+    public byte[] exportHead( int len )
+        throws IOException
+    {
+        return new byte[0];
+    }
 
-	public void write(byte[] bytes, int off, int len) throws IOException {
-		this.out.write(bytes, off, len);
-	}
+    public int read( byte[] buffer )
+        throws IOException
+    {
+        return in.read( buffer );
+    }
+
+    public void read( byte[] buffer, int off, int len )
+        throws IOException
+    {
+        len += off;
+        int l;
+        for ( int p = off; ( l = in.read( buffer, p, len - p ) ) < len - p; )
+        {
+            p += l;
+        }
+    }
+
+    public void write( byte[] bytes, int off, int len )
+        throws IOException
+    {
+        out.write( bytes, off, len );
+    }
 }

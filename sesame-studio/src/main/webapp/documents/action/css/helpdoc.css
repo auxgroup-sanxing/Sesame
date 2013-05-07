@@ -1,64 +1,65 @@
-body { 
-	margin: 0pt; 
-	padding: 0pt; 
-	border: 0pt none; 
-	text-align: center; 
-	background-color: rgb(249, 249, 249); 
-	font: 12px Verdana,Arial,Helvetica,sans-serif; 
+body {
+	margin: 0pt;
+	padding: 0pt;
+	border: 0pt none;
+	text-align: center;
+	background-color: rgb(249, 249, 249);
+	font: 12px Verdana, Arial, Helvetica, sans-serif;
 }
 
 div#maincontent h2 {
-	font-size:13px;
+	font-size: 13px;
 }
 
-h2, h3, h4, h5, h6 {
-	font-weight:bold;
-	margin:0;
-	padding:0;
+h2,h3,h4,h5,h6 {
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
 }
 
 div#maincontent div {
-	margin:0 15px;
-	padding:20px 0;
+	margin: 0 15px;
+	padding: 20px 0;
 }
 
 div#maincontent h1 {
-	font-family:'微软雅黑';
-	font-size:20px;
-	margin:15px 15px 0 15px;
-	text-align:center;
-	border-bottom:1px solid #AAAAAA;
+	font-family: '微软雅黑';
+	font-size: 20px;
+	margin: 15px 15px 0 15px;
+	text-align: center;
+	border-bottom: 1px solid #AAAAAA;
 	padding-bottom: 10px;
 }
 
 div.example {
 	padding-top: 15px;
-	border-bottom:1px solid #AAAAAA;
+	border-bottom: 1px solid #AAAAAA;
 }
 
-table.dataintable { 
-	font-family: Arial,Helvetica,sans-serif; 
-	margin-top: 10px; 
-	border-collapse: collapse; 
-	border: 1px solid rgb(136, 136, 136); 
-	width: 100%; 
-	text-align:left;
+table.dataintable {
+	font-family: Arial, Helvetica, sans-serif;
+	margin-top: 10px;
+	border-collapse: collapse;
+	border: 1px solid rgb(136, 136, 136);
+	width: 100%;
+	text-align: left;
 }
 
-table.dataintable th { 
-	vertical-align: baseline; 
-	padding: 5px 15px 5px 5px; 
-	background-color: rgb(204, 204, 204); 
-	border: 1px solid rgb(136, 136, 136); 
-	text-align: left; 
+table.dataintable th {
+	vertical-align: baseline;
+	padding: 5px 15px 5px 5px;
+	background-color: rgb(204, 204, 204);
+	border: 1px solid rgb(136, 136, 136);
+	text-align: left;
 }
 
-table.dataintable td { 
-	vertical-align: text-top; 
-	padding: 5px 15px 5px 5px; 
-	background-color: rgb(239, 239, 239); border: 1px solid rgb(170, 170, 170); 
+table.dataintable td {
+	vertical-align: text-top;
+	padding: 5px 15px 5px 5px;
+	background-color: rgb(239, 239, 239);
+	border: 1px solid rgb(170, 170, 170);
 }
 
-table.dataintable p { 
-	margin: 0pt 0pt 2px; 
+table.dataintable p {
+	margin: 0pt 0pt 2px;
 }

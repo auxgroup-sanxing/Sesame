@@ -5,66 +5,88 @@ import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
-public class ComponentNameSpace implements Externalizable {
-	private static final long serialVersionUID = -9130913368962887486L;
-	protected String containerName;
-	protected String name;
+public class ComponentNameSpace
+    implements Externalizable
+{
+    private static final long serialVersionUID = -9130913368962887486L;
 
-	public ComponentNameSpace() {
-	}
+    protected String containerName;
 
-	public ComponentNameSpace(String containerName, String componentName) {
-		this.containerName = containerName;
-		this.name = componentName;
-	}
+    protected String name;
 
-	public String getName() {
-		return this.name;
-	}
+    public ComponentNameSpace()
+    {
+    }
 
-	public void setName(String componentName) {
-		this.name = componentName;
-	}
+    public ComponentNameSpace( String containerName, String componentName )
+    {
+        this.containerName = containerName;
+        name = componentName;
+    }
 
-	public String getContainerName() {
-		return this.containerName;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setContainerName(String containerName) {
-		this.containerName = containerName;
-	}
+    public void setName( String componentName )
+    {
+        name = componentName;
+    }
 
-	public boolean equals(Object obj) {
-		boolean result = false;
-		if (obj instanceof ComponentNameSpace) {
-			ComponentNameSpace other = (ComponentNameSpace) obj;
-			result = (other.containerName.equals(this.containerName))
-					&& (other.name.equals(this.name));
-		}
+    public String getContainerName()
+    {
+        return containerName;
+    }
 
-		return result;
-	}
+    public void setContainerName( String containerName )
+    {
+        this.containerName = containerName;
+    }
 
-	public int hashCode() {
-		return (this.containerName.hashCode() ^ this.name.hashCode());
-	}
+    @Override
+    public boolean equals( Object obj )
+    {
+        boolean result = false;
+        if ( obj instanceof ComponentNameSpace )
+        {
+            ComponentNameSpace other = (ComponentNameSpace) obj;
+            result = ( other.containerName.equals( containerName ) ) && ( other.name.equals( name ) );
+        }
 
-	public String toString() {
-		return "[container=" + this.containerName + ",name=" + this.name + "]";
-	}
+        return result;
+    }
 
-	public void writeExternal(ObjectOutput out) throws IOException {
-		out.writeUTF((this.containerName != null) ? this.containerName : "");
-		out.writeUTF((this.name != null) ? this.name : "");
-	}
+    @Override
+    public int hashCode()
+    {
+        return ( containerName.hashCode() ^ name.hashCode() );
+    }
 
-	public void readExternal(ObjectInput in) throws IOException,
-			ClassNotFoundException {
-		this.containerName = in.readUTF();
-		this.name = in.readUTF();
-	}
+    @Override
+    public String toString()
+    {
+        return "[container=" + containerName + ",name=" + name + "]";
+    }
 
-	public ComponentNameSpace copy() {
-		return new ComponentNameSpace(this.containerName, this.name);
-	}
+    @Override
+    public void writeExternal( ObjectOutput out )
+        throws IOException
+    {
+        out.writeUTF( ( containerName != null ) ? containerName : "" );
+        out.writeUTF( ( name != null ) ? name : "" );
+    }
+
+    @Override
+    public void readExternal( ObjectInput in )
+        throws IOException, ClassNotFoundException
+    {
+        containerName = in.readUTF();
+        name = in.readUTF();
+    }
+
+    public ComponentNameSpace copy()
+    {
+        return new ComponentNameSpace( containerName, name );
+    }
 }

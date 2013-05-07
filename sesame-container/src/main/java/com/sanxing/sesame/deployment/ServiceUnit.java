@@ -1,22 +1,28 @@
 package com.sanxing.sesame.deployment;
 
-public class ServiceUnit {
-	private Identification identification;
-	private Target target;
+public class ServiceUnit
+{
+    private Identification identification;
 
-	public Identification getIdentification() {
-		return this.identification;
-	}
+    private Target target;
 
-	public void setIdentification(Identification identification) {
-		this.identification = identification;
-	}
+    public Identification getIdentification()
+    {
+        return identification;
+    }
 
-	public Target getTarget() {
-		return this.target;
-	}
+    public void setIdentification( Identification identification )
+    {
+        this.identification = identification;
+    }
 
-	public void setTarget(Target target) {
-		this.target = target;
-	}
+    public Target getTarget()
+    {
+        return target;
+    }
+
+    public void setTarget( Target target )
+    {
+        this.target = target;
+    }
 }

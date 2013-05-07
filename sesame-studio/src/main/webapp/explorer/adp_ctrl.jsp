@@ -11,7 +11,8 @@
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
 <%@page import="com.sanxing.adp.eclipse.ADPBaseProject"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

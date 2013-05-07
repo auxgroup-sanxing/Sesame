@@ -1,43 +1,61 @@
 package com.sanxing.sesame.engine.action.var;
 
+import org.jdom.Element;
+import org.jdom.Namespace;
+
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
-import java.util.List;
-import org.jdom.Element;
-import org.jdom.Namespace;
 
-public class RemoveNSAction extends AbstractAction implements Constant {
-	String targetVarName;
-	String sourceVarName;
+public class RemoveNSAction
+    extends AbstractAction
+    implements Constant
+{
+    String targetVarName;
 
-	public void doinit(Element config) {
-		this.targetVarName = config.getAttributeValue("to-var");
-		this.sourceVarName = config.getAttributeValue("var");
-		if (this.targetVarName == null)
-			this.targetVarName = this.sourceVarName;
-	}
+    String sourceVarName;
 
-	public void dowork(DataContext ctx) {
-		try {
-			Variable toBeRemoved = getVariable(ctx, this.sourceVarName, null);
-			if (toBeRemoved.getVarType() == 0) {
-				Element ele = (Element) toBeRemoved.get();
-				removeNameSpace(ele);
-			}
-		} catch (Exception localException) {
-		}
-	}
+    @Override
+    public void doinit( Element config )
+    {
+        targetVarName = config.getAttributeValue( "to-var" );
+        sourceVarName = config.getAttributeValue( "var" );
+        if ( targetVarName == null )
+        {
+            targetVarName = sourceVarName;
+        }
+    }
 
-	private void removeNameSpace(Element ele) {
-		Namespace ns = ele.getNamespace();
+    @Override
+    public void dowork( DataContext ctx )
+    {
+        try
+        {
+            Variable toBeRemoved = getVariable( ctx, sourceVarName, null );
+            if ( toBeRemoved.getVarType() == 0 )
+            {
+                Element ele = (Element) toBeRemoved.get();
+                removeNameSpace( ele );
+            }
+        }
+        catch ( Exception localException )
+        {
+        }
+    }
 
-		if (ns != null) {
-			ele.setNamespace(Namespace.NO_NAMESPACE);
+    private void removeNameSpace( Element ele )
+    {
+        Namespace ns = ele.getNamespace();
 
-			for (int i = 0; i < ele.getChildren().size(); ++i)
-				removeNameSpace((Element) ele.getChildren().get(i));
-		}
-	}
+        if ( ns != null )
+        {
+            ele.setNamespace( Namespace.NO_NAMESPACE );
+
+            for ( int i = 0; i < ele.getChildren().size(); ++i )
+            {
+                removeNameSpace( (Element) ele.getChildren().get( i ) );
+            }
+        }
+    }
 }

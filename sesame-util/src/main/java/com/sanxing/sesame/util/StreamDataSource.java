@@ -3,51 +3,72 @@ package com.sanxing.sesame.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import javax.activation.DataSource;
 
-public class StreamDataSource implements DataSource {
-	private InputStream in;
-	private String contentType;
-	private String name;
+public class StreamDataSource
+    implements DataSource
+{
+    private final InputStream in;
 
-	public StreamDataSource(InputStream in) {
-		this(in, null, null);
-	}
+    private String contentType;
 
-	public StreamDataSource(InputStream in, String contentType) {
-		this(in, contentType, null);
-	}
+    private String name;
 
-	public StreamDataSource(InputStream in, String contentType, String name) {
-		this.in = in;
-		this.contentType = contentType;
-		this.name = name;
-	}
+    public StreamDataSource( InputStream in )
+    {
+        this( in, null, null );
+    }
 
-	public InputStream getInputStream() throws IOException {
-		if (this.in == null) {
-			throw new IOException("no data");
-		}
-		return this.in;
-	}
+    public StreamDataSource( InputStream in, String contentType )
+    {
+        this( in, contentType, null );
+    }
 
-	public OutputStream getOutputStream() throws IOException {
-		throw new IOException("getOutputStream() not supported");
-	}
+    public StreamDataSource( InputStream in, String contentType, String name )
+    {
+        this.in = in;
+        this.contentType = contentType;
+        this.name = name;
+    }
 
-	public String getContentType() {
-		return this.contentType;
-	}
+    @Override
+    public InputStream getInputStream()
+        throws IOException
+    {
+        if ( in == null )
+        {
+            throw new IOException( "no data" );
+        }
+        return in;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    @Override
+    public OutputStream getOutputStream()
+        throws IOException
+    {
+        throw new IOException( "getOutputStream() not supported" );
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String getContentType()
+    {
+        return contentType;
+    }
 
-	public void setContentType(String contentType) {
-		this.contentType = contentType;
-	}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public void setContentType( String contentType )
+    {
+        this.contentType = contentType;
+    }
 }

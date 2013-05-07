@@ -1,36 +1,46 @@
 package com.sanxing.sesame.resolver;
 
-import com.sanxing.sesame.exception.NoInterfaceAvailableException;
 import javax.jbi.JBIException;
 import javax.jbi.component.ComponentContext;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
-public class InterfaceNameEndpointResolver extends EndpointResolverSupport {
-	private QName interfaceName;
+import com.sanxing.sesame.exception.NoInterfaceAvailableException;
 
-	public InterfaceNameEndpointResolver() {
-	}
+public class InterfaceNameEndpointResolver
+    extends EndpointResolverSupport
+{
+    private QName interfaceName;
 
-	public InterfaceNameEndpointResolver(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    public InterfaceNameEndpointResolver()
+    {
+    }
 
-	public ServiceEndpoint[] resolveAvailableEndpoints(
-			ComponentContext context, MessageExchange exchange) {
-		return context.getEndpoints(this.interfaceName);
-	}
+    public InterfaceNameEndpointResolver( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
 
-	public QName getInterfaceName() {
-		return this.interfaceName;
-	}
+    @Override
+    public ServiceEndpoint[] resolveAvailableEndpoints( ComponentContext context, MessageExchange exchange )
+    {
+        return context.getEndpoints( interfaceName );
+    }
 
-	public void setInterfaceName(QName interfaceName) {
-		this.interfaceName = interfaceName;
-	}
+    public QName getInterfaceName()
+    {
+        return interfaceName;
+    }
 
-	protected JBIException createServiceUnavailableException() {
-		return new NoInterfaceAvailableException(this.interfaceName);
-	}
+    public void setInterfaceName( QName interfaceName )
+    {
+        this.interfaceName = interfaceName;
+    }
+
+    @Override
+    protected JBIException createServiceUnavailableException()
+    {
+        return new NoInterfaceAvailableException( interfaceName );
+    }
 }

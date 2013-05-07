@@ -7,9 +7,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.util.Map;
+
 import org.apache.commons.vfs2.AllFileSelector;
-import org.apache.commons.vfs2.FileContent;
-import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystem;
 import org.apache.commons.vfs2.FileSystemException;
@@ -20,217 +19,261 @@ import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.provider.local.LocalFile;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 
-public class SesameSFTPClient {
-	private String sftpBasePath;
-	private URI uri;
-	private String host = "10.2.210.97";
+public class SesameSFTPClient
+{
+    private String sftpBasePath;
 
-	private int port = 22;
+    private URI uri;
 
-	private String username = "sesame";
+    private String host = "10.2.210.97";
 
-	private String password = "password";
+    private int port = 22;
 
-	private String remoteGetPath = "/home/sesame/sftptest/get";
+    private String username = "sesame";
 
-	private String remotePutPath = "/home/sesame/sftptest/put";
+    private String password = "password";
 
-	private String remoteBakPath = "/home/sesame/sftptest/bak";
+    private String remoteGetPath = "/home/sesame/sftptest/get";
 
-	private String localBakPath = "c:/sftptest/bak";
+    private String remotePutPath = "/home/sesame/sftptest/put";
 
-	private String localBak = "true";
-	private FileSystemManager fsManager;
-	private FileSystemOptions opts;
-	private FileObject src = null;
+    private String remoteBakPath = "/home/sesame/sftptest/bak";
 
-	public void setURI(URI uri) {
-		this.uri = uri;
-	}
+    private String localBakPath = "c:/sftptest/bak";
 
-	public void setConnectorProperties(Map<?, ?> props) {
-		setProperties(props);
-		setBindingProperties(props);
-	}
+    private String localBak = "true";
 
-	public void setBindingProperties(Map<?, ?> props) {
-		this.remoteGetPath = ((String) props.get("remoteGetPath"));
-		this.remotePutPath = ((String) props.get("remotePutPath"));
-		this.remoteBakPath = ((String) props.get("remoteBakPath"));
-		this.localBakPath = ((String) props.get("localBakPath"));
-		this.localBak = ((String) props.get("localBak"));
-	}
+    private FileSystemManager fsManager;
 
-	public void setProperties(Map<?, ?> props) {
-		this.host = this.uri.getHost();
-		this.port = this.uri.getPort();
-		this.username = ((String) props.get("username"));
-		this.password = ((String) props.get("password"));
+    private FileSystemOptions opts;
 
-		this.sftpBasePath = "sftp://" + this.username + ":" + this.password
-				+ "@" + this.host + ":" + this.port;
-	}
+    private FileObject src = null;
 
-	public void init() throws FileSystemException {
-		this.fsManager = VFS.getManager();
+    public void setURI( URI uri )
+    {
+        this.uri = uri;
+    }
 
-		this.opts = new FileSystemOptions();
+    public void setConnectorProperties( Map<?, ?> props )
+    {
+        setProperties( props );
+        setBindingProperties( props );
+    }
 
-		SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(
-				this.opts, "no");
-	}
+    public void setBindingProperties( Map<?, ?> props )
+    {
+        remoteGetPath = ( (String) props.get( "remoteGetPath" ) );
+        remotePutPath = ( (String) props.get( "remotePutPath" ) );
+        remoteBakPath = ( (String) props.get( "remoteBakPath" ) );
+        localBakPath = ( (String) props.get( "localBakPath" ) );
+        localBak = ( (String) props.get( "localBak" ) );
+    }
 
-	public FileObject[] getFiles() throws FileSystemException {
-		String path = this.sftpBasePath + this.remoteGetPath;
+    public void setProperties( Map<?, ?> props )
+    {
+        host = uri.getHost();
+        port = uri.getPort();
+        username = ( (String) props.get( "username" ) );
+        password = ( (String) props.get( "password" ) );
 
-		FileObject file = this.fsManager.resolveFile(path, this.opts);
+        sftpBasePath = "sftp://" + username + ":" + password + "@" + host + ":" + port;
+    }
 
-		this.src = file;
+    public void init()
+        throws FileSystemException
+    {
+        fsManager = VFS.getManager();
 
-		FileObject[] children = file.getChildren();
-		return children;
-	}
+        opts = new FileSystemOptions();
 
-	public void putFile(String filename, byte[] content) throws Exception {
-		FileObject file = this.fsManager.resolveFile(this.sftpBasePath
-				+ this.remotePutPath + File.separator + filename, this.opts);
+        SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking( opts, "no" );
+    }
 
-		this.src = file;
+    public FileObject[] getFiles()
+        throws FileSystemException
+    {
+        String path = sftpBasePath + remoteGetPath;
 
-		OutputStream out = file.getContent().getOutputStream();
+        FileObject file = fsManager.resolveFile( path, opts );
 
-		out.write(content);
+        src = file;
 
-		out.close();
-	}
+        FileObject[] children = file.getChildren();
+        return children;
+    }
 
-	public boolean moveFile(String filename) throws FileSystemException {
-		boolean result = false;
-		FileObject srcFile = this.fsManager.resolveFile(this.sftpBasePath
-				+ this.remoteGetPath + File.separator + filename, this.opts);
+    public void putFile( String filename, byte[] content )
+        throws Exception
+    {
+        FileObject file = fsManager.resolveFile( sftpBasePath + remotePutPath + File.separator + filename, opts );
 
-		this.src = srcFile;
-		result = moveFile(srcFile);
-		return result;
-	}
+        src = file;
 
-	public boolean moveFile(FileObject srcFile) throws FileSystemException {
-		FileObject targetFile = this.fsManager.resolveFile(this.sftpBasePath
-				+ this.remoteBakPath + File.separator
-				+ srcFile.getName().getBaseName(), this.opts);
-		return moveFile(srcFile, targetFile);
-	}
+        OutputStream out = file.getContent().getOutputStream();
 
-	private boolean moveFile(FileObject srcFile, FileObject targetFile) {
-		boolean result = false;
+        out.write( content );
 
-		if (srcFile.canRenameTo(targetFile)) {
-			try {
-				srcFile.moveTo(targetFile);
-				result = true;
-			} catch (FileSystemException e) {
-				e.printStackTrace();
-				result = false;
-			}
-			return result;
-		}
-		return result;
-	}
+        out.close();
+    }
 
-	public String[] getFileNames() {
-		return null;
-	}
+    public boolean moveFile( String filename )
+        throws FileSystemException
+    {
+        boolean result = false;
+        FileObject srcFile = fsManager.resolveFile( sftpBasePath + remoteGetPath + File.separator + filename, opts );
 
-	public InputStream processOneFile(String filename)
-			throws FileSystemException {
-		FileObject file = this.fsManager.resolveFile(this.sftpBasePath
-				+ this.remoteBakPath + File.separator + filename, this.opts);
-		InputStream in;
-		if (this.localBak.equals("true")) {
-			in = backupAndProcessOneFile(file, "file://" + this.localBakPath
-					+ File.separator + filename);
-		} else
-			in = processOneFileByStream(file);
+        src = srcFile;
+        result = moveFile( srcFile );
+        return result;
+    }
 
-		return in;
-	}
+    public boolean moveFile( FileObject srcFile )
+        throws FileSystemException
+    {
+        FileObject targetFile =
+            fsManager.resolveFile( sftpBasePath + remoteBakPath + File.separator + srcFile.getName().getBaseName(),
+                opts );
+        return moveFile( srcFile, targetFile );
+    }
 
-	public InputStream processOneFile(FileObject file)
-			throws FileSystemException {
-		InputStream in = null;
-		if (this.localBak.equals("true")) {
-			in = backupAndProcessOneFile(file, "file://" + this.localBakPath
-					+ File.separator + file.getName().getBaseName());
-		} else
-			in = processOneFileByStream(file);
+    private boolean moveFile( FileObject srcFile, FileObject targetFile )
+    {
+        boolean result = false;
 
-		return in;
-	}
+        if ( srcFile.canRenameTo( targetFile ) )
+        {
+            try
+            {
+                srcFile.moveTo( targetFile );
+                result = true;
+            }
+            catch ( FileSystemException e )
+            {
+                e.printStackTrace();
+                result = false;
+            }
+            return result;
+        }
+        return result;
+    }
 
-	public byte[] getInputByte(InputStream in) throws IOException {
-		byte[] result = (byte[]) null;
-		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		byte[] temp = new byte[1024];
-		int len = 0;
-		while ((len = in.read(temp)) != -1) {
-			output.write(temp, 0, len);
-			len = 0;
-		}
-		in.close();
-		result = output.toByteArray();
-		output.close();
-		return result;
-	}
+    public String[] getFileNames()
+    {
+        return null;
+    }
 
-	private InputStream backupAndProcessOneFile(FileObject srcFile,
-			String localbakFilePath) throws FileSystemException {
-		InputStream in = null;
-		LocalFile localFile = (LocalFile) this.fsManager
-				.resolveFile(localbakFilePath);
-		localFile.copyFrom(srcFile, new AllFileSelector());
-		in = localFile.getContent().getInputStream();
-		return in;
-	}
+    public InputStream processOneFile( String filename )
+        throws FileSystemException
+    {
+        FileObject file = fsManager.resolveFile( sftpBasePath + remoteBakPath + File.separator + filename, opts );
+        InputStream in;
+        if ( localBak.equals( "true" ) )
+        {
+            in = backupAndProcessOneFile( file, "file://" + localBakPath + File.separator + filename );
+        }
+        else
+        {
+            in = processOneFileByStream( file );
+        }
 
-	private InputStream processOneFileByStream(FileObject file)
-			throws FileSystemException {
-		InputStream in = null;
-		in = file.getContent().getInputStream();
-		return in;
-	}
+        return in;
+    }
 
-	public void release() throws Exception {
-		FileSystem fs = null;
-		if (this.src != null) {
-			this.src.close();
-			fs = this.src.getFileSystem();
-		}
-		this.fsManager.closeFileSystem(fs);
-	}
+    public InputStream processOneFile( FileObject file )
+        throws FileSystemException
+    {
+        InputStream in = null;
+        if ( localBak.equals( "true" ) )
+        {
+            in =
+                backupAndProcessOneFile( file, "file://" + localBakPath + File.separator + file.getName().getBaseName() );
+        }
+        else
+        {
+            in = processOneFileByStream( file );
+        }
 
-	public static void main(String[] args) throws Exception {
-		SesameSFTPClient sftpClient = new SesameSFTPClient();
-		try {
-			sftpClient.init();
-			FileObject[] files = sftpClient.getFiles();
-			for (FileObject file : files) {
-				if ((file.getType() != FileType.FILE)
-						|| (!(sftpClient.moveFile(file))))
-					continue;
-				InputStream in = null;
-				String filename = file.getName().getBaseName();
-				in = sftpClient.processOneFile(filename);
+        return in;
+    }
 
-				int len = in.available();
-				byte[] temp = new byte[len];
-				in.read(temp);
-				in.close();
-			}
+    public byte[] getInputByte( InputStream in )
+        throws IOException
+    {
+        byte[] result = null;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] temp = new byte[1024];
+        int len = 0;
+        while ( ( len = in.read( temp ) ) != -1 )
+        {
+            output.write( temp, 0, len );
+            len = 0;
+        }
+        in.close();
+        result = output.toByteArray();
+        output.close();
+        return result;
+    }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    private InputStream backupAndProcessOneFile( FileObject srcFile, String localbakFilePath )
+        throws FileSystemException
+    {
+        InputStream in = null;
+        LocalFile localFile = (LocalFile) fsManager.resolveFile( localbakFilePath );
+        localFile.copyFrom( srcFile, new AllFileSelector() );
+        in = localFile.getContent().getInputStream();
+        return in;
+    }
 
-		sftpClient.release();
-	}
+    private InputStream processOneFileByStream( FileObject file )
+        throws FileSystemException
+    {
+        InputStream in = null;
+        in = file.getContent().getInputStream();
+        return in;
+    }
+
+    public void release()
+        throws Exception
+    {
+        FileSystem fs = null;
+        if ( src != null )
+        {
+            src.close();
+            fs = src.getFileSystem();
+        }
+        fsManager.closeFileSystem( fs );
+    }
+
+    public static void main( String[] args )
+        throws Exception
+    {
+        SesameSFTPClient sftpClient = new SesameSFTPClient();
+        try
+        {
+            sftpClient.init();
+            FileObject[] files = sftpClient.getFiles();
+            for ( FileObject file : files )
+            {
+                if ( ( file.getType() != FileType.FILE ) || ( !( sftpClient.moveFile( file ) ) ) )
+                {
+                    continue;
+                }
+                InputStream in = null;
+                String filename = file.getName().getBaseName();
+                in = sftpClient.processOneFile( filename );
+
+                int len = in.available();
+                byte[] temp = new byte[len];
+                in.read( temp );
+                in.close();
+            }
+
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+
+        sftpClient.release();
+    }
 }

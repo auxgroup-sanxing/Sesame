@@ -1,94 +1,117 @@
 package com.sanxing.adp.runtime;
 
-import com.sanxing.adp.ADPException;
-import com.sanxing.adp.parser.OperationInfo;
-import com.sanxing.adp.parser.PartInfo;
-import com.sanxing.adp.util.XJUtil;
-import com.sanxing.sesame.exceptions.AppException;
-import com.sanxing.sesame.util.ReflectUtil;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.transform.JDOMResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ReturnMethodProcessor extends BaseMethodProcessor {
-	private static Logger LOG = LoggerFactory.getLogger(ReturnMethodProcessor.class);
+import com.sanxing.adp.ADPException;
+import com.sanxing.adp.parser.OperationInfo;
+import com.sanxing.adp.util.XJUtil;
+import com.sanxing.sesame.exceptions.AppException;
+import com.sanxing.sesame.util.ReflectUtil;
 
-	public Element process(Document request, OperationInfo operation, Object tx)
-			throws AppException {
-		Element body = request.getRootElement();
+public class ReturnMethodProcessor
+    extends BaseMethodProcessor
+{
+    private static Logger LOG = LoggerFactory.getLogger( ReturnMethodProcessor.class );
 
-		Element newBody = new Element("body", body.getNamespace());
-		newBody.addContent((Element) body.clone());
-		Object[] paramObjets = new Object[operation.getMethodParamCount()];
-		fufillINParams(operation, newBody, paramObjets);
+    @Override
+    public Element process( Document request, OperationInfo operation, Object tx )
+        throws AppException
+    {
+        Element body = request.getRootElement();
 
-		LOG.debug("After fufillINParams");
-		Element root = invokeSingleResultTx(operation, tx, paramObjets);
-		return root;
-	}
+        Element newBody = new Element( "body", body.getNamespace() );
+        newBody.addContent( (Element) body.clone() );
+        Object[] paramObjets = new Object[operation.getMethodParamCount()];
+        fufillINParams( operation, newBody, paramObjets );
 
-	private Element invokeSingleResultTx(OperationInfo oper, Object tx,
-			Object[] paramObjets) throws AppException {
-		Element root = null;
+        LOG.debug( "After fufillINParams" );
+        Element root = invokeSingleResultTx( operation, tx, paramObjets );
+        return root;
+    }
 
-		LOG.debug("Before getMethodByName");
-		Method method = ReflectUtil.getMethodByName(oper.getOperationName(),
-				tx.getClass());
+    private Element invokeSingleResultTx( OperationInfo oper, Object tx, Object[] paramObjets )
+        throws AppException
+    {
+        Element root = null;
 
-		if (method == null) {
-			throw new ADPException("00001", oper.getOperationName());
-		}
+        LOG.debug( "Before getMethodByName" );
+        Method method = ReflectUtil.getMethodByName( oper.getOperationName(), tx.getClass() );
 
-		if (LOG.isDebugEnabled())
-			LOG.debug("prepare to call adp function [" + method.getName() + "]");
-		Object result;
-		try {
-			result = method.invoke(tx, paramObjets);
-		} catch (IllegalArgumentException e) {
-			throw new ADPException("00002", oper.getOperationName(), e);
-		} catch (IllegalAccessException e) {
-			throw new ADPException("00003", oper.getOperationName(), e);
-		} catch (InvocationTargetException e) {
-			if (e.getCause() instanceof AppException)
-				throw ((AppException) e.getCause());
-			if (e.getCause() instanceof ADPException) {
-				throw ((ADPException) e.getCause());
-			}
+        if ( method == null )
+        {
+            throw new ADPException( "00001", oper.getOperationName() );
+        }
 
-			throw new ADPException("99999", e.getCause());
-		}
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("call adp function successed , prepare to fufill result");
-		}
+        if ( LOG.isDebugEnabled() )
+        {
+            LOG.debug( "prepare to call adp function [" + method.getName() + "]" );
+        }
+        Object result;
+        try
+        {
+            result = method.invoke( tx, paramObjets );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            throw new ADPException( "00002", oper.getOperationName(), e );
+        }
+        catch ( IllegalAccessException e )
+        {
+            throw new ADPException( "00003", oper.getOperationName(), e );
+        }
+        catch ( InvocationTargetException e )
+        {
+            if ( e.getCause() instanceof AppException )
+            {
+                throw ( (AppException) e.getCause() );
+            }
+            if ( e.getCause() instanceof ADPException )
+            {
+                throw ( (ADPException) e.getCause() );
+            }
 
-		if (XJUtil.isPrimitive(oper.getResult().getJavaType())) {
-			String elementNS = oper.getResult().getElementName()
-					.getNamespaceURI();
-			String elementName = oper.getResult().getElementName()
-					.getLocalPart();
-			Element ele = new Element(elementName, elementNS);
-			ele.setText(result.toString());
-			root = ele;
-		} else {
-			Marshaller m = JAXBHelper.getMarshallerByClazz(result.getClass());
-			JDOMResult jdomResult = new JDOMResult();
-			try {
-				m.marshal(result, jdomResult);
-			} catch (JAXBException e) {
-				throw new ADPException("00004", e);
-			}
-			Element partResult = jdomResult.getDocument().getRootElement();
-			partResult.detach();
-			root = partResult;
-		}
+            throw new ADPException( "99999", e.getCause() );
+        }
+        if ( LOG.isDebugEnabled() )
+        {
+            LOG.debug( "call adp function successed , prepare to fufill result" );
+        }
 
-		return root;
-	}
+        if ( XJUtil.isPrimitive( oper.getResult().getJavaType() ) )
+        {
+            String elementNS = oper.getResult().getElementName().getNamespaceURI();
+            String elementName = oper.getResult().getElementName().getLocalPart();
+            Element ele = new Element( elementName, elementNS );
+            ele.setText( result.toString() );
+            root = ele;
+        }
+        else
+        {
+            Marshaller m = JAXBHelper.getMarshallerByClazz( result.getClass() );
+            JDOMResult jdomResult = new JDOMResult();
+            try
+            {
+                m.marshal( result, jdomResult );
+            }
+            catch ( JAXBException e )
+            {
+                throw new ADPException( "00004", e );
+            }
+            Element partResult = jdomResult.getDocument().getRootElement();
+            partResult.detach();
+            root = partResult;
+        }
+
+        return root;
+    }
 }

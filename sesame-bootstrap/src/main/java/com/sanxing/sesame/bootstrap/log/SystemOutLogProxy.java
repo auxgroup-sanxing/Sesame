@@ -14,7 +14,7 @@ public class SystemOutLogProxy
     extends LogProxy
 {
 
-    private Class clazz;
+    private final Class clazz;
 
     public SystemOutLogProxy( final Class clazz )
     {
@@ -55,10 +55,8 @@ public class SystemOutLogProxy
     private void message( final String level, final String message, Object... args )
     {
         final String timestamp = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).format( new Date() );
-        System.out.println(
-            timestamp + " [" + level + "] " + clazz.getSimpleName()
-                + " - " + String.format( message.replace( "{}", "%s" ), args )
-        );
+        System.out.println( timestamp + " [" + level + "] " + clazz.getSimpleName() + " - "
+            + String.format( message.replace( "{}", "%s" ), args ) );
     }
 
 }

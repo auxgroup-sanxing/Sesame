@@ -1,15 +1,24 @@
 package com.sanxing.studio.search;
 
-public class ProjectRecord extends Record implements SearcherName {
-	public Column getDescriptionColumn() {
-		return getColumnByName("project description");
-	}
+public class ProjectRecord
+    extends Record
+    implements SearcherName
+{
+    @Override
+    public Column getDescriptionColumn()
+    {
+        return getColumnByName( "project description" );
+    }
 
-	public Column getNameColumn() {
-		return getColumnByName("project name");
-	}
+    @Override
+    public Column getNameColumn()
+    {
+        return getColumnByName( "project name" );
+    }
 
-	public String getSearcherName() {
-		return "project";
-	}
+    @Override
+    public String getSearcherName()
+    {
+        return "project";
+    }
 }

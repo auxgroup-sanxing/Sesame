@@ -5,84 +5,101 @@ import java.security.Key;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 
-public class ServiceKeyProvider {
-	private String name;
-	private String alias;
-	private String keystoreName;
-	private boolean paired;
-	private String keyPass;
+public class ServiceKeyProvider
+{
+    private String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private String alias;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    private String keystoreName;
 
-	public String getAlias() {
-		return this.alias;
-	}
+    private boolean paired;
 
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+    private String keyPass;
 
-	public String getKeystoreName() {
-		return this.keystoreName;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setKeystoreName(String keystoreName) {
-		this.keystoreName = keystoreName;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	public boolean isPri() {
-		return this.paired;
-	}
+    public String getAlias()
+    {
+        return alias;
+    }
 
-	public void setPri(boolean pri) {
-		this.paired = pri;
-	}
+    public void setAlias( String alias )
+    {
+        this.alias = alias;
+    }
 
-	public String getKeyPass() {
-		return this.keyPass;
-	}
+    public String getKeystoreName()
+    {
+        return keystoreName;
+    }
 
-	public void setKeyPass(String keyPass) {
-		this.keyPass = keyPass;
-	}
+    public void setKeystoreName( String keystoreName )
+    {
+        this.keystoreName = keystoreName;
+    }
 
-	public Key getKey() {
-		try {
-			KeyStoreInfo storeInfo = KeyStoreManager.getInstance().getKeyStore(
-					this.keystoreName);
-			String storePass = storeInfo.getStorePass();
-			FileInputStream fis1 = new FileInputStream(
-					storeInfo.getKeystorePath());
-			KeyStore ks1 = KeyStore.getInstance("jks");
-			ks1.load(fis1, storePass.toCharArray());
-			Key privateKey = ks1.getKey(this.alias, this.keyPass.toCharArray());
-			return privateKey;
-		} catch (Exception e) {
-			throw new RuntimeException("no such key [" + this.alias
-					+ "] or key password is wrong");
-		}
-	}
+    public boolean isPri()
+    {
+        return paired;
+    }
 
-	public Certificate getCert() {
-		try {
-			KeyStoreInfo storeInfo = KeyStoreManager.getInstance().getKeyStore(
-					this.keystoreName);
-			String storePass = storeInfo.getStorePass();
-			FileInputStream fis1 = new FileInputStream(
-					storeInfo.getKeystorePath());
-			KeyStore ks1 = KeyStore.getInstance("jks");
-			ks1.load(fis1, storePass.toCharArray());
-			Certificate cert = ks1.getCertificate(this.alias);
-			return cert;
-		} catch (Exception e) {
-			throw new RuntimeException("no such key [" + this.alias
-					+ "] or store password is wrong");
-		}
-	}
+    public void setPri( boolean pri )
+    {
+        paired = pri;
+    }
+
+    public String getKeyPass()
+    {
+        return keyPass;
+    }
+
+    public void setKeyPass( String keyPass )
+    {
+        this.keyPass = keyPass;
+    }
+
+    public Key getKey()
+    {
+        try
+        {
+            KeyStoreInfo storeInfo = KeyStoreManager.getInstance().getKeyStore( keystoreName );
+            String storePass = storeInfo.getStorePass();
+            FileInputStream fis1 = new FileInputStream( storeInfo.getKeystorePath() );
+            KeyStore ks1 = KeyStore.getInstance( "jks" );
+            ks1.load( fis1, storePass.toCharArray() );
+            Key privateKey = ks1.getKey( alias, keyPass.toCharArray() );
+            return privateKey;
+        }
+        catch ( Exception e )
+        {
+            throw new RuntimeException( "no such key [" + alias + "] or key password is wrong" );
+        }
+    }
+
+    public Certificate getCert()
+    {
+        try
+        {
+            KeyStoreInfo storeInfo = KeyStoreManager.getInstance().getKeyStore( keystoreName );
+            String storePass = storeInfo.getStorePass();
+            FileInputStream fis1 = new FileInputStream( storeInfo.getKeystorePath() );
+            KeyStore ks1 = KeyStore.getInstance( "jks" );
+            ks1.load( fis1, storePass.toCharArray() );
+            Certificate cert = ks1.getCertificate( alias );
+            return cert;
+        }
+        catch ( Exception e )
+        {
+            throw new RuntimeException( "no such key [" + alias + "] or store password is wrong" );
+        }
+    }
 }

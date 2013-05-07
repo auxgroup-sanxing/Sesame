@@ -4,121 +4,153 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class Env {
-	public static final String MODE = "mode";
-	public static final String ADMIN_HOST = "admin-host";
-	public static final String ADMIN_PORT = "admin-port";
-	public static final String SERVER_NAME = "server-name";
-	private String mode;
-	private String serverName;
-	private String adminHost;
-	private int adminPort;
-	private boolean admin;
-	private File serverDir;
-	private String domain = "com.sanxing.sesame";
+public class Env
+{
+    public static final String MODE = "mode";
 
-	private boolean clustered = false;
+    public static final String ADMIN_HOST = "admin-host";
 
-	public Env() {
-		try {
-			String strServerDir = System.getProperty("SESAME_HOME");
-			if (strServerDir == null) {
-				strServerDir = new File(System.getProperty("user.dir"))
-						.getParent();
-			}
-			this.serverDir = new File(strServerDir);
-			this.serverDir.mkdirs();
+    public static final String ADMIN_PORT = "admin-port";
 
-			this.mode = System.getProperty("mode", "dev");
+    public static final String SERVER_NAME = "server-name";
 
-			this.adminHost = System.getProperty("admin-host");
+    private String mode;
 
-			InetAddress.getByName(this.adminHost);
+    private String serverName;
 
-			this.adminPort = Integer.parseInt(System.getProperty("admin-port",
-					"2099"));
-			this.serverName = System.getProperty("server-name", "admin");
-			this.admin = (("admin".equalsIgnoreCase(getServerName())) || ("dev"
-					.equalsIgnoreCase(getMode())));
-		} catch (UnknownHostException e) {
-			throw new RuntimeException("Unkown admin host :" + this.adminHost);
-		} catch (NumberFormatException nfe) {
-			throw new RuntimeException("Unkown admin port :" + this.adminPort);
-		}
-	}
+    private String adminHost;
 
-	public File getHomeDir() {
-		return this.serverDir;
-	}
+    private int adminPort;
 
-	public File getLogDir() {
-		return new File(this.serverDir, "logs");
-	}
+    private boolean admin;
 
-	public boolean isAdmin() {
-		return this.admin;
-	}
+    private File serverDir;
 
-	public void setAdmin(boolean admin) {
-		this.admin = admin;
-	}
+    private String domain = "com.sanxing.sesame";
 
-	public boolean isClustered() {
-		return this.clustered;
-	}
+    private boolean clustered = false;
 
-	protected void setClustered(boolean value) {
-		this.clustered = value;
-	}
+    public Env()
+    {
+        try
+        {
+            String strServerDir = System.getProperty( "SESAME_HOME" );
+            if ( strServerDir == null )
+            {
+                strServerDir = new File( System.getProperty( "user.dir" ) ).getParent();
+            }
+            serverDir = new File( strServerDir );
+            serverDir.mkdirs();
 
-	public int getAdminPort() {
-		return this.adminPort;
-	}
+            mode = System.getProperty( "mode", "dev" );
 
-	public void setAdminPort(int adminPort) {
-		this.adminPort = adminPort;
-	}
+            adminHost = System.getProperty( "admin-host" );
 
-	public String getMode() {
-		return this.mode;
-	}
+            InetAddress.getByName( adminHost );
 
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
+            adminPort = Integer.parseInt( System.getProperty( "admin-port", "2099" ) );
+            serverName = System.getProperty( "server-name", "admin" );
+            admin = ( ( "admin".equalsIgnoreCase( getServerName() ) ) || ( "dev".equalsIgnoreCase( getMode() ) ) );
+        }
+        catch ( UnknownHostException e )
+        {
+            throw new RuntimeException( "Unkown admin host :" + adminHost );
+        }
+        catch ( NumberFormatException nfe )
+        {
+            throw new RuntimeException( "Unkown admin port :" + adminPort );
+        }
+    }
 
-	public boolean isProduction() {
-		return (!(getMode().equalsIgnoreCase("dev")));
-	}
+    public File getHomeDir()
+    {
+        return serverDir;
+    }
 
-	public String getDomain() {
-		return this.domain;
-	}
+    public File getLogDir()
+    {
+        return new File( serverDir, "logs" );
+    }
 
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
+    public boolean isAdmin()
+    {
+        return admin;
+    }
 
-	public String getServerName() {
-		return this.serverName;
-	}
+    public void setAdmin( boolean admin )
+    {
+        this.admin = admin;
+    }
 
-	public void setServerName(String serverName) {
-		this.serverName = serverName;
-	}
+    public boolean isClustered()
+    {
+        return clustered;
+    }
 
-	public String getAdminHost() {
-		return this.adminHost;
-	}
+    protected void setClustered( boolean value )
+    {
+        clustered = value;
+    }
 
-	public void setAdminHost(String adminHost) {
-		this.adminHost = adminHost;
-	}
+    public int getAdminPort()
+    {
+        return adminPort;
+    }
 
-	public String toString() {
-		return "Env [admin=" + this.admin + ", adminHost=" + this.adminHost
-				+ ", adminPort=" + this.adminPort + ", mode=" + this.mode
-				+ ", serverDir=" + this.serverDir + ", serverName="
-				+ this.serverName + "]";
-	}
+    public void setAdminPort( int adminPort )
+    {
+        this.adminPort = adminPort;
+    }
+
+    public String getMode()
+    {
+        return mode;
+    }
+
+    public void setMode( String mode )
+    {
+        this.mode = mode;
+    }
+
+    public boolean isProduction()
+    {
+        return ( !( getMode().equalsIgnoreCase( "dev" ) ) );
+    }
+
+    public String getDomain()
+    {
+        return domain;
+    }
+
+    public void setDomain( String domain )
+    {
+        this.domain = domain;
+    }
+
+    public String getServerName()
+    {
+        return serverName;
+    }
+
+    public void setServerName( String serverName )
+    {
+        this.serverName = serverName;
+    }
+
+    public String getAdminHost()
+    {
+        return adminHost;
+    }
+
+    public void setAdminHost( String adminHost )
+    {
+        this.adminHost = adminHost;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Env [admin=" + admin + ", adminHost=" + adminHost + ", adminPort=" + adminPort + ", mode=" + mode
+            + ", serverDir=" + serverDir + ", serverName=" + serverName + "]";
+    }
 }

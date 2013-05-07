@@ -3,6 +3,7 @@ package com.sanxing.sesame.binding.codec;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Set;
+
 import javax.activation.DataSource;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
@@ -10,113 +11,145 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+
 import org.dom4j.io.DocumentResult;
 import org.dom4j.io.DocumentSource;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 
-public class XMLSource implements Source {
-	private static final TransformerFactory transformerFactory = TransformerFactory
-			.newInstance();
-	private String systemId;
-	private Source content;
-	private Map<String, Object> properties = new Hashtable();
+public class XMLSource
+    implements Source
+{
+    private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-	private Map<String, DataSource> attachments = new Hashtable();
+    private String systemId;
 
-	public XMLSource() {
-	}
+    private Source content;
 
-	public XMLSource(Source content) {
-		setContent(content);
-	}
+    private final Map<String, Object> properties = new Hashtable();
 
-	public void setSystemId(String systemId) {
-		this.systemId = systemId;
-	}
+    private final Map<String, DataSource> attachments = new Hashtable();
 
-	public String getSystemId() {
-		return this.systemId;
-	}
+    public XMLSource()
+    {
+    }
 
-	public Set<String> getPropertyNames() {
-		return this.properties.keySet();
-	}
+    public XMLSource( Source content )
+    {
+        setContent( content );
+    }
 
-	public Object getProperty(String name) {
-		return this.properties.get(name);
-	}
+    @Override
+    public void setSystemId( String systemId )
+    {
+        this.systemId = systemId;
+    }
 
-	public void setProperty(String name, Object value) {
-		this.properties.put(name, value);
-	}
+    @Override
+    public String getSystemId()
+    {
+        return systemId;
+    }
 
-	public void addAttachment(String id, DataSource source) {
-		this.attachments.put(id, source);
-	}
+    public Set<String> getPropertyNames()
+    {
+        return properties.keySet();
+    }
 
-	public void removeAttachment(String id) {
-		this.attachments.remove(id);
-	}
+    public Object getProperty( String name )
+    {
+        return properties.get( name );
+    }
 
-	public DataSource getAttachment(String id) {
-		return ((DataSource) this.attachments.get(id));
-	}
+    public void setProperty( String name, Object value )
+    {
+        properties.put( name, value );
+    }
 
-	public Set<String> getAttachmentNames() {
-		return this.attachments.keySet();
-	}
+    public void addAttachment( String id, DataSource source )
+    {
+        attachments.put( id, source );
+    }
 
-	public org.w3c.dom.Document getW3CDocument() throws TransformerException {
-		if (this.content instanceof DOMSource) {
-			return ((org.w3c.dom.Document) ((DOMSource) this.content).getNode());
-		}
+    public void removeAttachment( String id )
+    {
+        attachments.remove( id );
+    }
 
-		DOMResult result = new DOMResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return ((org.w3c.dom.Document) result.getNode());
-	}
+    public DataSource getAttachment( String id )
+    {
+        return attachments.get( id );
+    }
 
-	public org.jdom.Document getJDOMDocument() throws TransformerException {
-		if (this.content instanceof JDOMSource) {
-			return ((JDOMSource) this.content).getDocument();
-		}
+    public Set<String> getAttachmentNames()
+    {
+        return attachments.keySet();
+    }
 
-		JDOMResult result = new JDOMResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return result.getDocument();
-	}
+    public org.w3c.dom.Document getW3CDocument()
+        throws TransformerException
+    {
+        if ( content instanceof DOMSource )
+        {
+            return ( (org.w3c.dom.Document) ( (DOMSource) content ).getNode() );
+        }
 
-	public org.dom4j.Document getDOM4jDocument() throws TransformerException {
-		if (this.content instanceof DocumentSource) {
-			return ((DocumentSource) this.content).getDocument();
-		}
+        DOMResult result = new DOMResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return ( (org.w3c.dom.Document) result.getNode() );
+    }
 
-		DocumentResult result = new DocumentResult();
-		Transformer transformer = transformerFactory.newTransformer();
-		transformer.transform(this.content, result);
-		return result.getDocument();
-	}
+    public org.jdom.Document getJDOMDocument()
+        throws TransformerException
+    {
+        if ( content instanceof JDOMSource )
+        {
+            return ( (JDOMSource) content ).getDocument();
+        }
 
-	public Source getContent() {
-		return this.content;
-	}
+        JDOMResult result = new JDOMResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return result.getDocument();
+    }
 
-	public void setContent(Source content) {
-		this.content = content;
-	}
+    public org.dom4j.Document getDOM4jDocument()
+        throws TransformerException
+    {
+        if ( content instanceof DocumentSource )
+        {
+            return ( (DocumentSource) content ).getDocument();
+        }
 
-	public void setDocument(org.w3c.dom.Document document) {
-		this.content = new DOMSource(document);
-	}
+        DocumentResult result = new DocumentResult();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform( content, result );
+        return result.getDocument();
+    }
 
-	public void setDocument(org.jdom.Document document) {
-		this.content = new JDOMSource(document);
-	}
+    public Source getContent()
+    {
+        return content;
+    }
 
-	public void setDocument(org.dom4j.Document document) {
-		this.content = new DocumentSource(document);
-	}
+    public void setContent( Source content )
+    {
+        this.content = content;
+    }
+
+    public void setDocument( org.w3c.dom.Document document )
+    {
+        content = new DOMSource( document );
+    }
+
+    public void setDocument( org.jdom.Document document )
+    {
+        content = new JDOMSource( document );
+    }
+
+    public void setDocument( org.dom4j.Document document )
+    {
+        content = new DocumentSource( document );
+    }
 }

@@ -6,144 +6,191 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class LogRecord extends Throwable {
-	private static final long serialVersionUID = -3144056887643453625L;
-	private static AtomicLong globalSequenceNumber = new AtomicLong(0L);
+public class LogRecord
+    extends Throwable
+{
+    private static final long serialVersionUID = -3144056887643453625L;
 
-	private static AtomicInteger nextThreadId = new AtomicInteger(10);
-	private static final long defaultExpireInterval = 3600000L;
-	private long sequenceNumber;
-	private int threadID;
-	private Object content;
-	private Date timestamp;
-	private String serviceName;
-	private String operationName;
-	private String channel;
-	private String action;
-	private String stage;
-	private long expireTime;
-	private static ThreadLocal<Object> threadIds = new ThreadLocal();
+    private static AtomicLong globalSequenceNumber = new AtomicLong( 0L );
 
-	public String getServiceName() {
-		return this.serviceName;
-	}
+    private static AtomicInteger nextThreadId = new AtomicInteger( 10 );
 
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
-	}
+    private static final long defaultExpireInterval = 3600000L;
 
-	public String getOperationName() {
-		return this.operationName;
-	}
+    private long sequenceNumber;
 
-	public void setOperationName(String operationName) {
-		this.operationName = operationName;
-	}
+    private int threadID;
 
-	public String getChannel() {
-		return this.channel;
-	}
+    private Object content;
 
-	public void setChannel(String channel) {
-		this.channel = channel;
-	}
+    private Date timestamp;
 
-	public long getExpireTime() {
-		return this.expireTime;
-	}
+    private String serviceName;
 
-	public void setExpireTime(long expireTime) {
-		this.expireTime = expireTime;
-	}
+    private String operationName;
 
-	public String getStage() {
-		return this.stage;
-	}
+    private String channel;
 
-	public void setStage(String stage) {
-		this.stage = stage;
-	}
+    private String action;
 
-	public LogRecord() {
-		initialize();
-	}
+    private String stage;
 
-	protected LogRecord(Throwable throwable) {
-		super(throwable);
-		initialize();
-	}
+    private long expireTime;
 
-	private void initialize() {
-		this.timestamp = new Date();
+    private static ThreadLocal<Object> threadIds = new ThreadLocal();
 
-		this.sequenceNumber = globalSequenceNumber.incrementAndGet();
-		Integer id = (Integer) threadIds.get();
-		if (id == null) {
-			id = new Integer(nextThreadId.incrementAndGet());
-			threadIds.set(id);
-		}
-		this.threadID = id.intValue();
-		this.expireTime = (System.currentTimeMillis() + 3600000L);
-	}
+    public String getServiceName()
+    {
+        return serviceName;
+    }
 
-	public Date getTimestamp() {
-		return this.timestamp;
-	}
+    public void setServiceName( String serviceName )
+    {
+        this.serviceName = serviceName;
+    }
 
-	public void setTimestamp(Date timestamp) {
-		this.timestamp = timestamp;
-	}
+    public String getOperationName()
+    {
+        return operationName;
+    }
 
-	public int getThreadID() {
-		return this.threadID;
-	}
+    public void setOperationName( String operationName )
+    {
+        this.operationName = operationName;
+    }
 
-	public void setSerial(long serial) {
-		this.sequenceNumber = serial;
-	}
+    public String getChannel()
+    {
+        return channel;
+    }
 
-	public long getSerial() {
-		return this.sequenceNumber;
-	}
+    public void setChannel( String channel )
+    {
+        this.channel = channel;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public long getExpireTime()
+    {
+        return expireTime;
+    }
 
-	public String getAction() {
-		return this.action;
-	}
+    public void setExpireTime( long expireTime )
+    {
+        this.expireTime = expireTime;
+    }
 
-	public void setContent(Object content) {
-		this.content = content;
-	}
+    public String getStage()
+    {
+        return stage;
+    }
 
-	public Object getContent() {
-		return this.content;
-	}
+    public void setStage( String stage )
+    {
+        this.stage = stage;
+    }
 
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		buf.append("{");
-		buf.append(" serial: " + getSerial());
-		if (this.action != null) {
-			buf.append(", action: '" + this.action + "'");
-		}
-		buf.append(" content: \"");
-		buf.append(this.content);
-		buf.append("\" ");
-		buf.append("}");
-		return buf.toString();
-	}
+    public LogRecord()
+    {
+        initialize();
+    }
 
-	public void printStackTrace() {
-	}
+    protected LogRecord( Throwable throwable )
+    {
+        super( throwable );
+        initialize();
+    }
 
-	public void printStackTrace(PrintStream s) {
-		s.println(toString());
-	}
+    private void initialize()
+    {
+        timestamp = new Date();
 
-	public void printStackTrace(PrintWriter writer) {
-		writer.println(toString());
-	}
+        sequenceNumber = globalSequenceNumber.incrementAndGet();
+        Integer id = (Integer) threadIds.get();
+        if ( id == null )
+        {
+            id = new Integer( nextThreadId.incrementAndGet() );
+            threadIds.set( id );
+        }
+        threadID = id.intValue();
+        expireTime = ( System.currentTimeMillis() + 3600000L );
+    }
+
+    public Date getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp( Date timestamp )
+    {
+        this.timestamp = timestamp;
+    }
+
+    public int getThreadID()
+    {
+        return threadID;
+    }
+
+    public void setSerial( long serial )
+    {
+        sequenceNumber = serial;
+    }
+
+    public long getSerial()
+    {
+        return sequenceNumber;
+    }
+
+    public void setAction( String action )
+    {
+        this.action = action;
+    }
+
+    public String getAction()
+    {
+        return action;
+    }
+
+    public void setContent( Object content )
+    {
+        this.content = content;
+    }
+
+    public Object getContent()
+    {
+        return content;
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuffer buf = new StringBuffer();
+        buf.append( "{" );
+        buf.append( " serial: " + getSerial() );
+        if ( action != null )
+        {
+            buf.append( ", action: '" + action + "'" );
+        }
+        buf.append( " content: \"" );
+        buf.append( content );
+        buf.append( "\" " );
+        buf.append( "}" );
+        return buf.toString();
+    }
+
+    @Override
+    public void printStackTrace()
+    {
+    }
+
+    @Override
+    public void printStackTrace( PrintStream s )
+    {
+        s.println( toString() );
+    }
+
+    @Override
+    public void printStackTrace( PrintWriter writer )
+    {
+        writer.println( toString() );
+    }
 }

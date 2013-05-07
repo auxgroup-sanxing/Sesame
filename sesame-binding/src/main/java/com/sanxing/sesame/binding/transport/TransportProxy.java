@@ -1,103 +1,149 @@
 package com.sanxing.sesame.binding.transport;
 
+import java.io.IOException;
+import java.net.URI;
+
+import org.w3c.dom.Element;
+
 import com.sanxing.sesame.binding.BindingException;
 import com.sanxing.sesame.binding.Carrier;
 import com.sanxing.sesame.binding.context.MessageContext;
-import java.io.IOException;
-import java.net.URI;
-import org.w3c.dom.Element;
 
-public class TransportProxy implements Acceptor, Connector {
-	private Transport transport;
-	private URI uri;
-	private long ref = 0L;
+public class TransportProxy
+    implements Acceptor, Connector
+{
+    private final Transport transport;
 
-	protected TransportProxy(Transport transport, URI uri, Element config)
-			throws IOException {
-		this.transport = transport;
-		this.transport.setURI(uri);
-		this.transport.init(config);
-		this.transport.open();
+    private final URI uri;
 
-		this.uri = uri;
-		this.ref = 1L;
-	}
+    private long ref = 0L;
 
-	protected Transport getReference() {
-		this.ref += 1L;
-		return this;
-	}
+    protected TransportProxy( Transport transport, URI uri, Element config )
+        throws IOException
+    {
+        this.transport = transport;
+        this.transport.setURI( uri );
+        this.transport.init( config );
+        this.transport.open();
 
-	public void close() throws IOException {
-		this.ref -= 1L;
+        this.uri = uri;
+        ref = 1L;
+    }
 
-		if (this.ref == 0L) {
-			this.transport.close();
-			String endpoint = this.uri.getScheme() + "://"
-					+ this.uri.getAuthority();
-			TransportFactory.remove(endpoint);
-		}
-	}
+    protected Transport getReference()
+    {
+        ref += 1L;
+        return this;
+    }
 
-	public String getCharacterEncoding() {
-		return this.transport.getCharacterEncoding();
-	}
+    @Override
+    public void close()
+        throws IOException
+    {
+        ref -= 1L;
 
-	public URI getURI() {
-		return this.uri;
-	}
+        if ( ref == 0L )
+        {
+            transport.close();
+            String endpoint = uri.getScheme() + "://" + uri.getAuthority();
+            TransportFactory.remove( endpoint );
+        }
+    }
 
-	public boolean isActive() {
-		return this.transport.isActive();
-	}
+    @Override
+    public String getCharacterEncoding()
+    {
+        return transport.getCharacterEncoding();
+    }
 
-	public void init(Element config) {
-		this.transport.init(config);
-	}
+    @Override
+    public URI getURI()
+    {
+        return uri;
+    }
 
-	public void open() throws IOException {
-		if (!(this.transport.isActive()))
-			this.transport.open();
-	}
+    @Override
+    public boolean isActive()
+    {
+        return transport.isActive();
+    }
 
-	public void removeCarrier(String contextPath, Carrier receiver) {
-		this.transport.removeCarrier(contextPath, receiver);
-	}
+    @Override
+    public void init( Element config )
+    {
+        transport.init( config );
+    }
 
-	public void setConfig(String contextPath, Element config)
-			throws IllegalArgumentException {
-		this.transport.setConfig(contextPath, config);
-	}
+    @Override
+    public void open()
+        throws IOException
+    {
+        if ( !( transport.isActive() ) )
+        {
+            transport.open();
+        }
+    }
 
-	public void addCarrier(String contextPath, Carrier receiver) {
-		this.transport.addCarrier(contextPath, receiver);
-	}
+    @Override
+    public void removeCarrier( String contextPath, Carrier receiver )
+    {
+        transport.removeCarrier( contextPath, receiver );
+    }
 
-	public void setURI(URI uri) {
-		throw new RuntimeException("Illegal access, user can not set uri");
-	}
+    @Override
+    public void setConfig( String contextPath, Element config )
+        throws IllegalArgumentException
+    {
+        transport.setConfig( contextPath, config );
+    }
 
-	public boolean getKeepAlive() {
-		return this.transport.getKeepAlive();
-	}
+    @Override
+    public void addCarrier( String contextPath, Carrier receiver )
+    {
+        transport.addCarrier( contextPath, receiver );
+    }
 
-	public void setKeepAlive(boolean on) {
-		this.transport.setKeepAlive(on);
-	}
+    @Override
+    public void setURI( URI uri )
+    {
+        throw new RuntimeException( "Illegal access, user can not set uri" );
+    }
 
-	public void reply(MessageContext context) throws BindingException,
-			IOException {
-		if (this.transport instanceof Connector)
-			((Connector) this.transport).sendOut(context);
-	}
+    @Override
+    public boolean getKeepAlive()
+    {
+        return transport.getKeepAlive();
+    }
 
-	public void sendOut(MessageContext context) throws BindingException,
-			IOException {
-		if (this.transport instanceof Connector)
-			((Connector) this.transport).sendOut(context);
-	}
+    @Override
+    public void setKeepAlive( boolean on )
+    {
+        transport.setKeepAlive( on );
+    }
 
-	public int hashCode() {
-		return this.transport.hashCode();
-	}
+    @Override
+    public void reply( MessageContext context )
+        throws BindingException, IOException
+    {
+        if ( transport instanceof Connector )
+        {
+            ( (Connector) transport ).sendOut( context );
+        }
+    }
+
+    @Override
+    public void sendOut( MessageContext context )
+        throws BindingException, IOException
+    {
+        if ( transport instanceof Connector )
+        {
+            ( (Connector) transport ).sendOut( context );
+        }
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return transport.hashCode();
+    }
 }

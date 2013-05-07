@@ -5,82 +5,120 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractStringMatcher implements StringMatcher {
-	private Set pattens;
-	private boolean isUpperCase;
+public abstract class AbstractStringMatcher
+    implements StringMatcher
+{
+    private Set pattens;
 
-	public AbstractStringMatcher() {
-		this.isUpperCase = true;
-	}
+    private boolean isUpperCase;
 
-	public void init() {
-		this.pattens = new HashSet();
-	}
+    public AbstractStringMatcher()
+    {
+        isUpperCase = true;
+    }
 
-	public void addAll(List patters) {
-		for (int i = 0; i < patters.size(); ++i) {
-			this.pattens.add(patters.get(i));
-		}
-	}
+    public void init()
+    {
+        pattens = new HashSet();
+    }
 
-	public void addPatten(String patter) {
-		this.pattens.add(patter);
-	}
+    @Override
+    public void addAll( List patters )
+    {
+        for ( int i = 0; i < patters.size(); ++i )
+        {
+            pattens.add( patters.get( i ) );
+        }
+    }
 
-	public void addAll(Set patters) {
-		Iterator it = patters.iterator();
-		while (it.hasNext())
-			this.pattens.add(it.next());
-	}
+    @Override
+    public void addPatten( String patter )
+    {
+        pattens.add( patter );
+    }
 
-	public void addAll(String[] patters) {
-		for (int i = 0; i < patters.length; ++i)
-			this.pattens.add(patters[i]);
-	}
+    @Override
+    public void addAll( Set patters )
+    {
+        Iterator it = patters.iterator();
+        while ( it.hasNext() )
+        {
+            pattens.add( it.next() );
+        }
+    }
 
-	public boolean removePatten(String patter) {
-		if (this.pattens.contains(patter)) {
-			this.pattens.remove(patter);
-			return true;
-		}
-		return false;
-	}
+    @Override
+    public void addAll( String[] patters )
+    {
+        for ( int i = 0; i < patters.length; ++i )
+        {
+            pattens.add( patters[i] );
+        }
+    }
 
-	public void reset() {
-		init();
-	}
+    @Override
+    public boolean removePatten( String patter )
+    {
+        if ( pattens.contains( patter ) )
+        {
+            pattens.remove( patter );
+            return true;
+        }
+        return false;
+    }
 
-	public int getPattenCount() {
-		return this.pattens.size();
-	}
+    @Override
+    public void reset()
+    {
+        init();
+    }
 
-	public String getPatten(int index) {
-		Object[] obj = this.pattens.toArray();
-		return obj[index].toString();
-	}
+    @Override
+    public int getPattenCount()
+    {
+        return pattens.size();
+    }
 
-	public void clearPattens() {
-		init();
-	}
+    @Override
+    public String getPatten( int index )
+    {
+        Object[] obj = pattens.toArray();
+        return obj[index].toString();
+    }
 
-	public String[] getPattens() {
-		Object[] temp = this.pattens.toArray();
-		String[] tempPatters = new String[temp.length];
-		for (int i = 0; i < temp.length; ++i) {
-			tempPatters[i] = temp[i].toString();
-		}
-		return tempPatters;
-	}
+    @Override
+    public void clearPattens()
+    {
+        init();
+    }
 
-	public void setCaseSenitive(boolean b) {
-		this.isUpperCase = b;
-	}
+    @Override
+    public String[] getPattens()
+    {
+        Object[] temp = pattens.toArray();
+        String[] tempPatters = new String[temp.length];
+        for ( int i = 0; i < temp.length; ++i )
+        {
+            tempPatters[i] = temp[i].toString();
+        }
+        return tempPatters;
+    }
 
-	public boolean isCaseSenitive() {
-		return this.isUpperCase;
-	}
+    @Override
+    public void setCaseSenitive( boolean b )
+    {
+        isUpperCase = b;
+    }
 
-	public abstract boolean match(String paramString);
+    @Override
+    public boolean isCaseSenitive()
+    {
+        return isUpperCase;
+    }
 
-	public abstract boolean matcher(String paramString, boolean paramBoolean);
+    @Override
+    public abstract boolean match( String paramString );
+
+    @Override
+    public abstract boolean matcher( String paramString, boolean paramBoolean );
 }

@@ -1,19 +1,22 @@
 package com.sanxing.sesame.mbean;
 
-public abstract interface ServiceUnitMBean {
-	public static final String STARTED = "Started";
-	public static final String SHUTDOWN = "Shutdown";
-	public static final String STOPPED = "Stopped";
+public abstract interface ServiceUnitMBean
+{
+    public static final String STARTED = "Started";
 
-	public abstract String getName();
+    public static final String SHUTDOWN = "Shutdown";
 
-	public abstract String getDescription();
+    public static final String STOPPED = "Stopped";
 
-	public abstract String getComponentName();
+    public abstract String getName();
 
-	public abstract String getCurrentState();
+    public abstract String getDescription();
 
-	public abstract String getServiceAssembly();
+    public abstract String getComponentName();
 
-	public abstract String getDescriptor();
+    public abstract String getCurrentState();
+
+    public abstract String getServiceAssembly();
+
+    public abstract String getDescriptor();
 }

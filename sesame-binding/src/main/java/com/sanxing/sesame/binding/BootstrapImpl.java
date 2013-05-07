@@ -1,42 +1,66 @@
 package com.sanxing.sesame.binding;
 
-import com.sanxing.sesame.exception.NotInitialisedYetException;
 import javax.jbi.JBIException;
 import javax.jbi.component.Bootstrap;
 import javax.jbi.component.InstallationContext;
 import javax.management.ObjectName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DocumentFragment;
 
-public class BootstrapImpl implements Bootstrap {
-	private static final Logger LOG = LoggerFactory.getLogger(BootstrapImpl.class);
-	private InstallationContext installContext;
-	private ObjectName extensionMBeanName;
+import com.sanxing.sesame.exception.NotInitialisedYetException;
 
-	public void cleanUp() throws JBIException {
-	}
+public class BootstrapImpl
+    implements Bootstrap
+{
+    private static final Logger LOG = LoggerFactory.getLogger( BootstrapImpl.class );
 
-	public ObjectName getExtensionMBeanName() {
-		return this.extensionMBeanName;
-	}
+    private InstallationContext installContext;
 
-	public void init(InstallationContext ctx) throws JBIException {
-		this.installContext = ctx;
-	}
+    private ObjectName extensionMBeanName;
 
-	public void onInstall() throws JBIException {
-		if (this.installContext == null) {
-			throw new NotInitialisedYetException();
-		}
-		DocumentFragment fragment = this.installContext
-				.getInstallationDescriptorExtension();
-		if (fragment != null)
-			LOG.debug("Installation Descriptor Extension Found");
-		else
-			LOG.debug("Installation Descriptor Extension Not Found !");
-	}
+    @Override
+    public void cleanUp()
+        throws JBIException
+    {
+    }
 
-	public void onUninstall() throws JBIException {
-	}
+    @Override
+    public ObjectName getExtensionMBeanName()
+    {
+        return extensionMBeanName;
+    }
+
+    @Override
+    public void init( InstallationContext ctx )
+        throws JBIException
+    {
+        installContext = ctx;
+    }
+
+    @Override
+    public void onInstall()
+        throws JBIException
+    {
+        if ( installContext == null )
+        {
+            throw new NotInitialisedYetException();
+        }
+        DocumentFragment fragment = installContext.getInstallationDescriptorExtension();
+        if ( fragment != null )
+        {
+            LOG.debug( "Installation Descriptor Extension Found" );
+        }
+        else
+        {
+            LOG.debug( "Installation Descriptor Extension Not Found !" );
+        }
+    }
+
+    @Override
+    public void onUninstall()
+        throws JBIException
+    {
+    }
 }

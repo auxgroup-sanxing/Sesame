@@ -1,16 +1,14 @@
 package com.sanxing.sesame.core;
 
-import com.sanxing.sesame.jmx.mbean.PlatformManagerMBean;
-import com.sanxing.sesame.jmx.mbean.ServerManagerMBean;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.management.MBeanServerConnection;
 import javax.management.MBeanServerInvocationHandler;
 import javax.management.MalformedObjectNameException;
@@ -19,143 +17,162 @@ import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
 
-public class Shutdown {
-	public static String PM_MBEANNAME = "com.sanxing.sesame:ServerName=${server-name},Type=Platform,Name=core-manager";
+import com.sanxing.sesame.jmx.mbean.PlatformManagerMBean;
+import com.sanxing.sesame.jmx.mbean.ServerManagerMBean;
 
-	public static String SM_MBeanName = "com.sanxing.sesame:ServerName=${server-name},Type=Platform,Name=server-manager";
+public class Shutdown
+{
+    public static String PM_MBEANNAME =
+        "com.sanxing.sesame:ServerName=${server-name},Type=Platform,Name=platform-manager";
 
-	private String option = "-f";
+    public static String SM_MBeanName =
+        "com.sanxing.sesame:ServerName=${server-name},Type=Platform,Name=server-manager";
 
-	private String serverName = "admin";
+    private String option = "-f";
 
-	private String adminHost = "127.0.0.1";
+    private String serverName = "admin";
 
-	private int adminPort = 2099;
+    private final String adminHost = "127.0.0.1";
 
-	public Shutdown() {
-		this.adminPort = Integer.parseInt(System.getProperty("admin-port",
-				"2099"));
-	}
+    private int adminPort = 2099;
 
-	private static <T> T getAdminMBean(Class<T> clazz, ObjectName name,
-			String host, int port) {
-		try {
-			JMXServiceURL adminServerURL = new JMXServiceURL(
-					"service:jmx:rmi:///jndi/rmi://" + host + ":" + port
-							+ "/admin");
+    public Shutdown()
+    {
+        adminPort = Integer.parseInt( System.getProperty( "admin-port", "2099" ) );
+    }
 
-			Map environment = new HashMap();
-			environment.put("java.naming.factory.initial",
-					"com.sun.jndi.rmi.registry.RegistryContextFactory");
-			JMXConnector adminServerConnector = JMXConnectorFactory.connect(
-					adminServerURL, environment);
-			MBeanServerConnection adminServerCon = adminServerConnector
-					.getMBeanServerConnection();
+    private static <T> T getAdminMBean( Class<T> clazz, ObjectName name, String host, int port )
+    {
+        try
+        {
+            JMXServiceURL adminServerURL =
+                new JMXServiceURL( "service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/admin" );
 
-			return MBeanServerInvocationHandler.newProxyInstance(
-					adminServerCon, name, clazz, false);
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e.getMessage());
-		} catch (IOException e) {
-			throw new RuntimeException(
-					"Connect to admin server failure(maybe shutted down)\n"
-							+ e.getMessage());
-		}
-	}
+            Map environment = new HashMap();
+            environment.put( "java.naming.factory.initial", "com.sun.jndi.rmi.registry.RegistryContextFactory" );
+            JMXConnector adminServerConnector = JMXConnectorFactory.connect( adminServerURL, environment );
+            MBeanServerConnection adminServerCon = adminServerConnector.getMBeanServerConnection();
 
-	private void parseArgs(String[] args) {
-		this.option = "-h";
+            return MBeanServerInvocationHandler.newProxyInstance( adminServerCon, name, clazz, false );
+        }
+        catch ( MalformedURLException e )
+        {
+            throw new RuntimeException( e.getMessage() );
+        }
+        catch ( IOException e )
+        {
+            throw new RuntimeException( "Connect to admin server failure(maybe shutted down)\n" + e.getMessage() );
+        }
+    }
 
-		this.serverName = "admin";
+    private void parseArgs( String[] args )
+    {
+        option = "-h";
 
-		if (args.length == 2) {
-			if ((args[0].equalsIgnoreCase("-h"))
-					|| (args[0].equalsIgnoreCase("-hard"))) {
-				this.option = "-h";
-			} else if ((args[0].equalsIgnoreCase("-s"))
-					|| (args[0].equalsIgnoreCase("-soft"))) {
-				this.option = "-s";
-			}
+        serverName = "admin";
 
-			this.serverName = args[1];
-		} else if (args.length == 1) {
-			this.serverName = args[0];
-		}
-	}
+        if ( args.length == 2 )
+        {
+            if ( ( args[0].equalsIgnoreCase( "-h" ) ) || ( args[0].equalsIgnoreCase( "-hard" ) ) )
+            {
+                option = "-h";
+            }
+            else if ( ( args[0].equalsIgnoreCase( "-s" ) ) || ( args[0].equalsIgnoreCase( "-soft" ) ) )
+            {
+                option = "-s";
+            }
 
-	private static void shutdown(String adminHost, int adminPort,
-			String serverName) throws MalformedObjectNameException {
-		ObjectName pmName = ObjectName.getInstance(PM_MBEANNAME.replace(
-				"${server-name}", serverName));
+            serverName = args[1];
+        }
+        else if ( args.length == 1 )
+        {
+            serverName = args[0];
+        }
+    }
 
-		PlatformManagerMBean pmm = (PlatformManagerMBean) getAdminMBean(
-				PlatformManagerMBean.class, pmName, adminHost, adminPort);
-		pmm.shutdown();
-	}
+    private static void shutdown( String adminHost, int adminPort, String serverName )
+        throws MalformedObjectNameException
+    {
+        ObjectName pmName = ObjectName.getInstance( PM_MBEANNAME.replace( "${server-name}", serverName ) );
 
-	private static void stop(String adminHost, int adminPort, String serverName)
-			throws MalformedObjectNameException {
-		ObjectName smName = ObjectName.getInstance(SM_MBeanName.replace(
-				"${server-name}", serverName));
+        PlatformManagerMBean pmm = getAdminMBean( PlatformManagerMBean.class, pmName, adminHost, adminPort );
+        pmm.shutdown();
+    }
 
-		ServerManagerMBean sm = (ServerManagerMBean) getAdminMBean(
-				ServerManagerMBean.class, smName, adminHost, adminPort);
-		sm.stop();
-	}
+    private static void stop( String adminHost, int adminPort, String serverName )
+        throws MalformedObjectNameException
+    {
+        ObjectName smName = ObjectName.getInstance( SM_MBeanName.replace( "${server-name}", serverName ) );
 
-	public String toString() {
-		return "Shutdown [adminHost=" + this.adminHost + ", adminPort="
-				+ this.adminPort + ", option=" + this.option + ", serverName="
-				+ this.serverName + "]";
-	}
+        ServerManagerMBean sm = getAdminMBean( ServerManagerMBean.class, smName, adminHost, adminPort );
+        sm.stop();
+    }
 
-	public static void main(String[] args) {
-		String strServerDir = System.getProperty("SESAME_HOME");
-		if (strServerDir == null) {
-			strServerDir = new File(System.getProperty("user.dir")).getParent();
-			System.setProperty("SESAME_HOME", strServerDir);
-		}
+    @Override
+    public String toString()
+    {
+        return "Shutdown [adminHost=" + adminHost + ", adminPort=" + adminPort + ", option=" + option + ", serverName="
+            + serverName + "]";
+    }
 
-		Properties properites = new Properties();
-		File profile = new File(System.getProperty("SESAME_HOME"),
-				"conf/system.properties");
-		try {
-			properites.load(new FileInputStream(profile));
-			Enumeration enumer = properites.propertyNames();
+    public static void main( String[] args )
+    {
+        String strServerDir = System.getProperty( "SESAME_HOME" );
+        if ( strServerDir == null )
+        {
+            strServerDir = new File( System.getProperty( "user.dir" ) ).getParent();
+            System.setProperty( "SESAME_HOME", strServerDir );
+        }
 
-			while (enumer.hasMoreElements()) {
-				String key = (String) enumer.nextElement();
-				String value = properites.getProperty(key);
+        Properties properites = new Properties();
+        File profile = new File( System.getProperty( "SESAME_HOME" ), "conf/system.properties" );
+        try
+        {
+            properites.load( new FileInputStream( profile ) );
+            Enumeration enumer = properites.propertyNames();
 
-				if (System.getProperty(key) == null)
-					System.setProperty(key, value);
-			}
-		} catch (IOException e) {
-			System.out.println("Load conf/system.properties failure!");
-		}
+            while ( enumer.hasMoreElements() )
+            {
+                String key = (String) enumer.nextElement();
+                String value = properites.getProperty( key );
 
-		Shutdown cmd = new Shutdown();
-		try {
-			cmd.parseArgs(args);
+                if ( System.getProperty( key ) == null )
+                {
+                    System.setProperty( key, value );
+                }
+            }
+        }
+        catch ( IOException e )
+        {
+            System.out.println( "Load conf/system.properties failure!" );
+        }
 
-			if (cmd.option.equals("-s")) {
-				System.out.println("stopping ..............");
-				stop(cmd.adminHost, cmd.adminPort, cmd.serverName);
-				System.out
-						.println("server [" + cmd.serverName + "] is stopped");
-				return;
-			}
+        Shutdown cmd = new Shutdown();
+        try
+        {
+            cmd.parseArgs( args );
 
-			if (cmd.option.equals("-h")) {
-				System.out.println("Shutting down  " + cmd.serverName
-						+ " ......");
-				shutdown(cmd.adminHost, cmd.adminPort, cmd.serverName);
-				System.out.println("Server [" + cmd.serverName
-						+ "] is shutted down");
-			}
-		} catch (Exception e) {
-			if(e.getMessage() != null)
-				System.err.println(e.getMessage());
-		}
-	}
+            if ( cmd.option.equals( "-s" ) )
+            {
+                System.out.println( "stopping .............." );
+                stop( cmd.adminHost, cmd.adminPort, cmd.serverName );
+                System.out.println( "server [" + cmd.serverName + "] is stopped" );
+                return;
+            }
+
+            if ( cmd.option.equals( "-h" ) )
+            {
+                System.out.println( "Shutting down  " + cmd.serverName + " ......" );
+                shutdown( cmd.adminHost, cmd.adminPort, cmd.serverName );
+                System.out.println( "Server [" + cmd.serverName + "] is shutted down" );
+            }
+        }
+        catch ( Exception e )
+        {
+            if ( e.getMessage() != null )
+            {
+                System.err.println( e.getMessage() );
+            }
+        }
+    }
 }

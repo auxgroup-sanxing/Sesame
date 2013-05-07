@@ -1,12 +1,5 @@
 package com.sanxing.sesame.transport.impl;
 
-import com.sanxing.sesame.binding.Carrier;
-import com.sanxing.sesame.binding.codec.BinarySource;
-import com.sanxing.sesame.binding.context.MessageContext;
-import com.sanxing.sesame.binding.transport.Acceptor;
-import com.sanxing.sesame.binding.transport.BaseTransport;
-import com.sanxing.sesame.transport.quartz.SesameScheduler;
-import com.sanxing.sesame.transport.quartz.TaskImpl;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,225 +11,310 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import org.quartz.SchedulerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.quartz.SchedulerException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public abstract class TaskTransport extends BaseTransport implements Acceptor {
-	private static Logger LOG = LoggerFactory.getLogger(TaskTransport.class);
-	protected SesameScheduler scheduler;
-	protected Map<String, Map<String, Object>> bindingPropsCache = new HashMap();
+import com.sanxing.sesame.binding.Carrier;
+import com.sanxing.sesame.binding.codec.BinarySource;
+import com.sanxing.sesame.binding.context.MessageContext;
+import com.sanxing.sesame.binding.transport.Acceptor;
+import com.sanxing.sesame.binding.transport.BaseTransport;
+import com.sanxing.sesame.transport.quartz.SesameScheduler;
+import com.sanxing.sesame.transport.quartz.TaskImpl;
 
-	protected ExecutorService workExecutor = new ThreadPoolExecutor(2, 5, 60L,
-			TimeUnit.MILLISECONDS, new ArrayBlockingQueue(50));
-	protected URI uri;
-	protected Map<?, ?> properties = new HashMap();
+public abstract class TaskTransport
+    extends BaseTransport
+    implements Acceptor
+{
+    private static Logger LOG = LoggerFactory.getLogger( TaskTransport.class );
 
-	protected boolean active = false;
+    protected SesameScheduler scheduler;
 
-	protected String operationName = "";
+    protected Map<String, Map<String, Object>> bindingPropsCache = new HashMap();
 
-	protected String readLine = "false";
-	protected String setContextAction = "true";
-	protected String encoding = "GBK";
-	protected int buffer_size = 1024;
+    protected ExecutorService workExecutor = new ThreadPoolExecutor( 2, 5, 60L, TimeUnit.MILLISECONDS,
+        new ArrayBlockingQueue( 50 ) );
 
-	public void accept(InputStream in, String operationName, String contextPath)
-			throws IOException {
-		byte[] bytes = new byte[this.buffer_size];
-		setOperationName(operationName);
-		read(in, bytes, contextPath);
-	}
+    protected URI uri;
 
-	protected void read(InputStream input, byte[] bytes, String contextPath)
-			throws IOException {
-		if (!(this.readLine.equals("true"))) {
-			byte[] temp = new byte[1024];
-			int len = 0;
-			int position = 0;
-			while ((len = input.read(temp)) != -1) {
-				System.arraycopy(temp, 0, bytes, position, len);
-				position += len;
-			}
-			input.close();
-			try {
-				this.workExecutor.execute(new Command(bytes, position,
-						contextPath));
-			} catch (Exception e) {
-				throw new IOException("ftp read error!");
-			}
-		} else {
-			InputStreamReader reader = new InputStreamReader(input);
-			BufferedReader bufferReader = new BufferedReader(reader);
-			String value = "";
-			while ((value = bufferReader.readLine()) != null) {
-				byte[] getBuffer = value.getBytes(this.encoding);
-				try {
-					if (getBuffer.length > 0)
-						this.workExecutor.execute(new Command(getBuffer,
-								getBuffer.length, contextPath));
-				} catch (Exception e) {
-					throw new IOException("ftp read error!");
-				}
-			}
-			bufferReader.close();
-			reader.close();
-			input.close();
-		}
-	}
+    protected Map<?, ?> properties = new HashMap();
 
-	public URI getURI() {
-		return this.uri;
-	}
+    protected boolean active = false;
 
-	public void removeCarrier(String contextPath, Carrier receiver) {
-		try {
-			deleteJob(contextPath, this.uri.getScheme());
+    protected String operationName = "";
 
-			super.removeCarrier(contextPath, receiver);
-			this.bindingPropsCache.remove(contextPath);
-		} catch (SchedulerException e) {
-			e.printStackTrace();
-		}
-	}
+    protected String readLine = "false";
 
-	private void registryJob(Map<String, Object> unitProps) throws Exception {
-		this.scheduler.registryJob(unitProps);
-	}
+    protected String setContextAction = "true";
 
-	private void deleteJob(String jobName, String groupName)
-			throws SchedulerException {
-		this.scheduler.deleteJob(jobName, groupName);
-	}
+    protected String encoding = "GBK";
 
-	public void addCarrier(String contextPath, Carrier receiver) {
-		super.addCarrier(contextPath, receiver);
-		Map unitProps = (Map) this.bindingPropsCache.get(contextPath);
+    protected int buffer_size = 1024;
 
-		String cornExp = (String) unitProps.get("cornExp");
-		if ((cornExp == null) || (cornExp.length() < 1)) {
-			unitProps.put("cornExp", (String) this.properties.get("cornExp"));
-		}
+    public void accept( InputStream in, String operationName, String contextPath )
+        throws IOException
+    {
+        byte[] bytes = new byte[buffer_size];
+        setOperationName( operationName );
+        read( in, bytes, contextPath );
+    }
 
-		try {
-			registryJob(unitProps);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    protected void read( InputStream input, byte[] bytes, String contextPath )
+        throws IOException
+    {
+        if ( !( readLine.equals( "true" ) ) )
+        {
+            byte[] temp = new byte[1024];
+            int len = 0;
+            int position = 0;
+            while ( ( len = input.read( temp ) ) != -1 )
+            {
+                System.arraycopy( temp, 0, bytes, position, len );
+                position += len;
+            }
+            input.close();
+            try
+            {
+                workExecutor.execute( new Command( bytes, position, contextPath ) );
+            }
+            catch ( Exception e )
+            {
+                throw new IOException( "ftp read error!" );
+            }
+        }
+        else
+        {
+            InputStreamReader reader = new InputStreamReader( input );
+            BufferedReader bufferReader = new BufferedReader( reader );
+            String value = "";
+            while ( ( value = bufferReader.readLine() ) != null )
+            {
+                byte[] getBuffer = value.getBytes( encoding );
+                try
+                {
+                    if ( getBuffer.length > 0 )
+                    {
+                        workExecutor.execute( new Command( getBuffer, getBuffer.length, contextPath ) );
+                    }
+                }
+                catch ( Exception e )
+                {
+                    throw new IOException( "ftp read error!" );
+                }
+            }
+            bufferReader.close();
+            reader.close();
+            input.close();
+        }
+    }
 
-	public void setURI(URI uri) {
-		this.uri = uri;
-	}
+    @Override
+    public URI getURI()
+    {
+        return uri;
+    }
 
-	public String getProperties(String key) {
-		Object value = this.properties.get(key);
-		return ((value == null) ? "" : (String) value);
-	}
+    @Override
+    public void removeCarrier( String contextPath, Carrier receiver )
+    {
+        try
+        {
+            deleteJob( contextPath, uri.getScheme() );
 
-	public void setProperties(Map<?, ?> properties) {
-		this.properties = properties;
-		String readLine_temp = getProperties("readLine");
-		if (readLine_temp.length() > 0)
-			this.readLine = readLine_temp;
-		String setContextAction_temp = getProperties("setContextAction");
-		if (setContextAction_temp.length() > 0)
-			this.setContextAction = setContextAction_temp;
-		String encoding_temp = getProperties("encoding");
-		if (encoding_temp.length() > 0)
-			this.encoding = encoding_temp;
-		if (getProperties("buffer_size").length() > 0)
-			this.buffer_size = Integer.parseInt(getProperties("buffer_size"));
-	}
+            super.removeCarrier( contextPath, receiver );
+            bindingPropsCache.remove( contextPath );
+        }
+        catch ( SchedulerException e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public void setOperationName(String operationName) {
-		this.operationName = operationName;
-	}
+    private void registryJob( Map<String, Object> unitProps )
+        throws Exception
+    {
+        scheduler.registryJob( unitProps );
+    }
 
-	public void setConfig(String contextPath, Element config)
-			throws IllegalArgumentException {
-		LOG.debug("::::::::::::::::::::::::::::::::::::::path is:"
-				+ contextPath + ",config is:" + config);
+    private void deleteJob( String jobName, String groupName )
+        throws SchedulerException
+    {
+        scheduler.deleteJob( jobName, groupName );
+    }
 
-		Map properties = new HashMap();
+    @Override
+    public void addCarrier( String contextPath, Carrier receiver )
+    {
+        super.addCarrier( contextPath, receiver );
+        Map unitProps = bindingPropsCache.get( contextPath );
 
-		if (contextPath == null) {
-			if (config != null) {
-				XPathFactory factory = XPathFactory.newInstance();
-				XPath xpath = factory.newXPath();
-				try {
-					String expression = "*/*";
-					NodeList nodes = (NodeList) xpath.evaluate(expression,
-							config, XPathConstants.NODESET);
-					int i = 0;
-					for (int len = nodes.getLength(); i < len; ++i) {
-						Element prop = (Element) nodes.item(i);
-						properties.put(prop.getNodeName(), prop
-								.getTextContent().trim());
-					}
-				} catch (XPathExpressionException e) {
-					throw new IllegalArgumentException(e.getMessage(), e);
-				}
-			}
-			LOG.debug(" .............SET root properties is:" + properties);
-			setProperties(properties);
-		} else {
-			NodeList list = config.getChildNodes();
-			for (int i = 0; i < list.getLength(); ++i) {
-				Node child = list.item(i);
-				if (child.getNodeType() == 1) {
-					properties.put(child.getNodeName(), child.getTextContent()
-							.trim());
-				}
-			}
-			properties.put("transport", this);
-			properties.put("taskClass", TaskImpl.class);
-			properties.put("jobName", contextPath);
-			properties.put("groupName", this.uri.getScheme());
-			this.bindingPropsCache.put(contextPath, properties);
-		}
-	}
+        String cornExp = (String) unitProps.get( "cornExp" );
+        if ( ( cornExp == null ) || ( cornExp.length() < 1 ) )
+        {
+            unitProps.put( "cornExp", properties.get( "cornExp" ) );
+        }
 
-	public boolean isActive() {
-		return this.active;
-	}
+        try
+        {
+            registryJob( unitProps );
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+        }
+    }
 
-	public abstract void executeTask(Map<?, ?> paramMap) throws Exception;
+    @Override
+    public void setURI( URI uri )
+    {
+        this.uri = uri;
+    }
 
-	class Command implements Runnable {
-		private byte[] inputBuffer;
-		private int realLen;
-		private String contextPath;
+    public String getProperties( String key )
+    {
+        Object value = properties.get( key );
+        return ( ( value == null ) ? "" : (String) value );
+    }
 
-		Command(byte[] paramArrayOfByte, int paramInt, String paramString) {
-			this.inputBuffer = paramArrayOfByte;
-			this.realLen = paramInt;
-			this.contextPath = paramString;
-		}
+    @Override
+    public void setProperties( Map<?, ?> properties )
+    {
+        this.properties = properties;
+        String readLine_temp = getProperties( "readLine" );
+        if ( readLine_temp.length() > 0 )
+        {
+            readLine = readLine_temp;
+        }
+        String setContextAction_temp = getProperties( "setContextAction" );
+        if ( setContextAction_temp.length() > 0 )
+        {
+            setContextAction = setContextAction_temp;
+        }
+        String encoding_temp = getProperties( "encoding" );
+        if ( encoding_temp.length() > 0 )
+        {
+            encoding = encoding_temp;
+        }
+        if ( getProperties( "buffer_size" ).length() > 0 )
+        {
+            buffer_size = Integer.parseInt( getProperties( "buffer_size" ) );
+        }
+    }
 
-		public void run() {
-			BinarySource input = new BinarySource();
-			input.setBytes(this.inputBuffer, this.realLen);
-			input.setEncoding(TaskTransport.this.getCharacterEncoding());
-			MessageContext ctx = new MessageContext(TaskTransport.this, input);
-			ctx.setPath(this.contextPath);
-			if (TaskTransport.this.setContextAction.equals("true")) {
-				ctx.setAction(TaskTransport.this.operationName);
-			}
+    public void setOperationName( String operationName )
+    {
+        this.operationName = operationName;
+    }
 
-			try {
-				TaskTransport.this.postMessage(ctx);
-				TaskTransport.this.reply(ctx);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+    @Override
+    public void setConfig( String contextPath, Element config )
+        throws IllegalArgumentException
+    {
+        LOG.debug( "::::::::::::::::::::::::::::::::::::::path is:" + contextPath + ",config is:" + config );
+
+        Map properties = new HashMap();
+
+        if ( contextPath == null )
+        {
+            if ( config != null )
+            {
+                XPathFactory factory = XPathFactory.newInstance();
+                XPath xpath = factory.newXPath();
+                try
+                {
+                    String expression = "*/*";
+                    NodeList nodes = (NodeList) xpath.evaluate( expression, config, XPathConstants.NODESET );
+                    int i = 0;
+                    for ( int len = nodes.getLength(); i < len; ++i )
+                    {
+                        Element prop = (Element) nodes.item( i );
+                        properties.put( prop.getNodeName(), prop.getTextContent().trim() );
+                    }
+                }
+                catch ( XPathExpressionException e )
+                {
+                    throw new IllegalArgumentException( e.getMessage(), e );
+                }
+            }
+            LOG.debug( " .............SET root properties is:" + properties );
+            setProperties( properties );
+        }
+        else
+        {
+            NodeList list = config.getChildNodes();
+            for ( int i = 0; i < list.getLength(); ++i )
+            {
+                Node child = list.item( i );
+                if ( child.getNodeType() == 1 )
+                {
+                    properties.put( child.getNodeName(), child.getTextContent().trim() );
+                }
+            }
+            properties.put( "transport", this );
+            properties.put( "taskClass", TaskImpl.class );
+            properties.put( "jobName", contextPath );
+            properties.put( "groupName", uri.getScheme() );
+            bindingPropsCache.put( contextPath, properties );
+        }
+    }
+
+    @Override
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    public abstract void executeTask( Map<?, ?> paramMap )
+        throws Exception;
+
+    class Command
+        implements Runnable
+    {
+        private final byte[] inputBuffer;
+
+        private final int realLen;
+
+        private final String contextPath;
+
+        Command( byte[] paramArrayOfByte, int paramInt, String paramString )
+        {
+            inputBuffer = paramArrayOfByte;
+            realLen = paramInt;
+            contextPath = paramString;
+        }
+
+        @Override
+        public void run()
+        {
+            BinarySource input = new BinarySource();
+            input.setBytes( inputBuffer, realLen );
+            input.setEncoding( getCharacterEncoding() );
+            MessageContext ctx = new MessageContext( TaskTransport.this, input );
+            ctx.setPath( contextPath );
+            if ( setContextAction.equals( "true" ) )
+            {
+                ctx.setAction( operationName );
+            }
+
+            try
+            {
+                postMessage( ctx );
+                reply( ctx );
+            }
+            catch ( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 }

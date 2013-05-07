@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.mail.Authenticator;
@@ -12,6 +13,7 @@ import javax.mail.BodyPart;
 import javax.mail.Flags.Flag;
 import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.PasswordAuthentication;
@@ -25,344 +27,436 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 import javax.mail.util.ByteArrayDataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SesameMailClient {
-	private String recvProtocol = "pop3";
-	private String sendProtocol = "smtp";
+public class SesameMailClient
+{
+    private final String recvProtocol = "pop3";
 
-	private String popServer;
-	private Session recvSession;
-	private String recvDebug = "true";
-	private String recvAuth = "true";
-	private String recvUser;
-	private String recvPassword;
+    private final String sendProtocol = "smtp";
 
-	private String from;
-	private String to;
-	private String smtpServer;
-	private Session sendSession;
-	private String sendDebug = "true";
-	private String sendAuth = "true";
-	private String sendUser;
-	private String sendPassword;
+    private String popServer;
 
-	private String attachment = "false";
+    private Session recvSession;
 
-	private Store store = null;
-	private Folder folder = null;
+    private String recvDebug = "true";
 
-	private static Logger LOG = LoggerFactory.getLogger(SesameMailClient.class);
+    private String recvAuth = "true";
 
-	public void setBindingProperties(Map<String, String> props) {
-	}
+    private String recvUser;
 
-	public void initSession() throws Exception {
-	}
+    private String recvPassword;
 
-	public void sendMail(byte[] resp, String subject) throws Exception {
-		if (this.sendSession == null)
-			throw new Exception("smtp server do not init,session is null!");
-		MimeMessage msg = new MimeMessage(this.sendSession);
+    private String from;
 
-		msg.setFrom(new InternetAddress(this.from));
+    private String to;
 
-		InternetAddress[] addresses = { new InternetAddress(this.to) };
+    private String smtpServer;
 
-		msg.setRecipients(MimeMessage.RecipientType.TO, addresses);
+    private Session sendSession;
 
-		msg.setSubject(subject);
+    private String sendDebug = "true";
 
-		MimeBodyPart mbp2 = new MimeBodyPart();
+    private String sendAuth = "true";
 
-		DataSource source = new ByteArrayDataSource(resp, "text/plain");
-		mbp2.setDataHandler(new DataHandler(source));
-		mbp2.setFileName(subject + ".txt");
+    private String sendUser;
 
-		Multipart mp = new MimeMultipart();
+    private String sendPassword;
 
-		mp.addBodyPart(mbp2);
+    private String attachment = "false";
 
-		msg.setContent(mp);
+    private Store store = null;
 
-		Transport transport = this.sendSession.getTransport(this.sendProtocol);
-		transport.connect(this.sendUser, this.sendPassword);
-		transport.sendMessage(msg, msg.getAllRecipients());
+    private Folder folder = null;
 
-		transport.close();
-	}
+    private static Logger LOG = LoggerFactory.getLogger( SesameMailClient.class );
 
-	public byte[] getMailBySubject(String subject) throws Exception {
-		byte[] result = (byte[]) null;
-		if (this.recvSession == null)
-			throw new Exception("pop server do not init!");
-		Store store = this.recvSession.getStore(this.recvProtocol);
-		store.connect();
-		if (store.isConnected()) {
-			Folder folder = store.getFolder("INBOX");
+    public void setBindingProperties( Map<String, String> props )
+    {
+    }
 
-			folder.open(2);
+    public void initSession()
+        throws Exception
+    {
+    }
 
-			SearchTerm subTerm = new SubjectTerm(subject);
-			Message[] msgs = folder.search(subTerm);
-			Message[] arrayOfMessage1;
-			if ((arrayOfMessage1 = msgs).length != 0) {
-				Message msg = arrayOfMessage1[0];
-				result = processOneMail(msg);
-				msg.setFlag(Flag.DELETED, true);
-			}
+    public void sendMail( byte[] resp, String subject )
+        throws Exception
+    {
+        if ( sendSession == null )
+        {
+            throw new Exception( "smtp server do not init,session is null!" );
+        }
+        MimeMessage msg = new MimeMessage( sendSession );
 
-			folder.close(true);
-			store.close();
-		}
+        msg.setFrom( new InternetAddress( from ) );
 
-		return result;
-	}
+        InternetAddress[] addresses = { new InternetAddress( to ) };
 
-	public byte[] processOneMail(Message msg) throws Exception {
-		byte[] result = (byte[]) null;
-		if (this.attachment.equals("false"))
-			result = processOneMailNoAttachment(msg);
-		else {
-			result = processOneMailWithAttachment(msg);
-		}
+        msg.setRecipients( RecipientType.TO, addresses );
 
-		if (result != null) {
-			msg.setFlag(Flag.DELETED, true);
-		}
-		return result;
-	}
+        msg.setSubject( subject );
 
-	public byte[] processOneMailNoAttachment(Message msg) throws Exception {
-		byte[] result = (byte[]) null;
+        MimeBodyPart mbp2 = new MimeBodyPart();
 
-		if (msg.isMimeType("multipart/alternative")) {
-			Multipart part = (MimeMultipart) msg.getContent();
-			int i = 0;
-			for (int n = part.getCount(); i < n; ++i) {
-				BodyPart body = part.getBodyPart(i);
+        DataSource source = new ByteArrayDataSource( resp, "text/plain" );
+        mbp2.setDataHandler( new DataHandler( source ) );
+        mbp2.setFileName( subject + ".txt" );
 
-				if (!(body.isMimeType("text/plain")))
-					continue;
-				String content = (String) body.getContent();
+        Multipart mp = new MimeMultipart();
 
-				LOG.debug("body type is:" + body.getContentType() + "\n"
-						+ "content is:[" + content + "],len is:"
-						+ content.getBytes().length);
+        mp.addBodyPart( mbp2 );
 
-				result = content.getBytes();
-			}
-		} else if (msg.isMimeType("text/plain")) {
-			String content = (String) msg.getContent();
-			result = content.getBytes();
-		} else if (msg.isMimeType("text/html")) {
-			LOG.error("html 格式");
-		} else {
-			throw new Exception("邮件包含附件");
-		}
-		return result;
-	}
+        msg.setContent( mp );
 
-	public byte[] processOneMailWithAttachment(Message msg) throws Exception {
-		byte[] result = (byte[]) null;
-		if (msg.isMimeType("multipart/mixed")) {
-			Multipart multipart = (Multipart) msg.getContent();
-			int i = 0;
-			for (int n = multipart.getCount(); i < n; ++i) {
-				Part part = multipart.getBodyPart(i);
-				String disposition = part.getDisposition();
-				LOG.debug("part type is:" + part.getContentType());
-				if (disposition != null) {
-					if (disposition.equals("attachment")) {
-						if (part.isMimeType("text/plain")) {
-							LOG.debug("part type is:" + part.getContentType());
-							String content = (String) part.getContent();
+        Transport transport = sendSession.getTransport( sendProtocol );
+        transport.connect( sendUser, sendPassword );
+        transport.sendMessage( msg, msg.getAllRecipients() );
 
-							result = new String(content.getBytes("iso-8859-1"),
-									"gbk").getBytes();
-							LOG.debug("content is:" + new String(result)
-									+ ",filename is:" + part.getFileName());
-							continue;
-						}
-						if ((part.isMimeType("application/octet-stream"))
-								|| (part.isMimeType("application/x-zip-compressed"))) {
-							LOG.debug("part type is:" + part.getContentType());
-							InputStream in = part.getInputStream();
-							ByteArrayOutputStream out = new ByteArrayOutputStream();
-							byte[] temp = new byte[1024];
-							int len = 0;
-							while ((len = in.read(temp)) != -1) {
-								out.write(temp, 0, len);
-								len = 0;
-							}
-							in.close();
-							result = out.toByteArray();
-							out.close();
-							continue;
-						}
+        transport.close();
+    }
 
-						throw new Exception("未知类型:[" + part.getContentType()
-								+ "]");
-					}
+    public byte[] getMailBySubject( String subject )
+        throws Exception
+    {
+        byte[] result = null;
+        if ( recvSession == null )
+        {
+            throw new Exception( "pop server do not init!" );
+        }
+        Store store = recvSession.getStore( recvProtocol );
+        store.connect();
+        if ( store.isConnected() )
+        {
+            Folder folder = store.getFolder( "INBOX" );
 
-					if (disposition.equals("inline")) {
-						continue;
-					}
-					throw new Exception("未知部署方式：[" + disposition + "]");
-				}
-			}
-		} else if (!(msg.isMimeType("multipart/related"))) {
-			throw new Exception("邮件未包含附件");
-		}
+            folder.open( 2 );
 
-		return result;
-	}
+            SearchTerm subTerm = new SubjectTerm( subject );
+            Message[] msgs = folder.search( subTerm );
+            Message[] arrayOfMessage1;
+            if ( ( arrayOfMessage1 = msgs ).length != 0 )
+            {
+                Message msg = arrayOfMessage1[0];
+                result = processOneMail( msg );
+                msg.setFlag( Flag.DELETED, true );
+            }
 
-	public void disconnecteStore() throws Exception {
-		if (this.store == null)
-			return;
-		if (this.store.isConnected()) {
-			this.folder.close(true);
-			this.store.close();
-		}
-	}
+            folder.close( true );
+            store.close();
+        }
 
-	public void connecteStore() throws Exception {
-		if ((this.store == null) || (!(this.store.isConnected())))
-			return;
-		this.store = this.recvSession.getStore(this.recvProtocol);
-		this.store.connect();
-		if (this.store.isConnected()) {
-			this.folder = this.store.getFolder("INBOX");
+        return result;
+    }
 
-			this.folder.open(2);
-		}
-	}
+    public byte[] processOneMail( Message msg )
+        throws Exception
+    {
+        byte[] result = null;
+        if ( attachment.equals( "false" ) )
+        {
+            result = processOneMailNoAttachment( msg );
+        }
+        else
+        {
+            result = processOneMailWithAttachment( msg );
+        }
 
-	public Message[] getAllMails() throws Exception {
-		Message[] msgs = (Message[]) null;
-		if (this.recvSession == null)
-			throw new Exception("pop server do not init!");
-		this.store = this.recvSession.getStore(this.recvProtocol);
-		this.store.connect();
-		if (this.store.isConnected()) {
-			this.folder = this.store.getFolder("INBOX");
+        if ( result != null )
+        {
+            msg.setFlag( Flag.DELETED, true );
+        }
+        return result;
+    }
 
-			this.folder.open(2);
+    public byte[] processOneMailNoAttachment( Message msg )
+        throws Exception
+    {
+        byte[] result = null;
 
-			msgs = this.folder.getMessages();
-		} else {
-			throw new Exception("can not connect to service!");
-		}
+        if ( msg.isMimeType( "multipart/alternative" ) )
+        {
+            Multipart part = (MimeMultipart) msg.getContent();
+            int i = 0;
+            for ( int n = part.getCount(); i < n; ++i )
+            {
+                BodyPart body = part.getBodyPart( i );
 
-		return msgs;
-	}
+                if ( !( body.isMimeType( "text/plain" ) ) )
+                {
+                    continue;
+                }
+                String content = (String) body.getContent();
 
-	public InputStream getEmails() throws Exception {
-		InputStream in = null;
-		Store store = this.recvSession.getStore(this.recvProtocol);
-		store.connect();
+                LOG.debug( "body type is:" + body.getContentType() + "\n" + "content is:[" + content + "],len is:"
+                    + content.getBytes().length );
 
-		Folder folder = store.getFolder("INBOX");
+                result = content.getBytes();
+            }
+        }
+        else if ( msg.isMimeType( "text/plain" ) )
+        {
+            String content = (String) msg.getContent();
+            result = content.getBytes();
+        }
+        else if ( msg.isMimeType( "text/html" ) )
+        {
+            LOG.error( "html 格式" );
+        }
+        else
+        {
+            throw new Exception( "邮件包含附件" );
+        }
+        return result;
+    }
 
-		folder.open(2);
-		Message[] msgs = folder.getMessages();
+    public byte[] processOneMailWithAttachment( Message msg )
+        throws Exception
+    {
+        byte[] result = null;
+        if ( msg.isMimeType( "multipart/mixed" ) )
+        {
+            Multipart multipart = (Multipart) msg.getContent();
+            int i = 0;
+            for ( int n = multipart.getCount(); i < n; ++i )
+            {
+                Part part = multipart.getBodyPart( i );
+                String disposition = part.getDisposition();
+                LOG.debug( "part type is:" + part.getContentType() );
+                if ( disposition != null )
+                {
+                    if ( disposition.equals( "attachment" ) )
+                    {
+                        if ( part.isMimeType( "text/plain" ) )
+                        {
+                            LOG.debug( "part type is:" + part.getContentType() );
+                            String content = (String) part.getContent();
 
-		byte[] getBuf = doMessages(msgs);
-		if (getBuf != null) {
-			in = new ByteArrayInputStream(getBuf);
-		}
-		folder.close(false);
-		store.close();
-		return in;
-	}
+                            result = new String( content.getBytes( "iso-8859-1" ), "gbk" ).getBytes();
+                            LOG.debug( "content is:" + new String( result ) + ",filename is:" + part.getFileName() );
+                            continue;
+                        }
+                        if ( ( part.isMimeType( "application/octet-stream" ) )
+                            || ( part.isMimeType( "application/x-zip-compressed" ) ) )
+                        {
+                            LOG.debug( "part type is:" + part.getContentType() );
+                            InputStream in = part.getInputStream();
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            byte[] temp = new byte[1024];
+                            int len = 0;
+                            while ( ( len = in.read( temp ) ) != -1 )
+                            {
+                                out.write( temp, 0, len );
+                                len = 0;
+                            }
+                            in.close();
+                            result = out.toByteArray();
+                            out.close();
+                            continue;
+                        }
 
-	public byte[] doMessages(Message[] msgs) throws Exception {
-		byte[] result = (byte[]) null;
-		for (Message msg : msgs) {
-			if (msg.getContentType().startsWith("multipart/")) {
-				Multipart part = (Multipart) msg.getContent();
-				int i = 0;
-				for (int n = part.getCount(); i < n; ++i) {
-					Part bp = part.getBodyPart(i);
-					String disposition = bp.getDisposition();
-					if ((disposition == null)
-							|| ((!(disposition.equals("attachment"))) && (!(disposition
-									.equals("inline"))))) {
-						continue;
-					}
+                        throw new Exception( "未知类型:[" + part.getContentType() + "]" );
+                    }
 
-					InputStream in = bp.getInputStream();
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] temp = new byte[1024];
-					int len = 0;
-					while ((len = in.read(temp)) != -1) {
-						out.write(temp, 0, len);
-						len = 0;
-					}
-					in.close();
+                    if ( disposition.equals( "inline" ) )
+                    {
+                        continue;
+                    }
+                    throw new Exception( "未知部署方式：[" + disposition + "]" );
+                }
+            }
+        }
+        else if ( !( msg.isMimeType( "multipart/related" ) ) )
+        {
+            throw new Exception( "邮件未包含附件" );
+        }
 
-					result = out.toByteArray();
-					out.close();
-					break;
-				}
+        return result;
+    }
 
-			}
+    public void disconnecteStore()
+        throws Exception
+    {
+        if ( store == null )
+        {
+            return;
+        }
+        if ( store.isConnected() )
+        {
+            folder.close( true );
+            store.close();
+        }
+    }
 
-		}
+    public void connecteStore()
+        throws Exception
+    {
+        if ( ( store == null ) || ( !( store.isConnected() ) ) )
+        {
+            return;
+        }
+        store = recvSession.getStore( recvProtocol );
+        store.connect();
+        if ( store.isConnected() )
+        {
+            folder = store.getFolder( "INBOX" );
 
-		return result;
-	}
+            folder.open( 2 );
+        }
+    }
 
-	public void initPOPServer() throws Exception {
-		Properties props = new Properties();
-		props.put("mail.pop3.host", this.popServer);
-		props.put("mail.pop3.auth", this.recvAuth);
+    public Message[] getAllMails()
+        throws Exception
+    {
+        Message[] msgs = null;
+        if ( recvSession == null )
+        {
+            throw new Exception( "pop server do not init!" );
+        }
+        store = recvSession.getStore( recvProtocol );
+        store.connect();
+        if ( store.isConnected() )
+        {
+            folder = store.getFolder( "INBOX" );
 
-		this.recvSession = Session.getDefaultInstance(props,
-				new Authenticator() {
-					public PasswordAuthentication getPasswordAuthentication() {
-						return new PasswordAuthentication(
-								SesameMailClient.this.recvUser,
-								SesameMailClient.this.recvPassword);
-					}
-				});
-		if (this.recvDebug.equals("true"))
-			this.recvSession.setDebug(true);
-	}
+            folder.open( 2 );
 
-	public void initSMTPServer() throws Exception {
-		Properties props = new Properties();
-		props = new Properties();
-		props.put("mail.smtp.host", this.smtpServer);
-		props.put("mail.smtp.auth", this.sendAuth);
+            msgs = folder.getMessages();
+        }
+        else
+        {
+            throw new Exception( "can not connect to service!" );
+        }
 
-		this.sendSession = Session.getInstance(props, null);
-		if (this.sendDebug.equals("true"))
-			this.sendSession.setDebug(true);
-	}
+        return msgs;
+    }
 
-	public void init() throws Exception {
-		initPOPServer();
-		initSMTPServer();
-	}
+    public InputStream getEmails()
+        throws Exception
+    {
+        InputStream in = null;
+        Store store = recvSession.getStore( recvProtocol );
+        store.connect();
 
-	public void setProperties(Map<?, ?> props) {
-		this.popServer = ((String) props.get("popServer"));
-		this.recvDebug = ((String) props.get("recvDebug"));
-		this.recvAuth = ((String) props.get("recvAuth"));
-		this.recvUser = ((String) props.get("recvUser"));
-		this.recvPassword = ((String) props.get("recvPassword"));
+        Folder folder = store.getFolder( "INBOX" );
 
-		this.from = ((String) props.get("from"));
-		this.to = ((String) props.get("to"));
-		this.smtpServer = ((String) props.get("smtpServer"));
-		this.sendDebug = ((String) props.get("sendDebug"));
-		this.sendAuth = ((String) props.get("sendAuth"));
-		this.sendUser = ((String) props.get("sendUser"));
-		this.sendPassword = ((String) props.get("sendPassword"));
+        folder.open( 2 );
+        Message[] msgs = folder.getMessages();
 
-		this.attachment = ((String) props.get("attachment"));
-	}
+        byte[] getBuf = doMessages( msgs );
+        if ( getBuf != null )
+        {
+            in = new ByteArrayInputStream( getBuf );
+        }
+        folder.close( false );
+        store.close();
+        return in;
+    }
+
+    public byte[] doMessages( Message[] msgs )
+        throws Exception
+    {
+        byte[] result = null;
+        for ( Message msg : msgs )
+        {
+            if ( msg.getContentType().startsWith( "multipart/" ) )
+            {
+                Multipart part = (Multipart) msg.getContent();
+                int i = 0;
+                for ( int n = part.getCount(); i < n; ++i )
+                {
+                    Part bp = part.getBodyPart( i );
+                    String disposition = bp.getDisposition();
+                    if ( ( disposition == null )
+                        || ( ( !( disposition.equals( "attachment" ) ) ) && ( !( disposition.equals( "inline" ) ) ) ) )
+                    {
+                        continue;
+                    }
+
+                    InputStream in = bp.getInputStream();
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    byte[] temp = new byte[1024];
+                    int len = 0;
+                    while ( ( len = in.read( temp ) ) != -1 )
+                    {
+                        out.write( temp, 0, len );
+                        len = 0;
+                    }
+                    in.close();
+
+                    result = out.toByteArray();
+                    out.close();
+                    break;
+                }
+
+            }
+
+        }
+
+        return result;
+    }
+
+    public void initPOPServer()
+        throws Exception
+    {
+        Properties props = new Properties();
+        props.put( "mail.pop3.host", popServer );
+        props.put( "mail.pop3.auth", recvAuth );
+
+        recvSession = Session.getDefaultInstance( props, new Authenticator()
+        {
+            @Override
+            public PasswordAuthentication getPasswordAuthentication()
+            {
+                return new PasswordAuthentication( recvUser, recvPassword );
+            }
+        } );
+        if ( recvDebug.equals( "true" ) )
+        {
+            recvSession.setDebug( true );
+        }
+    }
+
+    public void initSMTPServer()
+        throws Exception
+    {
+        Properties props = new Properties();
+        props = new Properties();
+        props.put( "mail.smtp.host", smtpServer );
+        props.put( "mail.smtp.auth", sendAuth );
+
+        sendSession = Session.getInstance( props, null );
+        if ( sendDebug.equals( "true" ) )
+        {
+            sendSession.setDebug( true );
+        }
+    }
+
+    public void init()
+        throws Exception
+    {
+        initPOPServer();
+        initSMTPServer();
+    }
+
+    public void setProperties( Map<?, ?> props )
+    {
+        popServer = ( (String) props.get( "popServer" ) );
+        recvDebug = ( (String) props.get( "recvDebug" ) );
+        recvAuth = ( (String) props.get( "recvAuth" ) );
+        recvUser = ( (String) props.get( "recvUser" ) );
+        recvPassword = ( (String) props.get( "recvPassword" ) );
+
+        from = ( (String) props.get( "from" ) );
+        to = ( (String) props.get( "to" ) );
+        smtpServer = ( (String) props.get( "smtpServer" ) );
+        sendDebug = ( (String) props.get( "sendDebug" ) );
+        sendAuth = ( (String) props.get( "sendAuth" ) );
+        sendUser = ( (String) props.get( "sendUser" ) );
+        sendPassword = ( (String) props.get( "sendPassword" ) );
+
+        attachment = ( (String) props.get( "attachment" ) );
+    }
 }

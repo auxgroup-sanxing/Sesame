@@ -7,15 +7,17 @@ out.clear();
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>部署向导</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 
 <style type="text/css">
 .x-tab-strip-spacer {
-	display: none;	
+	display: none;
 }
 
 ul.x-tab-strip li {
@@ -23,21 +25,23 @@ ul.x-tab-strip li {
 }
 
 .comboSpace {
-	padding-top: 15px!important;
+	padding-top: 15px !important;
 }
 
 .tipInfo {
-	font-weight: normal!important;
+	font-weight: normal !important;
 }
 
 .item-wrap {
 	font-size: 12px;
 	float: left;
 	width: 260px;
-	padding-bottom: 8px!important;
+	padding-bottom: 8px !important;
 }
 
-.itemNameWrap {}
+.itemNameWrap {
+	
+}
 
 .checkboxWrap {
 	float: left;
@@ -45,15 +49,15 @@ ul.x-tab-strip li {
 
 .descWrap {
 	float: left;
-	padding-left: 2px; 
+	padding-left: 2px;
 }
 
-#libView, #compView, #transView {
+#libView,#compView,#transView {
 	font-size: 12px;
 }
 
 .fieldClass {
-	margin-top:4px;
+	margin-top: 4px;
 }
 
 .pathClass {
@@ -63,9 +67,9 @@ ul.x-tab-strip li {
 </head>
 
 <body style="height: 100%">
-<script type="text/javascript" src="deploy_wizard.js"></script>
+	<script type="text/javascript" src="deploy_wizard.js"></script>
 
-<script type="text/javascript">
+	<script type="text/javascript">
    	if (window.top && window.top.Application)
    	{
 		Application = window.top.Application;

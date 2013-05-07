@@ -1,49 +1,64 @@
 package com.sanxing.sesame.deployment;
 
-public class Descriptor {
-	private double version;
-	private Component component;
-	private SharedLibrary sharedLibrary;
-	private ServiceAssembly serviceAssembly;
-	private Services services;
+public class Descriptor
+{
+    private double version;
 
-	public double getVersion() {
-		return this.version;
-	}
+    private Component component;
 
-	public void setVersion(double version) {
-		this.version = version;
-	}
+    private SharedLibrary sharedLibrary;
 
-	public Component getComponent() {
-		return this.component;
-	}
+    private ServiceAssembly serviceAssembly;
 
-	public void setComponent(Component component) {
-		this.component = component;
-	}
+    private Services services;
 
-	public SharedLibrary getSharedLibrary() {
-		return this.sharedLibrary;
-	}
+    public double getVersion()
+    {
+        return version;
+    }
 
-	public void setSharedLibrary(SharedLibrary sharedLibrary) {
-		this.sharedLibrary = sharedLibrary;
-	}
+    public void setVersion( double version )
+    {
+        this.version = version;
+    }
 
-	public ServiceAssembly getServiceAssembly() {
-		return this.serviceAssembly;
-	}
+    public Component getComponent()
+    {
+        return component;
+    }
 
-	public void setServiceAssembly(ServiceAssembly serviceAssembly) {
-		this.serviceAssembly = serviceAssembly;
-	}
+    public void setComponent( Component component )
+    {
+        this.component = component;
+    }
 
-	public Services getServices() {
-		return this.services;
-	}
+    public SharedLibrary getSharedLibrary()
+    {
+        return sharedLibrary;
+    }
 
-	public void setServices(Services services) {
-		this.services = services;
-	}
+    public void setSharedLibrary( SharedLibrary sharedLibrary )
+    {
+        this.sharedLibrary = sharedLibrary;
+    }
+
+    public ServiceAssembly getServiceAssembly()
+    {
+        return serviceAssembly;
+    }
+
+    public void setServiceAssembly( ServiceAssembly serviceAssembly )
+    {
+        this.serviceAssembly = serviceAssembly;
+    }
+
+    public Services getServices()
+    {
+        return services;
+    }
+
+    public void setServices( Services services )
+    {
+        this.services = services;
+    }
 }

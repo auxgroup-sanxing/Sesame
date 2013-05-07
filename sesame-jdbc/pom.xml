@@ -1,23 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>com.sanxing.sesame</groupId>
-    <artifactId>sesame</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>sesame-jdbc</artifactId>
-  <dependencies>
-  	<dependency>
-  		<groupId>com.sanxing.sesame</groupId>
-  		<artifactId>sesame-util</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.apache.velocity</groupId>
-  		<artifactId>velocity</artifactId>
-  	</dependency>
-  	<dependency>
-  		<groupId>org.codehaus.btm</groupId>
-  		<artifactId>btm</artifactId>
-  	</dependency>
-  </dependencies>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.sanxing.sesame</groupId>
+		<artifactId>sesame</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>sesame-jdbc</artifactId>
+	<dependencies>
+		<dependency>
+			<groupId>com.sanxing.sesame</groupId>
+			<artifactId>sesame-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.velocity</groupId>
+			<artifactId>velocity</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.btm</groupId>
+			<artifactId>btm</artifactId>
+		</dependency>
+	</dependencies>
 </project>

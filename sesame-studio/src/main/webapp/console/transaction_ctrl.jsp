@@ -1,8 +1,9 @@
 
-<%@page import="com.sanxing.sesame.logging.lucene.LuceneColumn"%><%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
+<%@page import="com.sanxing.sesame.logging.lucene.LuceneColumn"%><%@page
+	import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="java.io.*, java.util.*"%>
 <%@page import="java.lang.reflect.*"%>
-<%@page import="org.json.*" %>
+<%@page import="org.json.*"%>
 <%@page import="com.sanxing.studio.*"%>
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.sesame.logging.monitor.*"%>
@@ -11,7 +12,8 @@
 <%@page import="com.sanxing.sesame.logging.lucene.LuceneSearcher"%>
 <%@page import="com.sanxing.sesame.logging.lucene.LuceneRecord"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>
-<%@page language="java" contentType="text/xml; charset=utf-8" pageEncoding="utf-8"%>
+<%@page language="java" contentType="text/xml; charset=utf-8"
+	pageEncoding="utf-8"%>
 
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());

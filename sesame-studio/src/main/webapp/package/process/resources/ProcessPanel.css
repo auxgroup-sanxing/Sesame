@@ -5,51 +5,54 @@
 }
 
 .processViewDragTarget {
+	
 }
 
 .processViewDragObject {
+	
 }
 
 .processLineD {
-	background-image: url('images/down_array.gif'); 
+	background-image: url('images/down_array.gif');
 	background-position: top center;
 	background-repeat: no-repeat;
 	height: 48px;
 }
 
 .processLineH {
-	background-image: url('images/blue_dot.gif'); 
+	background-image: url('images/blue_dot.gif');
 	background-position: center;
 	background-repeat: repeat-x;
 }
 
 .processLineV {
-	background-image: url('images/vert_line.gif');/*url('images/blue_dot.gif'); */
+	background-image: url('images/vert_line.gif');
+	/*url('images/blue_dot.gif'); */
 	background-position: center;
 	background-repeat: repeat-y;
 }
 
 .processLineTL {
-	background-image: url('images/top_left.gif'); 
-	background-position: center; 
+	background-image: url('images/top_left.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processLineTM {
 	background-image: url('images/top_middle.gif');
-	background-position: center; 
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processLineTR {
-	background-image: url('images/top_right.gif'); 
-	background-position: center; 
+	background-image: url('images/top_right.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processLineBL {
 	background-image: url('images/bottom_left.gif');
-	background-position: bottom; 
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
@@ -60,25 +63,25 @@
 }
 
 .processLineBR {
-	background-image: url('images/bottom_right.gif'); 
-	background-position: bottom; 
+	background-image: url('images/bottom_right.gif');
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
 .processLineTL_branch {
-	background-image: url('images/top_left.gif'); 
-	background-position: center -50px; 
+	background-image: url('images/top_left.gif');
+	background-position: center -50px;
 	background-repeat: no-repeat;
 }
 
 .processLineTL_dowhile {
-	background-image: url('images/top_left_dowhile.gif'); 
-	background-position: top; 
+	background-image: url('images/top_left_dowhile.gif');
+	background-position: top;
 	background-repeat: no-repeat;
 }
 
 .processLineTL_whiledo {
-	background-image: url('images/top_left_whiledo.gif'); 
+	background-image: url('images/top_left_whiledo.gif');
 	background-position: center top;
 	background-repeat: no-repeat;
 }
@@ -90,32 +93,32 @@
 }
 
 .processLineTR_branch {
-	background-image: url('images/top_right.gif'); 
-	background-position: center -50px; 
+	background-image: url('images/top_right.gif');
+	background-position: center -50px;
 	background-repeat: no-repeat;
 }
 
 .processLineTR_dowhile {
-	background-image: url('images/top_right_dowhile.gif'); 
-	background-position: top; 
+	background-image: url('images/top_right_dowhile.gif');
+	background-position: top;
 	background-repeat: no-repeat;
 }
 
 .processLineBL_decision {
 	background-image: url('images/bottom_left_decision.gif');
-	background-position: bottom; 
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
 .processLineBL_dowhile {
-	background-image: url('images/horz_line.gif'); 
+	background-image: url('images/horz_line.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processLineBL_whiledo {
 	background-image: url('images/bottom_left_whiledo.gif');
-	background-position: bottom; 
+	background-position: bottom;
 	background-repeat: no-repeat;
 }
 
@@ -126,42 +129,42 @@
 }
 
 .processLineBR_dowhile {
-	background-image: url('images/bottom_right_dowhile.gif'); 
-	background-position: center; 
+	background-image: url('images/bottom_right_dowhile.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processLine_pathintf {
-	background-image: url('images/path_intf.gif'); 
+	background-image: url('images/path_intf.gif');
 	background-position: top right;
 	background-repeat: no-repeat;
-	position:relative;
+	position: relative;
 	left: 2px;
 }
 
 .processViewDropSite .hotspot {
-	background-image: url('images/target.gif'); 
+	background-image: url('images/target.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processViewDropTarget .hotspot {
-	background-image: url('images/target_active.gif'); 
+	background-image: url('images/target_active.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .processViewDragingNode .hotspot {
-	background-image: none; 
+	background-image: none;
 }
 
 .processViewHideHotspot .hotspot {
-	background-image: none; 
+	background-image: none;
 }
 
 .processGroupBox {
-	margin-left: 4px; 
-	margin-right: 4px;	
+	margin-left: 4px;
+	margin-right: 4px;
 }
 
 .processDottedBorder {
@@ -206,8 +209,8 @@
 }
 
 .process_AddButton {
-	background-image:url('images/add.gif');
-	background-position:center; 
+	background-image: url('images/add.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 	margin: 0px auto 0px auto;
 	width: 16px;
@@ -215,12 +218,12 @@
 }
 
 .process_AddButton_hover {
-	background-image:url('images/add_hover.gif');
+	background-image: url('images/add_hover.gif');
 }
 
 .processParallelHeader {
-	background-image:url('images/parallel.gif'); 
-	background-position:center; 
+	background-image: url('images/parallel.gif');
+	background-position: center;
 	background-repeat: no-repeat;
 	margin: 0px auto 0px auto;
 	width: 33px;
@@ -228,91 +231,92 @@
 }
 
 .processParallelAND {
-	background-image:url('images/parallel_and.gif'); 
-	background-position:center bottom; 
+	background-image: url('images/parallel_and.gif');
+	background-position: center bottom;
 	background-repeat: no-repeat;
 }
 
 .processParallelOR {
-	background-image:url('images/parallel_or.gif'); 
-	background-position:center bottom; 
+	background-image: url('images/parallel_or.gif');
+	background-position: center bottom;
 	background-repeat: no-repeat;
 }
 
 .process_xact_top_left {
-	background-image: url('images/xact_top_left.gif'); 
-	background-position:right center;
+	background-image: url('images/xact_top_left.gif');
+	background-position: right center;
 	background-repeat: no-repeat;
-	width:7px;
+	width: 7px;
 }
 
 .process_xact_top_middle {
-	background-image: url('images/xact_top_middle.gif'); 
-	background-position: center; 
+	background-image: url('images/xact_top_middle.gif');
+	background-position: center;
 	background-repeat: no-repeat;
-	height:16px;
+	height: 16px;
 }
 
 .process_xact_top_right {
-	background-image: url('images/xact_top_right.gif'); 
-	background-position:left center; 
+	background-image: url('images/xact_top_right.gif');
+	background-position: left center;
 	background-repeat: no-repeat;
-	width:7px;
+	width: 7px;
 }
 
 .process_xact_top_fill {
-	background-image: url('images/xact_top_fill.gif'); 
-	background-position: center 2px; 
+	background-image: url('images/xact_top_fill.gif');
+	background-position: center 2px;
 	background-repeat: repeat-x;;
 }
 
 .process_xact_bottom_left {
-	background-image: url('images/xact_bottom_left.gif'); 
-	background-position:right center; 
+	background-image: url('images/xact_bottom_left.gif');
+	background-position: right center;
 	background-repeat: no-repeat;
-	width:7px;
+	width: 7px;
 }
 
 .process_xact_bottom_middle {
-	background-image: url('images/xact_bottom_middle.gif'); 
-	background-position: center; 
+	background-image: url('images/xact_bottom_middle.gif');
+	background-position: center;
 	background-repeat: no-repeat;
-	height:16px;
+	height: 16px;
 }
 
 .process_xact_bottom_right {
-	background-image: url('images/xact_bottom_right.gif'); 
-	background-position: left center; 
+	background-image: url('images/xact_bottom_right.gif');
+	background-position: left center;
 	background-repeat: no-repeat;
-	width:7px;
+	width: 7px;
 }
 
 .process_xact_bottom_fill {
-	background-image: url('images/xact_bottom_fill.gif'); 
+	background-image: url('images/xact_bottom_fill.gif');
 	background-position: center;
 	background-repeat: repeat-x;
 }
 
 .palette_activity_category {
-	background-image: url('images/palette/activity_category.gif'); 
+	background-image: url('images/palette/activity_category.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .palette_activity_host {
-	background-image: url('images/palette/activity_host.gif'); 
+	background-image: url('images/palette/activity_host.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .palette_activity_namespaces {
-	background-image: url('images/palette/source_attach_attrib.gif') !important; 
+	background-image: url('images/palette/source_attach_attrib.gif')
+		!important;
 	background-position: center;
 	background-repeat: no-repeat;
 }
 
 .palette_break {
-	background-image: url('images/palette/break.gif') !important; 
+	background-image: url('images/palette/break.gif') !important;
 }
 
 .palette_client_recv {
@@ -320,35 +324,35 @@
 }
 
 .palette_client_send {
-	background-image: url('images/palette/client_send.gif') !important; 
+	background-image: url('images/palette/client_send.gif') !important;
 }
 
 .palette_clone {
-	background-image: url('images/palette/copy_edit.gif') !important; 
+	background-image: url('images/palette/copy_edit.gif') !important;
 }
 
 .palette_control_recv {
-	background-image: url('images/palette/control_recv.gif') !important; 
+	background-image: url('images/palette/control_recv.gif') !important;
 }
 
 .palette_control_send_recv {
-	background-image: url('images/palette/control_send_recv.gif') !important; 
+	background-image: url('images/palette/control_send_recv.gif') !important;
 }
 
 .palette_control_send {
-	background-image: url('images/palette/control_send.gif') !important; 
+	background-image: url('images/palette/control_send.gif') !important;
 }
 
 .palette_decision {
-	background-image: url('images/palette/decision.gif') !important; 
+	background-image: url('images/palette/decision.gif') !important;
 }
 
 .palette_declare_var {
-	background-image: url('images/palette/var_static.gif') !important; 
+	background-image: url('images/palette/var_static.gif') !important;
 }
 
 .palette_dom_add {
-	background-image: url('images/palette/dom_add.png') !important; 
+	background-image: url('images/palette/dom_add.png') !important;
 }
 
 .palette_dom_del {
@@ -356,35 +360,35 @@
 }
 
 .palette_dom_ren {
-	background-image: url('images/palette/dom_rename.png') !important; 
+	background-image: url('images/palette/dom_rename.png') !important;
 }
 
 .palette_do_while {
-	background-image: url('images/palette/do_while.gif') !important; 
+	background-image: url('images/palette/do_while.gif') !important;
 }
 
 .palette_finish {
-	background-image: url('images/palette/finish.gif')  !important; 
+	background-image: url('images/palette/finish.gif') !important;
 }
 
 .palette_for_each {
-	background-image: url('images/palette/for_each.gif') !important; 
+	background-image: url('images/palette/for_each.gif') !important;
 }
 
 .palette_sleep {
-	background-image: url('images/palette/sleep.gif') !important; 
+	background-image: url('images/palette/sleep.gif') !important;
 }
 
 .palette_multi_recv {
-	background-image: url('images/palette/multi_recv.gif') !important; 
+	background-image: url('images/palette/multi_recv.gif') !important;
 }
 
 .palette_parallel {
-	background-image: url('images/palette/parallel.gif') !important; 
+	background-image: url('images/palette/parallel.gif') !important;
 }
 
 .palette_perform {
-	background-image: url('images/palette/perform.gif') !important; 
+	background-image: url('images/palette/perform.gif') !important;
 }
 
 .palette_sql {
@@ -392,15 +396,15 @@
 }
 
 .palette_switch {
-	background-image: url('images/palette/switch.gif') !important; 
+	background-image: url('images/palette/switch.gif') !important;
 }
 
 .palette_transform {
-	background-image: url('images/palette/transform.gif') !important; 
+	background-image: url('images/palette/transform.gif') !important;
 }
 
 .palette_while_do {
-	background-image: url('images/palette/while_do.gif') !important; 
+	background-image: url('images/palette/while_do.gif') !important;
 }
 
 .palette_hideIndent {
@@ -412,7 +416,7 @@
 }
 
 .palette_script_add {
-	background-image: url('images/palette/script.png') !important; 
+	background-image: url('images/palette/script.png') !important;
 }
 
 .x-tree-node-el {

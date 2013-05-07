@@ -2,78 +2,106 @@ package com.sanxing.studio.auth;
 
 import java.security.Principal;
 
-public class StudioPrincipal implements Principal {
-	private final String name;
-	private String passwd;
-	private String fullname;
-	private String level;
-	private String description;
-	private transient int hash;
+public class StudioPrincipal
+    implements Principal
+{
+    private final String name;
 
-	public StudioPrincipal(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("Name cannot be null");
-		}
-		this.name = name;
-	}
+    private String passwd;
 
-	public String getName() {
-		return this.name;
-	}
+    private String fullname;
 
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if ((o == null) || (super.getClass() != o.getClass())) {
-			return false;
-		}
+    private String level;
 
-		StudioPrincipal that = (StudioPrincipal) o;
+    private String description;
 
-		return (this.name.equals(that.name));
-	}
+    private transient int hash;
 
-	public int hashCode() {
-		if (this.hash == 0) {
-			this.hash = this.name.hashCode();
-		}
-		return this.hash;
-	}
+    public StudioPrincipal( String name )
+    {
+        if ( name == null )
+        {
+            throw new IllegalArgumentException( "Name cannot be null" );
+        }
+        this.name = name;
+    }
 
-	public String toString() {
-		return this.name;
-	}
+    @Override
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
-	}
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
+            return true;
+        }
+        if ( ( o == null ) || ( super.getClass() != o.getClass() ) )
+        {
+            return false;
+        }
 
-	public String getPasswd() {
-		return this.passwd;
-	}
+        StudioPrincipal that = (StudioPrincipal) o;
 
-	public void setFullname(String fullname) {
-		this.fullname = fullname;
-	}
+        return ( name.equals( that.name ) );
+    }
 
-	public String getFullname() {
-		return this.fullname;
-	}
+    @Override
+    public int hashCode()
+    {
+        if ( hash == 0 )
+        {
+            hash = name.hashCode();
+        }
+        return hash;
+    }
 
-	public void setLevel(String level) {
-		this.level = level;
-	}
+    @Override
+    public String toString()
+    {
+        return name;
+    }
 
-	public String getLevel() {
-		return this.level;
-	}
+    public void setPasswd( String passwd )
+    {
+        this.passwd = passwd;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public String getPasswd()
+    {
+        return passwd;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public void setFullname( String fullname )
+    {
+        this.fullname = fullname;
+    }
+
+    public String getFullname()
+    {
+        return fullname;
+    }
+
+    public void setLevel( String level )
+    {
+        this.level = level;
+    }
+
+    public String getLevel()
+    {
+        return level;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
 }

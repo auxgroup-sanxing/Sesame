@@ -2,64 +2,82 @@ package com.sanxing.sesame.util;
 
 import java.io.PrintWriter;
 
-public class IndentPrinter {
-	private int indentLevel;
-	private String indent;
-	private PrintWriter out;
+public class IndentPrinter
+{
+    private int indentLevel;
 
-	public IndentPrinter() {
-		this(new PrintWriter(System.out), "  ");
-	}
+    private final String indent;
 
-	public IndentPrinter(PrintWriter out) {
-		this(out, "  ");
-	}
+    private final PrintWriter out;
 
-	public IndentPrinter(PrintWriter out, String indent) {
-		this.out = out;
-		this.indent = indent;
-	}
+    public IndentPrinter()
+    {
+        this( new PrintWriter( System.out ), "  " );
+    }
 
-	public void println(Object value) {
-		this.out.print(value.toString());
-		this.out.println();
-	}
+    public IndentPrinter( PrintWriter out )
+    {
+        this( out, "  " );
+    }
 
-	public void println(String text) {
-		this.out.print(text);
-		this.out.println();
-	}
+    public IndentPrinter( PrintWriter out, String indent )
+    {
+        this.out = out;
+        this.indent = indent;
+    }
 
-	public void print(String text) {
-		this.out.print(text);
-	}
+    public void println( Object value )
+    {
+        out.print( value.toString() );
+        out.println();
+    }
 
-	public void printIndent() {
-		for (int i = 0; i < this.indentLevel; ++i)
-			this.out.print(this.indent);
-	}
+    public void println( String text )
+    {
+        out.print( text );
+        out.println();
+    }
 
-	public void println() {
-		this.out.println();
-	}
+    public void print( String text )
+    {
+        out.print( text );
+    }
 
-	public void incrementIndent() {
-		this.indentLevel += 1;
-	}
+    public void printIndent()
+    {
+        for ( int i = 0; i < indentLevel; ++i )
+        {
+            out.print( indent );
+        }
+    }
 
-	public void decrementIndent() {
-		this.indentLevel -= 1;
-	}
+    public void println()
+    {
+        out.println();
+    }
 
-	public int getIndentLevel() {
-		return this.indentLevel;
-	}
+    public void incrementIndent()
+    {
+        indentLevel += 1;
+    }
 
-	public void setIndentLevel(int indentLevel) {
-		this.indentLevel = indentLevel;
-	}
+    public void decrementIndent()
+    {
+        indentLevel -= 1;
+    }
 
-	public void flush() {
-		this.out.flush();
-	}
+    public int getIndentLevel()
+    {
+        return indentLevel;
+    }
+
+    public void setIndentLevel( int indentLevel )
+    {
+        this.indentLevel = indentLevel;
+    }
+
+    public void flush()
+    {
+        out.flush();
+    }
 }

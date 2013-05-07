@@ -4,56 +4,74 @@ import org.jaxen.NamespaceContext;
 import org.jaxen.SimpleNamespaceContext;
 import org.jdom.Element;
 
-public class FlowInfo {
-	private SimpleNamespaceContext namespaceCtx = new SimpleNamespaceContext();
-	private String name;
-	private String description;
-	private String author;
-	private Element flowDefination;
+public class FlowInfo
+{
+    private final SimpleNamespaceContext namespaceCtx = new SimpleNamespaceContext();
 
-	public void addNSMapping(String URI, String prefix) {
-		this.namespaceCtx.addNamespace(prefix, URI);
-	}
+    private String name;
 
-	public NamespaceContext getNamespaceContext() {
-		return this.namespaceCtx;
-	}
+    private String description;
 
-	public Element getFlowDefination() {
-		return this.flowDefination;
-	}
+    private String author;
 
-	public void setFlowDefination(Element flowDefination) {
-		this.flowDefination = flowDefination;
-		if (!(validate()))
-			throw new RuntimeException("invalid flow defination");
-	}
+    private Element flowDefination;
 
-	public String getName() {
-		return this.name;
-	}
+    public void addNSMapping( String URI, String prefix )
+    {
+        namespaceCtx.addNamespace( prefix, URI );
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public NamespaceContext getNamespaceContext()
+    {
+        return namespaceCtx;
+    }
 
-	public String getDescription() {
-		return this.description;
-	}
+    public Element getFlowDefination()
+    {
+        return flowDefination;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setFlowDefination( Element flowDefination )
+    {
+        this.flowDefination = flowDefination;
+        if ( !( validate() ) )
+        {
+            throw new RuntimeException( "invalid flow defination" );
+        }
+    }
 
-	public String getAuthor() {
-		return this.author;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setAuthor(String author) {
-		this.author = author;
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
 
-	private boolean validate() {
-		return true;
-	}
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription( String description )
+    {
+        this.description = description;
+    }
+
+    public String getAuthor()
+    {
+        return author;
+    }
+
+    public void setAuthor( String author )
+    {
+        this.author = author;
+    }
+
+    private boolean validate()
+    {
+        return true;
+    }
 }

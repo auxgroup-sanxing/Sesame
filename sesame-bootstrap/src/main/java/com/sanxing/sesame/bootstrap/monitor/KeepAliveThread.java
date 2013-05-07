@@ -4,20 +4,21 @@
  */
 package com.sanxing.sesame.bootstrap.monitor;
 
-import com.sanxing.sesame.bootstrap.ShutdownHelper;
-import com.sanxing.sesame.bootstrap.monitor.commands.PingCommand;
-
 import java.io.IOException;
 import java.net.ConnectException;
 
+import com.sanxing.sesame.bootstrap.ShutdownHelper;
+import com.sanxing.sesame.bootstrap.monitor.commands.PingCommand;
+
 /**
- * Thread which pings a specified host:port at a configured interval and executes a task if
- * the remote monitor is unreachable (ie. {@link ConnectException}).
+ * Thread which pings a specified host:port at a configured interval and executes a task if the remote monitor is
+ * unreachable (ie. {@link ConnectException}).
  */
 public class KeepAliveThread
     extends Thread
 {
-    // NOTE: Avoiding any logging our sysout usage by this class, this could lockup logging when its detected remote unreachable
+    // NOTE: Avoiding any logging our sysout usage by this class, this could lockup logging when its detected remote
+    // unreachable
 
     public static final String KEEP_ALIVE_PORT = KeepAliveThread.class.getName() + ".port";
 
@@ -37,71 +38,74 @@ public class KeepAliveThread
 
     /**
      * Execute custom {@link Runtime} when remote is unreachable.
-     *
-     * @param host      host to be pinged
-     * @param port      port on host to be pinged
-     * @param interval  interval between pings
-     * @param timeout   ping timeout
-     * @param task      task to execute when remote is unreachable, this task should not log or write to syslog if possible to avoid locking up on shutdown
+     * 
+     * @param host host to be pinged
+     * @param port port on host to be pinged
+     * @param interval interval between pings
+     * @param timeout ping timeout
+     * @param task task to execute when remote is unreachable, this task should not log or write to syslog if possible
+     *            to avoid locking up on shutdown
      */
     // TestAccessible for most uses the task should be to HALT
-    public KeepAliveThread(final String host,
-                           final int port,
-                           final int interval,
-                           final int timeout,
-                           final Runnable task)
+    public KeepAliveThread( final String host, final int port, final int interval, final int timeout,
+                            final Runnable task )
         throws IOException
     {
-        setDaemon(true);
-        setName(getClass().getName());
+        setDaemon( true );
+        setName( getClass().getName() );
 
-        this.talker = new CommandMonitorTalker(host, port);
+        talker = new CommandMonitorTalker( host, port );
         this.interval = interval;
         this.timeout = timeout;
         this.task = task;
-        this.running = true;
+        running = true;
     }
 
     /**
      * Halt the JVM when remote is unreachable.
-     *
-     * @param host     host to be pinged
-     * @param port     port on host to be pinged
+     * 
+     * @param host host to be pinged
+     * @param port port on host to be pinged
      * @param interval interval between pings
-     * @param timeout  ping timeout
+     * @param timeout ping timeout
      */
-    public KeepAliveThread(final String host,
-                           final int port,
-                           final int interval,
-                           final int timeout)
+    public KeepAliveThread( final String host, final int port, final int interval, final int timeout )
         throws IOException
     {
-        this(host, port, interval, timeout, new Runnable()
+        this( host, port, interval, timeout, new Runnable()
         {
             @Override
-            public void run() {
-                ShutdownHelper.halt(666);
+            public void run()
+            {
+                ShutdownHelper.halt( 666 );
             }
-        });
+        } );
     }
 
     /**
-     * Continue pinging on configured port until there is a connection (refused) exception, case when a shutdown will be performed.
+     * Continue pinging on configured port until there is a connection (refused) exception, case when a shutdown will be
+     * performed.
      */
     @Override
-    public void run() {
-        while (running) {
-            try {
-                try {
+    public void run()
+    {
+        while ( running )
+        {
+            try
+            {
+                try
+                {
                     ping();
-                    sleep(interval);
+                    sleep( interval );
                 }
-                catch (final InterruptedException e) {
+                catch ( final InterruptedException e )
+                {
                     // re-ping if we were interrupted for any reason
                     ping();
                 }
             }
-            catch (ConnectException e) {
+            catch ( ConnectException e )
+            {
                 stopRunning();
                 executeTask();
             }
@@ -110,30 +114,37 @@ public class KeepAliveThread
 
     /**
      * Pings the configured host/port.
-     *
+     * 
      * @throws ConnectException If ping fails
      */
-    private void ping() throws ConnectException {
-        try {
-            talker.send(PingCommand.NAME, timeout);
+    private void ping()
+        throws ConnectException
+    {
+        try
+        {
+            talker.send( PingCommand.NAME, timeout );
         }
-        catch (ConnectException e) {
+        catch ( ConnectException e )
+        {
             throw e;
         }
-        catch (Exception e) {
+        catch ( Exception e )
+        {
             // ignore
         }
     }
 
     // @TestAccessible
-    void executeTask() {
+    void executeTask()
+    {
         task.run();
     }
 
     /**
      * Stops this thread from running (without running the shutdown code).
      */
-    public void stopRunning() {
+    public void stopRunning()
+    {
         running = false;
     }
 }

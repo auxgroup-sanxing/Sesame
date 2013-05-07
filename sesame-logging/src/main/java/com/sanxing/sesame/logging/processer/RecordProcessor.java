@@ -1,27 +1,33 @@
 package com.sanxing.sesame.logging.processer;
 
-import com.sanxing.sesame.logging.dao.LogBean;
-import com.sanxing.sesame.logging.handlers.LogHandler;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public abstract class RecordProcessor implements Processor {
-	protected List<LogHandler> handlers = new ArrayList();
-	protected LogBean bean;
+import com.sanxing.sesame.logging.dao.LogBean;
+import com.sanxing.sesame.logging.handlers.LogHandler;
 
-	public void process(Object o) {
-		register();
+public abstract class RecordProcessor
+    implements Processor
+{
+    protected List<LogHandler> handlers = new ArrayList();
 
-		this.bean = parse(o);
+    protected LogBean bean;
 
-		for (Iterator it = this.handlers.iterator(); it.hasNext();) {
-			LogHandler handler = (LogHandler) it.next();
-			handler.handle(this.bean);
-		}
-	}
+    @Override
+    public void process( Object o )
+    {
+        register();
 
-	public abstract void register();
+        bean = parse( o );
 
-	public abstract LogBean parse(Object paramObject);
+        for ( Object element : handlers )
+        {
+            LogHandler handler = (LogHandler) element;
+            handler.handle( bean );
+        }
+    }
+
+    public abstract void register();
+
+    public abstract LogBean parse( Object paramObject );
 }

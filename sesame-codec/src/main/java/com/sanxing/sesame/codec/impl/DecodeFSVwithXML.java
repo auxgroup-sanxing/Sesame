@@ -1,12 +1,11 @@
 package com.sanxing.sesame.codec.impl;
 
-import com.sanxing.sesame.binding.codec.FormatException;
-import com.sanxing.sesame.codec.util.CodecUtil;
 import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaComplexType;
 import org.apache.ws.commons.schema.XmlSchemaElement;
@@ -15,53 +14,67 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 
-public class DecodeFSVwithXML extends DecodeFSV {
-	public Element decode(byte[] message, int length, String charset,
-			XmlSchemaElement schemaElement, XmlSchema schema)
-			throws FormatException {
-		ByteBuffer msgBuf = ByteBuffer.wrap(message);
-		Element root = null;
-		try {
-			if (schemaElement == null)
-				throw new FormatException(
-						"function decodeMessage,parameter  [schemaElement] is null!");
-			XmlSchemaType xsdType = schemaElement.getSchemaType();
-			if (!(xsdType instanceof XmlSchemaComplexType)) {
-				throw new FormatException(
-						"in xsdDoc,can not find the child element:[complexType]");
-			}
-			root = new Element(schemaElement.getName());
+import com.sanxing.sesame.binding.codec.FormatException;
+import com.sanxing.sesame.codec.util.CodecUtil;
 
-			Iterator elements = CodecUtil.getElements(xsdType);
+public class DecodeFSVwithXML
+    extends DecodeFSV
+{
+    @Override
+    public Element decode( byte[] message, int length, String charset, XmlSchemaElement schemaElement, XmlSchema schema )
+        throws FormatException
+    {
+        ByteBuffer msgBuf = ByteBuffer.wrap( message );
+        Element root = null;
+        try
+        {
+            if ( schemaElement == null )
+            {
+                throw new FormatException( "function decodeMessage,parameter  [schemaElement] is null!" );
+            }
+            XmlSchemaType xsdType = schemaElement.getSchemaType();
+            if ( !( xsdType instanceof XmlSchemaComplexType ) )
+            {
+                throw new FormatException( "in xsdDoc,can not find the child element:[complexType]" );
+            }
+            root = new Element( schemaElement.getName() );
 
-			List fsvElements = new ArrayList();
-			while (elements.hasNext()) {
-				XmlSchemaElement element = (XmlSchemaElement) elements.next();
-				if (CodecUtil.hasFormat(element, schema)) {
-					fsvElements.add(element);
-				}
-			}
+            Iterator elements = CodecUtil.getElements( xsdType );
 
-			decodeMessage(msgBuf, fsvElements.iterator(), charset, root, schema);
+            List fsvElements = new ArrayList();
+            while ( elements.hasNext() )
+            {
+                XmlSchemaElement element = (XmlSchemaElement) elements.next();
+                if ( CodecUtil.hasFormat( element, schema ) )
+                {
+                    fsvElements.add( element );
+                }
+            }
 
-			byte[] xmlBuf = new byte[msgBuf.limit() - msgBuf.position()];
-			msgBuf.get(xmlBuf);
+            decodeMessage( msgBuf, fsvElements.iterator(), charset, root, schema );
 
-			ByteArrayInputStream in = new ByteArrayInputStream(xmlBuf);
+            byte[] xmlBuf = new byte[msgBuf.limit() - msgBuf.position()];
+            msgBuf.get( xmlBuf );
 
-			SAXBuilder builder = new SAXBuilder();
-			Document xmlDoc = builder.build(in);
-			Element xmlRoot = xmlDoc.getRootElement();
+            ByteArrayInputStream in = new ByteArrayInputStream( xmlBuf );
 
-			xmlRoot.detach();
-			root.addContent(xmlRoot);
-		} catch (FormatException e) {
-			e.printStackTrace();
-			throw e;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new FormatException(e.getMessage(), e);
-		}
-		return root;
-	}
+            SAXBuilder builder = new SAXBuilder();
+            Document xmlDoc = builder.build( in );
+            Element xmlRoot = xmlDoc.getRootElement();
+
+            xmlRoot.detach();
+            root.addContent( xmlRoot );
+        }
+        catch ( FormatException e )
+        {
+            e.printStackTrace();
+            throw e;
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            throw new FormatException( e.getMessage(), e );
+        }
+        return root;
+    }
 }

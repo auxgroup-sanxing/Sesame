@@ -1,207 +1,262 @@
 package com.sanxing.sesame.dispatch;
 
-import com.sanxing.sesame.container.JBIContainer;
-import com.sanxing.sesame.executors.ExecutorFactory;
-import com.sanxing.sesame.management.AttributeInfoHelper;
-import com.sanxing.sesame.management.BaseLifeCycle;
-import com.sanxing.sesame.mbean.ComponentMBeanImpl;
-import com.sanxing.sesame.mbean.ComponentNameSpace;
-import com.sanxing.sesame.mbean.ManagementContext;
-import com.sanxing.sesame.mbean.Registry;
-import com.sanxing.sesame.messaging.DeliveryChannelImpl;
-import com.sanxing.sesame.messaging.ExchangePacket;
-import com.sanxing.sesame.messaging.MessageExchangeImpl;
-import com.sanxing.sesame.router.Router;
-import com.sanxing.sesame.servicedesc.InternalEndpoint;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import javax.jbi.JBIException;
 import javax.jbi.management.LifeCycleMBean;
 import javax.jbi.messaging.MessageExchange;
-import javax.jbi.messaging.MessageExchange.Role;
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.ObjectName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AbstractDispatcher extends BaseLifeCycle implements
-		Dispatcher {
-	protected final Logger log;
-	protected Router router;
-	protected ExecutorFactory executorFactory;
-	private ReadWriteLock lock;
-	private Thread suspendThread;
-	private String name;
+import com.sanxing.sesame.executors.ExecutorFactory;
+import com.sanxing.sesame.management.AttributeInfoHelper;
+import com.sanxing.sesame.management.BaseLifeCycle;
+import com.sanxing.sesame.mbean.ComponentMBeanImpl;
+import com.sanxing.sesame.mbean.ComponentNameSpace;
+import com.sanxing.sesame.messaging.DeliveryChannelImpl;
+import com.sanxing.sesame.messaging.ExchangePacket;
+import com.sanxing.sesame.messaging.MessageExchangeImpl;
+import com.sanxing.sesame.router.Router;
+import com.sanxing.sesame.servicedesc.InternalEndpoint;
 
-	public AbstractDispatcher() {
-		this.log = LoggerFactory.getLogger(AbstractDispatcher.class);
+public abstract class AbstractDispatcher
+    extends BaseLifeCycle
+    implements Dispatcher
+{
+    protected final Logger log;
 
-		this.lock = new ReentrantReadWriteLock();
-	}
+    protected Router router;
 
-	public void init(Router router) throws JBIException {
-		this.router = router;
-		this.executorFactory = router.getContainer().getExecutorFactory();
+    protected ExecutorFactory executorFactory;
 
-		ObjectName objectName = router.getContainer().getManagementContext()
-				.createObjectName(this);
-		try {
-			router.getContainer().getManagementContext()
-					.registerMBean(objectName, this, LifeCycleMBean.class);
-		} catch (JMException e) {
-			throw new JBIException(
-					"Failed to register MBean with the ManagementContext", e);
-		}
-	}
+    private final ReadWriteLock lock;
 
-	public void start() throws JBIException {
-		super.start();
-	}
+    private Thread suspendThread;
 
-	public void stop() throws JBIException {
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("Called dispatcher stop");
-		}
-		if (this.suspendThread != null) {
-			this.suspendThread.interrupt();
-		}
-		super.stop();
-	}
+    private String name;
 
-	public void shutDown() throws JBIException {
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("Called dispatcher shutdown");
-		}
-		this.router.getContainer().getManagementContext().unregisterMBean(this);
-		super.shutDown();
-	}
+    public AbstractDispatcher()
+    {
+        log = LoggerFactory.getLogger( AbstractDispatcher.class );
 
-	public void send(MessageExchange me) throws JBIException {
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("Called Dispatcher send");
-		}
-		try {
-			this.lock.readLock().lock();
-			doSend((MessageExchangeImpl) me);
-		} finally {
-			this.lock.readLock().unlock();
-		}
-	}
+        lock = new ReentrantReadWriteLock();
+    }
 
-	public synchronized void suspend() {
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("Called dispatcher[" + getName() + "] suspend");
-		}
-		this.lock.writeLock().lock();
-		this.suspendThread = Thread.currentThread();
-	}
+    @Override
+    public void init( Router router )
+        throws JBIException
+    {
+        this.router = router;
+        executorFactory = router.getContainer().getExecutorFactory();
 
-	public synchronized void resume() {
-		if (this.log.isDebugEnabled()) {
-			this.log.debug("Called dispatcher[" + getName() + "] resume");
-		}
-		this.lock.writeLock().unlock();
-		this.suspendThread = null;
-	}
+        ObjectName objectName = router.getContainer().getManagementContext().createObjectName( this );
+        try
+        {
+            router.getContainer().getManagementContext().registerMBean( objectName, this, LifeCycleMBean.class );
+        }
+        catch ( JMException e )
+        {
+            throw new JBIException( "Failed to register MBean with the ManagementContext", e );
+        }
+    }
 
-	protected abstract void doSend(MessageExchangeImpl paramMessageExchangeImpl)
-			throws JBIException;
+    @Override
+    public void start()
+        throws JBIException
+    {
+        super.start();
+    }
 
-	protected void doRouting(MessageExchangeImpl me) throws MessagingException {
-		ComponentNameSpace id = (me.getRole() == MessageExchange.Role.PROVIDER) ? me
-				.getDestinationId() : me.getSourceId();
+    @Override
+    public void stop()
+        throws JBIException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Called dispatcher stop" );
+        }
+        if ( suspendThread != null )
+        {
+            suspendThread.interrupt();
+        }
+        super.stop();
+    }
 
-		ComponentMBeanImpl lcc = this.router.getContainer().getRegistry()
-				.getComponent(id.getName());
+    @Override
+    public void shutDown()
+        throws JBIException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Called dispatcher shutdown" );
+        }
+        router.getContainer().getManagementContext().unregisterMBean( this );
+        super.shutDown();
+    }
 
-		if (lcc != null) {
-			if (lcc.getDeliveryChannel() != null) {
-				try {
-					this.lock.readLock().lock();
-					((DeliveryChannelImpl) lcc.getDeliveryChannel())
-							.processInBound(me);
-				} finally {
-					this.lock.readLock().unlock();
-				}
-				return;
-			}
-			throw new MessagingException("Component " + id.getName()
-					+ " is shut down");
-		}
+    @Override
+    public void send( MessageExchange me )
+        throws JBIException
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Called Dispatcher send" );
+        }
+        try
+        {
+            lock.readLock().lock();
+            doSend( (MessageExchangeImpl) me );
+        }
+        finally
+        {
+            lock.readLock().unlock();
+        }
+    }
 
-		throw new MessagingException("No component named " + id.getName()
-				+ " - Couldn't route MessageExchange " + me);
-	}
+    @Override
+    public synchronized void suspend()
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Called dispatcher[" + getName() + "] suspend" );
+        }
+        lock.writeLock().lock();
+        suspendThread = Thread.currentThread();
+    }
 
-	public MBeanAttributeInfo[] getAttributeInfos() throws JMException {
-		AttributeInfoHelper helper = new AttributeInfoHelper();
-		helper.addAttribute(getObjectToManage(), "description",
-				"The type of flow");
-		return AttributeInfoHelper.join(super.getAttributeInfos(),
-				helper.getAttributeInfos());
-	}
+    @Override
+    public synchronized void resume()
+    {
+        if ( log.isDebugEnabled() )
+        {
+            log.debug( "Called dispatcher[" + getName() + "] resume" );
+        }
+        lock.writeLock().unlock();
+        suspendThread = null;
+    }
 
-	protected boolean isPersistent(MessageExchange me) {
-		ExchangePacket packet = ((MessageExchangeImpl) me).getPacket();
-		if (packet.getPersistent() != null) {
-			return packet.getPersistent().booleanValue();
-		}
-		return this.router.getContainer().isPersistent();
-	}
+    protected abstract void doSend( MessageExchangeImpl paramMessageExchangeImpl )
+        throws JBIException;
 
-	protected boolean isTransacted(MessageExchange me) {
-		return (me.getProperty("javax.jbi.transaction.jta") != null);
-	}
+    protected void doRouting( MessageExchangeImpl me )
+        throws MessagingException
+    {
+        ComponentNameSpace id =
+            ( me.getRole() == MessageExchange.Role.PROVIDER ) ? me.getDestinationId() : me.getSourceId();
 
-	protected boolean isSynchronous(MessageExchange me) {
-		Boolean sync = (Boolean) me.getProperty("javax.jbi.messaging.sendSync");
-		return ((sync != null) && (sync.booleanValue()));
-	}
+        ComponentMBeanImpl lcc = router.getContainer().getRegistry().getComponent( id.getName() );
 
-	protected boolean isClustered(MessageExchange me) {
-		MessageExchangeImpl mei = (MessageExchangeImpl) me;
-		if (mei.getDestinationId() == null) {
-			ServiceEndpoint se = me.getEndpoint();
-			if (se instanceof InternalEndpoint) {
-				return ((InternalEndpoint) se).isClustered();
-			}
+        if ( lcc != null )
+        {
+            if ( lcc.getDeliveryChannel() != null )
+            {
+                try
+                {
+                    lock.readLock().lock();
+                    ( (DeliveryChannelImpl) lcc.getDeliveryChannel() ).processInBound( me );
+                }
+                finally
+                {
+                    lock.readLock().unlock();
+                }
+                return;
+            }
+            throw new MessagingException( "Component " + id.getName() + " is shut down" );
+        }
 
-			return false;
-		}
+        throw new MessagingException( "No component named " + id.getName() + " - Couldn't route MessageExchange " + me );
+    }
 
-		String destination = mei.getDestinationId().getContainerName();
-		String source = mei.getSourceId().getContainerName();
-		return (!(source.equals(destination)));
-	}
+    @Override
+    public MBeanAttributeInfo[] getAttributeInfos()
+        throws JMException
+    {
+        AttributeInfoHelper helper = new AttributeInfoHelper();
+        helper.addAttribute( getObjectToManage(), "description", "The type of flow" );
+        return AttributeInfoHelper.join( super.getAttributeInfos(), helper.getAttributeInfos() );
+    }
 
-	public Router getRouter() {
-		return this.router;
-	}
+    protected boolean isPersistent( MessageExchange me )
+    {
+        ExchangePacket packet = ( (MessageExchangeImpl) me ).getPacket();
+        if ( packet.getPersistent() != null )
+        {
+            return packet.getPersistent().booleanValue();
+        }
+        return router.getContainer().isPersistent();
+    }
 
-	public String getType() {
-		return "Dispatcher";
-	}
+    protected boolean isTransacted( MessageExchange me )
+    {
+        return ( me.getProperty( "javax.jbi.transaction.jta" ) != null );
+    }
 
-	public String getName() {
-		if (this.name == null) {
-			String n = super.getName();
-			if (n.endsWith("Dispatcher")) {
-				n = n.substring(0, n.length() - 4);
-			}
-			return n;
-		}
-		return this.name;
-	}
+    protected boolean isSynchronous( MessageExchange me )
+    {
+        Boolean sync = (Boolean) me.getProperty( "javax.jbi.messaging.sendSync" );
+        return ( ( sync != null ) && ( sync.booleanValue() ) );
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    protected boolean isClustered( MessageExchange me )
+    {
+        MessageExchangeImpl mei = (MessageExchangeImpl) me;
+        if ( mei.getDestinationId() == null )
+        {
+            ServiceEndpoint se = me.getEndpoint();
+            if ( se instanceof InternalEndpoint )
+            {
+                return ( (InternalEndpoint) se ).isClustered();
+            }
 
-	public ExecutorFactory getExecutorFactory() {
-		return this.executorFactory;
-	}
+            return false;
+        }
+
+        String destination = mei.getDestinationId().getContainerName();
+        String source = mei.getSourceId().getContainerName();
+        return ( !( source.equals( destination ) ) );
+    }
+
+    @Override
+    public Router getRouter()
+    {
+        return router;
+    }
+
+    @Override
+    public String getType()
+    {
+        return "Dispatcher";
+    }
+
+    @Override
+    public String getName()
+    {
+        if ( name == null )
+        {
+            String n = super.getName();
+            if ( n.endsWith( "Dispatcher" ) )
+            {
+                n = n.substring( 0, n.length() - 4 );
+            }
+            return n;
+        }
+        return name;
+    }
+
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public ExecutorFactory getExecutorFactory()
+    {
+        return executorFactory;
+    }
 }

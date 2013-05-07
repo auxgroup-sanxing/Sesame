@@ -6,52 +6,72 @@ import java.io.Reader;
 import java.io.Serializable;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+
 import javax.xml.transform.stream.StreamSource;
 
-public class StringSource extends StreamSource implements Serializable {
-	private static final long serialVersionUID = -703716493720900L;
-	private final String text;
-	private String encoding;
+public class StringSource
+    extends StreamSource
+    implements Serializable
+{
+    private static final long serialVersionUID = -703716493720900L;
 
-	public StringSource(String text) {
-		this.encoding = "UTF-8";
+    private final String text;
 
-		if (text == null) {
-			throw new NullPointerException("text can not be null");
-		}
-		this.text = text;
-	}
+    private String encoding;
 
-	public StringSource(String text, String systemId) {
-		this(text);
-		setSystemId(systemId);
-	}
+    public StringSource( String text )
+    {
+        encoding = "UTF-8";
 
-	public StringSource(String text, String systemId, String encoding) {
-		this.encoding = "UTF-8";
+        if ( text == null )
+        {
+            throw new NullPointerException( "text can not be null" );
+        }
+        this.text = text;
+    }
 
-		this.text = text;
-		this.encoding = encoding;
-		setSystemId(systemId);
-	}
+    public StringSource( String text, String systemId )
+    {
+        this( text );
+        setSystemId( systemId );
+    }
 
-	public InputStream getInputStream() {
-		try {
-			return new ByteArrayInputStream(this.text.getBytes(this.encoding));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    public StringSource( String text, String systemId, String encoding )
+    {
+        this.encoding = "UTF-8";
 
-	public Reader getReader() {
-		return new StringReader(this.text);
-	}
+        this.text = text;
+        this.encoding = encoding;
+        setSystemId( systemId );
+    }
 
-	public String toString() {
-		return "StringSource[" + this.text + "]";
-	}
+    @Override
+    public InputStream getInputStream()
+    {
+        try
+        {
+            return new ByteArrayInputStream( text.getBytes( encoding ) );
+        }
+        catch ( UnsupportedEncodingException e )
+        {
+            throw new RuntimeException( e );
+        }
+    }
 
-	public String getText() {
-		return this.text;
-	}
+    @Override
+    public Reader getReader()
+    {
+        return new StringReader( text );
+    }
+
+    @Override
+    public String toString()
+    {
+        return "StringSource[" + text + "]";
+    }
+
+    public String getText()
+    {
+        return text;
+    }
 }

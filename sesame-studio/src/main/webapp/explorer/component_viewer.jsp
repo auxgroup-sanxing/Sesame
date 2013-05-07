@@ -5,7 +5,8 @@
 <%@page import="java.util.*, java.util.jar.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%@page import="org.json.*"%>
-<%@page import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
+<%@page
+	import="org.jdom.*, org.jdom.input.*, org.jdom.output.*, org.jdom.xpath.XPath"%>
 <%!
 private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -139,54 +140,58 @@ catch (Exception e)
 <meta http-equiv="Cache-Control" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <title>通讯绑定查看器</title>
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/xtheme-gray.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/xtheme-gray.css" />
 <style type="text/css">
 .x-combo-list-inner {
 	text-align: left;
 }
 
 .item-wrap {
-	text-align:center;
+	text-align: center;
 	float: left;
 	cursor: pointer;
 	margin-top: 4px;
 	margin-left: 4px;
-	padding:2px 7px!important;
-	font: 13px Arial,Helvetica,"Nimbus Sans L",sans-serif;
+	padding: 2px 7px !important;
+	font: 13px Arial, Helvetica, "Nimbus Sans L", sans-serif;
 }
 
 .displayNameWrap {
 	
 }
 
-.fullNameWrap, .sizeWarp, .timeWarp {
+.fullNameWrap,.sizeWarp,.timeWarp {
 	display: none
 }
 
 .hilited {
-	background: #EFEFEF; 
+	background: #EFEFEF;
 	color: black;
 }
 
 .x-icon-loading {
-	background-image: url('../ext-Ajax/resources/images/default/grid/loading.gif');
+	background-image:
+		url('../ext-Ajax/resources/images/default/grid/loading.gif');
 	background-position: center;
 	background-repeat: no-repeat;
 }
 </style>
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/src/locale/ext-lang-zh_CN.js"></script>
 </head>
 
 <body>
 
-<script type="text/javascript" src="../package/xml/xdom.js"></script>
-<script type="text/javascript" src="../package/uuid.js"></script>
-<script type="text/javascript" src="<%=script%>"></script>
+	<script type="text/javascript" src="../package/xml/xdom.js"></script>
+	<script type="text/javascript" src="../package/uuid.js"></script>
+	<script type="text/javascript" src="<%=script%>"></script>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 
 	var component = "<%=component%>";
 	var properties = <%=properties%>;
@@ -194,7 +199,7 @@ catch (Exception e)
 	
 </script>
 
-<script type="text/javascript">
+	<script type="text/javascript">
 	<%if (!script.startsWith("http://")) {%>
 		<%if(component.indexOf("adp-ec") != -1) {%>
 			var scriptEl = document.createElement("SCRIPT");

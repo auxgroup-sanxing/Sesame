@@ -4,65 +4,85 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-public class ArchiveEntry implements Serializable {
-	protected String location;
-	protected Date lastModified;
-	protected String type;
-	protected String name;
-	protected boolean pending;
-	protected transient Set<String> dependencies;
+public class ArchiveEntry
+    implements Serializable
+{
+    protected String location;
 
-	public String getLocation() {
-		return this.location;
-	}
+    protected Date lastModified;
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    protected String type;
 
-	public Date getLastModified() {
-		return this.lastModified;
-	}
+    protected String name;
 
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
-	}
+    protected boolean pending;
 
-	public String getType() {
-		return this.type;
-	}
+    protected transient Set<String> dependencies;
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getLocation()
+    {
+        return location;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public void setLocation( String location )
+    {
+        this.location = location;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public Date getLastModified()
+    {
+        return lastModified;
+    }
 
-	public boolean isPending() {
-		return this.pending;
-	}
+    public void setLastModified( Date lastModified )
+    {
+        this.lastModified = lastModified;
+    }
 
-	public void setPending(boolean pending) {
-		this.pending = pending;
-	}
+    public String getType()
+    {
+        return type;
+    }
 
-	public Set<String> getDependencies() {
-		return this.dependencies;
-	}
+    public void setType( String type )
+    {
+        this.type = type;
+    }
 
-	public void setDependencies(Set<String> dependencies) {
-		this.dependencies = dependencies;
-	}
+    public String getName()
+    {
+        return name;
+    }
 
-	public String toString() {
-		return "ArchiveEntry [lastModified=" + this.lastModified
-				+ ", location=" + this.location + ", name=" + this.name
-				+ ", pending=" + this.pending + ", type=" + this.type + "]";
-	}
+    public void setName( String name )
+    {
+        this.name = name;
+    }
+
+    public boolean isPending()
+    {
+        return pending;
+    }
+
+    public void setPending( boolean pending )
+    {
+        this.pending = pending;
+    }
+
+    public Set<String> getDependencies()
+    {
+        return dependencies;
+    }
+
+    public void setDependencies( Set<String> dependencies )
+    {
+        this.dependencies = dependencies;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ArchiveEntry [lastModified=" + lastModified + ", location=" + location + ", name=" + name
+            + ", pending=" + pending + ", type=" + type + "]";
+    }
 }

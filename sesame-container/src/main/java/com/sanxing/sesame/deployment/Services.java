@@ -1,31 +1,40 @@
 package com.sanxing.sesame.deployment;
 
-public class Services {
-	private boolean bindingComponent;
-	private Provides[] provides;
-	private Consumes[] consumes;
+public class Services
+{
+    private boolean bindingComponent;
 
-	public boolean isBindingComponent() {
-		return this.bindingComponent;
-	}
+    private Provides[] provides;
 
-	public void setBindingComponent(boolean bindingComponent) {
-		this.bindingComponent = bindingComponent;
-	}
+    private Consumes[] consumes;
 
-	public Provides[] getProvides() {
-		return this.provides;
-	}
+    public boolean isBindingComponent()
+    {
+        return bindingComponent;
+    }
 
-	public void setProvides(Provides[] provides) {
-		this.provides = provides;
-	}
+    public void setBindingComponent( boolean bindingComponent )
+    {
+        this.bindingComponent = bindingComponent;
+    }
 
-	public Consumes[] getConsumes() {
-		return this.consumes;
-	}
+    public Provides[] getProvides()
+    {
+        return provides;
+    }
 
-	public void setConsumes(Consumes[] consumes) {
-		this.consumes = consumes;
-	}
+    public void setProvides( Provides[] provides )
+    {
+        this.provides = provides;
+    }
+
+    public Consumes[] getConsumes()
+    {
+        return consumes;
+    }
+
+    public void setConsumes( Consumes[] consumes )
+    {
+        this.consumes = consumes;
+    }
 }

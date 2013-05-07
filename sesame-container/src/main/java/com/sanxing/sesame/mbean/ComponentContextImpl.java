@@ -1,11 +1,8 @@
 package com.sanxing.sesame.mbean;
 
-import com.sanxing.sesame.container.ActivationSpec;
-import com.sanxing.sesame.container.ComponentEnvironment;
-import com.sanxing.sesame.container.JBIContainer;
-import com.sanxing.sesame.servicedesc.InternalEndpoint;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
+
 import javax.jbi.JBIException;
 import javax.jbi.component.Component;
 import javax.jbi.component.ComponentContext;
@@ -16,204 +13,269 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
+
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 
-public class ComponentContextImpl implements ComponentContext, MBeanNames {
-	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ComponentContextImpl.class);
-	private ComponentNameSpace componentName;
-	private ComponentEnvironment environment;
-	private JBIContainer container;
-	private Component component;
-	private DeliveryChannel deliveryChannel;
-	private ActivationSpec activationSpec;
-	private boolean activated;
+import com.sanxing.sesame.container.ActivationSpec;
+import com.sanxing.sesame.container.ComponentEnvironment;
+import com.sanxing.sesame.container.JBIContainer;
+import com.sanxing.sesame.servicedesc.InternalEndpoint;
 
-	public ComponentContextImpl(JBIContainer container,
-			ComponentNameSpace componentName) {
-		this.componentName = componentName;
-		this.container = container;
-	}
+public class ComponentContextImpl
+    implements ComponentContext, MBeanNames
+{
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger( ComponentContextImpl.class );
 
-	public void activate(Component comp, ComponentEnvironment env,
-			ActivationSpec spec) {
-		this.component = comp;
-		this.environment = env;
-		this.activationSpec = spec;
-		this.activated = true;
-	}
+    private final ComponentNameSpace componentName;
 
-	public ComponentNameSpace getComponentNameSpace() {
-		return this.componentName;
-	}
+    private ComponentEnvironment environment;
 
-	public String getComponentName() {
-		return this.componentName.getName();
-	}
+    private JBIContainer container;
 
-	public Component getComponent() {
-		return this.component;
-	}
+    private Component component;
 
-	public ServiceEndpoint activateEndpoint(QName serviceName,
-			String endpointName) throws JBIException {
-		checkActivated();
-		if (LOG.isDebugEnabled()) {
-			LOG.debug("Component: " + this.componentName.getName()
-					+ " activated endpoint: " + serviceName + " : "
-					+ endpointName);
-		}
-		return this.container.getRegistry().activateEndpoint(this, serviceName,
-				endpointName);
-	}
+    private DeliveryChannel deliveryChannel;
 
-	public ServiceEndpoint[] availableEndpoints(QName serviceName)
-			throws JBIException {
-		checkActivated();
-		return this.container.getRegistry().getEndpointsForService(serviceName);
-	}
+    private ActivationSpec activationSpec;
 
-	public void deactivateEndpoint(ServiceEndpoint endpoint)
-			throws JBIException {
-		checkActivated();
-		this.container.getRegistry().deactivateEndpoint(this,
-				(InternalEndpoint) endpoint);
-	}
+    private boolean activated;
 
-	public DeliveryChannel getDeliveryChannel() {
-		return this.deliveryChannel;
-	}
+    public ComponentContextImpl( JBIContainer container, ComponentNameSpace componentName )
+    {
+        this.componentName = componentName;
+        this.container = container;
+    }
 
-	public String getJmxDomainName() {
-		return this.container.getName();
-	}
+    public void activate( Component comp, ComponentEnvironment env, ActivationSpec spec )
+    {
+        component = comp;
+        environment = env;
+        activationSpec = spec;
+        activated = true;
+    }
 
-	public ObjectName createCustomComponentMBeanName(String customName) {
-		return this.container.getManagementContext()
-				.createCustomComponentMBeanName(customName,
-						this.componentName.getName());
-	}
+    public ComponentNameSpace getComponentNameSpace()
+    {
+        return componentName;
+    }
 
-	public MBeanNames getMBeanNames() {
-		return this;
-	}
+    @Override
+    public String getComponentName()
+    {
+        return componentName.getName();
+    }
 
-	public MBeanServer getMBeanServer() {
-		return this.container.getMBeanServer();
-	}
+    public Component getComponent()
+    {
+        return component;
+    }
 
-	public InitialContext getNamingContext() {
-		return this.container.getNamingContext();
-	}
+    @Override
+    public ServiceEndpoint activateEndpoint( QName serviceName, String endpointName )
+        throws JBIException
+    {
+        checkActivated();
+        if ( LOG.isDebugEnabled() )
+        {
+            LOG.debug( "Component: " + componentName.getName() + " activated endpoint: " + serviceName + " : "
+                + endpointName );
+        }
+        return container.getRegistry().activateEndpoint( this, serviceName, endpointName );
+    }
 
-	public Object getTransactionManager() {
-		return this.container.getTransactionManager();
-	}
+    public ServiceEndpoint[] availableEndpoints( QName serviceName )
+        throws JBIException
+    {
+        checkActivated();
+        return container.getRegistry().getEndpointsForService( serviceName );
+    }
 
-	public String getWorkspaceRoot() {
-		if (this.environment.getWorkspaceRoot() != null) {
-			return this.environment.getWorkspaceRoot().getAbsolutePath();
-		}
-		return null;
-	}
+    @Override
+    public void deactivateEndpoint( ServiceEndpoint endpoint )
+        throws JBIException
+    {
+        checkActivated();
+        container.getRegistry().deactivateEndpoint( this, (InternalEndpoint) endpoint );
+    }
 
-	public JBIContainer getContainer() {
-		return this.container;
-	}
+    @Override
+    public DeliveryChannel getDeliveryChannel()
+    {
+        return deliveryChannel;
+    }
 
-	public ComponentEnvironment getEnvironment() {
-		return this.environment;
-	}
+    @Override
+    public String getJmxDomainName()
+    {
+        return container.getName();
+    }
 
-	public void setEnvironment(ComponentEnvironment ce) {
-		this.environment = ce;
-	}
+    @Override
+    public ObjectName createCustomComponentMBeanName( String customName )
+    {
+        return container.getManagementContext().createCustomComponentMBeanName( customName, componentName.getName() );
+    }
 
-	public void setContainer(JBIContainer container) {
-		this.container = container;
-	}
+    @Override
+    public MBeanNames getMBeanNames()
+    {
+        return this;
+    }
 
-	public void setDeliveryChannel(DeliveryChannel deliveryChannel) {
-		this.deliveryChannel = deliveryChannel;
-	}
+    @Override
+    public MBeanServer getMBeanServer()
+    {
+        return container.getMBeanServer();
+    }
 
-	public void registerExternalEndpoint(ServiceEndpoint externalEndpoint)
-			throws JBIException {
-		checkActivated();
-		if (externalEndpoint == null) {
-			throw new IllegalArgumentException(
-					"externalEndpoint should be non null");
-		}
-		this.container.getRegistry().registerExternalEndpoint(
-				getComponentNameSpace(), externalEndpoint);
-	}
+    @Override
+    public InitialContext getNamingContext()
+    {
+        return container.getNamingContext();
+    }
 
-	public void deregisterExternalEndpoint(ServiceEndpoint externalEndpoint)
-			throws JBIException {
-		checkActivated();
-		this.container.getRegistry().deregisterExternalEndpoint(
-				getComponentNameSpace(), externalEndpoint);
-	}
+    @Override
+    public Object getTransactionManager()
+    {
+        return container.getTransactionManager();
+    }
 
-	public ServiceEndpoint resolveEndpointReference(DocumentFragment epr) {
-		checkActivated();
-		return this.container.getRegistry().resolveEndpointReference(epr);
-	}
+    @Override
+    public String getWorkspaceRoot()
+    {
+        if ( environment.getWorkspaceRoot() != null )
+        {
+            return environment.getWorkspaceRoot().getAbsolutePath();
+        }
+        return null;
+    }
 
-	public ServiceEndpoint getEndpoint(QName service, String name) {
-		checkActivated();
-		return this.container.getRegistry().getEndpoint(service, name);
-	}
+    public JBIContainer getContainer()
+    {
+        return container;
+    }
 
-	public Document getEndpointDescriptor(ServiceEndpoint endpoint)
-			throws JBIException {
-		checkActivated();
-		return this.container.getRegistry().getEndpointDescriptor(endpoint);
-	}
+    public ComponentEnvironment getEnvironment()
+    {
+        return environment;
+    }
 
-	public ServiceEndpoint[] getEndpoints(QName interfaceName) {
-		checkActivated();
-		return this.container.getRegistry().getEndpointsForInterface(
-				interfaceName);
-	}
+    public void setEnvironment( ComponentEnvironment ce )
+    {
+        environment = ce;
+    }
 
-	public ServiceEndpoint[] getEndpointsForService(QName serviceName) {
-		checkActivated();
-		return this.container.getRegistry().getEndpointsForService(serviceName);
-	}
+    public void setContainer( JBIContainer container )
+    {
+        this.container = container;
+    }
 
-	public ServiceEndpoint[] getExternalEndpoints(QName interfaceName) {
-		checkActivated();
-		return this.container.getRegistry().getExternalEndpoints(interfaceName);
-	}
+    public void setDeliveryChannel( DeliveryChannel deliveryChannel )
+    {
+        this.deliveryChannel = deliveryChannel;
+    }
 
-	public ServiceEndpoint[] getExternalEndpointsForService(QName serviceName) {
-		checkActivated();
-		return this.container.getRegistry().getExternalEndpointsForService(
-				serviceName);
-	}
+    @Override
+    public void registerExternalEndpoint( ServiceEndpoint externalEndpoint )
+        throws JBIException
+    {
+        checkActivated();
+        if ( externalEndpoint == null )
+        {
+            throw new IllegalArgumentException( "externalEndpoint should be non null" );
+        }
+        container.getRegistry().registerExternalEndpoint( getComponentNameSpace(), externalEndpoint );
+    }
 
-	public String getInstallRoot() {
-		if (this.environment.getInstallRoot() != null) {
-			return this.environment.getInstallRoot().getAbsolutePath();
-		}
-		return null;
-	}
+    @Override
+    public void deregisterExternalEndpoint( ServiceEndpoint externalEndpoint )
+        throws JBIException
+    {
+        checkActivated();
+        container.getRegistry().deregisterExternalEndpoint( getComponentNameSpace(), externalEndpoint );
+    }
 
-	public Logger getLogger(String suffix, String filename)
-			throws MissingResourceException, JBIException {
-		String name = (suffix != null) ? suffix : "";
+    @Override
+    public ServiceEndpoint resolveEndpointReference( DocumentFragment epr )
+    {
+        checkActivated();
+        return container.getRegistry().resolveEndpointReference( epr );
+    }
 
-		return this.container.getLogger(name, filename);
-	}
+    @Override
+    public ServiceEndpoint getEndpoint( QName service, String name )
+    {
+        checkActivated();
+        return container.getRegistry().getEndpoint( service, name );
+    }
 
-	public ActivationSpec getActivationSpec() {
-		return this.activationSpec;
-	}
+    @Override
+    public Document getEndpointDescriptor( ServiceEndpoint endpoint )
+        throws JBIException
+    {
+        checkActivated();
+        return container.getRegistry().getEndpointDescriptor( endpoint );
+    }
 
-	private void checkActivated() {
-		if (!(this.activated))
-			throw new IllegalStateException("ComponentContext not activated");
-	}
+    @Override
+    public ServiceEndpoint[] getEndpoints( QName interfaceName )
+    {
+        checkActivated();
+        return container.getRegistry().getEndpointsForInterface( interfaceName );
+    }
+
+    @Override
+    public ServiceEndpoint[] getEndpointsForService( QName serviceName )
+    {
+        checkActivated();
+        return container.getRegistry().getEndpointsForService( serviceName );
+    }
+
+    @Override
+    public ServiceEndpoint[] getExternalEndpoints( QName interfaceName )
+    {
+        checkActivated();
+        return container.getRegistry().getExternalEndpoints( interfaceName );
+    }
+
+    @Override
+    public ServiceEndpoint[] getExternalEndpointsForService( QName serviceName )
+    {
+        checkActivated();
+        return container.getRegistry().getExternalEndpointsForService( serviceName );
+    }
+
+    @Override
+    public String getInstallRoot()
+    {
+        if ( environment.getInstallRoot() != null )
+        {
+            return environment.getInstallRoot().getAbsolutePath();
+        }
+        return null;
+    }
+
+    @Override
+    public Logger getLogger( String suffix, String filename )
+        throws MissingResourceException, JBIException
+    {
+        String name = ( suffix != null ) ? suffix : "";
+
+        return container.getLogger( name, filename );
+    }
+
+    public ActivationSpec getActivationSpec()
+    {
+        return activationSpec;
+    }
+
+    private void checkActivated()
+    {
+        if ( !( activated ) )
+        {
+            throw new IllegalStateException( "ComponentContext not activated" );
+        }
+    }
 }

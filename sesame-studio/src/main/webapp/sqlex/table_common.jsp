@@ -1,4 +1,5 @@
-<%@page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" errorPage="../exception.jsp"%>
+<%@page language="java" contentType="text/html; charset=utf-8"
+	pageEncoding="utf-8" errorPage="../exception.jsp"%>
 <%@page import="com.sanxing.studio.utils.CommonUtil"%>
 <%@page import="com.sanxing.studio.action.SQLExplorer"%>
 <%@page import="java.io.File"%>
@@ -48,17 +49,19 @@
 %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>表维护 - <%=tableName %></title>
 
-<link rel="stylesheet" type="text/css" href="../ext-Ajax/resources/css/ext-all.css" />
+<link rel="stylesheet" type="text/css"
+	href="../ext-Ajax/resources/css/ext-all.css" />
 <script type="text/javascript" src="../ext-Ajax/adapter/ext/ext-base.js"></script>
 <script type="text/javascript" src="../ext-Ajax/ext-all.js"></script>
-<script type="text/javascript" src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
+<script type="text/javascript"
+	src="../ext-Ajax/source/locale/ext-lang-zh_CN.js"></script>
 
 </head>
 <body>
-    <script type="text/javascript">
+	<script type="text/javascript">
    	    var app = top.Application;
     	if (window.top && app)
     	{
