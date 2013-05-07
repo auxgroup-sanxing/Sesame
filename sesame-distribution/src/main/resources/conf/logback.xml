@@ -27,8 +27,16 @@
   <logger name="com.sanxing.sesame" level="DEBUG">
     <appender-ref ref="sesame" />
   </logger>
+
+  <logger name="com.sanxing.adp" level="DEBUG">
+    <appender-ref ref="sesame" />
+  </logger>
   
   <logger name="com.sanxing.studio" level="DEBUG">
+    <appender-ref ref="studio" />
+  </logger>
+  
+  <logger name="org.apache.jsp" level="DEBUG">
     <appender-ref ref="studio" />
   </logger>
 

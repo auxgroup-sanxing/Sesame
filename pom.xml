@@ -121,6 +121,7 @@
   	<module>sesame-adp</module>
   	<module>sesame-studio</module>
   	<module>sesame-all</module>
+  	<module>sesame-component</module>
   </modules>
 
   <dependencyManagement>

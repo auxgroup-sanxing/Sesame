@@ -1176,11 +1176,11 @@ WebServletResponse responseWrapper = new WebServletResponse(response);
 	catch (InvocationTargetException e) {
 		Throwable t = e.getTargetException();
 		if (!(t instanceof FileNotFoundException))
-			logger.error("", t);
+			logger.error(t.getMessage(), t);
 		responseWrapper.sendError(t.getMessage());
 	}
 	catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		responseWrapper.sendError(e.getMessage());
 	}
 %>

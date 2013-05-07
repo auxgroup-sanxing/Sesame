@@ -646,8 +646,6 @@ public String listFiles(HttpServletRequest request, HttpServletResponse response
 %>
 
 <%
-Logger logger = LoggerFactory.getLogger(this.getClass());
-
 String operation = request.getParameter("operation");
 if (operation != null)
 {
@@ -663,11 +661,11 @@ if (operation != null)
 	}
 	catch (InvocationTargetException e) {
 		Throwable t = e.getTargetException();
-		logger.error("", t);
+		logger.error(t.getMessage(), t);
 		WebUtil.sendError(response, t.getMessage());
 	}
 	catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		WebUtil.sendError(response, e.getMessage());
 	}
 }

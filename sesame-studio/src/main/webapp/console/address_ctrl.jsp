@@ -220,7 +220,6 @@
 	}%>
 
 <%
-	Logger logger = LoggerFactory.getLogger(this.getClass());
 	String operation = request.getParameter("operation");
 	WebServletResponse responseWrapper = new WebServletResponse(response);
 	
@@ -240,7 +239,7 @@
 		throw new ServletException(t.getMessage(), t);
 	}
 	catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		throw new ServletException(e.getMessage(), e);
 	}
 %>

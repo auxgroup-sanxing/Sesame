@@ -147,7 +147,7 @@ public String loadDatasource(HttpServletRequest request, HttpServletResponse res
 		responseWrapper.sendError(t.getMessage());
 	}
 	catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		responseWrapper.sendError(e.getMessage());
 	}
 %>

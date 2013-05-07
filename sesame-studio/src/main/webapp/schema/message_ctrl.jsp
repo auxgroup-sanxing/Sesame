@@ -545,8 +545,6 @@ public String listFiles(HttpServletRequest request, HttpServletResponse response
 %>
 
 <%
-Logger logger = LoggerFactory.getLogger(this.getClass());
-
 String operation = request.getParameter("operation");
 if (operation != null) {
 	try {
@@ -559,10 +557,10 @@ if (operation != null) {
 		WebUtil.sendError(response, "["+request.getMethod()+"]找不到相应的方法来处理指定的 operation: "+operation);
 	} catch (InvocationTargetException e) {
 		Throwable t = e.getTargetException();
-		logger.error("", t);
+		logger.error(t.getMessage(), t);
 		WebUtil.sendError(response, t.getMessage());
 	} catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		WebUtil.sendError(response, e.getMessage());
 	}
 } else {

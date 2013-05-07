@@ -306,11 +306,11 @@ catch (NoSuchMethodException e) {
 }
 catch (InvocationTargetException e) {
 	Throwable t = e.getTargetException();
-	logger.error("", t);
+	logger.error(t.getMessage(), t);
 	responseWrapper.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, t.getMessage());
 }
 catch (Exception e) {
-	logger.error("", e);
+	logger.error(e.getMessage(), e);
 	responseWrapper.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
 }
 

@@ -182,7 +182,6 @@ public String deleteSkp(HttpServletRequest request,HttpServletResponse response)
 %>
 
 <%
-	Logger logger = LoggerFactory.getLogger(this.getClass());
 	String operation = request.getParameter("operation");
 	WebServletResponse responseWrapper = new WebServletResponse(response);
 	
@@ -198,10 +197,11 @@ public String deleteSkp(HttpServletRequest request,HttpServletResponse response)
 	}
 	catch (InvocationTargetException e) {
 		Throwable t = e.getTargetException();
+		logger.error(t.getMessage(), t);
 		responseWrapper.sendError(t.getMessage());
 	}
 	catch (Exception e) {
-		logger.error("", e);
+		logger.error(e.getMessage(), e);
 		responseWrapper.sendError(e.getMessage());
 	}
 %>

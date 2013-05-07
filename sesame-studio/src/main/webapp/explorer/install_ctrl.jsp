@@ -694,7 +694,7 @@
 					Object result = mbeanServer.invoke(
 							instance.getObjectName(), "installArchive", params,
 							signature);
-					log.debug(result);
+					log.debug("" + result);
 				} catch (Exception e) {
 					throw getDeepCause(e);
 				}
@@ -787,7 +787,7 @@
 					String[] signature = new String[] { "java.lang.String" };
 					try {
 						Object result = mbeanServer.invoke(instance.getObjectName(), "installArchive", params, signature);
-						log.debug(result);
+						log.debug("" + result);
 					} 
 					catch (MBeanException e) {
 						if (e.getCause() != null) {
@@ -888,7 +888,7 @@
 						Object result = mbeanServer.invoke(instance
 								.getObjectName(), "installArchive", params,
 								signature);
-						log.debug(result);
+						log.debug("" + result);
 					} catch (MBeanException e) {
 						if (e.getCause() != null) {
 							throw (Exception) e.getCause();
@@ -1640,7 +1640,7 @@
 
 		JSONArray result = new JSONArray();
 		File folder = new File(buildPath, path);
-		log.debug(folder);
+		log.debug(folder.toString());
 		if (folder.exists()) {
 			String regex = request.getParameter("filter");
 			Pattern pattern = regex != null && regex.length() > 0 ? Pattern
@@ -1851,7 +1851,7 @@
 						String operationName = parentName.equals("components") ? "uninstallComponent" : "uninstallSharedLibrary";
 						Object result = mbeanServer.invoke(instance.getObjectName(), operationName, 
 								params, signature);
-						log.debug(result);
+						log.debug("" + result);
 					} 
 					catch (MBeanException e) {
 						if (e.getCause() != null) {

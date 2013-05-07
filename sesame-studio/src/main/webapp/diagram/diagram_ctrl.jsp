@@ -19,7 +19,8 @@
 <%@page language="java" contentType="text/xml; charset=utf-8"
 	pageEncoding="utf-8"%>
 
-<%!private Logger logger = LoggerFactory.getLogger(this.getClass());
+<%!
+private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 /*
 private XPathFactory xfactory = XPathFactory.newInstance();
