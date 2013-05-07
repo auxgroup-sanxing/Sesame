@@ -15,7 +15,6 @@ import com.sanxing.sesame.router.MessageRouter;
 import com.sanxing.sesame.router.Router;
 import com.sanxing.sesame.uuid.IdGenerator;
 import java.io.File;
-import java.io.PrintStream;
 import java.util.MissingResourceException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
@@ -29,12 +28,11 @@ import javax.management.JMException;
 import javax.management.MBeanAttributeInfo;
 import javax.management.MBeanServer;
 import javax.naming.InitialContext;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class JBIContainer extends BaseLifeCycle {
 	public static final String DEFAULT_NAME = "sesame";
-	private static final Logger LOG = LoggerFactory.getLogger(JBIContainer.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(JBIContainer.class);
 	private MBeanServer mbeanServer;
 	protected Router router = new MessageRouter();
 	protected ServiceUnitManager serviceManager;

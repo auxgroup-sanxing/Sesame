@@ -518,7 +518,7 @@ public class DeploymentService extends BaseSystemService implements
 							component, "Unable to parse result string", e);
 				}
 			} catch (Exception e2) {
-				LOG.error(e2);
+				LOG.error(e2.getMessage());
 				result = null;
 			}
 		}

@@ -4,7 +4,6 @@ import com.sanxing.sesame.container.ActivationSpec;
 import com.sanxing.sesame.container.ComponentEnvironment;
 import com.sanxing.sesame.container.JBIContainer;
 import com.sanxing.sesame.servicedesc.InternalEndpoint;
-import java.io.File;
 import java.util.MissingResourceException;
 import java.util.logging.Logger;
 import javax.jbi.JBIException;
@@ -17,13 +16,12 @@ import javax.management.MBeanServer;
 import javax.management.ObjectName;
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.DocumentFragment;
 
 public class ComponentContextImpl implements ComponentContext, MBeanNames {
-	private static final Logger LOG = LoggerFactory.getLogger(ComponentContextImpl.class);
+	private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(ComponentContextImpl.class);
 	private ComponentNameSpace componentName;
 	private ComponentEnvironment environment;
 	private JBIContainer container;
