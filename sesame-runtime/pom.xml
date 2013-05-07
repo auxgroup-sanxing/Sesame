@@ -12,10 +12,6 @@
   		<artifactId>activemq-core</artifactId>
   	</dependency>
   	<dependency>
-  		<groupId>commons-logging</groupId>
-  		<artifactId>commons-logging</artifactId>
-  	</dependency>
-  	<dependency>
   		<groupId>com.sanxing.sesame</groupId>
   		<artifactId>sesame-binding</artifactId>
   	</dependency>

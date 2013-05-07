@@ -1000,11 +1000,6 @@
       	<version>1.4.7</version>
       </dependency>
       <dependency>
-      	<groupId>commons-logging</groupId>
-      	<artifactId>commons-logging</artifactId>
-      	<version>1.1.2</version>
-      </dependency>
-      <dependency>
       	<groupId>org.apache.lucene</groupId>
       	<artifactId>lucene-core</artifactId>
       	<version>3.0.1</version>
