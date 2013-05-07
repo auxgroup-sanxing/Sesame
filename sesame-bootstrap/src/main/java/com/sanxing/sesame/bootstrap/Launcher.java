@@ -101,8 +101,8 @@ public class Launcher
      * default.properties -- embedded in this jar (not user editable)
      * this is the place to set java.io.tmp and debug options by users
      *
-     * sesame.properties -- mandatory, will be picked up into context
-     * this is place to set sesame properties like workdir location etc (as today)
+     * system.properties -- mandatory, will be picked up into context
+     * this is place to set system.properties like workdir location etc (as today)
      *
      * sesame-test.properties -- optional, if present, will override values from those above
      * this is place to set test properties (like jetty port) etc
@@ -129,11 +129,11 @@ public class Launcher
 
         // NOTE: These are loaded as resources, and its expected that <install>/conf is included in the classpath
 
-        // Add the sesame.properties, is mandatory to be present
-        addProperties(request, "sesame", "/sesame.properties", true);
+        // Add the system.properties, is mandatory to be present
+        addProperties(request, "sesame", "/system.properties", true);
 
-        // Add the sesame-test.properties, not mandatory to be present
-        addProperties(request, "sesame-test", "/sesame-test.properties", false);
+        // Add the system-test.properties, not mandatory to be present
+        addProperties(request, "sesame-test", "/system-test.properties", false);
 
         // Ultimate source of "bundleBasedir" (hence, is added as last in sources list)
         // Now, that will be always overridden by value got from cwd and that seems correct to me

@@ -118,7 +118,7 @@ public class Shutdown {
 
 		Properties properites = new Properties();
 		File profile = new File(System.getProperty("SESAME_HOME"),
-				"conf/sesame.properties");
+				"conf/system.properties");
 		try {
 			properites.load(new FileInputStream(profile));
 			Enumeration enumer = properites.propertyNames();
@@ -131,7 +131,7 @@ public class Shutdown {
 					System.setProperty(key, value);
 			}
 		} catch (IOException e) {
-			System.out.println("Load conf/sesame.properties failure!");
+			System.out.println("Load conf/system.properties failure!");
 		}
 
 		Shutdown cmd = new Shutdown();

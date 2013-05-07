@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+  <jmxConfigurator/>
+  
+  <appender name="sesame" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>logs/sesame.log</File>
+    <Append>true</Append>
     <encoder>
       <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c - %m%n</pattern>
     </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/sesame.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+    </rollingPolicy>
+  </appender>
+  
+  <appender name="studio" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <File>logs/studio.log</File>
+    <Append>true</Append>
+    <encoder>
+      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c - %m%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/studio.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
+    </rollingPolicy>
   </appender>
 
-  <logger name="com.sanxing" level="DEBUG"/>
+  <logger name="com.sanxing.sesame" level="DEBUG">
+    <appender-ref ref="sesame" />
+  </logger>
+  
+  <logger name="com.sanxing.studio" level="DEBUG">
+    <appender-ref ref="studio" />
+  </logger>
 
-  <root level="${sesame.log.level:-INFO}">
-    <appender-ref ref="console"/>
-  </root>
 </configuration>

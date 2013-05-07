@@ -48,7 +48,7 @@ public class Platform {
 
 	static {
 		parsePropertyFile(new File(System.getProperty("SESAME_HOME"),
-				"conf/sesame.properties"));
+				"conf/system.properties"));
 
 		Console.echo(System.getProperty("sesame.echo", "on").equals("on"));
 
@@ -79,7 +79,7 @@ public class Platform {
 					System.setProperty(key, value);
 			}
 		} catch (IOException e) {
-			System.out.println("Load conf/sesame.properties failure!");
+			System.out.println("Load conf/system.properties failure!");
 		}
 	}
 
