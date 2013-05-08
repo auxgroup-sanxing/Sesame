@@ -57,11 +57,6 @@
   </prerequisites>
 
   <properties>
-    <nexusUrl>http://10.2.231.97:8081/nexus/</nexusUrl>
-    <sesameReleaseId>sesame-releases</sesameReleaseId>
-    <sesameReleaseUrl>http://10.2.231.97:8081/nexus/content/repositories/releases/</sesameReleaseUrl>
-    <sesameSnapshotId>sesame-snapshots</sesameSnapshotId>
-    <sesameSnapshotUrl>http://10.2.231.97:8081/nexus/content/repositories/snapshots/</sesameSnapshotUrl>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
@@ -1118,17 +1113,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <distributionManagement>
-    <repository>
-      <id>${sesameReleaseId}</id>
-      <url>${sesameReleaseUrl}</url>
-    </repository>
-    <snapshotRepository>
-      <id>${sesameSnapshotId}</id>
-      <url>${sesameSnapshotUrl}</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <build>
 
     <defaultGoal>install</defaultGoal>
@@ -1401,20 +1385,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
           <version>2.2.1</version>
-        </plugin>
-        <plugin>
-          <groupId>org.sonatype.plugins</groupId>
-          <artifactId>nexus-staging-maven-plugin</artifactId>
-          <version>${nexus-staging.version}</version>
-          <extensions>true</extensions>
-          <configuration>
-            <nexusUrl>${nexusUrl}</nexusUrl>
-            <keepStagingRepositoryOnCloseRuleFailure>true</keepStagingRepositoryOnCloseRuleFailure>
-            <tags>
-              <localUsername>${env.USER}</localUsername>
-              <javaVersion>${java.version}</javaVersion>
-            </tags>
-          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -1798,13 +1768,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <configuration>
-          <serverId>${sesameSnapshotId}</serverId>
-        </configuration>
-      </plugin>
 <!--
        <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -1823,6 +1786,19 @@
  -->
     </plugins>
   </build>
+
+  <distributionManagement>  
+   <repository>  
+     <id>nexus-releases</id>  
+       <name>Nexus Release Repository</name>  
+       <url>http://10.2.231.97:8081/nexus/content/repositories/releases/</url>  
+   </repository>  
+   <snapshotRepository>  
+      <id>nexus-snapshots</id>  
+      <name>Nexus Snapshot Repository</name>  
+      <url>http://10.2.231.97:8081/nexus/content/repositories/snapshots/</url>  
+    </snapshotRepository>  
+  </distributionManagement>
 
   <reporting>
     <plugins>
