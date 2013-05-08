@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<binding>
+  <codec>
+    <params>
+      <tx-code>local-name(/*)</tx-code>
+      <tx-start />
+      <tx-end />
+      <status-text>/fault/faultcode</status-text>
+      <status>/fault/faultstring</status>
+      <success-code>200</success-code>
+    </params>
+    <raw2xml>
+      <raw-handlers />
+      <decoder>com.sanxing.sesame.codec.impl.JSONDecoder</decoder>
+      <xml-handlers />
+    </raw2xml>
+    <xml2raw>
+      <xml-handlers />
+      <encoder>com.sanxing.sesame.codec.impl.JSONEncoder</encoder>
+      <raw-handlers />
+    </xml2raw>
+  </codec>
+</binding>
+

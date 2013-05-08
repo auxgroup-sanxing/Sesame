@@ -11,5 +11,6 @@
   	<module>adp-ec</module>
   	<module>process-ec</module>
   	<module>xml-bc</module>
+  	<module>json-bc</module>
   </modules>
 </project>

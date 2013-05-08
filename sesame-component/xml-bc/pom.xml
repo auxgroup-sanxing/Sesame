@@ -6,7 +6,7 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>xml-bc</artifactId>
-  <name>xml-bc</name>
+  <name>xml binding component</name>
   <description>XML绑定组件</description>
   <dependencies>
   	<dependency>
