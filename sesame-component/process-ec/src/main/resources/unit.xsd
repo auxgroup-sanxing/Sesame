@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://framework.sesame.org/bc/" xmlns:tns="http://framework.sesame.org/bc/" xmlns="http://www.w3.org/2001/XMLSchema">
+	<element name="properties">
+        <annotation>
+           	<appinfo>
+           		<xtype>fieldset</xtype>
+           		<title>参数</title>
+           		<border>true</border>
+           		<labelWidth>130</labelWidth>
+           	</appinfo>
+        </annotation>
+        <complexType>
+			<sequence>
+				<element name="callout-class" type="string">
+					<annotation>
+						<documentation>对外调用类</documentation>
+					</annotation>
+				</element>
+			</sequence>
+		</complexType>
+	</element>
+</schema>

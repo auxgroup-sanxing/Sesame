@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:transform xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+  <xsl:template match="http-cc">
+      <xsl:when status="ED10002" fault-code="1111" fault-reason="请先登录" >
+      </xsl:when>
+  </xsl:template>
+  <xsl:template match="socket-bc">
+      <xsl:when test="1003">
+        <result>1113</result>
+        <description>通讯错误</description>
+      </xsl:when>
+      <xsl:when test="status = '201'">
+        <result>2010</result>
+        <description>连接重置</description>
+      </xsl:when>
+  </xsl:template>
+</xsl:transform>
+

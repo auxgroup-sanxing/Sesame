@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapping xmlns="www">
+	<template match="raw-bc">
+		<when status="0001" fault-code="E001" fault-reason="密码错误" />
+	</template>
+</mapping>

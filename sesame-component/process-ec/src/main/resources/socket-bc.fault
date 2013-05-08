@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsl:transform xmlns:xsl="www" version="1.0">
+  <xsl:template match="http-cc">
+      <xsl:when status="1002" fault-code="20" fault-reason="余额不足" >
+      </xsl:when>
+  </xsl:template>
+</xsl:transform>
+

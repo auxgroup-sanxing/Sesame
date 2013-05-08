@@ -9,5 +9,7 @@
   <packaging>pom</packaging>
   <modules>
   	<module>adp-ec</module>
+  	<module>process-ec</module>
+  	<module>xml-bc</module>
   </modules>
 </project>

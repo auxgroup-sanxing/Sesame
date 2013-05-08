@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extensions>
+  <class id="12" prefix="math" class-name="java.lang.Math" description="数学函数" collapsed="false">
+    <function name="abs" description="取绝对值" />
+    <function name="max" description="取最大值" />
+    <function name="min" description="取最小值" />
+    <function name="random" description="取随机数" />
+    <function name="round" description="取整, 四舍五入" />
+  </class>
+</extensions>
+

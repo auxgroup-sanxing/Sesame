@@ -11,9 +11,6 @@
 <META http-equiv="Cache-Control" content="no-cache" />
 <META http-equiv="Expires" content="0" />
 
-<link rel="icon" href="images/sanxing.ico" type="image/x-icon" />
-<link rel="shortcut icon" href="images/sanxing.ico" type="image/x-icon" />
-<link rel="Bookmark" href="images/sanxing.ico" type="image/x-icon" />
 <link rel="stylesheet" type="text/css"
 	href="ext-Ajax/resources/css/ext-all.css" />
 <link rel="stylesheet" type="text/css"
