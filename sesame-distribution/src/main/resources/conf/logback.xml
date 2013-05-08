@@ -39,5 +39,9 @@
   <logger name="org.apache.jsp" level="DEBUG">
     <appender-ref ref="studio" />
   </logger>
+  
+  <logger name="org.apache.jasper" level="INFO">
+    <appender-ref ref="studio" />
+  </logger>
 
 </configuration>
