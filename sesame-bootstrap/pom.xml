@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.sanxing.sesame</groupId>
 		<artifactId>sesame</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>sesame-bootstrap</artifactId>
 	<dependencies>
@@ -30,11 +30,6 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>com.sanxing.sesame</groupId>
-			<artifactId>sesame-test-common</artifactId>
-			<scope>test</scope>
-		</dependency>
 
 	</dependencies>
 </project>

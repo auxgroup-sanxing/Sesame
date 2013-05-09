@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.sanxing.sesame</groupId>
 		<artifactId>sesame</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 	<groupId>com.sanxing.sesame.aggregate</groupId>
 	<artifactId>sesame-all</artifactId>

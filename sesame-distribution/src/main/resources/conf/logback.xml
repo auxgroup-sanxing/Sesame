@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
   <jmxConfigurator/>
+
+  <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c, %L - %m%n</pattern>
+    </encoder>
+  </appender>
   
   <appender name="sesame" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <File>logs/sesame.log</File>
     <Append>true</Append>
     <encoder>
-      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c - %m%n</pattern>
+      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c, %L - %m%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>logs/sesame.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
@@ -17,7 +23,7 @@
     <File>logs/studio.log</File>
     <Append>true</Append>
     <encoder>
-      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c - %m%n</pattern>
+      <pattern>%4d{yyyy-MM-dd HH:mm:ss} %-5p [%-15.15t] - %c, %L - %m%n</pattern>
     </encoder>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
       <fileNamePattern>logs/studio.%d{yyyy-MM-dd}.log.gz</fileNamePattern>
@@ -40,8 +46,12 @@
     <appender-ref ref="studio" />
   </logger>
   
-  <logger name="org.apache.jasper" level="INFO">
+  <logger name="org.apache.jasper" level="DEBUG">
     <appender-ref ref="studio" />
   </logger>
 
+  <root level="INFO">
+    <appender-ref ref="console"/>
+  </root>
+  
 </configuration>

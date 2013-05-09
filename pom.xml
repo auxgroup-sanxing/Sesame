@@ -18,7 +18,7 @@
   
   <groupId>com.sanxing.sesame</groupId>
   <artifactId>sesame</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0</version>
   <packaging>pom</packaging>
   
   <name>${project.artifactId}</name>
