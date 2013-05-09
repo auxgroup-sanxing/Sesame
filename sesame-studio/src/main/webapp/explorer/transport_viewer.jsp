@@ -27,7 +27,7 @@ try
 	Document document = null;
 	JarFile compJar = new JarFile(transportFile);
 	try {
-		JarEntry entry = compJar.getJarEntry("META-INF/schemes");
+		JarEntry entry = compJar.getJarEntry("schemes");
 		if (entry != null) {
 			InputStream input = compJar.getInputStream(entry);
 			Properties properties = new Properties();

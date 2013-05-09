@@ -32,6 +32,7 @@
 <%@page import="com.sanxing.adp.eclipse.ADPServiceProjectBuilder"%>
 <%@page import="com.sanxing.sesame.sharelib.ShareLibManager"%>
 <%@page import="com.sanxing.studio.deploy.DirectoryCopy"%>
+<%@page import="com.sanxing.studio.deploy.FileCopy"%>
 <%@page import="com.sanxing.studio.utils.DeployReportUtil"%>
 <%@page language="java" contentType="text/json; charset=utf-8"
 	pageEncoding="utf-8"%>
@@ -664,7 +665,7 @@
 			if (compress == null)
 				zipOut.setLevel(0);
 			zipOut.setComment("Sanxing Sesame Service-Assembly");
-			File entry = new File(buildPath, project + "/META-INF");
+			File entry = new File(buildPath, project);
 			FileUtil.zip(entry, "", zipOut);
 			for (Iterator<?> entries = zipList.iterator(); entries.hasNext();) {
 				entry = (File) entries.next();
@@ -1381,10 +1382,10 @@
 			//  是否生成部署报告
 			String report = deployJSO.optString("report");
 
-			File targetFolder = new File(getServletContext().getRealPath(
+			File deployFolder = new File(getServletContext().getRealPath(
 					"deploy/"));
-			FileUtil.deleteFile(targetFolder);
-			FileUtil.buildDirectory(targetFolder);
+			FileUtil.deleteFile(deployFolder);
+			FileUtil.buildDirectory(deployFolder);
 
 			if (unitData != null && !"".equals(unitData)) {
 				JSONArray unitJsonArray = new JSONArray(unitData);
@@ -1436,33 +1437,23 @@
 
 						//添加 schema 服务单元
 						File schemaUnit = new File(projectFolder, "schema");
+						File newProjectFolder = new File(deployFolder, projectName);
 						if (schemaUnit.exists() && schemaUnit.list().length > 0) {
-							File newProjectFolder = new File(targetFolder
-									.getAbsolutePath()
-									+ "/deploy/" + projectName);
 							if (!newProjectFolder.exists())
 								newProjectFolder.mkdirs();
-							File outFile = new File(newProjectFolder
-									.getAbsolutePath()
-									+ File.separator
-									+ schemaUnit.getName()
-									+ ".zip");
+							File outFile = new File(newProjectFolder, 
+									schemaUnit.getName() + ".zip");
 							if (!outFile.exists()) {
 								this.zipFile(outFile, schemaUnit, compress);
 							}
 						}
 
 						//更新项目的部署描述符
-						File sourceMetaFolder = new File(projectFolder,
-								"META-INF");
-						String destMetaFolder = targetFolder.getAbsolutePath()
-								+ "/deploy/" + projectName + "/META-INF";
-						File destMetaFolderFile = new File(destMetaFolder);
-						if (!destMetaFolderFile.exists()) {
-							DirectoryCopy.copyDirectory(sourceMetaFolder
-									.getAbsolutePath(), destMetaFolder);
-							File jbiFile = new File(destMetaFolderFile.getParent(),
-									"jbi.xml");
+						File sourcejbiFile = new File(projectFolder, "jbi.xml");
+						File jbiFile = new File(newProjectFolder, "jbi.xml");
+						if (sourcejbiFile.exists()) {
+							FileCopy FC = new FileCopy();
+							FC.copyFile(sourcejbiFile.getAbsolutePath(), jbiFile.getAbsolutePath());
 							if (jbiFile.exists()) {
 								updateDescriptor(jbiFile);
 								updateSingleDescriptor(jbiFile, schemaUnit); // 更新schema描述
@@ -1470,19 +1461,16 @@
 						}
 
 						// 打包服务单元到指定目录
-						File outFile = new File(targetFolder.getAbsolutePath()
-								+ "/deploy/" + projectName + File.separator
+						File outFile = new File(deployFolder.getAbsolutePath()
+								+ File.separator + projectName + File.separator
 								+ unitFolder.getName() + ".zip");
 						this.zipFile(outFile, unitFolder, compress);
 
-						File jbiFile = new File(destMetaFolderFile.getParent(), "jbi.xml");
 						updateSingleDescriptor(jbiFile, unitFolder);
 					}
 				}
 
 				// 打包项目
-				File deployFolder = new File(targetFolder.getAbsolutePath(),
-						"deploy");
 				File[] projectList = deployFolder.listFiles();
 				if (projectList.length > 0) {
 					for (File projectFolder : projectList) {
@@ -1508,11 +1496,11 @@
 				JSONArray libArray = resourceJSO.optJSONArray("lib");
 				JSONArray transArray = resourceJSO.optJSONArray("trans");
 
-				File compFolder = new File(targetFolder.getAbsolutePath()
+				File compFolder = new File(deployFolder.getAbsolutePath()
 						+ "/intall/components");
-				File libFolder = new File(targetFolder.getAbsolutePath()
+				File libFolder = new File(deployFolder.getAbsolutePath()
 						+ "/intall/lib");
-				File transFolder = new File(targetFolder.getAbsolutePath()
+				File transFolder = new File(deployFolder.getAbsolutePath()
 						+ "/intall/transports");
 
 				if (!compFolder.exists())
@@ -1556,7 +1544,7 @@
 
 			// 创建部署报告
 			if ("on".equals(report)) {
-				File configFolder = new File(targetFolder.getAbsolutePath()
+				File configFolder = new File(deployFolder.getAbsolutePath()
 						+ "/config");
 				if (!configFolder.exists())
 					configFolder.mkdir();
@@ -1575,7 +1563,7 @@
 
 			File outFile = new File(downloadFolder + File.separator
 					+ "deploy.zip");
-			this.zipFile(outFile, targetFolder, compress);
+			this.zipFile(outFile, deployFolder, compress);
 
 			StringBuffer buffer = new StringBuffer();
 			buffer.append("<div><span><b style='color:blue;'>部署成功!</b></span><br><br>您可以选择点击下面的链接下载部署文件 或点击<确定>完成部署</div>");
