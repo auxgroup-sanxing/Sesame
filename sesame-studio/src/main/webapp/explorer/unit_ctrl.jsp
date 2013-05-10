@@ -72,7 +72,7 @@ private void alterNamespace(Definition wsdlDef, String targetNamespace) {
 		Map<?,?> parts = message.getParts();
 		for (Iterator<?> iterator=parts.entrySet().iterator(); iterator.hasNext(); ) {
 			Map.Entry<?,?> partEntry = (Map.Entry<?,?>)iterator.next();
-			Part part = (Part)partEntry.getValue();
+			javax.wsdl.Part part = (javax.wsdl.Part)partEntry.getValue();
 			if (part.getElementName()!=null && part.getElementName().getNamespaceURI().equals(oldNamespace)) { 
 				part.setElementName(new QName(targetNamespace, part.getElementName().getLocalPart()));
 			}

@@ -121,7 +121,7 @@ private QName getOperationParameter(Definition definition, String operationName,
 				if (fault != null) message = fault.getMessage();
 			}
 			if (message != null) {
-				Part part = message.getPart("parameters");
+			    javax.wsdl.Part part = message.getPart("parameters");
 				if (part != null) {
 					return part.getElementName();
 				}

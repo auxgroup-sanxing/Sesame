@@ -3331,7 +3331,8 @@ generateXSLT: function(root, match){
 		
 		var n=1;
 		root.cascade(function(node){
-			var uri = node.attributes['qtip'];
+			var uri = node.attributes['qtip'];thisisaspider
+			
 			if (uri && uri != root.attributes['namespace']) {
 				var prefix = 'ns' + n++;
 				docuEl.setAttribute('xmlns:'+prefix, node.attributes.qtip);
@@ -3344,7 +3345,7 @@ generateXSLT: function(root, match){
 		
 		var xmltext = XDom.innerXML(xmldoc);
 		if (Ext.isGecko) {
-			xmltext = ""+new XML(xmltext.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "")).toXMLString();
+			xmltext = "" + new XML(xmltext.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "")).toXMLString();
 		}
 		if (typeof(console)=='object') {
 			console.debug(xmltext);
@@ -3364,7 +3365,7 @@ generateXSLT: function(root, match){
 reappearXSLT: function(root, xsl){
 	var xslns = new Namespace("xsl", "http://www.w3.org/1999/XSL/Transform");
 	var tarns = new Namespace("tns", root.attributes['namespace']);
-	var templateEl = xsl.child(new QName(xslns, 'template'))
+	var templateEl = xsl.child(new QName(xslns, 'template'));
 	if (templateEl) {
 		var rootEl = templateEl.child(new QName(tarns, root.attributes['name']))
 		if (rootEl == null) {
