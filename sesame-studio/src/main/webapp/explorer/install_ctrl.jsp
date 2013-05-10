@@ -1434,13 +1434,13 @@
 								.getParentFile();
 						String projectName = unitFolder.getParentFile()
 								.getParentFile().getName();
+						File newProjectFolder = new File(deployFolder, projectName);
+						if (!newProjectFolder.exists())
+							newProjectFolder.mkdirs();
 
 						//添加 schema 服务单元
 						File schemaUnit = new File(projectFolder, "schema");
-						File newProjectFolder = new File(deployFolder, projectName);
 						if (schemaUnit.exists() && schemaUnit.list().length > 0) {
-							if (!newProjectFolder.exists())
-								newProjectFolder.mkdirs();
 							File outFile = new File(newProjectFolder, 
 									schemaUnit.getName() + ".zip");
 							if (!outFile.exists()) {
