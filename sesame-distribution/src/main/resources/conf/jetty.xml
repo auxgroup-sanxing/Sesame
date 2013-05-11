@@ -27,6 +27,7 @@
       <Arg><Ref id="Contexts"/></Arg>
       <Arg>${sesame-studio}</Arg>
       <Arg>${sesame-studio-context-path}</Arg>
+      <Set name="defaultsDescriptor">webdefault.xml</Set>
       <Set name="extractWAR">false</Set>
       <Set name="throwUnavailableOnStartupException">true</Set>
     </New>

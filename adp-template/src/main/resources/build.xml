@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<project default="build" basedir=".">
+
+	<property name="base" value="." />
+	<property name="src" value="src/main/java" />
+	<property name="build" value="target/classes" />
+	<property name="finish" value=".finish" />
+	<property name="myclasspath" value="../../../../../lib/" />
+
+	<path id="classpath">
+		<fileset dir="${myclasspath}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="build">
+		<mkdir dir="${build}" />
+		<javac srcdir="${src}" destdir="${build}" debug="true" fork="true" encoding="utf-8" listfiles="true" debuglevel="lines,source">
+			<include name="**/*.java" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="clean">
+		<delete includeEmptyDirs="true">
+			<fileset dir="${build}" />
+			<fileset dir="${finish}" />
+		</delete>
+	</target>
+
+	<target name="finish" depends="build">
+		<mkdir dir="${finish}" />
+	</target>
+
+	<target name="deploy" depends="build,finish.check" if="finish.run">
+		<echo>Start to deploy</echo>
+	</target>
+
+	<target name="finish.check">
+		<condition property="finish.run">
+			<and>
+				<available file="${finish}" />
+			</and>
+		</condition>
+	</target>
+
+	<!--  checkstyle  -->
+    <property name="webinf.lib.home" value="../../../../../studio/WEB-INF/lib" />
+	<path id="checkstyle.path">
+		<fileset dir="${webinf.lib.home}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle.path" />
+	<target name="checkstyle" depends="build" description="Generates a report of code convention violations.">
+		<mkdir dir="bin/report/check-results" />
+		<checkstyle config="docs/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
+			<formatter type="xml" tofile="bin/report/check-results/checkstyle_report.xml" />
+			<fileset dir="${src}" includes="**/*.java" />
+		</checkstyle>
+		<style in="bin/report/check-results/checkstyle_report.xml" out="bin/report/check-results/checkstyle_report.html" style="docs/checkstyle-noframes.xsl" />
+	</target>
+
+	
+
+
+</project>

@@ -13,7 +13,8 @@ Ext.onReady(function(){
 		['服务视图', 'serviceViewer', 'settings', 'setting_viewer/images/service_view.png', '../console/service_viewer.jsp'],
 		['锁视图', 'lockViewer', '', 'setting_viewer/images/lock.png', '../console/locks_viewer.jsp',700,480],
 		//['交易监控', 'trasactionViewer', '', 'setting_viewer/images/activity_monitor.png', '../console/transaction_viewer.jsp', 800, 500],
-		['业务常量', 'busConstantViewer', '', 'setting_viewer/images/busconstant.png', '../console/busconstant_viewer.jsp']
+		['业务常量', 'busConstantViewer', '', 'setting_viewer/images/busconstant.png', '../console/busconstant_viewer.jsp'],
+		['资源管理', 'sysResourceViewer', '', 'setting_viewer/images/resource.png', '../explorer/resource_explorer.jsp']
     ];
 	
 	var store = new Ext.data.ArrayStore({

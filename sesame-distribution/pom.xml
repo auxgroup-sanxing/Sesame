@@ -51,6 +51,14 @@
   		<groupId>org.eclipse.jetty.orbit</groupId>
   		<artifactId>org.eclipse.jdt.core</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-classic</artifactId>
+  	</dependency>
+  	<dependency>
+  		<groupId>ch.qos.logback</groupId>
+  		<artifactId>logback-core</artifactId>
+  	</dependency>
   </dependencies>
   
   <build>
@@ -79,6 +87,7 @@
         </executions>
   	  </plugin>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>

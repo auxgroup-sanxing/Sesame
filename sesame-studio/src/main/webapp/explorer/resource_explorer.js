@@ -44,7 +44,7 @@ init : function(){
 		name: ''
 	});
 	resourceTree = new Ext.tree.TreePanel({
-		title: '项目资源',
+		title: '系统资源',
 		region: 'west', split: true,
 		border: false, width: 260,
 		style : {
@@ -55,10 +55,10 @@ init : function(){
 		tbar: [],
 		selModel: new Ext.tree.MultiSelectionModel(),
 		loader: new Ext.tree.TreeLoader({
-			dataUrl: 'project_ctrl.jsp', 
+			dataUrl: 'resource_ctrl.jsp', 
 			baseAttrs: {},
-			baseParams: {operation:'getProjectFiles', filter:'^[^\\.]+(\\..*|.*)$'},
-			uiProviders: {'project':Ext.ux.ProjectNodeUI},
+			baseParams: {operation:'getResourceFiles', filter:'^[^\\.]+(\\..*|.*)$'},
+			uiProviders: {'resource':Ext.ux.ResourceNodeUI},
 			listeners: {
 				"beforeload": function(treeLoader, node) {
 					this.baseParams.path = node.getPath('name');
@@ -120,48 +120,11 @@ init : function(){
 	});
 	
 	viewport = new Ext.Viewport({
-		stateId: 'project_explorer',
+		stateId: 'resource_explorer',
 		layout: 'border',
 		items: [
 			resourceTree, tabPanel
 		]
-	});
-	
-	var newProjAction = new Ext.Action({
-		text: '新建项目',
-		icon:"../images/icons/new_wiz.gif",
-		handler: function(){
-		 	var item = this;
-			cNode = resourceTree.getRootNode();
-		 	var a = cNode.attributes;
-			var callback = function(values){
-				try {
-					var node = _this.createProjectNode({
-						desc: values['project-desc'],
-						name: values['project-name'],
-						leader: values['team-leader'],
-						qtip: values['namespace'],
-						reference: values['reference']
-					});
-					cNode.appendChild(node);
-					node.select();
-					
-					var projects = top.Application.launcher.items.get("all-projects");
-					projects.menu.add({
-						itemId: values['project-name'],
-						text: values['project-desc'],
-						iconCls: 'bogus',
-						handler: top.Application.projectsMenu.createWindow,
-						scope: top.Application.projectsMenu,
-						resizable: false,
-						maximizable: false
-					});
-				}
-				catch(e) {
-				}
-			};
-			_this.getProjectWizard({callback:callback}).show();
-		}
 	});
 	
 	var newFoldAction = new Ext.Action({
@@ -251,7 +214,7 @@ init : function(){
 			}
 			Ext.Ajax.request({
 				method: 'POST', 
-				url: 'project_ctrl.jsp', 
+				url: 'resource_ctrl.jsp', 
 				params: {operation:"remove", files: Ext.encode(files) },
 				callback: function(options, success, response){
 					if (success) {
@@ -269,10 +232,6 @@ init : function(){
 							var n = sels[i];
 							if (!n || !n.attributes.allowRemove)  continue;
 							n.remove();
-							if (n.attributes.iconCls=='x-icon-project') {
-								var projects = top.Application.launcher.items.get("all-projects");
-								projects.menu.remove(n.attributes.name);
-							}
 						}
 					}
 					else {
@@ -294,9 +253,7 @@ init : function(){
 			var n =  sels[0], a = n.attributes;
 			var file = n.getPath('name').substring(2);
 			var extension = _this.getExtension(file);
-			if (a.iconCls=='x-icon-project') 
-				Application.projectsMenu.createWindow({id: file, text: (a.desc ? a.desc : a.name) });
-			else if (!n.isLeaf())
+			if (!n.isLeaf())
 				n.expand();
 			else {
 				_this.openFile(file);
@@ -318,7 +275,7 @@ init : function(){
 				panel.getForm().submit({
 					method: 'POST', 
 					url: 'file_ctrl.jsp', 
-					params: {operation:"save", file: panel.itemId, type: "project", content: code },
+					params: {operation:"save", file: panel.itemId, type: "system", content: code },
 					success: function(form, action){
 						resourceTree.selectPath('//'+panel.itemId, 'name', function(success, node){
 							if (success) {
@@ -375,17 +332,17 @@ init : function(){
      				node: resourceTree.getRootNode(),
      				callback: function(result) {
 						var cNode = resourceTree.getRootNode();
-						var node = _this.createProjectNode(result);
+						var node = _this.createResourceNode(result);
 						cNode.appendChild(node);
 						node.select();
 						
-						var projects = top.Application.launcher.items.get("all-projects");
-						projects.menu.add({
+						var resources = top.Application.launcher.items.get("all-resources");
+						resources.menu.add({
 							id: result['name'],
 							text: result['desc'],
 							iconCls: 'bogus',
-							handler: top.Application.projectsMenu.createWindow,
-					        scope: top.Application.projectsMenu,
+							handler: top.Application.resourcesMenu.createWindow,
+					        scope: top.Application.resourcesMenu,
 							resizable: false,
 							maximizable: false
 						});
@@ -405,7 +362,7 @@ init : function(){
      		text: '新建',
      		handler: function(){ return false; },
      		menu: {
-     			items: [newProjAction, newFoldAction, newFileAction]
+     			items: [newFoldAction, newFileAction]
      		}
      	},
 		'-',
@@ -457,33 +414,13 @@ init : function(){
 				e.stopEvent();
 				var node = this.parentMenu.node;
 				if (!node) return true;
-
-				var a = node.attributes;
-				if (a.iconCls=='x-icon-project') {
-					var callback = function(data){
-						a.desc = data['project-desc'];
-						a.qtip = data['namespace'];
-						a.leader = data['team-leader'];
-						a.reference = data['reference'];
-						node.setText((a.desc || a.name)+(a.revision > -1 ? '&nbsp;<span style="color:olive;">'+a.revision+'</span>' : ''));
-					};
-					var params = {
-						'project-name': a.name,
-						'project-desc': a.desc,
-						'namespace': a.qtip,
-						'team-leader': a.leader,
-						'reference': a.reference
-					};
-					_this.getProjectDialog({callback:callback, params: params}).show();
-					return true;
-				}
 				
 				var root = node.getOwnerTree().getRootNode().getPath('name');
 				var path = node.getPath('name').substring(root.length+1);
 
 				Ext.Ajax.request({
 					method: 'POST', 
-					url: 'project_ctrl.jsp', 
+					url: 'resource_ctrl.jsp', 
 					params: {operation: "info", path: path },
 					callback: function(options, success, response) {
 						if (success) {
@@ -525,7 +462,7 @@ init : function(){
 
 				Ext.Ajax.request({
 					method: 'POST', 
-					url: 'project_ctrl.jsp', 
+					url: 'resource_ctrl.jsp', 
 					params: {operation:"rename", path: node.getPath('name'), newName: newName },
 					callback: function(options, success, response) {
 						if (success) {
@@ -733,7 +670,7 @@ init : function(){
 		var rename = ctxMenu.items.get('rename');
 		rename.setDisabled(a.allowRemove==false);
 		var scm = ctxMenu.items.get('scm');
-		scm.setDisabled(node.getDepth()==1 && a.iconCls!='x-icon-project');
+		scm.setDisabled(node.getDepth()==1);
 		return false;
 	});
 	
@@ -743,7 +680,6 @@ init : function(){
 			tooltip: '新建',
 			menu: {
 				items: [
-				 	newProjAction,
 					newFoldAction,
 					newFileAction
 				]
@@ -764,10 +700,10 @@ init : function(){
 	resourceTree.doLayout(true, true);
 },
 
-createProjectNode : function(config){
+createResourceNode : function(config){
 	var node = new Ext.tree.AsyncTreeNode(Ext.apply(config, {
-		iconCls: 'x-icon-project',
-		//uiProvider: Ext.ux.ProjectNodeUI,
+		iconCls: 'x-icon-folder',
+		//uiProvider: Ext.ux.ResourceNodeUI,
 		allowRemove: true,
 		leaf: false
 	}));
@@ -838,333 +774,6 @@ getOverlayIcon: function(node) {
 	}
 },
 
-getProjectDialog : function(options){
-	var _this = this;
-	
-	if (!this.projectDlg) {
-		var depends=_this.getReferencePanel({ header: false });
-	    var dlg = new Ext.Window({
-			title: '项目属性',
-	        autoCreate: true,
-	        resizable:false, constrain:true, constrainHeader:true,
-	        minimizable:false, maximizable:false,
-	        stateful:false, modal:true,
-	        buttonAlign: "right", defaultButton: 0,
-	        width: 450, height: 310,
-			minWidth: 300,
-	        footer: true, plain: true,
-	        closable: true, closeAction: 'hide',
-	        layout: 'fit',
-			items: [{
-				xtype: 'tabpanel',
-				activeTab: 0,
-				border: false, deferredRender: false,
-				items: [{
-					itemId: 'base',
-					title: '基本属性',
-					xtype: 'form',
-					autoScroll: true,
-					labelWidth: 75,
-					border: false,
-					bodyStyle: 'padding:10px;',
-					defaultType: 'textfield',
-					defaults: { anchor: '-18' },
-					items: [
-						{
-							name: 'project-name',
-							readOnly: true,
-							fieldLabel: '名称',
-							regex: /^[A-Za-z_]\w*$/, 
-							regexText:'项目名称必须以字母开头，并且不能包含空白字符'
-					    },{
-							name: 'project-desc',
-							allowBlank: false,
-							fieldLabel: '项目描述',
-							regex: /\S+/, 
-							regexText:'项目描述不能为空'
-					    },{
-							name: 'namespace',
-							allowBlank: false,
-							fieldLabel: '命名空间',
-							regex: Namespace.regex, 
-							regexText: Namespace.regexText
-					    },{
-							name: 'team-leader',
-							xtype: 'combo',
-							fieldLabel: '项目经理',
-							forceSelection: true,
-							triggerAction: 'all',
-							editable: true,
-							valueField: 'name',
-							displayField: 'label',
-							store: new Ext.data.JsonStore({
-								url: 'project_ctrl.jsp',
-								baseParams: {operation: 'getProjectManagers'},
-								root: 'items',
-								fields: [
-									{name: 'label',type: 'string'}, 
-									{name: 'name',type: 'string'}
-								],
-								listeners: {
-									loadexception: {
-										fn: function(proxy, obj, response){
-											this.showException(response);
-										}, 
-										scope: this
-									}
-								}
-							}),
-							listeners: {
-								expand: function(obj) {
-									obj.store.reload();
-								},
-								loadexception: {
-									fn: function(proxy, obj, response){
-										this.showException(response);
-									}, 
-									scope: this
-								}
-							}
-					    }]
-					},
-					depends
-				],
-				listeners: {
-					tabchange: function(sender, tab){
-						if (tab.itemId=='depends') {
-							tab.getView().refresh();
-						}
-					}
-				}
-			}],
-			buttons: [{
-				text: Ext.Msg.buttonText.ok, 
-				disabled: false, 
-				handler: function(){
-					var tabPanel = dlg.getComponent(0);
-					var form = tabPanel.get('base').getForm();
-					var selections = depends.getSelectionModel().getSelections();
-					var dependency = [];
-					for (var i=0; i<selections.length; i++) {
-						dependency.push(selections[i].get('name'));
-					}
-	
-					form.submit({
-						url: 'project_ctrl.jsp',
-						params: {operation:'modifyProject', dependency: Ext.encode(dependency) },
-						success: function(){ 
-							if (dlg.options.callback) {
-								dlg.options.callback(Ext.apply(form.getValues(), {reference: dependency}));
-							}
-							dlg.hide();
-						},
-						failure: function(form, action){ if (action.response) _this.showException(action.response); }
-					});
-				}
-			},{
-				text: Ext.Msg.buttonText.cancel, 
-				handler: function(){ dlg.hide(); }
-			}]
-	    });
-	    
-		dlg.render(Ext.getBody());
-	    this.projectDlg = dlg;
-	}
-	else {
-		this.projectDlg.getComponent(0).setActiveTab(0);
-	}
-	this.projectDlg.options = options;
-	
-	var tabPanel = this.projectDlg.getComponent(0);
-	var form = tabPanel.get('base').getForm();
-	form.reset();
-	form.setValues(options.params);
-	
-	var depends = tabPanel.get('depends');
-	var ref = options.params.reference || [];
-	depends.store.load({
-		params: { exclusion: '["'+options.params['project-name']+'"]' },
-		callback: function(array, options, success){
-			//console.debug(depends);
-			for (var i=0; i<array.length; i++) {
-				var r = array[i];
-				if (ref.indexOf(r.get('name')) > -1) {
-					depends.getSelectionModel().selectRow(i, true);
-				}
-			}
-		}
-	});
-	
-    return this.projectDlg;
-},
-
-getProjectWizard : function(options){
-	var _this = this;
-	
-	var dlg = this.projectWiz;
-	if (!dlg) {
-		var depends;
-	    dlg = new Ext.Window({
-			title: '新建项目',
-	        autoCreate: true,
-	        resizable:false, constrain:true, constrainHeader:true,
-	        minimizable:false, maximizable:false,
-	        stateful:false, modal: true,
-	        buttonAlign: "right",
-			defaultButton: 0,
-	        width: 450,
-	        height: 210,
-			minWidth: 300,
-	        footer: true, plain: true,
-	        closable: true, closeAction: 'hide',
-			layout: 'card',
-			activeItem: 0,
-			items: [{
-				itemId: 'base',
-				xtype: 'form',
-				autoScroll: true,
-				labelWidth: 75,
-				border: false,
-				bodyStyle: 'padding:10px;',
-				defaultType: 'textfield',
-				defaults: { anchor: '-18' },
-				items: [
-					{
-						name: 'project-name',
-						allowBlank: false,
-						fieldLabel: '名称',
-						regex: /^[A-Za-z_]\w*$/, 
-						regexText:'项目名称必须以字母开头，并且不能包含空白字符',
-						listeners: {
-							change: function(field, newVal, oldVal){
-								var field = this.ownerCt.getForm().findField('namespace');
-								if (field.getValue()=='') field.setValue('http://www.sesame.org/projects/'+newVal);
-							}
-						}
-				    },{
-						name: 'project-desc',
-						allowBlank: false,
-						fieldLabel: '项目描述',
-						regex: /\S+/, 
-						regexText:'项目描述不能为空'
-				    },{
-						name: 'namespace',
-						allowBlank: false,
-						fieldLabel: '命名空间',
-						regex: Namespace.regex, 
-						regexText: Namespace.regexText
-				    },{
-						hiddenName: 'team-leader',
-						xtype: 'combo',
-						fieldLabel: '项目经理',
-						allowBlank: false,
-						forceSelection: true, editable: false,
-						triggerAction: 'all',
-						valueField: 'name',
-						displayField: 'label',
-						store: new Ext.data.JsonStore({
-							url: 'project_ctrl.jsp',
-							baseParams: {operation: 'getProjectManagers'},
-							root: 'items',
-							fields: [
-								{name: 'label',type: 'string'}, 
-								{name: 'name',type: 'string'}
-							],
-							listeners: {
-								loadexception: {
-									fn: function(proxy, obj, response){
-										this.showException(response);
-									}, 
-									scope: this
-								}
-							}
-						}),
-						listeners: {
-							expand: function(obj) {
-								obj.store.reload();
-							},
-							loadexception: {
-								fn: function(proxy, obj, response){
-									this.showException(response);
-								}, 
-								scope: this
-							}
-						}
-				    }]
-				},
-				depends=_this.getReferencePanel()
-			],
-			buttons: [{
-				text: '上一步',
-				ref: '../prevBtn',
-				disabled: true,
-				handler: function(){
-					if (dlg.getLayout().activeItem==depends) {
-						dlg.getLayout().setActiveItem('base');
-						dlg.nextBtn.setText('下一步');
-						this.disable();
-						return;
-					}
-				}
-			},{
-				text: '下一步', 
-				ref: '../nextBtn',
-				disabled: false, 
-				handler: function(){
-					if (dlg.getLayout().activeItem==dlg.get('base')) {
-						if (dlg.get('base').getForm().isValid()) {
-							depends.store.reload();
-							dlg.getLayout().setActiveItem(depends);
-							dlg.prevBtn.enable();
-							this.setText('完成');
-						}
-						return;
-					}
-					
-					var basePanel = dlg.getComponent(0);
-					var form = basePanel.getForm();
-					var selections = depends.getSelectionModel().getSelections();
-					var dependency = [];
-					for (var i=0; i<selections.length; i++) {
-						dependency.push(selections[i].get('name'));
-					}
-	
-					form.submit({url: 'project_ctrl.jsp', clientValidation: true, 
-						params: {operation:'createProject', dependency: Ext.encode(dependency) },
-						success: function(){
-							if (dlg.options.callback) {
-								dlg.options.callback(Ext.apply(form.getValues(), {reference: dependency}));
-							}
-							dlg.hide(); 
-						},
-						failure: function(form, action){ if (action.response) _this.showException(action.response); }
-					});
-				}
-			},{
-				text: Ext.Msg.buttonText.cancel, 
-				handler: function(){ dlg.hide(); }
-			}]
-	    });
-		
-		dlg.render(Ext.getBody());
-	    this.projectWiz = dlg;
-	}
-	else {
-		dlg.getLayout().setActiveItem('base');
-		dlg.nextBtn.setText('下一步');
-		dlg.prevBtn.disable();
-	}
-	dlg.options = options;
-	//var a = node.attributes;
-	var formPanel = dlg.getComponent(0);
-	var form = formPanel.getForm();
-	form.reset();
-	if (options.params) {
-		form.setValues(options.params);
-	}
-    return dlg;
-},
-
 getFileDialog : function(options){
 	var _this = this;
 	
@@ -1222,7 +831,7 @@ getFileDialog : function(options){
 					var form = formPanel.getForm();
 		
 					form.submit({
-						url: 'project_ctrl.jsp', clientValidation: true, 
+						url: 'resource_ctrl.jsp', clientValidation: true, 
 						params: {operation: dlg.options.operation, path:dlg.options.path},
 						success: function(form, action){
 							if (dlg.options.callback) {
@@ -1296,7 +905,7 @@ openFile: function(file) {
 						Ext.Ajax.request({
 							method: 'GET',
 							url: 'file_ctrl.jsp',
-							params: {operation: 'load', type: "project", file: file},
+							params: {operation: 'load', type: "system", file: file},
 							callback: function(options, success, response) {
 								panel.bwrap.unmask();
 								if (success) {
@@ -1390,7 +999,7 @@ getUploadDialog : function(options){
 			var formPanel = dlg.getComponent(0);
 			var form = formPanel.getForm();
 
-			form.submit({url: 'project_ctrl.jsp', clientValidation: true, 
+			form.submit({url: 'resource_ctrl.jsp', clientValidation: true, 
 				params: {operation: 'uploadFile', path:dlg.options.params.path},
 				success: function(){ if (dlg.options.callback) dlg.options.callback({'file-name': form['file-name']}); dlg.hide(); },
 				failure: function(form, action){ if (action.response) _this.showException(action.response); }
@@ -1411,52 +1020,6 @@ getUploadDialog : function(options){
 		form.setValues(options.params);
 	}
     return this.uploadDlg;
-},
-
-//获取项目引用面板
-getReferencePanel : function(config){
-	var checksm;
-	var panel = new Ext.grid.GridPanel(Ext.apply({
-		itemId: 'depends',
-		xtype: 'grid',
-		title: '项目引用',
-		border: false, 
-		hideHeaders: true,
-		sm: checksm=new Ext.grid.CheckboxSelectionModel({
-			checkOnly: true
-		}),
-		cm: new Ext.grid.ColumnModel([
-			checksm,
-			{header: '项目描述', dataIndex: 'desc'},
-			{header: '项目名称', dataIndex: 'name'}
-		]),
-		store: new Ext.data.JsonStore({
-			url: 'project_ctrl.jsp',
-			baseParams: {operation: 'getProjects', exclusion: '[]' },
-			root: 'items',
-			fields: [
-				{name: 'desc',type: 'string'}, 
-				{name: 'name',type: 'string'}
-			],
-			listeners: {
-				loadexception: {
-					fn: function(proxy, obj, response){
-						this.showException(response);
-					}, 
-					scope: this
-				}
-			}
-		}),
-		viewConfig: {forceFit: true},
-		tools: [{
-			id: 'refresh',
-			qtip: '刷新',
-			handler: function(e, toolEl, panel, tc){
-				panel.store.reload();
-			}
-		}]
-	}, config));
-	return panel;
 },
 
 getToolbar : function(){
@@ -1486,11 +1049,11 @@ getToolbar : function(){
 
 Ext.onReady(Explorer.init, Explorer, true);
 
-Ext.ux.ProjectNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
+Ext.ux.ResourceNodeUI = Ext.extend(Ext.tree.TreeNodeUI, {
     // private
     renderElements : function(n, a, targetNode, bulkRender) {
-		Ext.ux.ProjectNodeUI.superclass.renderElements.apply(this, arguments);
-		Ext.fly(this.wrap).addClass('x-project');
+		Ext.ux.ResourceNodeUI.superclass.renderElements.apply(this, arguments);
+		Ext.fly(this.wrap).addClass('x-resource');
         Ext.fly(this.ctNode).applyStyles({'border-width':'0px 1px 1px 1px', 'border-style':'solid', 'border-color':'gray'});
 	}
 });

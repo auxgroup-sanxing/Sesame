@@ -10,7 +10,6 @@
 <%@page import="org.apache.commons.fileupload.*"%>
 <%@page import="org.apache.commons.fileupload.disk.*"%>
 <%@page import="org.apache.commons.fileupload.servlet.*"%>
-<%@page import="com.sanxing.adp.eclipse.ADPBaseProject"%>
 <%@page language="java" contentType="text/xml; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%!
@@ -37,12 +36,10 @@ private String getFileSize(long size) {
 @SuppressWarnings("unchecked")
 public String loadJarFileList(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	JSONArray items = new JSONArray();
-	String component = request.getParameter("component");
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	
 	try {
-		File unit = Configuration.getWarehouseFile(component);
-		File libPath = new File(unit, "adp_base/lib");
+		File libPath = Application.getSystemLib();
 		if (libPath.exists() && libPath.isDirectory()) {
 			File[] jarFiles = libPath.listFiles();
 			if (jarFiles != null && jarFiles.length > 0)
@@ -97,17 +94,12 @@ public String uploadJarFiles(HttpServletRequest request, HttpServletResponse res
 				}
 			}
 			
-			String component = (String) params.get("component");
-			File unit = Configuration.getWarehouseFile(component);
+			File lib = Application.getSystemLib();
 			
 			FileItem fileItem = (FileItem) params.get("file");
 			if (fileItem != null) {
 				String fileName = fileItem.getName();
 				if (fileName != null) {
-					// 增加classpath中的jar文件路径
-					ADPBaseProject adpBase = new ADPBaseProject(unit.getAbsolutePath() + "/adp_base/");
-					adpBase.addClassPath(fileName);
-					
 					JSONObject jso = new JSONObject();
 					
 					String size = getFileSize(fileItem.get().length);
@@ -120,7 +112,7 @@ public String uploadJarFiles(HttpServletRequest request, HttpServletResponse res
 					jso.put("lastModify", uploadTime);
 					jsoArray.put(jso);
 					
-					fileItem.write(new File(unit, "adp_base/lib/" + fileName));
+					fileItem.write(new File(lib, fileName));
 				}
 			}
 					
@@ -144,20 +136,16 @@ public String uploadJarFiles(HttpServletRequest request, HttpServletResponse res
 // 删除文件
 public String deletJarFiles(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	String dataStr = request.getParameter("data");
-	String component = request.getParameter("component");
 	
 	try {
-		File unit = Configuration.getWarehouseFile(component);
-		ADPBaseProject adpBase = new ADPBaseProject(unit.getAbsolutePath() + "/adp_base/");
+		File lib = Application.getSystemLib();
 		
 		JSONArray data = new JSONArray(dataStr);
 		for (int i=0; i< data.length(); i++) {
 			JSONObject jso = data.getJSONObject(i);
 			String fileName = jso.optString("fullName");
-			File jarFile = new File(unit, "adp_base/lib/" + fileName);
+			File jarFile = new File(lib, fileName);
 			if (jarFile.exists()) {
-				// 删除classpath中的jar文件路径
-				adpBase.deleteClassPath(fileName);
 				jarFile.delete();
 			}
 		}

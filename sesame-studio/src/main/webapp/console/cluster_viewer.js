@@ -24,8 +24,8 @@ var Viewer = function(){
 	return {
 		chartList : [],		// 监控图表对象列表
 		serverList : [],	// 已启动server列表
-		operaURL: 'clusterCtrl.jsp',
-		mbeanURL: 'consoleCtrl.jsp',
+		operaURL: 'cluster_ctrl.jsp',
+		mbeanURL: 'console_ctrl.jsp',
 		
 		prepare: function() {
 			Ext.QuickTips.init();
@@ -670,7 +670,7 @@ var Viewer = function(){
             	var userData = button.userData;
                 Ext.Ajax.request({
                     waitMsg: '正在提交请求....',
-                    url: 'consoleCtrl.jsp',
+                    url: 'console_ctrl.jsp',
                     params: {
                         operation: "invoke",
                         record: Ext.encode(userData)
@@ -799,7 +799,7 @@ var Viewer = function(){
                         var centerPanel = Ext.getCmp("detail-panel");
                         if(n.attributes.name){
                             Ext.Ajax.request({
-                                url: 'consoleCtrl.jsp',
+                                url: 'console_ctrl.jsp',
                                 params: {
                                     operation: "refreshMBean",
                                     objectName: n.attributes.name

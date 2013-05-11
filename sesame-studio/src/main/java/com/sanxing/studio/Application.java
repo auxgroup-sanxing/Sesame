@@ -25,6 +25,10 @@ public class Application
     private static final Logger LOG = LoggerFactory.getLogger( Application.class );
 
     private static ServletContext servletContext = null;
+    
+    private static File rootFolder;
+    
+    private static File rootLib;
 
     private static File projectFolder;
 
@@ -44,6 +48,21 @@ public class Application
     public static String getRealPath( String path )
     {
         return getServletContext().getRealPath( path );
+    }
+
+    public static File getSystemRoot()
+    {
+        return rootFolder;
+    }
+
+    public static File getSystemLib()
+    {
+        return rootLib;
+    }
+
+    public static File getSystemFile( String path )
+    {
+        return new File( getSystemRoot(), path );
     }
 
     public static File getWarehouseRoot()
@@ -87,6 +106,8 @@ public class Application
         servletContext.setAttribute( "MBeanServer", Platform.getLocalMBeanServer() );
 
         String home = System.getProperty( "SESAME_HOME" );
+        rootFolder = new File( home );
+        rootLib = new File( home, "lib" );
         projectFolder = new File( home, "projects" );
         if ( !( projectFolder.exists() ) )
         {

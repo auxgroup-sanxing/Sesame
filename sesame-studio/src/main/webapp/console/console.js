@@ -69,7 +69,7 @@ return {
 					win.sampling = false;
 					Ext.Ajax.request({
 						waitMsg: 'Please Wait....',
-						url:'consoleCtrl.jsp',
+						url:'console_ctrl.jsp',
 						params:{
 							operation:"endCollection",
 							objectName: viewConfig.objectName
@@ -209,7 +209,7 @@ return {
 		function do_invoke(userData){
 			Ext.Ajax.request({
 				waitMsg: 'Please Wait....',
-				url:'consoleCtrl.jsp',
+				url:'console_ctrl.jsp',
 				params:{
 					operation:"invoke",
 					record:Ext.encode(userData)
@@ -248,7 +248,7 @@ return {
 		        split: true,
 		        border: false,
 		        loader: new Ext.tree.TreeLoader({
-		        	dataUrl:'consoleCtrl.jsp',
+		        	dataUrl:'console_ctrl.jsp',
 		        	baseParams: {operation:'refreshAll'},
 					listeners: {
 						loadexception: function(loader, node, response){ _this.showException(response); } 
@@ -290,7 +290,7 @@ return {
 		        				
 		        					Ext.Ajax.request({
 										waitMsg: 'Please Wait....',
-										url:'consoleCtrl.jsp',
+										url:'console_ctrl.jsp',
 										params:{
 											operation:"startCollection",
 											objectName:node.attributes.qtip,
@@ -299,7 +299,7 @@ return {
 										success:function(response){
 											var view = Ext.decode(response.responseText);
 											view.objectName = node.attributes.qtip;
-											view.url="consoleCtrl.jsp?operation=pollMessage&model=system&id="+node.attributes.qtip;
+											view.url="console_ctrl.jsp?operation=pollMessage&model=system&id="+node.attributes.qtip;
 											_this.getCollectionView(view).show();
 										},
 										failure:function(response){
@@ -311,7 +311,7 @@ return {
 		        					
 		        					Ext.Ajax.request({
 										waitMsg: 'Please Wait....',
-										url:'consoleCtrl.jsp',
+										url:'console_ctrl.jsp',
 										params:{
 											operation:"startCollection",
 											objectName:node.attributes.qtip,
@@ -320,7 +320,7 @@ return {
 										success:function(response){
 											var view = Ext.decode(response.responseText);
 											view.objectName = node.attributes.qtip;
-											view.url="consoleCtrl.jsp?operation=pollMessage&model=group&id="+node.attributes.qtip;
+											view.url="console_ctrl.jsp?operation=pollMessage&model=group&id="+node.attributes.qtip;
 											_this.getCollectionView(view).show();
 										},
 										failure:function(response){
@@ -357,7 +357,7 @@ return {
 		            	if (n.leaf){
 		            		Ext.Ajax.request({
 								waitMsg: 'Please Wait....',
-								url:'consoleCtrl.jsp',
+								url:'console_ctrl.jsp',
 								params:{
 									operation:"refreshMBean",
 									objectName:n.attributes.qtip
@@ -427,7 +427,7 @@ return {
 		window.listen = function(){
 			
 			Ext.Ajax.request({
-				url:'consoleCtrl.jsp',
+				url:'console_ctrl.jsp',
 				timeout: 70000,
 				params:{
 					operation:"listenNotification"

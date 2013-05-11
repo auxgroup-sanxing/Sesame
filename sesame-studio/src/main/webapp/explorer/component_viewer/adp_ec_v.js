@@ -80,7 +80,7 @@ return {
 					width: 300,
 					triggerAction: 'all',
 					forceSelection:false, editable:true,
-					store: ['com.sanxing.sesame.binding.CommonBC']
+					store: ['com.sanxing.sesame.binding.AdapterComponent']
 				}],
 				tools: [{
 					id: 'plus',

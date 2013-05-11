@@ -20,8 +20,14 @@ private String getProject(String path) {
 public String load(HttpServletRequest request, HttpServletResponse response) throws Exception
 {
 	String filepath = request.getParameter("file");
+	String filetype = request.getParameter("type");
 
-	File file = Configuration.getWorkspaceFile(filepath);
+	File file = null;
+	if ("system".equals( filetype )) {
+	    file = Application.getSystemFile(filepath);
+	} else {
+	    file = Configuration.getWorkspaceFile(filepath);
+	}
     StringBuffer buffer = new StringBuffer();
 	if (file.exists()) {
 		if (file.length() > 1024 * 1024) {
@@ -62,8 +68,14 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 public String save(HttpServletRequest request, HttpServletResponse response) throws Exception
 {
 	String filepath = request.getParameter("file");
+	String filetype = request.getParameter("type");
 
-	File file = Configuration.getWorkspaceFile(filepath);
+	File file = null;
+	if ("system".equals( filetype )) {
+	    file = Application.getSystemFile(filepath);
+	} else {
+	    file = Configuration.getWorkspaceFile(filepath);
+	}
     StringBuffer buffer = new StringBuffer();
 
 	if (!file.getParentFile().exists()) {

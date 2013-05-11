@@ -52,7 +52,7 @@ public class ADPServiceProject
     public void generateCode()
         throws Exception
     {
-        String srcDir = serviceUnitPath + "/" + projectName + "/src/";
+        String srcDir = serviceUnitPath + "/" + projectName + "/src/main/java";
         String wsdlFile = serviceUnitPath + "/unit.wsdl";
         String[] regexs = { ".*?Impl\\.java", "\\.svn" };
 

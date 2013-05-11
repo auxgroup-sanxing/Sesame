@@ -1,9 +1,7 @@
 package com.sanxing.adp.eclipse;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
@@ -51,35 +49,5 @@ public class ADPServiceProjectBuilder
         throws Exception
     {
         buildProject( buildFileName, "build" );
-    }
-
-    public static void main( String[] args )
-        throws FileNotFoundException
-    {
-        File buildFile =
-            new File(
-                "G:\\sesame-1.0\\work\\containers\\studio\\webapp\\workarea\\httpTest\\engine\\caculateInterest\\Adp_caculateInterest\\build.xml" );
-        Project p = new Project();
-
-        DefaultLogger consoleLogger = new DefaultLogger();
-        consoleLogger.setErrorPrintStream( System.err );
-        consoleLogger.setOutputPrintStream( System.out );
-
-        consoleLogger.setMessageOutputLevel( 2 );
-        p.addBuildListener( consoleLogger );
-        try
-        {
-            p.fireBuildStarted();
-            p.init();
-            ProjectHelper helper = ProjectHelper.getProjectHelper();
-            helper.parse( p, buildFile );
-            p.executeTarget( "checkstyle" );
-            p.fireBuildFinished( null );
-        }
-        catch ( BuildException e )
-        {
-            e.printStackTrace();
-            p.fireBuildFinished( e );
-        }
     }
 }
