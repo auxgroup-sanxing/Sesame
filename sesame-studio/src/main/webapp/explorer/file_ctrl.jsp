@@ -17,6 +17,82 @@ private String getProject(String path) {
 	return n > 0 ? path.substring(0, n) : path;
 }
 
+public String getCharset(File file) throws Exception
+{
+	String charset = "GBK";
+	byte[] first3Bytes = new byte[3];
+	InputStream input = new FileInputStream(file);
+	try 
+	{
+		boolean checked = false;
+		BufferedInputStream bis = new BufferedInputStream(input);
+		bis.mark(0);
+		int read = bis.read(first3Bytes, 0, 3);
+		if (read == -1) 
+			return charset;
+		if (first3Bytes[0] == (byte)0xFF && first3Bytes[1] == (byte)0xFE) 
+		{
+			charset = "UTF-16LE";
+			checked = true;
+		}
+		else if(first3Bytes[0] == (byte)0xFE && first3Bytes[1] == (byte)0xFF) 
+		{
+			charset = "UTF-16BE";
+			checked = true;
+		}
+		else if(first3Bytes[0] == (byte)0xEF && first3Bytes[1] == (byte)0xBB && first3Bytes[2] == (byte)0xBF) 
+		{
+			charset = "UTF-8";
+			checked = true;
+		}
+		bis.reset();
+		if(!checked) 
+		{
+			while ((read = bis.read()) != -1) 
+			{
+				if (read >= 0xF0)
+					break;
+				if (0x80<=read && read <= 0xBF) //单独出现BF以下的，也算是GBK
+					break;
+				if (0xC0<=read && read <= 0xDF) 
+				{
+					read = bis.read();
+					if (0x80<= read && read <= 0xBF)//双字节 (0xC0 - 0xDF) (0x80 - 0xBF),也可能在GB编码内
+						continue;
+					else
+						break;
+				}					
+				else if (0xE0 <= read && read <= 0xEF) //也有可能出错，但是几率较小
+				{
+					read = bis.read();
+					if (0x80<= read && read <= 0xBF) 
+					{
+						read = bis.read();
+						if (0x80<= read && read <= 0xBF) 
+						{
+							charset = "UTF-8";
+							break;
+						}
+						else
+						{
+							break;
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+			}
+		}
+		return charset;
+	}
+    finally 
+    {
+    	input.close();
+    }
+}
+
 public String load(HttpServletRequest request, HttpServletResponse response) throws Exception
 {
 	String filepath = request.getParameter("file");
@@ -42,11 +118,11 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 			else if (agent.contains("Mac")) {
 				separator = "\r";
 			}
-			
+			String charset = getCharset(file);
 			InputStream input = new FileInputStream(file);
 			try {
 			    String line;
-		        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(input, charset));
 		        while ((line = reader.readLine()) != null) {
 		            buffer.append(line);
 		            buffer.append(separator);
@@ -95,8 +171,6 @@ public String save(HttpServletRequest request, HttpServletResponse response) thr
 	
 	OutputStream output = new FileOutputStream(file);
 	try {
-	    //String line;
-        //BufferedReader reader = new BufferedReader(new InputStreamReader(input));
         output.write(content.getBytes());
 	}
     finally {
