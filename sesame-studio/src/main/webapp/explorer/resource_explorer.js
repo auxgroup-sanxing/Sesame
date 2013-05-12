@@ -23,6 +23,7 @@ var associations = {
 	'jar' : { type: 'application'},
 	'java' : { type: 'text', syntax: 'java'},
 	'js' : { type: 'text', syntax: 'javascript'},
+	'log' : { type: 'text', syntax: 'text'},
 	'sql' : { type: 'text', syntax: 'sql'},
 	'txt' : { type: 'text', syntax: 'text'},
 	'xml' : { type: 'text', syntax: 'html'},

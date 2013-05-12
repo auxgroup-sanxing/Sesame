@@ -46,7 +46,7 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 			InputStream input = new FileInputStream(file);
 			try {
 			    String line;
-		        BufferedReader reader = new BufferedReader(new InputStreamReader(input, "UTF-8"));
+		        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
 		        while ((line = reader.readLine()) != null) {
 		            buffer.append(line);
 		            buffer.append(separator);
