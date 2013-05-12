@@ -87,7 +87,7 @@
 			<artifactId>google-collections</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>checkstyle</groupId>
+			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
 		</dependency>
 		<dependency>
