@@ -17,13 +17,13 @@ try
 {
 	File unitFolder = Configuration.getWorkspaceFile(unit);
 	SAXBuilder builder = JdomUtil.newSAXBuilder();
-	Document doc = builder.build(new File(unitFolder, "META-INF/unit.xml"));
+	Document doc = builder.build(new File(unitFolder, "unit.xml"));
 	Element rootEl = doc.getRootElement();
 	oriented = rootEl.getAttributeValue("oriented");
 	endpoint = rootEl.getAttributeValue("endpoint");
 	
 	File epFolder = new File(unitFolder, "../../"+oriented+"/"+endpoint);
-	rootEl = builder.build(new File(epFolder, "META-INF/unit.xml")).getRootElement();
+	rootEl = builder.build(new File(epFolder, "unit.xml")).getRootElement();
 	Element propertiesEl = rootEl.getChild("properties");
 	String component;
 	if (propertiesEl!=null && (component=propertiesEl.getAttributeValue("component"))!=null) {
@@ -32,7 +32,7 @@ try
 			throw new Exception("找不到指定的组件包: "+compFile.getCanonicalPath());
 		}
 		JarFile compJar = new JarFile(compFile);
-		JarEntry entry = compJar.getJarEntry("META-INF/unit.xsd");
+		JarEntry entry = compJar.getJarEntry("unit.xsd");
 		try {
 			if (entry != null) {
 				InputStream input = compJar.getInputStream(entry);

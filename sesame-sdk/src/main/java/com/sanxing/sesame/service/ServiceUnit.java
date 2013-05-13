@@ -95,7 +95,7 @@ public class ServiceUnit
             WSDLLocator locator = new WSDLLocatorImpl( unitFile );
             definition = wsdlReader.readWSDL( locator );
 
-            File jbiFile = new File( serviceUnitRoot, "META-INF/jbi.xml" );
+            File jbiFile = new File( serviceUnitRoot, "jbi.xml" );
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             descriptor = builder.parse( jbiFile );

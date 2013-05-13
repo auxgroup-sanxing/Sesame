@@ -763,7 +763,7 @@ public String getBindingTypes(HttpServletRequest request, HttpServletResponse re
 	
 	try {
 		File unitFolder = Configuration.getWorkspaceFile(unit);
-		File dirPath = new File(unitFolder.getParentFile(), component + "/META-INF/");
+		File dirPath = new File(unitFolder.getParentFile(), component);
 		if (dirPath.exists() && dirPath.isDirectory()) {
 			File[] allFiles = dirPath.listFiles();
 			for (File file : allFiles) {

@@ -29,7 +29,7 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 		SAXBuilder builder = JdomUtil.newSAXBuilder();
 		Element unitEl = new Element("unit");
 		File unitFolder = Configuration.getWorkspaceFile(unit);
-		Document document = builder.build(new File(unitFolder, "META-INF/unit.xml"));
+		Document document = builder.build(new File(unitFolder, "unit.xml"));
 		Element rootEl = document.getRootElement();
 		String oriented = rootEl.getAttributeValue("oriented");
 		String endpoint = rootEl.getAttributeValue("endpoint");
@@ -47,7 +47,7 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 			attrEl.addContent(docuEl.detach());
 			
 		File epFolder = new File(unitFolder, "../../"+oriented+"/"+endpoint);
-		rootEl = builder.build(new File(epFolder, "META-INF/unit.xml")).getRootElement();
+		rootEl = builder.build(new File(epFolder, "unit.xml")).getRootElement();
 		Element prefEl=rootEl.getChild("properties");
 		if (prefEl != null) {
 			unitEl.addContent(prefEl.detach());
@@ -108,7 +108,7 @@ public String getInterfaces(HttpServletRequest request, HttpServletResponse resp
 	{
 		SAXBuilder builder = JdomUtil.newSAXBuilder();
 		File unitFolder = Configuration.getWorkspaceFile(unit);
-		Document document = builder.build(new File(unitFolder, "META-INF/unit.xml"));
+		Document document = builder.build(new File(unitFolder, "unit.xml"));
 		Element rootEl = document.getRootElement();
 		JSONArray items = new JSONArray();
 		List<?> list=rootEl.getChildren("interface");
@@ -150,7 +150,7 @@ public String getAvailServices(HttpServletRequest request, HttpServletResponse r
 		if (folders != null)
 		for (int i=0; i<folders.length; i++) {
 			File folder = folders[i];
-			Document document = builder.build(new File(folder, "META-INF/unit.xml"));
+			Document document = builder.build(new File(folder, "unit.xml"));
 			Element rootEl = document.getRootElement();
 			String service = rootEl.getAttributeValue("service-name");
 			String namespace = rootEl.getAttributeValue("namespace");
@@ -205,13 +205,13 @@ public String loadOperations(HttpServletRequest request, HttpServletResponse res
 		SAXBuilder builder = new SAXBuilder();
 		File unitFolder = Configuration.getWorkspaceFile(unit);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Document document = builder.build(new File(unitFolder, "META-INF/unit.xml"));
+		Document document = builder.build(new File(unitFolder, "unit.xml"));
 		Element rootEl = document.getRootElement();
 		String oriented = rootEl.getAttributeValue("oriented");
 		String endpoint = rootEl.getAttributeValue("endpoint");
 		
 		File epFolder = new File(unitFolder, "../../"+oriented+"/"+endpoint);
-		rootEl = builder.build(new File(epFolder, "META-INF/unit.xml")).getRootElement();
+		rootEl = builder.build(new File(epFolder, "unit.xml")).getRootElement();
 		JSONArray items = new JSONArray();
 		List<?> list=rootEl.getChildren("interface");
 		for (Iterator<?> iter=list.iterator(); iter.hasNext(); ) {
@@ -306,7 +306,7 @@ public String modifyBinding(HttpServletRequest request, HttpServletResponse resp
 
 	SAXBuilder builder = JdomUtil.newSAXBuilder();
 	File unitFolder = Configuration.getWorkspaceFile(unit);
-	File file = new File(unitFolder, "META-INF/unit.xml");
+	File file = new File(unitFolder, "unit.xml");
 	Document doc = builder.build(file);
 	Element rootEl = doc.getRootElement();
 
@@ -414,7 +414,7 @@ public String removeBinding(HttpServletRequest request, HttpServletResponse resp
 	{
 		SAXBuilder builder = JdomUtil.newSAXBuilder();
 		File unitFolder = Configuration.getWorkspaceFile(unit);
-		File file = new File(unitFolder, "META-INF/unit.xml");
+		File file = new File(unitFolder, "unit.xml");
 		Document doc = builder.build(file);
 		Element rootEl = doc.getRootElement();
 	
@@ -464,7 +464,7 @@ public String save(HttpServletRequest request, HttpServletResponse response) thr
 		Element unitEl = document.getRootElement();
 
 		File unitFolder = Configuration.getWorkspaceFile(unit);
-		File unitFile = new File(unitFolder, "META-INF/unit.xml");
+		File unitFile = new File(unitFolder, "unit.xml");
 		Document doc = builder.build(unitFile);
 		Element root = doc.getRootElement();
 		Element attrEl = unitEl.getChild("attributes");

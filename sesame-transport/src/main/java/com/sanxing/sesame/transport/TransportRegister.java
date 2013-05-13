@@ -51,7 +51,7 @@ public class TransportRegister
                     jar.getManifest().getAttributes( "" );
                     try
                     {
-                        JarEntry entry = jar.getJarEntry( "META-INF/schemes" );
+                        JarEntry entry = jar.getJarEntry( "schemes" );
                         if ( entry == null )
                         {
                             continue;

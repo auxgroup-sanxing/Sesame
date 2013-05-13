@@ -32,7 +32,7 @@ import com.sanxing.sesame.util.W3CUtil;
 
 public final class DescriptorFactory
 {
-    public static final String DESCRIPTOR_FILE = "META-INF/jbi.xml";
+    public static final String DESCRIPTOR_FILE = "jbi.xml";
 
     private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema";
 
@@ -487,7 +487,7 @@ public final class DescriptorFactory
     {
         if ( descriptorFile.isDirectory() )
         {
-            descriptorFile = new File( descriptorFile, "META-INF/jbi.xml" );
+            descriptorFile = new File( descriptorFile, DESCRIPTOR_FILE );
         }
         if ( descriptorFile.isFile() )
         {

@@ -128,13 +128,13 @@ public class TcpServer
     {
         SAXBuilder builder = new SAXBuilder();
 
-        File unitFile = new File( getUnitRoot(), "META-INF/unit.xml" );
+        File unitFile = new File( getUnitRoot(), "unit.xml" );
         Element rootEl = builder.build( unitFile ).getRootElement();
         String oriented = rootEl.getAttributeValue( "oriented" );
         String endpoint = rootEl.getAttributeValue( "endpoint" );
 
         File epFolder = new File( getUnitRoot(), "../../" + oriented + "/" + endpoint );
-        File wsdl = new File( epFolder, "META-INF/unit.wsdl" );
+        File wsdl = new File( epFolder, "unit.wsdl" );
         Definition definition = loadDefition( wsdl );
         Map portTypes = definition.getPortTypes();
 
