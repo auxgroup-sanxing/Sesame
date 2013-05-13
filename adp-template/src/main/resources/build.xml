@@ -16,7 +16,7 @@
 
 	<target name="build">
 		<mkdir dir="${build}" />
-		<javac srcdir="${src}" destdir="${build}" debug="true" fork="true" encoding="utf-8" listfiles="true" debuglevel="lines,source">
+		<javac srcdir="${src}" destdir="${build}" debug="true" fork="true" listfiles="true" debuglevel="lines,source">
 			<include name="**/*.java" />
 			<classpath refid="classpath" />
 		</javac>
@@ -46,20 +46,22 @@
 	</target>
 
 	<!--  checkstyle  -->
-    <property name="webinf.lib.home" value="../../../../../studio/WEB-INF/lib" />
+    <property name="webinf.home" value="../../../../../studio/WEB-INF" />
+    <property name="sun.checks" value="${webinf.home}/checkstyle/sun_checks.xml" />
+    <property name="checkstyle.noframes" value="${webinf.home}/checkstyle/checkstyle-noframes.xsl" />
 	<path id="checkstyle.path">
-		<fileset dir="${webinf.lib.home}">
+		<fileset dir="${webinf.home}/lib">
 			<include name="*.jar" />
 		</fileset>
 	</path>
 	<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle.path" />
 	<target name="checkstyle" depends="build" description="Generates a report of code convention violations.">
-		<mkdir dir="bin/report/check-results" />
-		<checkstyle config="docs/sun_checks.xml" failureProperty="checkstyle.failure" failOnViolation="false">
-			<formatter type="xml" tofile="bin/report/check-results/checkstyle_report.xml" />
+		<mkdir dir="target/report/check-results" />
+		<checkstyle config="${sun.checks}" failureProperty="checkstyle.failure" failOnViolation="false">
+			<formatter type="xml" tofile="target/report/check-results/checkstyle_report.xml" />
 			<fileset dir="${src}" includes="**/*.java" />
 		</checkstyle>
-		<style in="bin/report/check-results/checkstyle_report.xml" out="bin/report/check-results/checkstyle_report.html" style="docs/checkstyle-noframes.xsl" />
+		<style in="target/report/check-results/checkstyle_report.xml" out="target/report/check-results/checkstyle_report.html" style="${checkstyle.noframes}" />
 	</target>
 
 	

@@ -38,10 +38,6 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<groupId>java2html</groupId>
-			<artifactId>j2h</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 		</dependency>
@@ -97,6 +93,11 @@
 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.java2html</groupId>
+			<artifactId>j2h</artifactId>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 </project>

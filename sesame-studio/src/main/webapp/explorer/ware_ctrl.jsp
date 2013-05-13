@@ -368,7 +368,8 @@
 		if (file.isDirectory()) {
 			deleteFiles(file);
 		}
-		if (!file.delete()) {
+		file.delete();
+		if (file.exists()) {
 			throw new Exception("删除失败: \"" + file + "\" ");
 		}
 		return "true";

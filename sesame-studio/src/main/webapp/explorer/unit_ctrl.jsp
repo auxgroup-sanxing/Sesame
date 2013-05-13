@@ -1710,6 +1710,7 @@ public String getProjectTree(HttpServletRequest request, HttpServletResponse res
 			File file = files[i];
 			if (file.isHidden()) continue;
 			if ("bin".equals(file.getName())) continue;
+			if ("classes".equals(file.getName())) continue;
 			if ("docs".equals(file.getName())) continue;
 			if (file.getName().startsWith(".")) continue;
 			if ("build.xml".equals(file.getName())) continue;
@@ -1789,7 +1790,7 @@ public String javaToHtml(HttpServletRequest request, HttpServletResponse respons
 public String showFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	String unit = request.getParameter("unit");
 	String path = request.getParameter("path").replaceAll("/+", "/");
-	path = (path.indexOf("/bin/") > -1) ? path : "/bin/" + path;
+	path = (path.indexOf("/src/main/java") > -1) ? path.replace( "/src/main/java", "/bin/src" ) : path;
 	String node = request.getParameter("node");
 	String filePath = "Adp_" + unit.replaceAll(".*?\\/", "") + path + ".html";
 	if (filePath.indexOf("checkstyle_report") != -1) {

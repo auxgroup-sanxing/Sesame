@@ -1087,9 +1087,9 @@
       	<version>1.3</version>
       </dependency>
       <dependency>
-      	<groupId>java2html</groupId>
+      	<groupId>com.java2html</groupId>
       	<artifactId>j2h</artifactId>
-      	<version>1.3.1</version>
+      	<version>1.5.1</version>
       </dependency>
       <dependency>
       	<groupId>org.apache.poi</groupId>
