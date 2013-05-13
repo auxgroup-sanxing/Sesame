@@ -171,7 +171,7 @@ public String save(HttpServletRequest request, HttpServletResponse response) thr
 	
 	OutputStream output = new FileOutputStream(file);
 	try {
-        output.write(content.getBytes());
+        output.write(content.getBytes("UTF-8"));
 	}
     finally {
 		output.close();
