@@ -495,7 +495,6 @@ return {
 					border: false,
 					bodyStyle: 'padding: 10px 20px 10px 10px;',
 					stateful:  false,
-					defaults: { anchor: '-20' },
 					items: [{
 	                      fieldLabel: '地址名称',
 	                      name: 'name',

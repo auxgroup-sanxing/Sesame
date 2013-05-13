@@ -270,7 +270,7 @@ getCommitDialog: function(options){
 					xtype: 'textarea',
 					fieldLabel: '注释',
 					name: 'comment',
-					allowBlank: true
+					allowBlank: false
 				},{
 					xtype: 'combo',
 					fieldLabel: '历史注释',

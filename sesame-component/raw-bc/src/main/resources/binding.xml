@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<binding>
+  <allowable>
+    <protocol name="ftp">文件传输协议</protocol>
+    <protocol name="tcp">传输控制协议</protocol>
+    <protocol name="http">超文本传输协议</protocol>
+  </allowable>
+  <codec>
+    <params>
+      <tx-code></tx-code>
+      <tx-start>0</tx-start>
+      <tx-end>4</tx-end>
+      <status-text>/fault/faultstring</status-text>
+      <status>/fault/faultcode</status>
+      <success-code>200</success-code>
+    </params>
+    <raw2xml>
+      <raw-handlers />
+      <decoder>com.sanxing.sesame.codec.impl.DecodeFSV</decoder>
+      <xml-handlers />
+    </raw2xml>
+    <xml2raw>
+      <xml-handlers />
+      <encoder>com.sanxing.sesame.codec.impl.EncodeFSV</encoder>
+      <raw-handlers />
+    </xml2raw>
+  </codec>
+</binding>
+
