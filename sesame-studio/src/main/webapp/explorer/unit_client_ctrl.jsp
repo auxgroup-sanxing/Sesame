@@ -95,7 +95,7 @@ public String deployserviceunit(HttpServletRequest request, HttpServletResponse 
 	String supath = unitFolder.getAbsolutePath();
 	String componentname = request.getParameter("compName");
 	DeployServiceUnit dsu = new DeployServiceUnit();
-	dsu.deployeServiceUnit(serviceassemblyname,unitname,componentname,supath);
+	dsu.deployeServiceUnit(serviceassemblyname, unitname, componentname, supath);
 	return "success";
 }
 

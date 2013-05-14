@@ -69,9 +69,11 @@ public abstract class BaseMethodProcessor
                     if ( part != null )
                     {
                         part.setNamespace( Namespace.getNamespace( "", elementName.getNamespaceURI() ) );
-                        break;
                     }
-                    throw new ADPException( "00007", elementName.getLocalPart() );
+                    else
+                    {
+                        throw new ADPException( "00007", elementName.getLocalPart() );
+                    }
                 }
                 part = body.getChild( parameterInfo.getName() );
 

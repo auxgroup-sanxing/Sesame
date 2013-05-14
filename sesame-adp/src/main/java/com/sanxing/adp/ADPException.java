@@ -9,7 +9,7 @@ public class ADPException
 
     static
     {
-        registerErrMsgs( "ADP_ERR.MSG" );
+        registerErrMsgs( "adp_err.msg" );
     }
 
     public ADPException( String errCode, Throwable e )

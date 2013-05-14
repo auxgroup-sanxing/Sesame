@@ -31,7 +31,7 @@ public class DirectoryCopy
                 @Override
                 public boolean accept( File dir, String name )
                 {
-                    return ( ( !( name.endsWith( ".svn" ) ) ) && ( !( name.endsWith( ".java" ) ) ) );
+                    return ( ( !( name.endsWith( ".svn" ) ) ) && ( !( name.endsWith( ".java" ) ) ) && ( !( name.startsWith( "Adp_" ) ) ) );
                 }
             };
             File[] allFile = F.listFiles( filter );
