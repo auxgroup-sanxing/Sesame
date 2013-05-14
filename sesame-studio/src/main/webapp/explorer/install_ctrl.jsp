@@ -327,7 +327,7 @@
 		Element identEl = saEl
 				.getChild("identification", rootEl.getNamespace());
 		identEl.getChild("name", rootEl.getNamespace()).setText(
-				descritorFile.getParentFile().getParentFile().getName());
+				descritorFile.getParentFile().getName());
 
 		File descFile = new File(unit, "unit.wsdl");
 		String name, desc = null;
@@ -397,7 +397,7 @@
 		Element identEl = saEl
 				.getChild("identification", rootEl.getNamespace());
 		identEl.getChild("name", rootEl.getNamespace()).setText(
-				descritorFile.getParentFile().getParentFile().getName());
+				descritorFile.getParentFile().getName());
 		saEl.removeChildren("service-unit", rootEl.getNamespace());
 		for (File unit : unitList) {
 			File descFile = new File(unit, "unit.wsdl");

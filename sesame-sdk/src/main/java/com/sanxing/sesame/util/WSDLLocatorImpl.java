@@ -90,7 +90,7 @@ public class WSDLLocatorImpl
                 {
                     String unitName = importFile.getParentFile().getName();
 
-                    File sus = parentFile.getParentFile().getParentFile().getParentFile();
+                    File sus = parentFile.getParentFile().getParentFile();
                     boolean found = false;
                     File[] list = sus.listFiles();
                     for ( File item : list )
