@@ -4,7 +4,7 @@
 
 	<property name="base" value="." />
 	<property name="src" value="src/main/java" />
-	<property name="build" value="target/classes" />
+	<property name="build" value="../classes" />
 	<property name="finish" value=".finish" />
 	<property name="myclasspath" value="../../../../../lib/" />
 

@@ -644,7 +644,12 @@
 				if (compress == null)
 					zipOut.setLevel(0);
 				zipOut.setComment("Sanxing Sesame Service-Unit");
-				for (File file : entry.listFiles()) {
+				FilenameFilter filter = new FilenameFilter() {
+					public boolean accept(File dir, String name) {
+						return !name.startsWith("Adp_");
+					}
+				 };
+				for (File file : entry.listFiles(filter)) {
 					zipUnit(file, "", zipOut);
 				}
 			} finally {
@@ -665,10 +670,9 @@
 			if (compress == null)
 				zipOut.setLevel(0);
 			zipOut.setComment("Sanxing Sesame Service-Assembly");
-			File entry = new File(buildPath, project);
-			FileUtil.zip(entry, "", zipOut);
+			FileUtil.zip(jbiFile, "", zipOut);
 			for (Iterator<?> entries = zipList.iterator(); entries.hasNext();) {
-				entry = (File) entries.next();
+				File entry = (File) entries.next();
 				FileUtil.zip(entry, "", zipOut);
 			}
 		} finally {

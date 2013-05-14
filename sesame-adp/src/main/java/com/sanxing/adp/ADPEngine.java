@@ -98,7 +98,7 @@ public class ADPEngine
                 LOG.trace( "deploy service unit [" + serviceUnitName + "]" );
             }
             ServiceUnit unit = getServiceUnit( serviceUnitName );
-            File unitClassPath = new File( serviceUnitRootPath + File.separator + "adp-classes" );
+            File unitClassPath = new File( serviceUnitRootPath + File.separator + "classes" );
             server.resetClassLoader();
             server.addClassPath( unitClassPath.toURL() );
             if ( LOG.isTraceEnabled() )

@@ -615,7 +615,8 @@ public class SVNSynchronizer
         options.addIgnorePattern( ".cvs" );
         options.addIgnorePattern( "bin" );
         options.addIgnorePattern( "*.mine" );
-        options.addIgnorePattern( "adp-classes" );
+        options.addIgnorePattern( "target" );
+        options.addIgnorePattern( "classes" );
         options.setAuthStorageEnabled( false );
 
         authManager = new SVNAuthenticationManager( name, password );
