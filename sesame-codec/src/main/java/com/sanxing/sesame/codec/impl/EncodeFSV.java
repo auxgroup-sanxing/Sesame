@@ -75,13 +75,16 @@ public class EncodeFSV
         String charset = result.getEncoding();
         XmlSchema schema = result.getXMLSchema();
 
-        LOG.debug( "------------debug xmlschema start" );
-        Iterator iter = schema.getElements().getNames();
-        while ( iter.hasNext() )
+        if (LOG.isDebugEnabled()) 
         {
-            LOG.debug( iter.next().toString() );
+            LOG.debug( "------------debug xmlschema start" );
+            Iterator iter = schema.getElements().getNames();
+            while ( iter.hasNext() )
+            {
+                LOG.debug( iter.next().toString() );
+            }
+            LOG.debug( "------------debug xmlschema finish\n" );
         }
-        LOG.debug( "------------debug xmlschema finish\n" );
 
         OutputStream output = result.getOutputStream();
         String elementName = result.getElementName();
@@ -89,10 +92,6 @@ public class EncodeFSV
         if ( charset == null )
         {
             throw new FormatException( "charset not specified!" );
-        }
-        if ( schema == null )
-        {
-            ;
         }
         try
         {
