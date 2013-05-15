@@ -38,9 +38,9 @@ public class AssignAction
 
         targetVarType = config.getAttributeValue( "type" );
 
-        xPath = config.getChildTextTrim( "xpath" );
+        xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
 
-        rawValue = config.getChildTextTrim( "raw-value" );
+        rawValue = config.getChildTextTrim( "raw-value", config.getNamespace() );
     }
 
     @Override

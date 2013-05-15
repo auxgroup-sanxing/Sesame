@@ -591,7 +591,7 @@ public class DefaultBinding
                     XObjectRecord record = new XObjectRecord( message.getSerial().longValue(), content );
                     record.setCallout( true );
                     record.setStage( "callout编码前" );
-                    log.info( "[SEND][XML]------------------------------------------------------", record );
+                    log.info( "[SEND][XML]------------------------------------------------------" + record );
                 }
 
                 if ( message.getSource() == null )

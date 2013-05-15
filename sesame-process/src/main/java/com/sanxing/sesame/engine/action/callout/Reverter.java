@@ -131,15 +131,15 @@ public class Reverter
                     }
 
                     Element addressEl = actionEl.getChild( "address" );
-                    String strServiceName = addressEl.getChildTextTrim( "service-name" );
+                    String strServiceName = addressEl.getChildTextTrim( "service-name", addressEl.getNamespace() );
                     QName serviceName =
                         ( ( strServiceName == null ) || ( strServiceName.length() == 0 ) ) ? null
                             : QName.valueOf( strServiceName );
-                    String strInterfaceName = addressEl.getChildTextTrim( "interface-name" );
+                    String strInterfaceName = addressEl.getChildTextTrim( "interface-name", addressEl.getNamespace() );
                     QName interfaceName = ( strInterfaceName == null ) ? null : QName.valueOf( strInterfaceName );
-                    String strOperationName = addressEl.getChildTextTrim( "operation-name" );
+                    String strOperationName = addressEl.getChildTextTrim( "operation-name", addressEl.getNamespace() );
                     QName operationName = ( strOperationName == null ) ? null : QName.valueOf( strOperationName );
-                    String endpointName = addressEl.getChildTextTrim( "endpoint-name" );
+                    String endpointName = addressEl.getChildTextTrim( "endpoint-name", addressEl.getNamespace() );
 
                     MessageExchange me = engine.getExchangeFactory().createInOptionalOutExchange();
 

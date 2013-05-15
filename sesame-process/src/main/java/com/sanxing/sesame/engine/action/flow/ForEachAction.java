@@ -29,7 +29,7 @@ public class ForEachAction
     {
         varName = config.getAttributeValue( "var" );
 
-        xpath = config.getChildTextTrim( "xpath" );
+        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
 
         childVarName = config.getAttributeValue( "as" );
 

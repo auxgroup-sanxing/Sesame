@@ -65,8 +65,8 @@ public class FaultProcessor
 
         Document result = transformer.transform( status, statusText );
         Element rootEl = result.getRootElement();
-        String faultCode = rootEl.getChildText( "fault-code" );
-        String faultReason = rootEl.getChildText( "fault-reason" );
+        String faultCode = rootEl.getChildText( "fault-code", rootEl.getNamespace() );
+        String faultReason = rootEl.getChildText( "fault-reason", rootEl.getNamespace() );
         if ( exception instanceof AppException )
         {
             ( (AppException) exception ).setErrorCode( faultCode );

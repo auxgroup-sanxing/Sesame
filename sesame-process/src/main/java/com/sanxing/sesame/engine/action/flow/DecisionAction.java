@@ -34,7 +34,7 @@ public class DecisionAction
         {
             Element ifEl = (Element) iter.next();
 
-            String xpath = ifEl.getChildTextTrim( "xpath" );
+            String xpath = ifEl.getChildTextTrim( "xpath", ifEl.getNamespace() );
             Variable booleanVar = select( contextEl, xpath, ctx );
             Boolean bool = (Boolean) booleanVar.get();
             Element thenEl = ifEl.getChild( "then" );

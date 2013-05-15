@@ -26,7 +26,7 @@ public class IfThenAction
     {
         varName = config.getAttributeValue( "var" );
 
-        xpath = config.getChildTextTrim( "xpath" );
+        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
 
         this.config = config;
     }
@@ -55,7 +55,7 @@ public class IfThenAction
                 Element elseifthen = (Element) list.get( i );
 
                 varName = elseifthen.getAttributeValue( "var" );
-                String xpath = elseifthen.getChildTextTrim( "xpath" );
+                String xpath = elseifthen.getChildTextTrim( "xpath", elseifthen.getNamespace() );
 
                 var = ctx.getVariable( varName );
                 ele = (Element) var.get();

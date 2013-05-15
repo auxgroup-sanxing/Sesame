@@ -179,7 +179,7 @@ public class EncodeFSV
                     format = CodecUtil.getXSDFormat( element, elementName );
                     elementType = type.getName();
 
-                    elementValue = xmlElement.getChildText( elementName );
+                    elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace() );
                     if ( elementValue == null )
                     {
                         XMLOutputter outputter = new XMLOutputter( Format.getPrettyFormat() );

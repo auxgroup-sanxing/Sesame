@@ -83,7 +83,7 @@ public class Encode8583
                     throw new FormatException( "in xsdDoc,elementName:[" + elementName
                         + "]have not dedine the attribute[type] or it has no vlaue!" );
                 }
-                String elementValue = xmlElement.getChildText( elementName );
+                String elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace() );
 
                 if ( elementValue.length() < 1 )
                 {
@@ -128,7 +128,7 @@ public class Encode8583
 
                 String elementName = child.getName();
 
-                String elementValue = xmlElement.getChildText( elementName );
+                String elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace() );
                 if ( elementValue == null )
                 {
                     throw new FormatException( "in xsdDoc name is:[" + elementName

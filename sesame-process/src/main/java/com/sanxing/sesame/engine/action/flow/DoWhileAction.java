@@ -28,7 +28,7 @@ public class DoWhileAction
     @Override
     public void doinit( Element actionEl )
     {
-        xpath = actionEl.getChildTextTrim( "xpath" );
+        xpath = actionEl.getChildTextTrim( "xpath", actionEl.getNamespace() );
         this.actionEl = actionEl;
         contextEl = new Element( "context" );
     }

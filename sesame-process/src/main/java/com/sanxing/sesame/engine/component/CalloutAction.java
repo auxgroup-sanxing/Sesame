@@ -95,15 +95,15 @@ public class CalloutAction
     {
         this.actionEl = actionEl;
         Element addressEl = actionEl.getChild( "address" );
-        String strServiceName = addressEl.getChildTextTrim( "service-name" );
+        String strServiceName = addressEl.getChildTextTrim( "service-name", actionEl.getNamespace() );
         serviceName =
             ( ( ( strServiceName == null ) || ( strServiceName.length() == 0 ) ) ? null
                 : QName.valueOf( strServiceName ) );
-        String strInterfaceName = addressEl.getChildTextTrim( "interface-name" );
+        String strInterfaceName = addressEl.getChildTextTrim( "interface-name", actionEl.getNamespace() );
         interfaceName = ( ( strInterfaceName == null ) ? null : QName.valueOf( strInterfaceName ) );
-        String strOperationName = addressEl.getChildTextTrim( "operation-name" );
+        String strOperationName = addressEl.getChildTextTrim( "operation-name", actionEl.getNamespace() );
         operationName = ( ( strOperationName == null ) ? null : QName.valueOf( strOperationName ) );
-        endpointName = addressEl.getChildTextTrim( "endpoint-name" );
+        endpointName = addressEl.getChildTextTrim( "endpoint-name", actionEl.getNamespace() );
         mode = actionEl.getAttributeValue( "mode", "direct" );
 
         useVariable = actionEl.getAttributeValue( "use-var" );

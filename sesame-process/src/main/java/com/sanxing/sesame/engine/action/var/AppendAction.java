@@ -45,9 +45,9 @@ public class AppendAction
 
             targetVarType = config.getAttributeValue( "type", "" );
 
-            xPath = config.getChildTextTrim( "xpath" );
+            xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
 
-            rawValue = config.getChildTextTrim( "raw-value" );
+            rawValue = config.getChildTextTrim( "raw-value", config.getNamespace() );
             if ( ( config.getAttributeValue( "index" ) == null ) || ( config.getAttributeValue( "index" ).equals( "" ) ) )
             {
                 index = -1;

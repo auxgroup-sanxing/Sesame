@@ -42,7 +42,7 @@ public class SesameLogger
     @Override
     public void debug( Object message, LogRecord lr )
     {
-        getLogger().debug( message.toString(), lr );
+        getLogger().debug( message.toString() + "\n" + lr );
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SesameLogger
     @Override
     public void error( Object message, LogRecord lr )
     {
-        getLogger().error( message.toString(), lr );
+        getLogger().error( message.toString() + "\n" + lr );
     }
 
     @Override
@@ -66,7 +66,7 @@ public class SesameLogger
     @Override
     public void fatal( Object message, LogRecord lr )
     {
-        getLogger().error( message.toString(), lr );
+        getLogger().error( message.toString() + "\n" + lr );
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SesameLogger
     @Override
     public void info( Object message, LogRecord lr )
     {
-        getLogger().info( message.toString(), lr );
+        getLogger().info( message.toString() + "\n" + lr );
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SesameLogger
     @Override
     public void trace( Object message, LogRecord lr )
     {
-        getLogger().trace( message.toString(), lr );
+        getLogger().trace( message.toString() + "\n" + lr );
     }
 
     @Override
@@ -102,7 +102,7 @@ public class SesameLogger
     @Override
     public void warn( Object message, LogRecord lr )
     {
-        getLogger().warn( message.toString(), lr );
+        getLogger().warn( message.toString() + "\n" + lr );
     }
 
     @Override

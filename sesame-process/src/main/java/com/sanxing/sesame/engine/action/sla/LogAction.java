@@ -34,7 +34,7 @@ public class LogAction
         level = config.getAttributeValue( "level", "debug" );
         varName = config.getAttributeValue( "var", "anonymous" );
         msg = config.getAttributeValue( "msg", "" ).replace( "*", "" );
-        xPath = config.getChildTextTrim( "xpath", null );
+        xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
         if ( loggerName != null )
         {
             log = LoggerFactory.getLogger( loggerName );

@@ -126,7 +126,7 @@ public abstract class BlockedAcceptor
             BinaryResult result = (BinaryResult) context.getResult();
             BufferRecord rec = new BufferRecord( context.getSerial().longValue(), result.getBytes() );
 
-            log.info( "[REPLY][BINARY]-----------------------------------------", rec );
+            log.info( "[REPLY][BINARY]-----------------------------------------" + rec );
         }
 
         PipeLine pipeline = pipelines.get( context.getSerial() );

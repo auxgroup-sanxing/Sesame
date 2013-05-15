@@ -24,7 +24,7 @@ public class DeleteAction
     public void doinit( Element config )
     {
         varName = config.getAttributeValue( "var" );
-        xpath = config.getChildTextTrim( "xpath" );
+        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
     }
 
     @Override

@@ -22,7 +22,7 @@ public class CloneAction
     {
         sourceVarName = config.getAttributeValue( "var" );
         targetVarName = config.getAttributeValue( "to-var" );
-        xPath = config.getChildTextTrim( "xpath" );
+        xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
     }
 
     @Override

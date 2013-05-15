@@ -296,14 +296,12 @@ public class JdomUtil
     {
         try
         {
-            StringWriter writer = new StringWriter();
-            XMLOutputter xmlOutputter = new XMLOutputter();
-            xmlOutputter.setFormat( pretty );
-            xmlOutputter.output( source2JDOMDocument( source ), writer );
-            return writer.toString();
+            XMLOutputter xmlOutputter = new XMLOutputter( pretty );
+            return xmlOutputter.outputString(source2JDOMDocument( source ));
         }
         catch ( Exception e )
         {
+        	// ignore
         }
         return "";
     }
