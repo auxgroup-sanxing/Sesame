@@ -344,7 +344,7 @@ public class Encode8583
     public long encode( Source input, XmlSchema schema, String charset, OutputStream output )
         throws FormatException
     {
-        Document message = JdomUtil.source2JDomDocument( input );
+        Document message = JdomUtil.source2JDOMDocument( input );
         String elementName = message.getRootElement().getName();
 
         if ( charset == null )

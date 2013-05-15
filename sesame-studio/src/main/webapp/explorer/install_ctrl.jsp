@@ -193,7 +193,7 @@
 		Namespace xmlns_comp = rootEl.getNamespace("comp");
 		if (xmlns_comp != null) {
 			String path = xmlns_comp.getURI();
-			File compBundle = Configuration.getWarehouseFile(path); // TODO new File(unit.getParentFile(), path);
+			File compBundle = Configuration.getWarehouseFile(path);
 			try {
 				if (compBundle.isDirectory()) {
 					document = builder.build(new File(compBundle,
@@ -1303,7 +1303,7 @@
 		items.put("libs", libRS);
 		items.put("trans", transRS);
 
-		// TODO 分析服务单元引用的组件以及共享库
+		// 分析服务单元引用的组件以及共享库
 		String dataStr = request.getParameter("data");
 		if (!"".equals(dataStr)) {
 			List<File> untiList = new ArrayList<File>();
@@ -1455,11 +1455,13 @@
 						//更新项目的部署描述符
 						File sourcejbiFile = new File(projectFolder, "jbi.xml");
 						File jbiFile = new File(newProjectFolder, "jbi.xml");
-						if (sourcejbiFile.exists()) {
+						if (sourcejbiFile.exists() && !jbiFile.exists()) {
 							FileCopy FC = new FileCopy();
 							FC.copyFile(sourcejbiFile.getAbsolutePath(), jbiFile.getAbsolutePath());
-							if (jbiFile.exists()) {
-								updateDescriptor(jbiFile);
+						}
+						if (jbiFile.exists()) {
+							updateDescriptor(jbiFile);
+							if (schemaUnit.exists() && schemaUnit.list().length > 0) {
 								updateSingleDescriptor(jbiFile, schemaUnit); // 更新schema描述
 							}
 						}
@@ -1501,11 +1503,11 @@
 				JSONArray transArray = resourceJSO.optJSONArray("trans");
 
 				File compFolder = new File(deployFolder.getAbsolutePath()
-						+ "/intall/components");
+						+ "/install/components");
 				File libFolder = new File(deployFolder.getAbsolutePath()
-						+ "/intall/lib");
+						+ "/install/lib");
 				File transFolder = new File(deployFolder.getAbsolutePath()
-						+ "/intall/transports");
+						+ "/install/transports");
 
 				if (!compFolder.exists())
 					compFolder.mkdirs();
@@ -1592,10 +1594,15 @@
 		ZipOutputStream zipOut = new ZipOutputStream(new BufferedOutputStream(
 				csum));
 		try {
+			FilenameFilter filter = new FilenameFilter() {
+				public boolean accept(File dir, String name) {
+					return !name.startsWith("Adp_");
+				}
+			 };
 			if (compress == null || "off".equals(compress))
 				zipOut.setLevel(0);
 			zipOut.setComment("Sanxing Sesame Service-Unit");
-			for (File file : sourceFolder.listFiles())
+			for (File file : sourceFolder.listFiles(filter))
 				zipUnit(file, "", zipOut);
 		} catch (Exception e) {
 			throw new Exception("打包文件" + outFile.getName() + "失败!");

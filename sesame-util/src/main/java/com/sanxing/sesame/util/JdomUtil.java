@@ -299,56 +299,13 @@ public class JdomUtil
             StringWriter writer = new StringWriter();
             XMLOutputter xmlOutputter = new XMLOutputter();
             xmlOutputter.setFormat( pretty );
-            xmlOutputter.output( source2JDOMElement( source ), writer );
+            xmlOutputter.output( source2JDOMDocument( source ), writer );
             return writer.toString();
         }
         catch ( Exception e )
         {
         }
         return "";
-    }
-
-    public static Document source2JDomDocument( Source source )
-    {
-        try
-        {
-            if ( source instanceof JDOMSource )
-            {
-                return ( (JDOMSource) source ).getDocument();
-            }
-            JDOMResult result = new JDOMResult();
-            Transformer transformer = getTransformerFactory().newTransformer();
-            transformer.transform( source, result );
-            return result.getDocument();
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
-    }
-
-    public static Element source2JDOMElement( Source source )
-    {
-        try
-        {
-            Element root = null;
-            if ( source instanceof JDOMSource )
-            {
-                root = ( (JDOMSource) source ).getDocument().getRootElement();
-            }
-            else
-            {
-                JDOMResult result = new JDOMResult();
-                Transformer transformer = getTransformerFactory().newTransformer();
-                transformer.transform( source, result );
-                root = result.getDocument().getRootElement();
-            }
-            return root;
-        }
-        catch ( Exception e )
-        {
-            throw new RuntimeException( e );
-        }
     }
 
     public static Source JDOMElement2DOMSource( Element element )

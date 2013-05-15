@@ -214,7 +214,6 @@ public class ServerInfo
         }
 
         List dataSources = jdbcEl.getChildren( "datasource" );
-        int stmNumber = 0;
         for ( int i = 0; i < dataSources.size(); ++i )
         {
             Element dsEle = (Element) dataSources.get( i );
@@ -227,16 +226,7 @@ public class ServerInfo
             dsInfo.setTransactionManager( tranManagerType );
             if ( !( isTransaction ) )
             {
-                dsInfo.setTransactionManager( 0 );
-            }
-
-            if ( ( tranManagerType == 1 ) && ( isTransaction ) )
-            {
-                if ( stmNumber != 0 )
-                {
-                    continue;
-                }
-                ++stmNumber;
+                dsInfo.setTransactionManager( TransactionManagerType.NTM );
             }
 
             server.datasourceInfos.add( dsInfo );

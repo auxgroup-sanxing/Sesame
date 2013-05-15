@@ -75,7 +75,10 @@ public abstract class BaseMethodProcessor
                         throw new ADPException( "00007", elementName.getLocalPart() );
                     }
                 }
-                part = body.getChild( parameterInfo.getName() );
+                else
+                {
+                    part = body.getChild( parameterInfo.getName() );
+                }
 
                 if ( XJUtil.isPrimitive( javaType ) )
                 {

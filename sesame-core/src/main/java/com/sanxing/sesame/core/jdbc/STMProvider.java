@@ -1,7 +1,7 @@
 package com.sanxing.sesame.core.jdbc;
 
 import javax.naming.Context;
-import javax.naming.NameNotFoundException;
+import javax.naming.NameAlreadyBoundException;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.jdom.Element;
@@ -45,28 +45,16 @@ public class STMProvider
             tm.bindWithDataSource( sesameDataSource );
             try
             {
-                if ( context.lookup( "java:comp/UserTransaction" ) == null )
-                {
-                    context.createSubcontext( "java:comp" );
-                    context.rebind( "java:comp/UserTransaction", tm );
-                }
+                context.bind( "java:comp/UserTransaction", tm );
             }
-            catch ( NameNotFoundException e )
+            catch ( NameAlreadyBoundException e )
             {
-                context.createSubcontext( "java:comp" );
                 context.rebind( "java:comp/UserTransaction", tm );
             }
         }
         catch ( Exception e )
         {
-            if ( LOG.isTraceEnabled() )
-            {
-                LOG.trace( e.getMessage(), e );
-            }
-            else
-            {
-                LOG.error( e.getMessage() );
-            }
+            LOG.error( e.getMessage() );
         }
     }
 
