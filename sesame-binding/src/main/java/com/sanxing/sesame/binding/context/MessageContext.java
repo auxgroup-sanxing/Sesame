@@ -46,6 +46,7 @@ public class MessageContext
 
     public MessageContext( Acceptor acceptor, Source input )
     {
+        this();
         serial = SerialGenerator.getSerial();
         setTransport( acceptor );
         setAccepted( true );
@@ -54,6 +55,7 @@ public class MessageContext
 
     public MessageContext( Connector connector, Result output )
     {
+        this();
         setTransport( connector );
         setAccepted( false );
         this.output = output;
@@ -70,8 +72,6 @@ public class MessageContext
         mode = Mode.BLOCK;
 
         properties = new Hashtable();
-
-        path = "";
     }
 
     public void setSerial( long serial )
