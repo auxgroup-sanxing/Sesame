@@ -90,7 +90,7 @@ public class Encode8583
                     continue;
                 }
 
-                org.w3c.dom.Element format = CodecUtil.getXSDFromat( child, elementName );
+                org.w3c.dom.Element format = CodecUtil.getXSDFormat( child, elementName );
 
                 String kind = format.getAttribute( "kind" );
                 ValidateField.validate8583Kind( elementName, kind );
@@ -135,7 +135,7 @@ public class Encode8583
                         + "],in xml,can not find the element" );
                 }
 
-                org.w3c.dom.Element format = CodecUtil.getXSDFromat( child, elementName );
+                org.w3c.dom.Element format = CodecUtil.getXSDFormat( child, elementName );
 
                 int id = ValidateField.validateEId( format.getAttribute( "id" ), elementName );
 

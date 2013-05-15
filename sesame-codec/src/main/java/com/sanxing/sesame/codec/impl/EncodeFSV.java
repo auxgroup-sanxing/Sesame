@@ -176,7 +176,7 @@ public class EncodeFSV
                 int kindInt;
                 if ( type instanceof XmlSchemaSimpleType )
                 {
-                    format = CodecUtil.getXSDFromat( element, elementName );
+                    format = CodecUtil.getXSDFormat( element, elementName );
                     elementType = type.getName();
 
                     elementValue = xmlElement.getChildText( elementName );

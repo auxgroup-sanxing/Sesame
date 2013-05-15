@@ -94,7 +94,7 @@ public class Decode8583
 
                 String elementType = element.getSchemaType().getName();
 
-                org.w3c.dom.Element format = CodecUtil.getXSDFromat( element, elementName );
+                org.w3c.dom.Element format = CodecUtil.getXSDFormat( element, elementName );
 
                 int id = ValidateField.validateEId( format.getAttribute( "id" ), elementName );
 
