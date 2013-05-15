@@ -156,7 +156,7 @@ public class DecodeFSV
                 {
                     type = xsType.getName();
 
-                    format = CodecUtil.getXSDFromat( element, elementName );
+                    format = CodecUtil.getXSDFormat( element, elementName );
 
                     kind = format.getAttribute( "kind" );
                     ValidateField.validateKind( elementName, kind );

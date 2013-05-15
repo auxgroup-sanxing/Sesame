@@ -35,7 +35,7 @@ public class CodecUtil
         return elements;
     }
 
-    public static org.w3c.dom.Element getXSDFromat( XmlSchemaElement element, String elementName )
+    public static org.w3c.dom.Element getXSDFormat( XmlSchemaElement element, String elementName )
         throws FormatException
     {
         org.w3c.dom.Element format = null;
