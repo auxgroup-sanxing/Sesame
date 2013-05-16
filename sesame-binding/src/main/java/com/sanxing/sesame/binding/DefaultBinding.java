@@ -591,7 +591,7 @@ public class DefaultBinding
                     XObjectRecord record = new XObjectRecord( message.getSerial().longValue(), content );
                     record.setCallout( true );
                     record.setStage( "callout编码前" );
-                    log.info( "[SEND][XML]------------------------------------------------------" + record );
+                    log.info( "[SEND][XML]------------------------------------------------------", record );
                 }
 
                 if ( message.getSource() == null )
@@ -693,7 +693,7 @@ public class DefaultBinding
     public boolean parse( MessageContext message, Map<String, Object> params )
         throws BindingException
     {
-        Log log = LogFactory.getLog( "sesame.binding." + message.getAction() );
+        Log log = LogFactory.getLog( "sesame.binding");
         try
         {
             if ( message.isAccepted() )
@@ -719,9 +719,8 @@ public class DefaultBinding
                 if ( message.getAction() != null )
                 {
                     MDC.put( "ACTION", message.getAction() );
+                    log = LogFactory.getLog( "sesame.binding." + message.getAction());
                 }
-
-                log = LogFactory.getLog( "sesame.binding." + message.getAction() );
 
                 Source source =
                     ( message.getSource() instanceof XMLSource ) ? ( (XMLSource) message.getSource() ).getContent()
