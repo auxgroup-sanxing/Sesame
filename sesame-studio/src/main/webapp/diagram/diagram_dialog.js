@@ -3344,7 +3344,7 @@ generateXSLT: function(root, match){
 		Saver.saveNodes(root, docuEl);
 		
 		var xmltext = XDom.innerXML(xmldoc);
-		if (Ext.isGecko) {
+		if (typeof(XML)=='function') {
 			xmltext = "" + new XML(xmltext.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "")).toXMLString();
 		}
 		if (typeof(console)=='object') {
