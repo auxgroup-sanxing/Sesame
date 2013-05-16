@@ -83,7 +83,7 @@ public class EncodeFSV
             {
                 LOG.debug( iter.next().toString() );
             }
-            LOG.debug( "------------debug xmlschema finish\n" );
+            LOG.debug( "------------debug xmlschema finish" );
         }
 
         OutputStream output = result.getOutputStream();

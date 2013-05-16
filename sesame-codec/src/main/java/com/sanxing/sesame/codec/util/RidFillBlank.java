@@ -11,7 +11,6 @@ public class RidFillBlank
     {
         byte binaryZero = 0;
         String result = null;
-
         if ( type.equals( "string" ) )
         {
             for ( int i = buf.length - 1; i >= 0; --i )
@@ -23,6 +22,7 @@ public class RidFillBlank
                 try
                 {
                     result = new String( buf, 0, i + 1, charset );
+                    break;
                 }
                 catch ( UnsupportedEncodingException e )
                 {
@@ -52,6 +52,7 @@ public class RidFillBlank
                     {
                         result = new String( buf, 0, i + 1, charset );
                     }
+                    break;
                 }
                 catch ( UnsupportedEncodingException e )
                 {
@@ -67,36 +68,60 @@ public class RidFillBlank
     public static String ridLeftBlank( byte[] buf, int blank, String type, String charset )
         throws FormatException
     {
+        byte binaryZero = 0;
         String result = null;
-        for ( int i = 0; i < buf.length; ++i )
+        if ( type.equals( "string" ) )
         {
-            if ( ( blank ^ buf[i] ) == 0 )
+            for ( int i = 0; i < buf.length; ++i )
             {
-                continue;
-            }
-            try
-            {
-                if ( "hexBinary".equals( type ) )
+                if ( ( ( blank ^ buf[i] ) == 0 ) || ( ( binaryZero ^ buf[i] ) == 0 ) )
                 {
-                    byte[] temp2 = new byte[buf.length - i];
-                    System.arraycopy( buf, i, temp2, 0, temp2.length );
-
-                    result = HexBinary.encode( temp2 );
+                    continue;
                 }
-                else
+                try
                 {
                     result = new String( buf, i, buf.length - i, charset );
+                    break;
                 }
-
+                catch ( UnsupportedEncodingException e )
+                {
+                    throw new FormatException( e.getMessage(), e );
+                }
             }
-            catch ( UnsupportedEncodingException e )
+
+        }
+        else
+        {
+            for ( int i = 0; i < buf.length; ++i )
             {
-                throw new FormatException( e.getMessage(), e );
+                if ( ( ( blank ^ buf[i] ) == 0 ) && ( buf.length != 1 ) )
+                {
+                    continue;
+                }
+                try
+                {
+                    if ( "hexBinary".equals( type ) )
+                    {
+                        byte[] temp2 = new byte[buf.length - i];
+                        System.arraycopy( buf, i, temp2, 0, temp2.length );
+
+                        result = HexBinary.encode( temp2 );
+                    }
+                    else
+                    {
+                        result = new String( buf, i, buf.length - i, charset );
+                    }
+                    break;
+                }
+                catch ( UnsupportedEncodingException e )
+                {
+                    throw new FormatException( e.getMessage(), e );
+                }
             }
 
         }
 
-        label106: return ( ( result == null ) ? "" : result );
+        return ( ( result == null ) ? "" : result );
     }
 
     public static String fillBlank( String elementValue, int length, char blank, String align, String encodeCharset,

@@ -522,7 +522,7 @@ public class DefaultBinding
     public boolean assemble( Source content, MessageContext message )
         throws BindingException
     {
-        Log log = LogFactory.getLog( "sesame.binding." + message.getAction() );
+        Log log = LogFactory.getLog( "sesame.binding");
 
         String channel = null;
         String action = null;
@@ -566,6 +566,11 @@ public class DefaultBinding
                 }
 
                 assembleResponse( content, message );
+                
+                if ( message.getAction() != null )
+                {
+                    log = LogFactory.getLog( "sesame.binding." + message.getAction() );
+                }
 
                 if ( ( log.isInfoEnabled() ) && ( message.getResult() instanceof BinaryResult ) )
                 {
@@ -602,6 +607,11 @@ public class DefaultBinding
                 }
 
                 assembleRequest( content, message );
+                
+                if ( message.getAction() != null )
+                {
+                    log = LogFactory.getLog( "sesame.binding." + message.getAction() );
+                }
 
                 if ( ( log.isInfoEnabled() ) && ( message.getSource() instanceof BinarySource ) )
                 {
