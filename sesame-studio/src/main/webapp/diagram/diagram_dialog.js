@@ -3331,7 +3331,7 @@ generateXSLT: function(root, match){
 		
 		var n=1;
 		root.cascade(function(node){
-			var uri = node.attributes['qtip'];thisisaspider
+			var uri = node.attributes['qtip'];
 			
 			if (uri && uri != root.attributes['namespace']) {
 				var prefix = 'ns' + n++;
