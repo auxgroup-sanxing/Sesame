@@ -3063,7 +3063,7 @@ return {
 			var value = record.get('value');
 			
 			// 详细内容格式化
-			alert(XML(Ext.util.Format.htmlDecode(value)).toXMLString());			
+			alert(Ext.util.Format.htmlDecode(value));			
 		});
 		
 		// 获取屏幕宽度

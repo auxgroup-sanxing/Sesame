@@ -1093,12 +1093,6 @@ getInvokeDialog : function(node){
 		
 	dlg.node = node;
 	var a = node.attributes;	
-	if (!!a['emulator-fault-text'])
-		a['emulator-fault-text'] = 
-			XML(a['emulator-fault-text']).toXMLString();
-	
-	if (!!a['emulator-text'])
-		a['emulator-text'] = XML(a['emulator-text']).toXMLString();
 			
 	var formPanel = dlg.getComponent(0).getComponent('params');
 	var form = formPanel.getForm();
