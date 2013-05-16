@@ -456,32 +456,13 @@ public class SocketConnector
         {
             if ( keepalive )
             {
-                long millis = System.currentTimeMillis();
                 if ( ( this.socket != null ) && ( this.socket.isConnected() ) )
                 {
                     socket = this.socket;
                     socket.setSoTimeout( timeout );
                 }
-                else
-                {
-                    socket = this.socket = new Socket();
-                    socket.setKeepAlive( keepalive );
-                    socket.setReuseAddress( true );
-                    if ( LOG.isDebugEnabled() )
-                    {
-                        LOG.debug( "Attempt to connect " + socketAddress );
-                    }
-                    socket.connect( socketAddress, timeout );
-                    Long elapsed = Long.valueOf( System.currentTimeMillis() - millis );
-                    socket.setSoTimeout( timeout - elapsed.intValue() );
-                    if ( LOG.isDebugEnabled() )
-                    {
-                        LOG.debug( "Socket connected to " + socket.getInetAddress() + ":" + socket.getPort() );
-                    }
-                }
             }
-
-            if ( ( this.socket != null ) && ( !( this.socket.isClosed() ) ) )
+            else if ( ( this.socket != null ) && ( !( this.socket.isClosed() ) ) )
             {
                 try
                 {
@@ -491,27 +472,33 @@ public class SocketConnector
                 }
                 catch ( SocketException e )
                 {
+                    //ignore
                 }
                 finally
                 {
                     this.socket = null;
                 }
             }
-
-            long millis = System.currentTimeMillis();
-            socket = new Socket();
-            socket.setKeepAlive( keepalive );
-            socket.setReuseAddress( true );
-            if ( LOG.isDebugEnabled() )
+            if (socket == null)
             {
-                LOG.debug( "Attempt to connect " + socketAddress );
-            }
-            socket.connect( socketAddress, timeout );
-            Long elapsed = Long.valueOf( System.currentTimeMillis() - millis );
-            socket.setSoTimeout( timeout - elapsed.intValue() );
-            if ( LOG.isDebugEnabled() )
-            {
-                LOG.debug( "Socket connected to " + socket.getInetAddress() + ":" + socket.getPort() );
+                long millis = System.currentTimeMillis();
+                if (keepalive)
+                    socket = this.socket = new Socket();
+                else
+                    socket = new Socket();
+                socket.setKeepAlive( keepalive );
+                socket.setReuseAddress( true );
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "Attempt to connect " + socketAddress );
+                }
+                socket.connect( socketAddress, timeout );
+                Long elapsed = Long.valueOf( System.currentTimeMillis() - millis );
+                socket.setSoTimeout( timeout - elapsed.intValue() );
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "Socket connected to " + socket.getInetAddress() + ":" + socket.getPort() );
+                }
             }
         }
         catch ( SocketException e )
@@ -520,7 +507,6 @@ public class SocketConnector
             socket.close();
             throw e;
         }
-
         if ( LOG.isDebugEnabled() )
         {
             LOG.debug( "Socket read timeout: " + socket.getSoTimeout() );
@@ -531,9 +517,10 @@ public class SocketConnector
             throw new BindingException( e.getMessage(), e );
         }
 
-        PipeLine pipeline = new PipeLine( socket.getInputStream(), socket.getOutputStream() );
+        PipeLine pipeline = null;
         try
         {
+            pipeline = new PipeLine( socket.getInputStream(), socket.getOutputStream() );
             BinaryResult result = new BinaryResult();
             result.setEncoding( getProperty( "encoding" ) );
             sendRecv( pipeline, (BinarySource) context.getSource(), result );
@@ -553,8 +540,11 @@ public class SocketConnector
         }
         finally
         {
-            pipeline.close();
-            if ( !( keepalive ) )
+            if (pipeline != null)
+            {
+                pipeline.close();
+            }
+            if ( !( keepalive ) && socket != null )
             {
                 socket.close();
             }

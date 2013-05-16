@@ -41,6 +41,7 @@ public class CodeGenerator
         p.setProperty( "class.resource.loader.class",
             "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader" );
         p.setProperty( "input.encoding", "UTF-8" );
+        p.setProperty( "output.encoding", "UTF-8" );
         try
         {
             Velocity.init( p );
