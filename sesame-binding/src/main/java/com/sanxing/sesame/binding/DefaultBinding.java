@@ -586,7 +586,7 @@ public class DefaultBinding
                     finish.setAction( action );
                     finish.setServiceName( serviceName );
                     finish.setOperationName( operationName );
-                    log.info( null, finish );
+                    log.info( finish );
                 }
             }
             else
@@ -845,7 +845,7 @@ public class DefaultBinding
 
                     ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
                     err.setStage( "交易结束" );
-                    log.info( null, err );
+                    log.info( err );
                 }
 
             }
@@ -879,7 +879,7 @@ public class DefaultBinding
 
                 ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
                 err.setStage( "交易结束" );
-                log.info( null, err );
+                log.info( err );
             }
             else
             {
@@ -962,7 +962,7 @@ public class DefaultBinding
 
                 ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
                 err.setStage( "交易结束" );
-                log.info( null, err );
+                log.info( err );
             }
             return true;
         }

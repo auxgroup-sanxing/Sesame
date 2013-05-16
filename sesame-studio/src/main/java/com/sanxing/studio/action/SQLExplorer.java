@@ -123,7 +123,7 @@ public class SQLExplorer
                     SAXBuilder builder = new SAXBuilder();
                     Document document = builder.build( file );
                     Element root = document.getRootElement();
-                    Element columns = root.getChild( "columns" );
+                    Element columns = root.getChild( "columns", root.getNamespace() );
                     document.detachRootElement();
                     if ( columns != null )
                     {
@@ -262,7 +262,7 @@ public class SQLExplorer
             validateIndex( request, document, null );
             Element tableEl = document.getRootElement();
 
-            Element indices = tableEl.getChild( "indices" );
+            Element indices = tableEl.getChild( "indices", tableEl.getNamespace() );
             if ( indices == null )
             {
                 tableEl.addContent( indices = new Element( "indices" ) );
@@ -365,7 +365,7 @@ public class SQLExplorer
         Element root = document.getRootElement();
         data.put( "name", file.getName() );
         data.put( "remarks", root.getAttributeValue( "remarks" ) );
-        Element restEl = root.getChild( "restriction" );
+        Element restEl = root.getChild( "restriction", root.getNamespace() );
         if ( restEl != null )
         {
             List contents = restEl.getContent( new Filter()
@@ -567,18 +567,18 @@ public class SQLExplorer
             {
                 Element elem = (Element) iter.next();
                 JSONObject treeNode = new JSONObject();
-                String typeDscr = elem.getChildText( "type_name" ).toLowerCase();
+                String typeDscr = elem.getChildText( "type_name", elem.getNamespace() ).toLowerCase();
                 if ( ( typeDscr.equals( "char" ) ) || ( typeDscr.equals( "varchar" ) ) )
                 {
-                    typeDscr = typeDscr + "(" + elem.getChildText( "column_size" ) + ")";
+                    typeDscr = typeDscr + "(" + elem.getChildText( "column_size", elem.getNamespace() ) + ")";
                 }
-                treeNode.put( "text", elem.getChildText( "column_name" ) + " <b>" + typeDscr + "</b>" );
+                treeNode.put( "text", elem.getChildText( "column_name", elem.getNamespace() ) + " <b>" + typeDscr + "</b>" );
 
                 treeNode.put( "leaf", true );
                 treeNode.put( "icon", "sqlexplorer_viewer/images/columns.gif" );
                 treeNode.put( "meta", "COLUMN" );
                 treeNode.put( parent, parentId );
-                treeNode.put( "name", elem.getChildText( "column_name" ) );
+                treeNode.put( "name", elem.getChildText( "column_name", elem.getNamespace() ) );
 
                 result.put( treeNode );
             }
@@ -1013,7 +1013,7 @@ public class SQLExplorer
         SAXBuilder builder = new SAXBuilder();
         Document document = builder.build( file );
         Element root = document.getRootElement();
-        Element columns = root.getChild( "columns" );
+        Element columns = root.getChild( "columns", root.getNamespace() );
         if ( columns == null )
         {
             root.addContent( columns = new Element( "columns" ) );
@@ -1068,14 +1068,14 @@ public class SQLExplorer
             {
                 Element elem = (Element) iter.next();
                 JSONObject column = new JSONObject();
-                String columnName = elem.getChildText( "column_name" );
+                String columnName = elem.getChildText( "column_name", elem.getNamespace() );
 
-                String header = elem.getChildText( "remarks" );
+                String header = elem.getChildText( "remarks", elem.getNamespace() );
                 if ( ( header == null ) || ( header.equals( "" ) ) )
                 {
                     header = columnName;
                 }
-                String type = elem.getChildText( "type_name" ).toLowerCase();
+                String type = elem.getChildText( "type_name", elem.getNamespace() ).toLowerCase();
                 if ( type.indexOf( "char" ) > -1 )
                 {
                     type = "string";
@@ -1119,10 +1119,10 @@ public class SQLExplorer
                 column.put( "header", header );
                 column.put( "dataIndex", tName + "_" + columnName );
                 column.put( "type", type );
-                column.put( "size", elem.getChildText( "column_size" ) );
-                column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable" ) ) );
+                column.put( "size", elem.getChildText( "column_size", elem.getNamespace() ) );
+                column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable", elem.getNamespace() ) ) );
 
-                String restriction = elem.getChildText( "restriction" );
+                String restriction = elem.getChildText( "restriction", elem.getNamespace() );
                 if ( ( restriction != null ) && ( restriction.length() > 0 ) )
                 {
                     JSONTokener tokener = new JSONTokener( restriction );
@@ -1131,7 +1131,7 @@ public class SQLExplorer
                 columns.put( column );
             }
 
-            Element restEl = tableEl.getChild( "restriction" );
+            Element restEl = tableEl.getChild( "restriction", tableEl.getNamespace() );
             if ( restEl != null )
             {
                 List contents = restEl.getContent( new Filter()
@@ -1177,14 +1177,14 @@ public class SQLExplorer
         {
             Element elem = (Element) iter.next();
             JSONObject column = new JSONObject();
-            String columnName = elem.getChildText( "column_name" );
+            String columnName = elem.getChildText( "column_name", elem.getNamespace() );
 
-            String header = elem.getChildText( "remarks" );
+            String header = elem.getChildText( "remarks", elem.getNamespace() );
             if ( ( header == null ) || ( header.equals( "" ) ) )
             {
                 header = columnName;
             }
-            String type = elem.getChildText( "type_name" ).toLowerCase();
+            String type = elem.getChildText( "type_name", elem.getNamespace() ).toLowerCase();
             if ( type.indexOf( "char" ) > -1 )
             {
                 type = "string";
@@ -1228,15 +1228,15 @@ public class SQLExplorer
             column.put( "header", header );
             column.put( "dataIndex", columnName );
             column.put( "type", type );
-            column.put( "size", elem.getChildText( "column_size" ) );
-            column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable" ) ) );
+            column.put( "size", elem.getChildText( "column_size", elem.getNamespace() ) );
+            column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable", elem.getNamespace() ) ) );
 
-            String def = elem.getChildText( "column_def" );
+            String def = elem.getChildText( "column_def", elem.getNamespace() );
             if ( def != null )
             {
                 column.put( "def", def );
             }
-            String restriction = elem.getChildText( "restriction" );
+            String restriction = elem.getChildText( "restriction", elem.getNamespace() );
             if ( ( restriction != null ) && ( restriction.length() > 0 ) )
             {
                 JSONTokener tokener = new JSONTokener( restriction );
@@ -1246,7 +1246,7 @@ public class SQLExplorer
         }
 
         table.put( "columns", columns );
-        Element restEl = tableEl.getChild( "restriction" );
+        Element restEl = tableEl.getChild( "restriction", tableEl.getNamespace() );
         if ( restEl != null )
         {
             List contents = restEl.getContent( new Filter()
@@ -1288,14 +1288,14 @@ public class SQLExplorer
         {
             Element elem = (Element) iter.next();
             JSONObject column = new JSONObject();
-            String columnName = elem.getChildText( "column_name" );
+            String columnName = elem.getChildText( "column_name", elem.getNamespace() );
 
-            String header = elem.getChildText( "remarks" );
+            String header = elem.getChildText( "remarks", elem.getNamespace() );
             if ( ( header == null ) || ( header.equals( "" ) ) )
             {
                 header = columnName;
             }
-            String type = elem.getChildText( "type_name" ).toLowerCase();
+            String type = elem.getChildText( "type_name", elem.getNamespace() ).toLowerCase();
             if ( type.indexOf( "char" ) > -1 )
             {
                 type = "string";
@@ -1329,10 +1329,10 @@ public class SQLExplorer
             column.put( "header", header );
             column.put( "dataIndex", columnName );
             column.put( "type", type );
-            column.put( "size", elem.getChildText( "column_size" ) );
-            column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable" ) ) );
+            column.put( "size", elem.getChildText( "column_size", elem.getNamespace() ) );
+            column.put( "allowBlank", "true".equals( elem.getChildText( "is_nullable", elem.getNamespace() ) ) );
 
-            String restriction = elem.getChildText( "restriction" );
+            String restriction = elem.getChildText( "restriction", elem.getNamespace() );
             if ( ( restriction != null ) && ( restriction.length() > 0 ) )
             {
                 JSONTokener tokener = new JSONTokener( restriction );
@@ -1342,7 +1342,7 @@ public class SQLExplorer
         }
 
         view.put( "columns", columns );
-        Element restEl = viewEl.getChild( "restriction" );
+        Element restEl = viewEl.getChild( "restriction", viewEl.getNamespace() );
         if ( restEl != null )
         {
             List contents = restEl.getContent( new Filter()
@@ -1371,7 +1371,7 @@ public class SQLExplorer
         DatabaseMetaData dbMeta = conn.getMetaData();
         Document document = builder.build( file );
         Element table = document.getRootElement();
-        Element columns = table.getChild( "columns" );
+        Element columns = table.getChild( "columns", table.getNamespace() );
         if ( columns != null )
         {
             List colList = columns.getChildren();
@@ -1491,22 +1491,22 @@ public class SQLExplorer
 
     private String getColumnDefine( Element column )
     {
-        String name = column.getChildText( "column_name" );
-        String type = column.getChildText( "type_name" );
-        String def = column.getChildText( "column_def" );
+        String name = column.getChildText( "column_name", column.getNamespace() );
+        String type = column.getChildText( "type_name", column.getNamespace() );
+        String def = column.getChildText( "column_def", column.getNamespace() );
         def = " DEFAULT " + ( ( type.toLowerCase().indexOf( "char" ) >= 0 ) ? "'" + def + "'" : def );
 
         if ( type.toLowerCase().indexOf( "char" ) >= 0 )
         {
-            type = type + " (" + column.getChildText( "column_size" ) + ")";
+            type = type + " (" + column.getChildText( "column_size", column.getNamespace() ) + ")";
         }
         else if ( type.equals( "decimal" ) )
         {
             type =
-                type + " (" + column.getChildText( "column_size" ) + "," + column.getChildText( "decimal_digits" )
+                type + " (" + column.getChildText( "column_size", column.getNamespace() ) + "," + column.getChildText( "decimal_digits", column.getNamespace() )
                     + ")";
         }
-        String nullable = column.getChildText( "is_nullable" );
+        String nullable = column.getChildText( "is_nullable", column.getNamespace() );
         return name + " " + type + ( ( nullable.equals( "false" ) ) ? " NOT NULL" : "" ) + def;
     }
 
@@ -1624,7 +1624,7 @@ public class SQLExplorer
     private void reverseColumn( DatabaseMetaData meta, Element table, String name )
         throws SQLException, JDOMException
     {
-        Element columns = table.getChild( "columns" );
+        Element columns = table.getChild( "columns", table.getNamespace() );
         if ( columns == null )
         {
             table.addContent( columns = new Element( "columns" ) );
@@ -1669,7 +1669,7 @@ public class SQLExplorer
     private void reverseIndices( DatabaseMetaData meta, Element table, String name )
         throws SQLException
     {
-        Element indices = table.getChild( "indices" );
+        Element indices = table.getChild( "indices", table.getNamespace() );
         if ( indices == null )
         {
             table.addContent( indices = new Element( "indices" ) );
@@ -1754,7 +1754,7 @@ public class SQLExplorer
             String validator = request.getParameter( "validator" );
             if ( ( validator != null ) && ( validator.length() > 0 ) )
             {
-                Element validEl = tableEl.getChild( "restriction" );
+                Element validEl = tableEl.getChild( "restriction", tableEl.getNamespace() );
                 if ( validEl == null )
                 {
                     tableEl.addContent( validEl = new Element( "restriction" ) );

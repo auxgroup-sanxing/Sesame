@@ -64,7 +64,7 @@ public class ForEachAction
             Element child = (Element) listVar.get();
             Variable childVar = new Variable( child, 0 );
             ctx.addVariable( childVarName, childVar );
-            Iterator iterActions = config.getChild( "actions" ).getChildren().iterator();
+            Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
             try
             {
                 ActionUtil.bachInvoke( ctx, iterActions );
@@ -83,7 +83,7 @@ public class ForEachAction
                 Element child = (Element) eleIter.next();
                 Variable childVar = new Variable( child, 0 );
                 ctx.addVariable( childVarName, childVar );
-                Iterator iterActions = config.getChild( "actions" ).getChildren().iterator();
+                Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
                 try
                 {
                     ActionUtil.bachInvoke( ctx, iterActions );
@@ -99,7 +99,7 @@ public class ForEachAction
     @Override
     public void doworkInDehydrateState( DataContext ctx )
     {
-        Iterator iterActions = config.getChild( "actions" ).getChildren().iterator();
+        Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
         try
         {
             ActionUtil.bachInvoke( ctx, iterActions );

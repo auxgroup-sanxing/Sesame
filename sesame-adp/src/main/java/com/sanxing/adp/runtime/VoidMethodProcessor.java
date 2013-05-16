@@ -27,12 +27,8 @@ public class VoidMethodProcessor
     public Element process( Document request, OperationInfo operation, Object tx )
     {
         Object[] paramObjets = new Object[operation.getMethodParamCount()];
-        Element body = request.getRootElement();
-
-        Element newBody = new Element( "body", body.getNamespace() );
-        newBody.addContent( (Element) body.clone() );
-        fufillINParams( operation, newBody, paramObjets );
-        fufillOUTParams( operation, newBody, paramObjets );
+        fufillINParams( operation, request, paramObjets );
+        fufillOUTParams( operation, request, paramObjets );
 
         Element root = invokeMultiResultOperation( operation, tx, paramObjets );
         return root;

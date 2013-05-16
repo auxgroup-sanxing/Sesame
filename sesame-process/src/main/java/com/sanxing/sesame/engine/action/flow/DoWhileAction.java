@@ -41,12 +41,12 @@ public class DoWhileAction
         {
             try
             {
-                Iterator iterator = actionEl.getChild( "do" ).getChildren().iterator();
+                Iterator iterator = actionEl.getChild( "do", actionEl.getNamespace() ).getChildren().iterator();
                 ActionUtil.bachInvoke( ctx, iterator );
 
                 if ( executionContext.isDebugging() )
                 {
-                    Element xpathEl = actionEl.getChild( "xpath" );
+                    Element xpathEl = actionEl.getChild( "xpath", actionEl.getNamespace() );
                     synchronized ( executionContext )
                     {
                         executionContext.setCurrentAction( xpathEl.getAttributeValue( "id", "" ) );
@@ -76,7 +76,7 @@ public class DoWhileAction
     @Override
     public void doworkInDehydrateState( DataContext ctx )
     {
-        Iterator iterator = actionEl.getChild( "do" ).getChildren().iterator();
+        Iterator iterator = actionEl.getChild( "do", actionEl.getNamespace() ).getChildren().iterator();
         ActionUtil.bachInvoke( ctx, iterator );
     }
 }

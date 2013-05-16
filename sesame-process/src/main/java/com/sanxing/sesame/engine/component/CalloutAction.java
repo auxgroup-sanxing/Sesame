@@ -94,7 +94,7 @@ public class CalloutAction
     public void doinit( Element actionEl )
     {
         this.actionEl = actionEl;
-        Element addressEl = actionEl.getChild( "address" );
+        Element addressEl = actionEl.getChild( "address", actionEl.getNamespace() );
         String strServiceName = addressEl.getChildTextTrim( "service-name", actionEl.getNamespace() );
         serviceName =
             ( ( ( strServiceName == null ) || ( strServiceName.length() == 0 ) ) ? null
@@ -109,7 +109,7 @@ public class CalloutAction
         useVariable = actionEl.getAttributeValue( "use-var" );
         toVar = actionEl.getAttributeValue( "to-var" );
 
-        Element timeoutEl = actionEl.getChild( "onTimeout" );
+        Element timeoutEl = actionEl.getChild( "onTimeout", actionEl.getNamespace() );
         if ( timeoutEl != null )
         {
             timeout = Long.parseLong( timeoutEl.getAttributeValue( "timeout", "30" ) );
@@ -121,7 +121,7 @@ public class CalloutAction
 
         catches = actionEl.getChildren( "onException" );
 
-        xsltEl = actionEl.getChild( "xslt" );
+        xsltEl = actionEl.getChild( "xslt", actionEl.getNamespace() );
 
         String value = actionEl.getAttributeValue( "is-emulator", "0" );
         if ( value != null )

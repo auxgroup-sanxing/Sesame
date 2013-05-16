@@ -41,7 +41,7 @@ public class IfThenAction
         Boolean bool = (Boolean) booleanVar.get();
         if ( bool.booleanValue() )
         {
-            Iterator thenActions = config.getChild( "then" ).getChildren().iterator();
+            Iterator thenActions = config.getChild( "then", config.getNamespace() ).getChildren().iterator();
             ActionUtil.bachInvoke( ctx, thenActions );
         }
         else
@@ -62,7 +62,7 @@ public class IfThenAction
 
                 booleanVar = select( ele, xpath, ctx );
                 bool = (Boolean) booleanVar.get();
-                Iterator thenActions = elseifthen.getChild( "then" ).getChildren().iterator();
+                Iterator thenActions = elseifthen.getChild( "then", config.getNamespace() ).getChildren().iterator();
                 if ( bool.booleanValue() )
                 {
                     elseif = true;
@@ -71,9 +71,9 @@ public class IfThenAction
                 }
             }
 
-            if ( ( !( elseif ) ) && ( config.getChild( "else" ) != null ) )
+            if ( ( !( elseif ) ) && ( config.getChild( "else", config.getNamespace() ) != null ) )
             {
-                Iterator elseActions = config.getChild( "else" ).getChildren().iterator();
+                Iterator elseActions = config.getChild( "else", config.getNamespace() ).getChildren().iterator();
                 ActionUtil.bachInvoke( ctx, elseActions );
             }
         }

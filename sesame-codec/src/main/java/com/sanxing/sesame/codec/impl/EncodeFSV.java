@@ -290,7 +290,7 @@ public class EncodeFSV
                 }
                 if ( ( type instanceof XmlSchemaComplexType ) && ( element.getSchemaType().getName() != null ) )
                 {
-                    org.jdom.Element xmlElementChild = xmlElement.getChild( elementName );
+                    org.jdom.Element xmlElementChild = xmlElement.getChild( elementName, xmlElement.getNamespace() );
                     if ( xmlElementChild == null )
                     {
                         throw new FormatException( "in xmlDoc,can not find the element:[" + elementName + "]" );
@@ -338,7 +338,7 @@ public class EncodeFSV
                                 throw new FormatException( "element:[" + element.getName()
                                     + "],element occurs,do not define the attribute[ref] or it has no value!" );
                             }
-                            org.jdom.Element xmlChild = xmlElement.getChild( elementName );
+                            org.jdom.Element xmlChild = xmlElement.getChild( elementName, xmlElement.getNamespace() );
                             if ( xmlChild == null )
                             {
                                 throw new FormatException( "in xmlDoc,can not find the child element:[" + elementName

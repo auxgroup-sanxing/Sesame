@@ -27,12 +27,8 @@ public class ReturnMethodProcessor
     public Element process( Document request, OperationInfo operation, Object tx )
         throws AppException
     {
-        Element body = request.getRootElement();
-
-        Element newBody = new Element( "body", body.getNamespace() );
-        newBody.addContent( (Element) body.clone() );
         Object[] paramObjets = new Object[operation.getMethodParamCount()];
-        fufillINParams( operation, newBody, paramObjets );
+        fufillINParams( operation, request, paramObjets );
 
         LOG.debug( "After fufillINParams" );
         Element root = invokeSingleResultTx( operation, tx, paramObjets );

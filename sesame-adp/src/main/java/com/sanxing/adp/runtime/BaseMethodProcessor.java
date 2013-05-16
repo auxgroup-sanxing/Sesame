@@ -35,11 +35,12 @@ public abstract class BaseMethodProcessor
         this.server = server;
     }
 
-    void fufillINParams( OperationInfo oper, Element body, Object[] paramObjets )
+    void fufillINParams( OperationInfo oper, Document request, Object[] paramObjets )
         throws ADPException
     {
         int i = 0;
-
+        
+        Element body = request.getRootElement();
         if ( body == null )
         {
             throw new ADPException( "00006", oper.getCapOperationName() );
@@ -48,8 +49,9 @@ public abstract class BaseMethodProcessor
         if ( LOG.isDebugEnabled() )
         {
             LOG.debug( "prepared to fufill input parameters..............." );
-            LOG.debug( "input document is ...........\n " + JdomUtil.print( new JDOMSource( body ) ) );
+            LOG.debug( "input document is ...........\n " + JdomUtil.print( new JDOMSource( request ) ) );
         }
+        
         List<PartInfo> params = oper.getParams();
         for ( PartInfo parameterInfo : params )
         {
@@ -61,28 +63,26 @@ public abstract class BaseMethodProcessor
                     LOG.debug( "parsing element [" + elementName + "]" );
                 }
                 String javaType = parameterInfo.getJavaType();
-                Element part = null;
                 if ( elementName != null )
                 {
-                    Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
-                    part = body.getChild( elementName.getLocalPart(), ns );
-                    if ( part != null )
+                    if ( elementName.getLocalPart().equals( body.getName() ) )
                     {
-                        part.setNamespace( Namespace.getNamespace( "", elementName.getNamespaceURI() ) );
+                        Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
+                        body.setNamespace( ns );
+                        for ( Element ele : (List<Element>) body.getChildren() )
+                        {
+                            ele.setNamespace( ns );
+                        }
                     }
                     else
                     {
                         throw new ADPException( "00007", elementName.getLocalPart() );
                     }
                 }
-                else
-                {
-                    part = body.getChild( parameterInfo.getName() );
-                }
 
                 if ( XJUtil.isPrimitive( javaType ) )
                 {
-                    String param = part.getText();
+                    String param = body.getText();
                     Object paramObj =
                         XJUtil.xmlPrimitiv2Java( parameterInfo.getJavaType(), parameterInfo.getXsType(), param );
                     paramObjets[i] = paramObj;
@@ -92,7 +92,7 @@ public abstract class BaseMethodProcessor
                     Unmarshaller unmarshaller =
                         JAXBHelper.getUnMarshallerByClazz( server.jarFileClassLoader.loadClass( javaType ) );
 
-                    Object paramObject = unmarshaller.unmarshal( new JDOMSource( part ) );
+                    Object paramObject = unmarshaller.unmarshal( new JDOMSource( body ) );
                     paramObjets[i] = paramObject;
                 }
 
@@ -128,7 +128,7 @@ public abstract class BaseMethodProcessor
         }
     }
 
-    void fufillOUTParams( OperationInfo oper, Element body, Object[] paramObjets )
+    void fufillOUTParams( OperationInfo oper, Document request, Object[] paramObjets )
     {
         int i = oper.getMethodParamCount() - oper.getParams().size() + 1;
         for ( PartInfo parameterInfo : oper.getResults() )

@@ -130,7 +130,7 @@ public class Reverter
                         var = dataCtx.getVariable( useVariable );
                     }
 
-                    Element addressEl = actionEl.getChild( "address" );
+                    Element addressEl = actionEl.getChild( "address", actionEl.getNamespace() );
                     String strServiceName = addressEl.getChildTextTrim( "service-name", addressEl.getNamespace() );
                     QName serviceName =
                         ( ( strServiceName == null ) || ( strServiceName.length() == 0 ) ) ? null

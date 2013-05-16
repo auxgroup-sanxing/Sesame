@@ -34,7 +34,7 @@ public class SchemaUtil
         {
             return "";
         }
-        return annoEl.getChildText( "documentation", element.getNamespace() );
+        return annoEl.getChildText( "documentation", annoEl.getNamespace() );
     }
 
     static void getAppinfo( Element element, JSONObject component )

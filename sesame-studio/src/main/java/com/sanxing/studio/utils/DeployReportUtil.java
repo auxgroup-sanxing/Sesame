@@ -302,7 +302,7 @@ public class DeployReportUtil
         while ( itr.hasNext() )
         {
             Element jms = (Element) itr.next();
-            Element appinfo = jms.getChild( "app-info" );
+            Element appinfo = jms.getChild( "app-info", jms.getNamespace() );
             if ( appinfo == null )
             {
                 continue;
@@ -376,8 +376,8 @@ public class DeployReportUtil
                 {
                     continue;
                 }
-                Element jndi = database.getChild( "jndi-name" );
-                Element appinfo = database.getChild( "app-info" );
+                Element jndi = database.getChild( "jndi-name", database.getNamespace() );
+                Element appinfo = database.getChild( "app-info", database.getNamespace() );
                 if ( jndi == null )
                 {
                     continue;

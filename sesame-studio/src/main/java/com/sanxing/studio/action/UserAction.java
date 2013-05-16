@@ -303,7 +303,7 @@ public class UserAction
                 Element root = document.getRootElement();
 
                 validateRole( roleId, root );
-                Element roles = root.getChild( "roles" );
+                Element roles = root.getChild( "roles", root.getNamespace() );
                 if ( roles == null )
                 {
                     root.addContent( roles = new Element( "roles" ) );

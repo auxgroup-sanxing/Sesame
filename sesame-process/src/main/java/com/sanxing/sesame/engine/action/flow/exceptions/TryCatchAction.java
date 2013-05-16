@@ -38,7 +38,7 @@ public class TryCatchAction
     public void dowork( DataContext dataCtx )
         throws AppException
     {
-        Iterator tryActions = actionEl.getChild( "try" ).getChildren().iterator();
+        Iterator tryActions = actionEl.getChild( "try", actionEl.getNamespace() ).getChildren().iterator();
         try
         {
             ActionUtil.bachInvoke( dataCtx, tryActions );

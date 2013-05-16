@@ -58,7 +58,7 @@ public class Outputter
             if ( column != null )
             {
                 label = column.getChildText( "remarks" );
-                JSONTokener json = new JSONTokener( column.getChildText( "restriction" ) );
+                JSONTokener json = new JSONTokener( column.getChildText( "restriction", column.getNamespace() ) );
                 Object token = ( json.more() ) ? json.nextValue() : null;
                 if ( token instanceof JSONArray )
                 {
