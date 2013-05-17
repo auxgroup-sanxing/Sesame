@@ -1,9 +1,11 @@
 package com.sanxing.adp.runtime;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.namespace.QName;
 
 import org.jdom.Document;
@@ -63,23 +65,6 @@ public abstract class BaseMethodProcessor
                     LOG.debug( "parsing element [" + elementName + "]" );
                 }
                 String javaType = parameterInfo.getJavaType();
-                if ( elementName != null )
-                {
-                    if ( elementName.getLocalPart().equals( body.getName() ) )
-                    {
-                        Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
-                        body.setNamespace( ns );
-                        for ( Element ele : (List<Element>) body.getChildren() )
-                        {
-                            ele.setNamespace( ns );
-                        }
-                    }
-                    else
-                    {
-                        throw new ADPException( "00007", elementName.getLocalPart() );
-                    }
-                }
-
                 if ( XJUtil.isPrimitive( javaType ) )
                 {
                     String param = body.getText();
@@ -89,8 +74,26 @@ public abstract class BaseMethodProcessor
                 }
                 else
                 {
-                    Unmarshaller unmarshaller =
-                        JAXBHelper.getUnMarshallerByClazz( server.jarFileClassLoader.loadClass( javaType ) );
+                    Class paramClass = server.jarFileClassLoader.loadClass( javaType );
+                    if ( elementName != null )
+                    {
+                        if ( elementName.getLocalPart().equals( body.getName() ) )
+                        {
+                            body.setNamespace( Namespace.getNamespace( elementName.getNamespaceURI() ) );
+                            for ( Element ele : (List<Element>) body.getChildren() )
+                            {
+                                Field field = paramClass.getDeclaredField( ele.getName() );
+                                XmlElement xmlEle = field.getAnnotation( XmlElement.class );
+                                ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
+                            }
+                        }
+                        else
+                        {
+                            throw new ADPException( "00007", elementName.getLocalPart() );
+                        }
+                    }
+                    
+                    Unmarshaller unmarshaller = JAXBHelper.getUnMarshallerByClazz( paramClass );
 
                     Object paramObject = unmarshaller.unmarshal( new JDOMSource( body ) );
                     paramObjets[i] = paramObject;

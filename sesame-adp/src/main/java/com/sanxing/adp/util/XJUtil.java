@@ -180,10 +180,6 @@ public class XJUtil
         return ns2package( ns.getNamespaceURI() ) + "." + StringUtils.capitalize( ns.getLocalPart() );
     }
 
-    public static void main( String[] args )
-    {
-    }
-
     public static boolean isPrimitive( String javaType )
     {
         return primitives.contains( javaType );
