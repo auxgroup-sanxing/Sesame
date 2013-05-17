@@ -62,10 +62,9 @@
 					lock.put("path",unitname+"/"+serverType+"/"+parent+"/"+filename);
 					lock.put("type","服务");
 				}else{
-					//TODO
+					//TODO:
 					//lock.put("path",filePath);
 					//lock.put("type","未知");
-					
 				}
 				locks.put(lock);
 			}
@@ -76,13 +75,14 @@
 		response.setContentType("text/json;charset=utf-8");
 		return result.toString();
 	}
+	
 	public String unLock(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		try{
-		String unit = request.getParameter("unit");
-		File file = Configuration.getWorkspaceFile(unit);
-		ThreeWaySynchronizer sync = SCM.getSynchronizer(file.getParentFile());
-		sync.unlock(file,true);
-		response.setContentType("text/plain;charset=utf-8");
+			String unit = request.getParameter("unit");
+			File file = Configuration.getWorkspaceFile(unit);
+			ThreeWaySynchronizer sync = SCM.getSynchronizer(file.getParentFile());
+			sync.unlock(file,true);
+			response.setContentType("text/plain;charset=utf-8");
 		}catch(Exception e){
 			//e.printStackTrace();
 		}

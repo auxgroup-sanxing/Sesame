@@ -1914,16 +1914,25 @@ public String unitUnlock(HttpServletRequest request, HttpServletResponse respons
 	
 	Map props = sync.info(wsdlFile);
 	String lock = (String)props.get("lock");
-	if(null != lock){
-		sync.commit(unitFolder.listFiles(new FileFilter() {
-			public boolean accept(File file) {
-				return file.getName().endsWith(".xsd") || file.getName().endsWith(".xml") || file.getName().endsWith(".wsdl");
-			}
-		}), "Auto commit by studio");
+	if(lock != null){
+	    try{
+			sync.commit(unitFolder.listFiles(new FileFilter() {
+				public boolean accept(File file) {
+					return file.getName().endsWith(".xsd") || file.getName().endsWith(".xml") || file.getName().endsWith(".wsdl");
+				}
+			}), "Auto commit by studio");
+	    }
+		catch (Exception e) {
+			//e.printStackTrace();
+		}
 		
-		// false: 正常解锁; 
-		// true:强制解锁,即可以解其他人加的锁
-		sync.unlock(wsdlFile,false);
+		props = sync.info(wsdlFile);
+		lock = (String)props.get("lock");
+		if(lock != null) {
+			// false: 正常解锁; 
+			// true:强制解锁,即可以解其他人加的锁
+			sync.unlock(wsdlFile, false);
+		}
 	}
 	response.setContentType("text/plain;charset=utf-8");
 	return "success";
