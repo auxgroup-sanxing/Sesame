@@ -79,12 +79,20 @@ public abstract class BaseMethodProcessor
                     {
                         if ( elementName.getLocalPart().equals( body.getName() ) )
                         {
-                            body.setNamespace( Namespace.getNamespace( elementName.getNamespaceURI() ) );
+                        	Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
+                            body.setNamespace( ns );
                             for ( Element ele : (List<Element>) body.getChildren() )
                             {
                                 Field field = paramClass.getDeclaredField( ele.getName() );
                                 XmlElement xmlEle = field.getAnnotation( XmlElement.class );
-                                ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
+                                if ( "##default".equals( xmlEle.namespace() ) )
+                                {
+                                	ele.setNamespace( ns );
+                                }
+                                else
+                                {
+                                	ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
+                                }                              	
                             }
                         }
                         else
