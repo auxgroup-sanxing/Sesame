@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.apache.ws.commons.schema.XmlSchema;
@@ -151,24 +152,18 @@ public class EncodeFSV
                         "in xsdDoc,element [request] or [response],the attribute [name] do not have value" );
                 }
                 XmlSchemaType type = null;
-                if ( element.getRefName() != null )
+                QName refName = element.getRefName();
+                if ( refName != null )
                 {
-                    if ( schema.getElementByName( element.getRefName() ) == null )
+                    if ( schema.getElementByName( refName ) == null )
                     {
                         throw new FormatException( "can not get element from schema by name:[" + element.getRefName()
                             + "]!" );
                     }
-                    type = schema.getElementByName( element.getRefName() ).getSchemaType();
+                    element = schema.getElementByName( refName );
                 }
-                else
-                {
-                    type = element.getSchemaType();
-                }
+                type = element.getSchemaType();
 
-                if ( element.getRefName() != null )
-                {
-                    element = schema.getElementByName( element.getRefName() );
-                }
                 org.w3c.dom.Element format;
                 String elementType;
                 String elementValue;
@@ -178,7 +173,15 @@ public class EncodeFSV
                     format = CodecUtil.getXSDFormat( element, elementName );
                     elementType = type.getName();
 
-                    elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace() );
+                    elementValue = xmlElement.getChildText( elementName );
+                    if ( elementValue == null )
+                    {
+                        elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace() );
+                    }
+                    if ( elementValue == null && refName != null)
+                    {
+                        elementValue = xmlElement.getChildText( elementName, xmlElement.getNamespace( refName.getPrefix() ) );
+                    }
                     if ( elementValue == null )
                     {
                         XMLOutputter outputter = new XMLOutputter( Format.getPrettyFormat() );

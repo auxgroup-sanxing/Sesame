@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.apache.ws.commons.schema.XmlSchema;
@@ -138,14 +139,15 @@ public class DecodeFSV
                 org.jdom.Element childOfElementMessage = new org.jdom.Element( elementName );
 
                 XmlSchemaType xsType = null;
-                if ( element.getRefName() != null )
+                QName refName = element.getRefName();
+                if ( refName != null )
                 {
-                    if ( schema.getElementByName( element.getRefName() ) == null )
+                    if ( schema.getElementByName( refName ) == null )
                     {
                         throw new FormatException( "can not get element from schema by name:[" + element.getRefName()
                             + "]!" );
                     }
-                    element = schema.getElementByName( element.getRefName() );
+                    element = schema.getElementByName( refName );
                 }
                 xsType = element.getSchemaType();
 
