@@ -481,25 +481,27 @@ return {
 		    dlg = new Ext.Window({
 				title: '编辑地址',
 		        autoCreate: true,
-		        resizable: true, constrain:true, constrainHeader:true,
+		        resizable: false, constrain:true, constrainHeader:true,
 		        minimizable:false, maximizable:false, stateful:false, modal:true,
 		        buttonAlign: "right", defaultButton: 0,
-		        width: 500, height: 210, minWidth: 300,
+		        width: 450, height: 210, minWidth: 300,
 		        footer: true, plain: false,
 		        closeAction: 'hide',
 				layout: 'fit',
 				items: [{
 					itemId: 'form',
 					xtype: 'form',
+					labelWidth: 85,
 					autoScroll: true, autoHeight: false,
 					border: false,
-					bodyStyle: 'padding: 10px 20px 10px 10px;',
+					bodyStyle: 'padding:10px;',
 					stateful:  false,
 					items: [{
 	                      fieldLabel: '地址名称',
 	                      name: 'name',
 	                      sortable: true,
 	                      xtype: 'textfield',
+	                      width: 180,
 	                      allowBlank: false
                   	},{
 	                    fieldLabel: '协议',
@@ -507,6 +509,7 @@ return {
 	                    sortable: true,
 						xtype: 'combo',
 						allowBlank: false,
+						width: 180,
 						forceSelection: true, editable: false,
 						store: new Ext.data.JsonStore({
 							url: 'address_ctrl.jsp',
@@ -519,6 +522,7 @@ return {
                       	fieldLabel: '地址',
                       	name: 'uri',
                         xtype: 'textfield',
+                        width: 180,
                         allowBlank: false,
 						regex: new RegExp("^(//)?"
 										+ "(([0-9a-z_!~*'().&=+$%-]+: )?[0-9a-z_!~*'().&=+$%-]+@)?" // ftp的user@
@@ -536,6 +540,7 @@ return {
 						xtype: 'combo',
 						fieldLabel: '地址类型',
 						allowBlank: false,
+						width: 180,
 						forceSelection: true, editable: false,
 						store: [['local','本地地址'], ['remote','远程地址']],
 						triggerAction: 'all'

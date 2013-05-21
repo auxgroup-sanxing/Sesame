@@ -1593,6 +1593,9 @@
 					if (!filename.endsWith(".zip")) {
 						throw new Exception("服务包必须是扩展名为 .zip 的文件");
 					}
+					index = filename.lastIndexOf(".");
+					if (unitName == null || unitName.equals(""))
+						unitName = filename.substring(0, index);
 					File unitFolder = Configuration.getWorkspaceFile(project + "/" + unitType + "/" + unitName);
 					if (unitFolder.exists()) {
 						throw new Exception("服务单元已经存在，请指定一个新的名称");
@@ -1603,37 +1606,29 @@
 
 					FileUtil.buildDirectory(unitFolder);
 					FileUtil.unpackArchive(unitFile, unitFolder);
-					/*
-			        ZipFile zipFile = new ZipFile(unitFile);
-					try {
-						final String path = "target/classes/";
-				        for (Enumeration<?> entries = zipFile.entries(); entries.hasMoreElements();) {
-				            ZipEntry entry = (ZipEntry) entries.nextElement();
-				            if (entry.getName().startsWith(path)) {
-				                File file = new File(unitFolder, entry.getName().replaceFirst(path, ""));
-				                if (!FileUtil.buildDirectory(file.getParentFile())) {
-				                    throw new IOException("Could not create directory: " + file.getParentFile());
-				                }
-				                if (!entry.isDirectory()) {
-				                	OutputStream output = new BufferedOutputStream(new FileOutputStream(file));
-				                	InputStream input = zipFile.getInputStream(entry);
-				                    FileUtil.copyInputStream(input, output);
-				                    input.close();
-				                    output.close();
-				                }
-				                else {
-				                    if (!FileUtil.buildDirectory(file)) {
-				                        throw new IOException("Could not create directory: " + file);
-				                    }
-				                }
-				            }
-				        }
+					
+					
+					Document document;
+					File wsdlFile;
+					if ((wsdlFile = new File(unitFolder, "unit.wsdl")).exists()) {
+						SAXBuilder builder = new SAXBuilder();
+						document = builder.build(wsdlFile);
+					} else  {
+						throw new Exception("服务包中找不到服务单元定义文档 unit.wdsl");
 					}
-					finally {
-				        zipFile.close();
-					}
-					*/
-					return "true";
+					
+					Element rootEl = document.getRootElement();
+					Namespace ns = rootEl.getNamespace();
+					String name = null, desc=null;
+					
+					name = rootEl.getAttributeValue("name");
+					desc = rootEl.getChildText("documentation", ns);
+					JSONObject jso = new JSONObject();
+					jso.put("success", true);
+					jso.put("unit-name", name);
+					jso.put("desc", desc);
+					
+					return jso.toString();
 				}
 				return "{success:false, error:\"未知操作\"}";
 			}

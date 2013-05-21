@@ -202,8 +202,9 @@ return {
 		var addMenu = new Ext.menu.Menu({
 			id: 'addMenu',
 			items: [{
-				catalog: 'engine',
-				text: '服务单元',
+				catalog: 'server',
+				text: '代理服务',
+				icon:"../images/icons/computer_add.png",
 				handler: function(){
 				 	var item = this;
 					var cNode = rootNode.findChild("name", this.catalog);
@@ -211,14 +212,12 @@ return {
 				 	var a = cNode.attributes;
 					var callback = function(values){
 						cNode.expand(false, false, function(){
-							var file = project + '/' + item.catalog + '/' + values['serviceUnit'];
-							var node = cNode.findChild("file", file);
+							var node = cNode.findChild("name", values['unit-name']);
 							if (!node) {
 								node = _this.createResourceNode({
 									icon: a.icon,
-									text: values['serviceUnit'],
-									path: a.path,
-									file: file,
+									text: values['unit-name'],
+									name: values['unit-name'],
 									desc: values['desc']
 								});
 								cNode.appendChild(node);
@@ -226,7 +225,61 @@ return {
 							node.select();
 						});
 					};
-					Dialog.getUnitDialog({title:'添加服务单元', params: {type:item.catalog}, callback:callback}).show();
+					Dialog.getUnitDialog({title:'添加代理服务单元', params: {type:item.catalog}, callback:callback}).show();
+				}
+			},
+			{
+				catalog: 'engine',
+				text: '本地服务',
+				icon:"../images/obj16/elements_obj.gif",
+				handler: function(){
+				 	var item = this;
+					var cNode = rootNode.findChild("name", this.catalog);
+					if (!cNode) return;
+				 	var a = cNode.attributes;
+					var callback = function(values){
+						cNode.expand(false, false, function(){
+							var node = cNode.findChild("name", values['unit-name']);
+							if (!node) {
+								node = _this.createResourceNode({
+									icon: a.icon,
+									text: values['unit-name'],
+									name: values['unit-name'],
+									desc: values['desc']
+								});
+								cNode.appendChild(node);
+							}
+							node.select();
+						});
+					};
+					Dialog.getUnitDialog({title:'添加本地服务单元', params: {type:item.catalog}, callback:callback}).show();
+				}
+			},
+			{
+				catalog: 'client',
+				text: '远程服务',
+				icon:"../images/elcl16/external_browser.gif",
+				handler: function(){
+				 	var item = this;
+					var cNode = rootNode.findChild("name", this.catalog);
+					if (!cNode) return;
+				 	var a = cNode.attributes;
+					var callback = function(values){
+						cNode.expand(false, false, function(){
+							var node = cNode.findChild("name", values['unit-name']);
+							if (!node) {
+								node = _this.createResourceNode({
+									icon: a.icon,
+									text: values['unit-name'],
+									name: values['unit-name'],
+									desc: values['desc']
+								});
+								cNode.appendChild(node);
+							}
+							node.select();
+						});
+					};
+					Dialog.getUnitDialog({title:'添加远程服务单元', params: {type:item.catalog}, callback:callback}).show();
 				}
 			},
 			'-',
@@ -240,7 +293,7 @@ return {
 				 	var a = cNode.attributes;
 					var callback = function(values){
 						cNode.expand(false, false, function(){
-							var file = project + '/' + item.catalog + '/' + values['file'];
+							var file = project + '/' + item.catalog + '/' + values['file'];//TODO:file
 							var node = cNode.findChild("file", file);
 							if (!node) {
 								node = _this.createResourceNode({

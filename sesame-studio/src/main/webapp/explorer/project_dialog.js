@@ -345,7 +345,7 @@ return {
 							},
 							success: function(form, action){
 								if (dlg.options.callback) {
-									dlg.options.callback(form.getValues());
+									dlg.options.callback(action.result);//form.getValues());
 									dlg.hide();
 								}
 							},
