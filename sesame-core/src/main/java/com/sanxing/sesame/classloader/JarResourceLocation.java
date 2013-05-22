@@ -59,16 +59,14 @@ public class JarResourceLocation
     {
         if ( jarFile != null )
         {
-            try
+            JarEntry jarEntry = jarFile.getJarEntry( resourceName );
+            if ( jarEntry != null )
             {
-                JarEntry jarEntry = jarFile.getJarEntry( resourceName );
-                if ( jarEntry != null )
+                try 
                 {
-                    return new JarEntryResourceHandle( jarEntry, jarFile.getInputStream( jarEntry ) );
+                    return new JarResourceHandle( jarFile, jarEntry, getCodeSource() );
+                } catch (MalformedURLException localMalformedURLException) {
                 }
-            }
-            catch ( IOException e )
-            {
             }
         }
         else if ( content != null )

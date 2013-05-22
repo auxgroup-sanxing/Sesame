@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.engine.action.cutpoint.ActionCutpoint;
+import com.sanxing.sesame.engine.action.flow.AbortException;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.DehydrateManager;
 import com.sanxing.sesame.engine.context.ExecutionContext;
@@ -102,7 +103,71 @@ public abstract class AbstractAction
     @Override
     public void work( DataContext ctx )
     {
-        // TODO:
+        ExecutionContext executionContext = ctx.getExecutionContext();
+        if ( executionContext.isDoCutpoint() )
+        {
+            for ( ActionCutpoint cutpoint : cutPoints )
+            {
+                cutpoint.beforWork( ctx, this );
+            }
+        }
+        try
+        {
+            if ( executionContext.isDebugging() )
+            {
+                try
+                {
+                    synchronized ( executionContext )
+                    {
+                        executionContext.setCurrentAction( this.actionEl.getAttributeValue( "id" ) );
+                        LOG.debug( "[Action id=" + this.actionEl.getAttributeValue( "id" ) + "], I am waiting..."
+                            + getName() );
+                        executionContext.wait();
+                    }
+                }
+                catch ( InterruptedException e )
+                {
+                    LOG.debug( "Debug is terminated", e );
+                }
+            }
+
+            if ( executionContext.isTerminated() )
+            {
+                throw new AbortException();
+            }
+
+            if ( !executionContext.isDehydrated() )
+            {
+                dowork( ctx );
+            }
+            else if ( DehydrateManager.isDehydratedAction( ctx.getExecutionContext().getUuid(), getActionId() ) )
+            {
+                DehydrateManager.hydrate( ctx.getExecutionContext().getUuid() );
+            }
+            else
+                doworkInDehydrateState( ctx );
+
+        }
+        catch ( Exception e )
+        {
+            ctx.getExecutionContext().setStatus( ExecutionContext.STATUS_ERRORHANDLING );
+            if ( ( e instanceof RuntimeException ) )
+            {
+                throw ( (RuntimeException) e );
+            }
+
+            throw new ActionException( e );
+        }
+        finally
+        {
+            if ( executionContext.isDoCutpoint() )
+            {
+                for ( ActionCutpoint cutpoint : cutPoints )
+                {
+                    cutpoint.afterWork( ctx, this );
+                }
+            }
+        }
     }
 
     @Override
