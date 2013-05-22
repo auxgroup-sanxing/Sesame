@@ -11,7 +11,7 @@ public class ActionException
 
     static
     {
-        registerErrMsgs( "PROCESS_ERR.MSG" );
+        registerErrMsgs( "process_err.msg" );
     }
 
     public ActionException( AbstractAction action )
