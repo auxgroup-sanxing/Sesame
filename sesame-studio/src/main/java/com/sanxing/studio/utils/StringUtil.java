@@ -102,27 +102,31 @@ public class StringUtil
                     }
                     out[( outLen++ )] = (char) value;
                 }
-
-                if ( aChar == 't' )
+                else
                 {
-                    aChar = '\t';
+                    if ( aChar == 't' )
+                    {
+                        aChar = '\t';
+                    }
+                    else if ( aChar == 'r' )
+                    {
+                        aChar = '\r';
+                    }
+                    else if ( aChar == 'n' )
+                    {
+                        aChar = '\n';
+                    }
+                    else if ( aChar == 'f' )
+                    {
+                        aChar = '\f';
+                    }
+                    out[( outLen++ )] = aChar;
                 }
-                else if ( aChar == 'r' )
-                {
-                    aChar = '\r';
-                }
-                else if ( aChar == 'n' )
-                {
-                    aChar = '\n';
-                }
-                else if ( aChar == 'f' )
-                {
-                    aChar = '\f';
-                }
+            }
+            else
+            {
                 out[( outLen++ )] = aChar;
             }
-
-            out[( outLen++ )] = aChar;
         }
 
         return new String( out, 0, outLen );
