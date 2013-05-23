@@ -24,17 +24,18 @@ public class VoidMethodProcessor
     private static Logger LOG = LoggerFactory.getLogger( VoidMethodProcessor.class );
 
     @Override
-    public Element process( Document request, OperationInfo operation, Object tx )
+    public Document process( Document request, OperationInfo operation, Object tx )
     {
         Object[] paramObjets = new Object[operation.getMethodParamCount()];
         fufillINParams( operation, request, paramObjets );
         fufillOUTParams( operation, request, paramObjets );
 
-        Element root = invokeMultiResultOperation( operation, tx, paramObjets );
-        return root;
+        Document response = invokeMultiResultOperation( operation, tx, paramObjets );
+        formatResponse( operation, response );
+        return response;
     }
 
-    private Element invokeMultiResultOperation( OperationInfo oper, Object tx, Object[] paramObjets )
+    private Document invokeMultiResultOperation( OperationInfo oper, Object tx, Object[] paramObjets )
         throws ADPException
     {
         Element root = new Element( "response" );
@@ -128,6 +129,6 @@ public class VoidMethodProcessor
 
         }
 
-        return root;
+        return new Document( root );
     }
 }

@@ -8,7 +8,7 @@
 <%@page import="com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.sesame.logging.monitor.*"%>
 <%@page import="com.sanxing.sesame.logging.dao.LogBean"%>
-<%@page import="com.sanxing.sesame.dao.data.PageInfo"%>
+<%@page import="com.sanxing.sesame.jdbc.data.PageInfo"%>
 <%@page import="com.sanxing.sesame.logging.lucene.LuceneSearcher"%>
 <%@page import="com.sanxing.sesame.logging.lucene.LuceneRecord"%>
 <%@page import="org.dom4j.*, org.dom4j.io.*"%>

@@ -57,6 +57,8 @@ import com.sanxing.sesame.management.ManagementSupport;
 import com.sanxing.sesame.service.ServiceUnit;
 import com.sanxing.sesame.util.JdomUtil;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class ProcessEngine
     extends EngineComponent
     implements ServiceUnitManager
@@ -275,13 +277,13 @@ public class ProcessEngine
             {
                 Variable var = exchange2var( exchange );
                 executionCtx.put( "ENGINE", this );
-                executionCtx.put( "NAMING_CONTEXT", getContext().getNamingContext() );
+                executionCtx.put( NAMING_CONTEXT, getContext().getNamingContext() );
                 executionCtx.getDataContext().addVariable( "request", var );
-                executionCtx.put( "process.classloader", getClassLoader() );
-                executionCtx.put( "process.serial", platformSerial );
-                executionCtx.put( "process.ACTION", action );
-                executionCtx.put( "process.name", operationName );
-                executionCtx.put( "process.group", endpoint.getEndpointName() );
+                executionCtx.put( CLASSLOADER, getClassLoader() );
+                executionCtx.put( SERIAL_NUMBER, platformSerial );
+                executionCtx.put( ACTION, action );
+                executionCtx.put( PROCESS_NAME, operationName );
+                executionCtx.put( PROCESS_GROUP, endpoint.getEndpointName() );
                 executionCtx.getDataContext().addVariable( "serial", new Variable( platformSerial, 8 ) );
 
                 appendBizParameter( exchange, operationName, executionCtx );

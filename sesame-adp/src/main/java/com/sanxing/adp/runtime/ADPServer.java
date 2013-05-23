@@ -99,7 +99,7 @@ public class ADPServer
         Object tx = portTypeInfo.getTx( jarFileClassLoader );
         try
         {
-            Element root;
+            Document response;
             if ( oper.isVoid() )
             {
                 if ( LOG.isTraceEnabled() )
@@ -107,7 +107,7 @@ public class ADPServer
                     LOG.trace( "the method is void" );
                 }
 
-                root = voidBMP.process( request, oper, tx );
+                response = voidBMP.process( request, oper, tx );
             }
             else
             {
@@ -116,9 +116,9 @@ public class ADPServer
                     LOG.trace( "the method is not void" );
                 }
 
-                root = returnBMP.process( request, oper, tx );
+                response = returnBMP.process( request, oper, tx );
             }
-            return new Document( root );
+            return response;
         }
         catch ( Exception e )
         {

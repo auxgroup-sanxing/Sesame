@@ -28,6 +28,8 @@ import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.xpath.XPathUtil;
 import com.sanxing.sesame.engine.xslt.TransformerManager;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class EngineDebugger
 {
     private static Logger LOG = LoggerFactory.getLogger( EngineDebugger.class );
@@ -42,12 +44,12 @@ public class EngineDebugger
     {
         this.executionCtx = executionCtx;
 
-        Object serial = executionCtx.get( "process.serial" );
+        Object serial = executionCtx.get( SERIAL_NUMBER );
 
         this.executionCtx.getDataContext().addVariable( "serial",
             new Variable( ( serial != null ) ? serial : Integer.valueOf( 0 ), 8 ) );
 
-        this.executionCtx.put( "NAMING_CONTEXT", JNDIUtil.getInitialContext() );
+        this.executionCtx.put( NAMING_CONTEXT, JNDIUtil.getInitialContext() );
 
         this.executionCtx.put( "ENGINE", ProcessEngine.jbiInstance );
 
@@ -106,7 +108,7 @@ public class EngineDebugger
             classloader = loader;
         }
 
-        executionCtx.put( "process.classloader", classloader );
+        executionCtx.put( CLASSLOADER, classloader );
         executionCtx.openDebugging();
         Runnable worker = new Runnable()
         {
@@ -117,9 +119,9 @@ public class EngineDebugger
                 {
                     TransformerManager.clearCache( flowName );
                     MDC.put( "ACTION", "debugger" );
-                    if ( executionCtx.get( "process.serial" ) != null )
+                    if ( executionCtx.get( SERIAL_NUMBER ) != null )
                     {
-                        MDC.put( "SERIAL", String.valueOf( executionCtx.get( "process.serial" ) ) );
+                        MDC.put( "SERIAL", String.valueOf( executionCtx.get( SERIAL_NUMBER ) ) );
                     }
                     MDC.put( "CLIENT_TYPE", "debugger" );
                     MDC.put( "CLIENT_ID", "debugger" );
@@ -127,7 +129,7 @@ public class EngineDebugger
                     {
                         MDC.put( "CLIENT_SERIAL", executionCtx.getUuid() );
                     }
-                    executionCtx.put( "process.ACTION", flowName );
+                    executionCtx.put( ACTION, flowName );
                     Engine.getInstance().execute( executionCtx, flowName );
                 }
                 catch ( Throwable t )

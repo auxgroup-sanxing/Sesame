@@ -19,8 +19,6 @@ public class XPathUtil
 
     public static XPathFunctionContext fc = new XPathFunctionContext( true );
 
-    /** @deprecated */
-    @Deprecated
     public static SimpleNamespaceContext nc = new SimpleNamespaceContext();
 
     public static Map<String, String> commonNameSpace = new ConcurrentHashMap();

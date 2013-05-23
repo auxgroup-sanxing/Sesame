@@ -8,6 +8,7 @@ import javax.xml.bind.Marshaller;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.transform.JDOMResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,18 +25,19 @@ public class ReturnMethodProcessor
     private static Logger LOG = LoggerFactory.getLogger( ReturnMethodProcessor.class );
 
     @Override
-    public Element process( Document request, OperationInfo operation, Object tx )
+    public Document process( Document request, OperationInfo operation, Object tx )
         throws AppException
     {
         Object[] paramObjets = new Object[operation.getMethodParamCount()];
         fufillINParams( operation, request, paramObjets );
 
         LOG.debug( "After fufillINParams" );
-        Element root = invokeSingleResultTx( operation, tx, paramObjets );
-        return root;
+        Document response = invokeSingleResultTx( operation, tx, paramObjets );
+        formatResponse( operation, response );
+        return response;
     }
 
-    private Element invokeSingleResultTx( OperationInfo oper, Object tx, Object[] paramObjets )
+    private Document invokeSingleResultTx( OperationInfo oper, Object tx, Object[] paramObjets )
         throws AppException
     {
         Element root = null;
@@ -108,6 +110,6 @@ public class ReturnMethodProcessor
             root = partResult;
         }
 
-        return root;
+        return new Document( root );
     }
 }

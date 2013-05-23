@@ -11,6 +11,8 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.logging.Log;
 import com.sanxing.sesame.logging.LogFactory;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class LogAction
     extends AbstractAction
     implements Constant
@@ -65,7 +67,7 @@ public class LogAction
             }
             toBeDebug = toBeDebug + "\n" + "-----------------------------------";
 
-            Long serial = (Long) dataContext.getExecutionContext().get( "process.serial" );
+            Long serial = (Long) dataContext.getExecutionContext().get( SERIAL_NUMBER );
 
             if ( serial != null )
             {

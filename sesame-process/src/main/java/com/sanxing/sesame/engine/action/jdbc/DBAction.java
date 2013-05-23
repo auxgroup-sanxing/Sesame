@@ -23,6 +23,8 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 import com.sanxing.sesame.engine.context.Variable;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class DBAction
     extends AbstractAction
 {
@@ -114,7 +116,7 @@ public class DBAction
     private Connection getConnection( ExecutionContext execContext, String dsn )
         throws NamingException, SQLException
     {
-        Context context = (Context) execContext.get( "NAMING_CONTEXT" );
+        Context context = (Context) execContext.get( NAMING_CONTEXT );
         DataSource datasource = (DataSource) context.lookup( dsn );
         return datasource.getConnection();
     }

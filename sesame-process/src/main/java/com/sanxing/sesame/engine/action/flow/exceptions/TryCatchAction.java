@@ -18,6 +18,8 @@ import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.exceptions.AppException;
 import com.sanxing.sesame.exceptions.KeyedErr;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class TryCatchAction
     extends AbstractAction
     implements Constant
@@ -95,8 +97,8 @@ public class TryCatchAction
                     dataCtx.addVariable( "faultcode", statusVar );
                     Variable descVar = new Variable( exceptionMsg, 7 );
                     dataCtx.addVariable( "faultstring", descVar );
-                    dataCtx.getExecutionContext().put( "process.faultcode", exceptionKey );
-                    dataCtx.getExecutionContext().put( "process.faultstring", exceptionMsg );
+                    dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, exceptionKey );
+                    dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, exceptionMsg );
 
                     ActionUtil.bachInvoke( dataCtx, catchEl.getChildren().iterator() );
 

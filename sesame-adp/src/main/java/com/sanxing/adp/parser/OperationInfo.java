@@ -45,7 +45,7 @@ public class OperationInfo
 
     public String getCapOperationName()
     {
-        return StringUtils.capitalise( operationName );
+        return StringUtils.capitalize( operationName );
     }
 
     public boolean isVoid()

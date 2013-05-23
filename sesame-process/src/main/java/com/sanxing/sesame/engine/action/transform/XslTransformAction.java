@@ -19,6 +19,8 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.xslt.TransformerManager;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class XslTransformAction
     extends AbstractAction
 {
@@ -54,7 +56,7 @@ public class XslTransformAction
     @Override
     public void dowork( DataContext ctx )
     {
-        ClassLoader loader = (ClassLoader) ctx.getExecutionContext().get( "process.classloader" );
+        ClassLoader loader = (ClassLoader) ctx.getExecutionContext().get( CLASSLOADER );
         ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
         try
         {

@@ -31,6 +31,8 @@ import com.sanxing.sesame.logging.Log;
 import com.sanxing.sesame.logging.LogFactory;
 import com.sanxing.sesame.util.JdomUtil;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class Reverter
 {
     private static Logger LOG = LoggerFactory.getLogger( Reverter.class );
@@ -72,8 +74,8 @@ public class Reverter
                         Variable descVar = new Variable( exceptionMsg, 7 );
                         dataCtx.addVariable( "faultstring", descVar );
 
-                        dataCtx.getExecutionContext().put( "process.faultcode", e.getKey() );
-                        dataCtx.getExecutionContext().put( "process.faultstring", e.getMessage() );
+                        dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, e.getKey() );
+                        dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, e.getMessage() );
 
                         ActionUtil.bachInvoke( dataCtx, clause.getActions().iterator() );
                     }
@@ -105,7 +107,7 @@ public class Reverter
         ProcessEngine engine = (ProcessEngine) executeCtx.get( "ENGINE" );
         try
         {
-            NamespaceContext namespaceCtx = (NamespaceContext) dataCtx.getExecutionContext().get( "process.namespaces" );
+            NamespaceContext namespaceCtx = (NamespaceContext) dataCtx.getExecutionContext().get( NAMESPACE_CONTEXT );
 
             while ( actions.hasNext() )
             {
@@ -143,7 +145,7 @@ public class Reverter
 
                     MessageExchange me = engine.getExchangeFactory().createInOptionalOutExchange();
 
-                    Long serial = (Long) executeCtx.get( "process.serial" );
+                    Long serial = (Long) executeCtx.get( SERIAL_NUMBER );
                     me.setProperty( "sesame.exchange.platform.serial", serial );
                     me.setProperty( "sesame.exchange.consumer", engine.getContext().getComponentName() );
                     me.setProperty( "com.sanxing.sesame.dispatch", "straight" );

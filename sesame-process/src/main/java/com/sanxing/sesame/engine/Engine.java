@@ -15,6 +15,8 @@ import com.sanxing.sesame.engine.action.beanshell.BSCManager;
 import com.sanxing.sesame.engine.action.flow.AbortException;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class Engine
 {
     static final Logger LOG = LoggerFactory.getLogger( Engine.class );
@@ -78,7 +80,7 @@ public class Engine
         Element flow = info.getFlowDefination();
         try
         {
-            executionCtx.put( "process.namespaces", info.getNamespaceContext() );
+            executionCtx.put( NAMESPACE_CONTEXT, info.getNamespaceContext() );
 
             ActionUtil.bachInvoke( executionCtx.getDataContext(), flow.getChildren().iterator() );
 
@@ -100,11 +102,11 @@ public class Engine
     {
         if ( executionCtx.isDebugging() )
         {
-            executionCtx.put( "beanshell.context", BSCManager.getInstanceForDebug( flowName ) );
+            executionCtx.put( BEANSHELL_CONTEXT, BSCManager.getInstanceForDebug( flowName ) );
         }
         else
         {
-            executionCtx.put( "beanshell.context", BSCManager.getInstance( flowName ) );
+            executionCtx.put( BEANSHELL_CONTEXT, BSCManager.getInstance( flowName ) );
         }
     }
 }

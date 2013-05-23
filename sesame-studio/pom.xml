@@ -70,6 +70,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>com.sanxing.sesame</groupId>
+			<artifactId>sesame-process</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>xerces</groupId>
 			<artifactId>xercesImpl</artifactId>
 			<scope>provided</scope>

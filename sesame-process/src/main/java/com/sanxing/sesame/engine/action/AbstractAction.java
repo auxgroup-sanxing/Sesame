@@ -14,6 +14,7 @@ import org.jaxen.jdom.JDOMXPath;
 import org.jdom.Attribute;
 import org.jdom.CDATA;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -281,5 +282,19 @@ public abstract class AbstractAction
             getXPathCache().put( strPath, result );
         }
         return getXPathCache().get( strPath );
+    }
+    
+    public void allAddtionNamespace( Element element, Namespace namespace )
+    {
+        List childrens = element.getChildren();
+        for ( int i = 0; i < childrens.size(); ++i )
+        {
+            Element addition = (Element) childrens.get( i );
+            addition.setNamespace( namespace );
+            if ( addition.getChildren().size() > 0 )
+            {
+                allAddtionNamespace( addition, namespace );
+            }
+        }
     }
 }

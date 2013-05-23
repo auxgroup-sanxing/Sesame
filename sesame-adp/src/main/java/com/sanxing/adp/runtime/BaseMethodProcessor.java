@@ -1,6 +1,7 @@
 package com.sanxing.adp.runtime;
 
 import java.lang.reflect.Field;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -29,7 +30,7 @@ public abstract class BaseMethodProcessor
 
     private static Logger LOG = LoggerFactory.getLogger( BaseMethodProcessor.class );
 
-    public abstract Element process( Document paramDocument, OperationInfo paramOperationInfo, Object paramObject )
+    public abstract Document process( Document request, OperationInfo paramOperationInfo, Object paramObject )
         throws ADPException, AppException;
 
     public void setServer( ADPServer server )
@@ -88,10 +89,12 @@ public abstract class BaseMethodProcessor
                                 if ( "##default".equals( xmlEle.namespace() ) )
                                 {
                                 	ele.setNamespace( ns );
+                                	allAddtionNamespace( ele, ns);
                                 }
                                 else
                                 {
                                 	ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
+                                    allAddtionNamespace( ele, Namespace.getNamespace( xmlEle.namespace() ));
                                 }                              	
                             }
                         }
@@ -125,16 +128,16 @@ public abstract class BaseMethodProcessor
         }
     }
 
-    void allAddtionNamespace( Element part, String NamespaceURI )
+    void allAddtionNamespace( Element part, Namespace namespace )
     {
         List childrens = part.getChildren();
         for ( int i = 0; i < childrens.size(); ++i )
         {
             Element addition = (Element) childrens.get( i );
-            addition.setNamespace( Namespace.getNamespace( "", NamespaceURI ) );
+            addition.setNamespace( namespace );
             if ( addition.getChildren().size() > 0 )
             {
-                allAddtionNamespace( addition, NamespaceURI );
+                allAddtionNamespace( addition, namespace );
             }
         }
     }
@@ -147,6 +150,57 @@ public abstract class BaseMethodProcessor
             ResultHolder holder = new ResultHolder();
             paramObjets[i] = holder;
             ++i;
+        }
+    }
+    
+    void formatResponse( OperationInfo oper, Document response )
+    {
+        Element body = response.getRootElement();
+        if ( body == null )
+        {
+            throw new ADPException( "00008", oper.getCapOperationName() );
+        }
+
+        if ( LOG.isDebugEnabled() )
+        {
+            LOG.debug( "output document is ...........\n " + JdomUtil.print( new JDOMSource( response ) ) );
+        }
+        Iterator it = ( (Element) body.clone() ).getAdditionalNamespaces().iterator();
+        while ( it.hasNext() )
+        {
+            body.removeNamespaceDeclaration( (Namespace) it.next() );
+        }
+        List<PartInfo> results = oper.getResults();
+        for ( PartInfo resultInfo : results )
+        {
+            try
+            {
+                QName elementName = resultInfo.getElementName();
+                if ( LOG.isDebugEnabled() )
+                {
+                    LOG.debug( "parsing element [" + elementName + "]" );
+                }
+                String javaType = resultInfo.getJavaType();
+                if ( ! XJUtil.isPrimitive( javaType ) )
+                {
+                    if ( elementName != null )
+                    {
+                        if ( elementName.getLocalPart().equals( body.getName() ) )
+                        {
+                            body.setNamespace( Namespace.NO_NAMESPACE );
+                            allAddtionNamespace( body, Namespace.NO_NAMESPACE);
+                        }
+                        else
+                        {
+                            throw new ADPException( "00009", elementName.getLocalPart() );
+                        }
+                    }
+                }
+            }
+            catch ( Exception e )
+            {
+                throw new ADPException( "99999", e );
+            }
         }
     }
 }

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 
 import javax.jbi.messaging.ExchangeStatus;
+import javax.jbi.messaging.Fault;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
@@ -20,9 +21,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
+import org.jdom.xpath.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -40,10 +43,14 @@ import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.exceptions.MockException;
 import com.sanxing.sesame.engine.xslt.TransformerManager;
 import com.sanxing.sesame.exception.FaultException;
+import com.sanxing.sesame.exceptions.AppException;
+import com.sanxing.sesame.exceptions.SystemException;
 import com.sanxing.sesame.logging.Log;
 import com.sanxing.sesame.logging.LogFactory;
 import com.sanxing.sesame.logging.PerfRecord;
 import com.sanxing.sesame.util.JdomUtil;
+
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
 
 public class CalloutAction
     extends AbstractAction
@@ -264,13 +271,13 @@ public class CalloutAction
         Variable descVar = new Variable( e.getMessage(), 7 );
         dataCtx.addVariable( "faultstring", descVar );
 
-        dataCtx.getExecutionContext().put( "process.faultcode", e.getKey() );
-        dataCtx.getExecutionContext().put( "process.faultstring", e.getMessage() );
+        dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, e.getKey() );
+        dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, e.getMessage() );
     }
 
     private void docall( DataContext ctx )
     {
-        Long serial = (Long) ctx.getExecutionContext().get( "process.serial" );
+        Long serial = (Long) ctx.getExecutionContext().get( SERIAL_NUMBER );
         long timeMillis = System.currentTimeMillis();
         MessageExchange me;
         try
@@ -373,27 +380,74 @@ public class CalloutAction
                     ctx.addVariable( toVar, varResponse );
                 }
             }
-        }
+
+            if (this.toVar != null) {
+              NormalizedMessage response = me.getMessage("out");
+              Document docResponse = JdomUtil.source2JDOMDocument(response.getContent());
+              Element eleResponse = docResponse.getRootElement();
+              Variable varResponse = new Variable(eleResponse, 0);
+              ctx.addVariable(this.toVar, varResponse);
+            }
+       }
         catch ( FaultException e )
         {
+            String key = "500";
             String message = "未取到故障详细信息";
             LOG.debug( "Fault Exception", e );
-            throw new CalloutException( "500", message, e );
+            Fault fault = e.getFault();
+            Document faultDoc = JdomUtil.source2JDOMDocument( fault.getContent() );
+            XPath xpath = (XPath) fault.getProperty( "response.status.xpath" );
+            if ( xpath != null )
+            {
+                try
+                {
+                    key = xpath.valueOf( faultDoc );
+                }
+                catch ( JDOMException ex )
+                {
+                    message = "获取故障代码失败: " + ex.getMessage();
+                }
+            }
+            XPath textPath = (XPath) fault.getProperty( "response.statustext.xpath" );
+            if ( textPath != null )
+            {
+                try
+                {
+                    message = textPath.valueOf( faultDoc );
+                }
+                catch ( JDOMException ex )
+                {
+                }
+            }
+            throw new CalloutException( key, message, e );
         }
         catch ( MessagingException e )
         {
+            throw new CalloutException("503", e.getMessage(), e);
         }
         catch ( TimeoutException e )
         {
+            throw new CalloutException("504", e.getMessage(), e);
         }
         catch ( Exception e )
         {
             String key = getExceptionKey( e );
             String message = getExceptionMsg( e );
-            if ( e instanceof MockException )
+            if ( ( e instanceof MockException ) )
             {
-                ;
+                key = ( (MockException) e ).getErrKey();
             }
+            else if ( ( e instanceof SystemException ) )
+            {
+                key = ( (SystemException) e ).getGlobalErrCode();
+            }
+            else if ( ( e instanceof AppException ) )
+            {
+                key = ( (AppException) e ).getGlobalErrCode();
+            }
+
+            LOG.debug( "Callout failure, The exception key is: [" + key + "]" );
+
             throw new CalloutException( key, message, e );
         }
         finally
@@ -408,16 +462,6 @@ public class CalloutAction
                 perf.setOperationName( operationName.getLocalPart() );
                 sensor.info( "--------------------------------------------------------------------------------", perf );
             }
-        }
-        Log sensor = LogFactory.getLog( "sesame.system.sensor.callout" );
-        if ( sensor.isInfoEnabled() )
-        {
-            PerfRecord perf = new PerfRecord();
-            perf.setSerial( serial.longValue() );
-            perf.setElapsedTime( System.currentTimeMillis() - timeMillis );
-            perf.setServiceName( String.valueOf( serviceName ) );
-            perf.setOperationName( operationName.getLocalPart() );
-            sensor.info( "--------------------------------------------------------------------------------", perf );
         }
     }
 
@@ -478,7 +522,7 @@ public class CalloutAction
 
     public void transform( DataContext ctx, String toVar )
     {
-        ClassLoader cl = (ClassLoader) ctx.getExecutionContext().get( "process.classloader" );
+        ClassLoader cl = (ClassLoader) ctx.getExecutionContext().get( CLASSLOADER );
         ClassLoader savedCl = Thread.currentThread().getContextClassLoader();
         try
         {
@@ -510,6 +554,7 @@ public class CalloutAction
                     Element varEl = (Element) elem.clone();
                     varEl.setName( varName );
                     varEl.setNamespace( Namespace.NO_NAMESPACE );
+                    allAddtionNamespace( varEl, Namespace.NO_NAMESPACE );
                     contextEl.addContent( varEl );
                 }
             }

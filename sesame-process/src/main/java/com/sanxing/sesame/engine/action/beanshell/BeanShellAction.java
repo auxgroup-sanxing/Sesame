@@ -13,6 +13,8 @@ import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.exceptions.AppException;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class BeanShellAction
     extends AbstractAction
 {
@@ -30,7 +32,7 @@ public class BeanShellAction
     public void dowork( DataContext context )
         throws AppException
     {
-        BeanShellContext bsc = (BeanShellContext) context.getExecutionContext().get( "beanshell.context" );
+        BeanShellContext bsc = (BeanShellContext) context.getExecutionContext().get( BEANSHELL_CONTEXT );
         String functionName = "func_" + getActionId();
         if ( !( bsc.isFunctionResitered( functionName ) ) )
         {

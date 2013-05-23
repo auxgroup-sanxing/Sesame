@@ -16,6 +16,8 @@ import com.sanxing.sesame.engine.action.beanshell.BeanShellContext;
 import com.sanxing.sesame.engine.action.callout.Reverter;
 import com.sanxing.sesame.engine.action.jdbc.ConnectionUtil;
 
+import static com.sanxing.sesame.engine.ExecutionEnv.*;
+
 public class ExecutionContext
 {
     public static final int STATUS_NORMAL = 0;
@@ -87,7 +89,7 @@ public class ExecutionContext
         dataCtx.close();
         ConnectionUtil.clean( uuid );
         actQueue.clear();
-        BeanShellContext bsc = (BeanShellContext) get( "beanshell.context" );
+        BeanShellContext bsc = (BeanShellContext) get( BEANSHELL_CONTEXT );
         if ( bsc == null )
         {
             return;

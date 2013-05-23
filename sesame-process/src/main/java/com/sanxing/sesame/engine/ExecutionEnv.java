@@ -29,9 +29,9 @@ public abstract class ExecutionEnv
 
     static
     {
-        exports.put( "serial", "process.serial" );
-        exports.put( "faultcode", "process.faultcode" );
-        exports.put( "faultstring", "process.faultstring" );
+        exports.put( "serial", SERIAL_NUMBER );
+        exports.put( "faultcode", PROCESS_FAULTCODE );
+        exports.put( "faultstring", PROCESS_FAULTSTRING );
     }
 
     public static final Map<String, String> export()
