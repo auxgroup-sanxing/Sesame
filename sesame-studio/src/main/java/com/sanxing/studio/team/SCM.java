@@ -72,10 +72,11 @@ public class SCM
                 db.open( SVNWCDbOpenMode.ReadOnly, null, false, false );
                 ISVNWCDb.WCDbInfo info =
                     db.readInfo( location.getAbsoluteFile(),
-                        new ISVNWCDb.WCDbInfo.InfoField[] { ISVNWCDb.WCDbInfo.InfoField.reposRootUrl } );
+                        new ISVNWCDb.WCDbInfo.InfoField[] { ISVNWCDb.WCDbInfo.InfoField.reposRootUrl, ISVNWCDb.WCDbInfo.InfoField.reposRelPath } );
                 if ( info != null )
                 {
-                    repositoryURL = info.reposRootUrl.removePathTail().toString();
+                	SVNURL url = info.reposRootUrl.appendPath( info.reposRelPath.getPath().replace( '\\', '/' ), false );
+                	repositoryURL = url.removePathTail().toString();
                 }
             }
             catch ( SVNException e )

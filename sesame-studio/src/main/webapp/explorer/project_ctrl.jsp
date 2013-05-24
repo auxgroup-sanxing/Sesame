@@ -280,10 +280,11 @@
 		String url = request.getParameter("url");
 		String username = request.getParameter("username");
 		String password = request.getParameter("passwd");
-		String path = url.substring(url.lastIndexOf('/')+1);
+		int index = url.lastIndexOf('/');
+		String path = url.substring(index + 1);
 		long revision = Long.parseLong(request.getParameter("revision"));
 		File wcPath = Application.getWorkspaceFile(path);
-		
+		url = url.substring(0, index);
 		if (username == null) {
 			Element prefsEl = Configuration.getSCMPrefs();
 			Element repoEl = (Element)XPath.selectSingleNode(prefsEl, "repository[@url='"+url+"']");
@@ -294,7 +295,7 @@
 		}
 		
 		ThreeWaySynchronizer synchronizer = SCM.getSynchronizer(wcPath, url, username, password);
-		revision = synchronizer.checkout("", wcPath, revision);
+		revision = synchronizer.checkout(path, wcPath, revision);
 		
 		JSONObject result = new JSONObject();
 		
