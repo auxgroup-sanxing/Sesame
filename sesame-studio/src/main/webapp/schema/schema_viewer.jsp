@@ -3,6 +3,7 @@
 <%@page import="java.util.*, java.io.*"%>
 <%@page
 	import="com.sanxing.studio.*,com.sanxing.studio.utils.*,com.sanxing.studio.team.svn.*,com.sanxing.studio.team.*"%>
+<%@page import="org.json.*"%>
 <%@page import="org.slf4j.Logger, org.slf4j.LoggerFactory"%>
 <%!
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -13,7 +14,10 @@ schema = schema!=null ? new String(schema.getBytes("iso8859-1"), "utf-8") : null
 String project = schema.substring(0, schema.indexOf('/'));
 String tns = "";
 String isVersioned = "true";
+String schemaLocked = "false";
 try {
+	JSONObject user = Authentication.getCurrentUser();
+	String userName = user.optString("userid");
 	tns = PrefsUtil.getNamespaceUri(project);
 	
 	File xsdFile = new File(Configuration.getWorkspaceRoot(),schema);
@@ -21,6 +25,13 @@ try {
 	ThreeWaySynchronizer sync = SCM.getSynchronizer(projectFolder);
 	if((null == sync) ||(!sync.isVersioned(xsdFile))){
 		isVersioned = "false";
+	} else {
+		Map<String, ?> props = sync.info(xsdFile);
+		String lock = (String)props.get("lock");
+		if (lock != null) {
+			if (userName.equals((String) props.get("lock.owner")))
+			    schemaLocked = "true";
+		}
 	}
 	out.clear();
 }
@@ -120,6 +131,7 @@ html,body {
 	document.oncontextmenu = function(e) { return false; };
 	var schema = '<%=schema%>';
 	var isVersioned = '<%=isVersioned%>';
+	var schemaLocked = '<%=schemaLocked%>';
 	var targetNamespace = '<%=tns%>';
 	
 	var debug = function(obj, showMethods, sort){

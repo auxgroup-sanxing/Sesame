@@ -188,14 +188,23 @@ public String operationUnlock(HttpServletRequest request, HttpServletResponse re
 		return "success";
 	Map props = sync.info(xsdFile);
 	String lock = (String)props.get("lock");
-	if(null != lock){
-		if (xmlFile.exists())
-			sync.commit(new File[]{xsdFile, xmlFile}, "Auto commit by studio");
-		else
-			sync.commit(new File[]{xsdFile}, "Auto commit by studio");
-		sync.unlock(xsdFile, false);
+	if(lock != null){
+	    try{
+			if (xmlFile.exists())
+				sync.commit(new File[]{xsdFile, xmlFile}, "Auto commit by studio");
+			else
+				sync.commit(new File[]{xsdFile}, "Auto commit by studio");
+	    }
+		catch (Exception e) {
+			//e.printStackTrace();
+		}
+		
+		props = sync.info(xsdFile);
+		lock = (String)props.get("lock");
+		if(lock != null) {
+			sync.unlock(xsdFile, false);
+		}
 	}
-	
 	response.setContentType("text/plain;charset=utf-8");
 	return "success";
 }

@@ -1,5 +1,11 @@
 Ext.BLANK_IMAGE_URL='../images/s.gif';
 
+var ImagePath = {
+	lock: '../images/tool16/lock.png',
+	unlock: '../images/tool16/unlock.png',
+	disconnect: '../images/elcl16/launch_disconnect.gif'
+};
+
 var Viewer = function(){
 //变量
 var layout, schemaTree;
@@ -1242,7 +1248,7 @@ return {
 			    text: '保存',
 				icon: '../images/tool16/save_edit.gif',
 				cls: 'x-btn-text-icon',
-				disabled: true,
+				disabled: (isVersioned == 'true' && schemaLocked == 'false')? true:false,
 				listeners : {
 					click:function(){
 						_this.save();
@@ -1257,10 +1263,9 @@ return {
 			    }
 			},'-',
 			{
-				//TODO
 				id:'lock',
-				text:'锁定',
-				icon: '../images/tool16/lock.png',
+				text:(schemaLocked == 'false')?'锁定': '解锁',
+				icon: (schemaLocked == 'false')? ImagePath.unlock : ImagePath.lock,
 				disabled:(isVersioned == 'true')? false:true,
 				cls: 'x-btn-text-icon',
 				handler:function(){
@@ -1272,35 +1277,37 @@ return {
 	},
 
 	schemaLock:function(button){
-		var operation
-		if(button.text == "锁定")
-			operation = "schemaLock"
-		else
-			operation = "schemaUnlock";
 		var _this = this;
+		var operation = (button.text == '锁定') ? 'schemaLock' : 'schemaUnlock';
+		var msg = (button.text == '锁定') ? '正在锁定数据字典...' : '正在解锁数据字典...';
+		var _this = this;
+		
+		Ext.getBody().mask(msg, 'x-mask-loading');
 		Ext.Ajax.request({
-				method: 'POST',
+				method: 'POST',                                 
 				url: 'schema_ctrl.jsp',
 				params: {
 					operation: operation,
 					schema: schema
 				},
 				callback: function(options, success, response){
+					Ext.getBody().unmask();
 					if (!success) {
-						
-						_this.showException(response);
-					}else {
-						if(button.text == "锁定"){
+						_this.showException(response);              
+					} else {
+						if (button.text == "锁定") {
 							button.setText('解锁');
-							
-							Viewer.load();
-						}else{
+							button.setIcon(ImagePath.lock);
+							schemaLocked = 'true';
+						} else {
 							button.setText('锁定');
+							button.setIcon(ImagePath.unlock);
+							schemaLocked = 'false';
 							schemaTree.getTopToolbar().items.get('save').disable();
 						}
-					}
+					}                                             
 				}
-		});
+			});                                               
 	},
 	
 	
@@ -2153,7 +2160,8 @@ return {
 		});
 		rootNode.appendChild([directives, elements, typesNode]);
 		rootNode.expand();
-		Ext.getBody().mask('编辑数据字典前，请锁定数据字典!', 'x-mask-loading');
+		if (isVersioned == 'true' && schemaLocked == 'false')
+			Ext.getBody().mask('编辑数据字典前，请锁定数据字典!', 'x-mask-loading');
 		Ext.Ajax.request({
 			method: 'GET', 
 			url: 'schema_ctrl.jsp', 

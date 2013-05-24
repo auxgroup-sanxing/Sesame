@@ -108,7 +108,6 @@ public String load(HttpServletRequest request, HttpServletResponse response) thr
 	}
 }
 
-//TODO  NEW ADD BEGIN  20100714 
 //锁定操作
 @SuppressWarnings("unchecked")
 public String schemaLock(HttpServletRequest request, HttpServletResponse response) throws Exception
@@ -147,11 +146,20 @@ public String schemaUnlock(HttpServletRequest request, HttpServletResponse respo
 		return "success";
 	Map props = sync.info(xsdFile);
 	String lock = (String)props.get("lock");
-	if(null != lock){
-		sync.commit(new File[]{xsdFile}, "Auto commit by studio");
-		sync.unlock(xsdFile, false);
+	if(lock != null){
+	    try{
+			sync.commit(new File[]{xsdFile}, "Auto commit by studio");
+	    }
+		catch (Exception e) {
+			//e.printStackTrace();
+		}
+		
+		props = sync.info(xsdFile);
+		lock = (String)props.get("lock");
+		if(lock != null) {
+			sync.unlock(xsdFile, false);
+		}
 	}
-	
 	response.setContentType("text/plain;charset=utf-8");
 	return "success";
 }
