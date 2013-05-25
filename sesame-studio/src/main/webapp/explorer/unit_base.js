@@ -2397,9 +2397,7 @@ Ext.extend(UnitServerGuide, UnitBase, {
 			{
 			 	header: "交易码",
 				dataIndex: 'action',
-				editor: new Ext.form.TextField({
-					allowBlank: false
-				})
+				editor: new Ext.form.TextField()
 			}],
 			viewConfig: { forceFit: true }
 		};

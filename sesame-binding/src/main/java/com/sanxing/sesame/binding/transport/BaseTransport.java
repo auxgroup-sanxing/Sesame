@@ -190,7 +190,7 @@ public abstract class BaseTransport
                 }
             }
 
-            Exception ex = new RecognizeException( "Could not recognize action(tx-code)" );
+            Exception ex = new RecognizeException( String.format( "Could not recognize action(tx-code:[%s])", message.getAction() ) );
             if ( message.getBinding() != null )
             {
                 message.setException( ex );

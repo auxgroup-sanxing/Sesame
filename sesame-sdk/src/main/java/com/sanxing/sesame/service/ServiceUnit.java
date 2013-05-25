@@ -127,7 +127,7 @@ public class ServiceUnit
         if ( nodes.getLength() > 0 )
         {
             Element elem = (Element) nodes.item( 0 );
-            return elem.getAttribute( "art:" + attributeName );
+            return elem.getAttribute( "ses:" + attributeName );
         }
 
         return "";
@@ -136,7 +136,7 @@ public class ServiceUnit
     public NodeList getExtentionElements( String operationName )
         throws Exception
     {
-        NodeList nodes = descriptor.getElementsByTagName( "art:link" );
+        NodeList nodes = descriptor.getElementsByTagName( "ses:link" );
         int i = 0;
         for ( int len = nodes.getLength(); i < len; ++i )
         {
@@ -215,7 +215,7 @@ public class ServiceUnit
 
     private void loadOperations()
     {
-        NodeList items = descriptor.getElementsByTagName( "art:link" );
+        NodeList items = descriptor.getElementsByTagName( "ses:link" );
         String serviceName;
         for ( int i = 0; i < items.getLength(); ++i )
         {

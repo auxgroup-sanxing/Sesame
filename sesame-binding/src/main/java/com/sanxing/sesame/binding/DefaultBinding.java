@@ -22,6 +22,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.dom4j.io.DOMWriter;
 import org.dom4j.io.DocumentResult;
@@ -140,7 +142,7 @@ public class DefaultBinding
                 OperationContext context = serviceUnit.getOperationContext( operation.getName() );
                 if ( ( context != null ) && ( context.getReference() != null ) )
                 {
-                    actionMap.put( operation.getName(), context );
+                    actionMap.put( operation.getName().trim(), context );
                 }
                 else
                 {
@@ -152,7 +154,10 @@ public class DefaultBinding
                         {
                             SOAPOperation op = (SOAPOperation) ext;
                             String action = op.getSoapActionURI();
-                            actionMap.put( action, context );
+                            if ( StringUtils.isBlank( action ))
+                                actionMap.put( operation.getName().trim(), context );
+                            else
+                                actionMap.put( action.trim(), context );
                             break;
                         }
                     }
@@ -216,8 +221,9 @@ public class DefaultBinding
                         {
                             SOAPOperation op = (SOAPOperation) ext;
                             String action = op.getSoapActionURI();
-                            actionMap.remove( action );
-                            actionMap.remove( operation.getName() );
+                            if ( StringUtils.isNotBlank( action ))
+                                actionMap.remove( action.trim() );
+                            actionMap.remove( operation.getName().trim() );
                             break;
                         }
                     }
@@ -242,7 +248,7 @@ public class DefaultBinding
                 int len = txCode_end.intValue() - txCode_start.intValue();
                 byte[] buf = new byte[len];
                 System.arraycopy( binSource.getBytes(), txCode_start.intValue(), buf, 0, len );
-                context.setAction( new String( buf ) );
+                context.setAction( new String( buf ).trim() );
             }
 
             if ( context.getAction() != null )
@@ -517,7 +523,7 @@ public class DefaultBinding
         {
             return null;
         }
-        return actionMap.get( action );
+        return actionMap.get( action.trim() );
     }
 
     @Override
@@ -674,7 +680,10 @@ public class DefaultBinding
                 {
                     int len = txCode_end.intValue() - txCode_start.intValue();
                     byte[] buf = new byte[len];
-                    System.arraycopy( message.getAction().getBytes( binResult.getEncoding() ), 0, buf, 0, len );
+                    byte[] txCode = message.getAction().getBytes( binResult.getEncoding() );
+                    if (txCode.length > len)
+                        throw new BindingException( "txCode length is bigger than (txCode_end - txCode_start)" );
+                    System.arraycopy( txCode, 0, buf, 0, txCode.length );
                     binResult.getOutputStream().write( buf );
                 }
                 catch ( IOException e )
