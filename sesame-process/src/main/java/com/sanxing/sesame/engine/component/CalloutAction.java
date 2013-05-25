@@ -554,7 +554,7 @@ public class CalloutAction
                     Element varEl = (Element) elem.clone();
                     varEl.setName( varName );
                     varEl.setNamespace( Namespace.NO_NAMESPACE );
-                    allAddtionNamespace( varEl, Namespace.NO_NAMESPACE );
+                    JdomUtil.allAdditionNamespace( varEl, Namespace.NO_NAMESPACE );
                     contextEl.addContent( varEl );
                 }
             }

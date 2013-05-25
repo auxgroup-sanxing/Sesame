@@ -1,13 +1,15 @@
 package com.sanxing.sesame.codec.impl;
 
-import java.io.InputStream;
-
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
 import com.sanxing.sesame.binding.codec.BinarySource;
 import com.sanxing.sesame.binding.codec.Decoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLResult;
+import com.sanxing.sesame.util.JdomUtil;
 
 public class DecodeXML
     implements Decoder
@@ -41,19 +43,23 @@ public class DecodeXML
     {
         try
         {
+            Document content = null;
             if ( source.getReader() != null )
             {
-                result.setDocument( getSAXBuilder().build( source.getReader() ) );
-                return;
+                content = getSAXBuilder().build( source.getReader() );
             }
-            InputStream stream = source.getInputStream();
-            if ( stream != null )
+            else if ( source.getInputStream() != null )
             {
-                result.setDocument( getSAXBuilder().build( stream ) );
-                return;
+                content = getSAXBuilder().build( source.getInputStream() );
             }
-
-            result.setDocument( getSAXBuilder().build( source.getSystemId() ) );
+            else
+            {
+                content = getSAXBuilder().build( source.getSystemId() );
+            }
+            Element root = content.getRootElement();
+            root.setNamespace( Namespace.NO_NAMESPACE );
+            JdomUtil.allAdditionNamespace( root, Namespace.NO_NAMESPACE );
+            result.setDocument( content );
         }
         catch ( Exception e )
         {

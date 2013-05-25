@@ -3,6 +3,7 @@ package com.sanxing.sesame.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -20,6 +21,7 @@ import javax.xml.validation.Validator;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.Namespace;
 import org.jdom.input.DOMBuilder;
 import org.jdom.output.DOMOutputter;
 import org.jdom.output.Format;
@@ -363,7 +365,18 @@ public class JdomUtil
         return new JDOMSource( jdoc );
     }
 
-    public static void init()
+    public static void allAdditionNamespace( Element part, Namespace namespace )
     {
+        List childrens = part.getChildren();
+        for ( int i = 0; i < childrens.size(); ++i )
+        {
+            Element addition = (Element) childrens.get( i );
+            addition.setNamespace( namespace );
+            if ( addition.getChildren().size() > 0 )
+            {
+                allAdditionNamespace( addition, namespace );
+            }
+        }
     }
+    
 }

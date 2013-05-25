@@ -283,18 +283,4 @@ public abstract class AbstractAction
         }
         return getXPathCache().get( strPath );
     }
-    
-    public void allAddtionNamespace( Element element, Namespace namespace )
-    {
-        List childrens = element.getChildren();
-        for ( int i = 0; i < childrens.size(); ++i )
-        {
-            Element addition = (Element) childrens.get( i );
-            addition.setNamespace( namespace );
-            if ( addition.getChildren().size() > 0 )
-            {
-                allAddtionNamespace( addition, namespace );
-            }
-        }
-    }
 }

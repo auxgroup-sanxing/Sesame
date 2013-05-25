@@ -89,12 +89,12 @@ public abstract class BaseMethodProcessor
                                 if ( "##default".equals( xmlEle.namespace() ) )
                                 {
                                 	ele.setNamespace( ns );
-                                	allAddtionNamespace( ele, ns);
+                                	JdomUtil.allAdditionNamespace( ele, ns);
                                 }
                                 else
                                 {
                                 	ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
-                                    allAddtionNamespace( ele, Namespace.getNamespace( xmlEle.namespace() ));
+                                	JdomUtil.allAdditionNamespace( ele, Namespace.getNamespace( xmlEle.namespace() ));
                                 }                              	
                             }
                         }
@@ -124,20 +124,6 @@ public abstract class BaseMethodProcessor
             catch ( Exception e )
             {
                 throw new ADPException( "99999", e );
-            }
-        }
-    }
-
-    void allAddtionNamespace( Element part, Namespace namespace )
-    {
-        List childrens = part.getChildren();
-        for ( int i = 0; i < childrens.size(); ++i )
-        {
-            Element addition = (Element) childrens.get( i );
-            addition.setNamespace( namespace );
-            if ( addition.getChildren().size() > 0 )
-            {
-                allAddtionNamespace( addition, namespace );
             }
         }
     }
@@ -188,7 +174,7 @@ public abstract class BaseMethodProcessor
                         if ( elementName.getLocalPart().equals( body.getName() ) )
                         {
                             body.setNamespace( Namespace.NO_NAMESPACE );
-                            allAddtionNamespace( body, Namespace.NO_NAMESPACE);
+                            JdomUtil.allAdditionNamespace( body, Namespace.NO_NAMESPACE);
                         }
                         else
                         {

@@ -270,6 +270,14 @@ public class DefaultBinding
 
             binSource.setXMLSchema( schema );
             binSource.setElementName( elementName.getLocalPart() );
+            
+            if ( ( txCode_start != null ) && ( txCode_end != null ) )
+            {
+                int len = binSource.getBytes().length - txCode_end.intValue();
+                byte[] buf = new byte[len];
+                System.arraycopy( binSource.getBytes(), txCode_end.intValue(), buf, 0, len );
+                binSource.setBytes( buf );
+            }
 
             XMLResult result = new XMLResult();
             codec.getDecoder().decode( binSource, result );
@@ -660,9 +668,22 @@ public class DefaultBinding
             binResult.setXMLSchema( schema );
             binResult.setElementName( elementName.getLocalPart() );
             binResult.setEncoding( binSource.getEncoding() );
+            if (message.getAction() != null && txCode_start != null && txCode_end != null)
+            {
+                try
+                {
+                    int len = txCode_end.intValue() - txCode_start.intValue();
+                    byte[] buf = new byte[len];
+                    System.arraycopy( message.getAction().getBytes( binResult.getEncoding() ), 0, buf, 0, len );
+                    binResult.getOutputStream().write( buf );
+                }
+                catch ( IOException e )
+                {
+                    throw new BindingException( e );
+                }
+            }
             XMLSource xmlSource = new XMLSource( content );
             codec.getEncoder().encode( xmlSource, binResult );
-
             binSource.setBytes( binResult.getBytes() );
             for ( String name : binResult.getPropertyNames() )
             {
