@@ -172,7 +172,7 @@ public abstract class BaseTransport
             for ( Carrier carrier : Carriers )
             {
                 long timeMillis = System.currentTimeMillis();
-                message.setProperty( "sendTime", Long.valueOf( timeMillis ) );
+                message.setProperty( BaseTransport.SEND_TIME, Long.valueOf( timeMillis ) );
                 boolean result = carrier.post( message );
 
                 if ( ( message.getMode() == MessageContext.Mode.BLOCK ) && ( sensor.isInfoEnabled() ) )

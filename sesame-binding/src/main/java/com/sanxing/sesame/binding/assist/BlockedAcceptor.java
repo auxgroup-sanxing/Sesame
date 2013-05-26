@@ -149,7 +149,7 @@ public abstract class BlockedAcceptor
             }
         }
 
-        Long startTime = (Long) context.getProperty( "sendTime" );
+        Long startTime = (Long) context.getProperty( BaseTransport.SEND_TIME );
 
         Log sensor = LogFactory.getLog( "sesame.system.sensor" );
         PerfRecord rec = new PerfRecord();

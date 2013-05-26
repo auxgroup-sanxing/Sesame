@@ -59,10 +59,6 @@ import com.sanxing.sesame.service.ServiceUnit;
 public class DefaultBinding
     implements Binding
 {
-    protected static final String BINDING_SERVICE_NAME = "sesame.binding.service.name";
-
-    protected static final String BINDING_ENDPOINT_NAME = "sesame.binding.endpoint.name";
-
     private static final Logger LOG = LoggerFactory.getLogger( DefaultBinding.class );
 
     private static final TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -329,8 +325,8 @@ public class DefaultBinding
             return false;
         }
 
-        context.setProperty( "sesame.binding.endpoint.name", port.getName() );
-        context.setProperty( "sesame.binding.service.name", serviceName );
+        context.setProperty( Carrier.BINDING_ENDPOINT_NAME, port.getName() );
+        context.setProperty( Carrier.BINDING_SERVICE_NAME, serviceName );
 
         return true;
     }
@@ -345,7 +341,7 @@ public class DefaultBinding
             XmlSchema schema = null;
             QName elementName = new QName( "undefined" );
 
-            String operationName = (String) context.getProperty( "sesame.binding.operation.name" );
+            String operationName = (String) context.getProperty( Carrier.BINDING_OPERATION_NAME );
             OperationContext operaContext = serviceUnit.getOperationContext( operationName );
             if ( operaContext != null )
             {
@@ -546,7 +542,7 @@ public class DefaultBinding
         {
             channel = (String) message.getProperty( "sesame.exchange.consumer" );
             action = message.getAction();
-            QName service = (QName) message.getProperty( "sesame.binding.service.name" );
+            QName service = (QName) message.getProperty( Carrier.BINDING_SERVICE_NAME );
             if ( service != null )
             {
                 serviceName = service.toString();
@@ -659,13 +655,13 @@ public class DefaultBinding
             BinarySource binSource = (BinarySource) message.getSource();
             message.setPath( ( uri.getPath().length() > 0 ) ? uri.getPath() : "/" );
 
-            String operation = (String) message.getProperty( "sesame.binding.operation.name" );
+            String operation = (String) message.getProperty( Carrier.BINDING_OPERATION_NAME );
             XmlSchema schema = null;
             QName elementName = new QName( "undefined" );
             OperationContext operaContext = serviceUnit.getOperationContext( operation );
             if ( operaContext != null )
             {
-                message.setAction( ( operaContext.getAction() != null ) ? operaContext.getAction() : operation );
+                message.setAction( StringUtils.isEmpty( operaContext.getAction() ) ? operation : operaContext.getAction() );
                 schema = operaContext.getSchema();
                 elementName = operaContext.getInputElement();
             }
@@ -934,7 +930,7 @@ public class DefaultBinding
         Log log = LogFactory.getLog( "sesame.binding" );
         try
         {
-            String operationName = (String) context.getProperty( "sesame.binding.operation.name" );
+            String operationName = (String) context.getProperty( Carrier.BINDING_OPERATION_NAME );
             OperationContext operaContext = serviceUnit.getOperationContext( operationName );
 
             XmlSchema schema = ( operaContext != null ) ? operaContext.getSchema() : null;

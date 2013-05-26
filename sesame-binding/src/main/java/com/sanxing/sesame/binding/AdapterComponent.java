@@ -89,8 +89,8 @@ public class AdapterComponent
             }
 
             exchange.setProperty( "sesame.exchange.consumer", getContext().getComponentName() );
-            QName serviceName = (QName) exchange.getProperty( "sesame.binding.service.name" );
-            String endpointName = (String) exchange.getProperty( "sesame.binding.endpoint.name" );
+            QName serviceName = (QName) exchange.getProperty( Carrier.BINDING_SERVICE_NAME );
+            String endpointName = (String) exchange.getProperty( Carrier.BINDING_ENDPOINT_NAME );
             ServiceEndpoint endpoint = getContext().getEndpoint( serviceName, endpointName );
             Binding binding = bindings.get( endpoint );
             if ( binding != null )

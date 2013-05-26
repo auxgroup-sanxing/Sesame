@@ -16,6 +16,7 @@ import javax.jbi.messaging.NormalizedMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,7 @@ import com.sanxing.sesame.binding.codec.XMLResult;
 import com.sanxing.sesame.binding.codec.XMLSource;
 import com.sanxing.sesame.binding.context.MessageContext;
 import com.sanxing.sesame.binding.transport.Acceptor;
+import com.sanxing.sesame.binding.transport.BaseTransport;
 import com.sanxing.sesame.binding.transport.Connector;
 import com.sanxing.sesame.binding.transport.Transport;
 import com.sanxing.sesame.logging.ErrorRecord;
@@ -39,8 +41,6 @@ public class Carrier
     public static final String BINDING_ENDPOINT_NAME = "sesame.binding.endpoint.name";
 
     public static final String BINDING_OPERATION_NAME = "sesame.binding.operation.name";
-
-    protected static final String SEND_TIME = "sendTime";
 
     private static final Logger LOG = LoggerFactory.getLogger( Carrier.class );
 
@@ -116,7 +116,7 @@ public class Carrier
                 throw new BindingException( "Parse response error for MessageContext: " + message );
             }
         }
-        String operationName = (String) message.getProperty( "sesame.binding.operation.name" );
+        String operationName = (String) message.getProperty( Carrier.BINDING_OPERATION_NAME );
         OperationContext operation = binding.getServiceUnit().getOperationContext( operationName );
         if ( operation == null )
         {
@@ -137,7 +137,7 @@ public class Carrier
         }
         exchange.setProperty( "sesame.exchange.platform.serial", message.getSerial() );
         exchange.setProperty( "sesame.exchange.tx.proxy", operation.getServiceUnit().getName() );
-        exchange.setProperty( "sesame.exchange.tx.action", operation.getAction() );
+        exchange.setProperty( "sesame.exchange.tx.action", StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
         exchange.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
 
         NormalizedMessage normalizedIn = exchange.createMessage();
@@ -236,7 +236,7 @@ public class Carrier
         }
         exchange.setProperty( "sesame.exchange.platform.serial", message.getSerial() );
         exchange.setProperty( "sesame.exchange.tx.proxy", operation.getServiceUnit().getName() );
-        exchange.setProperty( "sesame.exchange.tx.action", operation.getAction() );
+        exchange.setProperty( "sesame.exchange.tx.action", StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
         exchange.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
         message.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
 
@@ -259,7 +259,7 @@ public class Carrier
         exchange.setMessage( normalizedIn, "in" );
         getCache().put( exchange.getExchangeId(), message );
 
-        exchange.setProperty( "sendTime", Long.valueOf( System.currentTimeMillis() ) );
+        exchange.setProperty( BaseTransport.SEND_TIME, Long.valueOf( System.currentTimeMillis() ) );
         component.send( exchange );
     }
 
@@ -334,7 +334,7 @@ public class Carrier
             {
                 long serial = ( (Long) exchange.getProperty( "sesame.exchange.platform.serial" ) ).longValue();
                 context.setSerial( serial );
-                context.setProperty( "sesame.binding.operation.name", exchange.getOperation().getLocalPart() );
+                context.setProperty( Carrier.BINDING_OPERATION_NAME, exchange.getOperation().getLocalPart() );
             }
             catch ( IllegalAccessException e )
             {
@@ -386,7 +386,7 @@ public class Carrier
 
         getCache().remove( exchange.getExchangeId() );
 
-        long timeMillis = ( (Long) exchange.getProperty( "sendTime" ) ).longValue();
+        long timeMillis = ( (Long) exchange.getProperty( BaseTransport.SEND_TIME ) ).longValue();
         Log sensor = LogFactory.getLog( "sesame.system.sensor.exchange" );
         PerfRecord perf = new PerfRecord();
         perf.setElapsedTime( System.currentTimeMillis() - timeMillis );
