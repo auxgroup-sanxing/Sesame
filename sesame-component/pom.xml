@@ -14,5 +14,6 @@
   	<module>json-bc</module>
   	<module>raw-bc</module>
   	<module>soap-sc</module>
+  	<module>soap-cc</module>
   </modules>
 </project>
