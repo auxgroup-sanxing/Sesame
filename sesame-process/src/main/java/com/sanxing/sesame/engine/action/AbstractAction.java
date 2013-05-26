@@ -214,11 +214,11 @@ public abstract class AbstractAction
 
             int type = 0;
             Variable result = null;
-            List list = xpath.selectNodes( startPoint );
+            List list = xpath.selectNodes( startPoint);
 
             if ( list.size() > 1 )
             {
-                result = new Variable( list, 5 );
+                result = new Variable( list, Variable.LIST );
             }
             else if ( list.size() == 1 )
             {
@@ -226,31 +226,31 @@ public abstract class AbstractAction
 
                 if ( first instanceof Element )
                 {
-                    type = 0;
+                    type = Variable.ELEMENT;
                 }
                 else if ( first instanceof Boolean )
                 {
-                    type = 6;
+                    type = Variable.BOOLEAN;
                 }
                 else if ( first instanceof String )
                 {
-                    type = 7;
+                    type = Variable.STRING;
                 }
                 else if ( first instanceof Attribute )
                 {
-                    type = 3;
+                    type = Variable.ATTRIBUTE;
                 }
                 else if ( first instanceof Text )
                 {
-                    type = 1;
+                    type = Variable.TEXT;
                 }
                 else if ( first instanceof CDATA )
                 {
-                    type = 2;
+                    type = Variable.CDATA;
                 }
                 else if ( first instanceof Number )
                 {
-                    type = 8;
+                    type = Variable.NUMBER;
                 }
 
                 result = new Variable( first, type );

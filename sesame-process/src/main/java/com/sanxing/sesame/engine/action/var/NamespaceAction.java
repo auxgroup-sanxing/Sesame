@@ -12,6 +12,7 @@ import com.sanxing.sesame.engine.action.ActionException;
 import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
+import com.sanxing.sesame.util.JdomUtil;
 
 public class NamespaceAction
     extends AbstractAction
@@ -78,7 +79,7 @@ public class NamespaceAction
 
     private void removeNamespace( Variable target )
     {
-        if ( target.getVarType() == 0 )
+        if ( target.getVarType() == Variable.ELEMENT )
         {
             Element el = (Element) target.get();
             if ( namespace.getURI().length() == 0 )
@@ -91,7 +92,7 @@ public class NamespaceAction
                 el.removeNamespaceDeclaration( namespace );
             }
         }
-        else if ( target.getVarType() == 5 )
+        else if ( target.getVarType() == Variable.LIST )
         {
             List list = (List) target.get();
             for ( Iterator localIterator = list.iterator(); localIterator.hasNext(); )
@@ -112,12 +113,12 @@ public class NamespaceAction
 
     private void addNamespace( Variable target )
     {
-        if ( target.getVarType() == 0 )
+        if ( target.getVarType() == Variable.ELEMENT )
         {
             Element el = (Element) target.get();
             el.addNamespaceDeclaration( namespace );
         }
-        else if ( target.getVarType() == 5 )
+        else if ( target.getVarType() == Variable.LIST )
         {
             List list = (List) target.get();
             for ( Iterator localIterator = list.iterator(); localIterator.hasNext(); )
@@ -138,17 +139,18 @@ public class NamespaceAction
 
     private void setNamespace( Variable target )
     {
-        if ( target.getVarType() == 0 )
+        if ( target.getVarType() == Variable.ELEMENT )
         {
             Element el = (Element) target.get();
             el.setNamespace( namespace );
+            JdomUtil.allAdditionNamespace(el, namespace);
         }
-        else if ( target.getVarType() == 3 )
+        else if ( target.getVarType() == Variable.ATTRIBUTE )
         {
             Attribute attribute = (Attribute) target.get();
             attribute.setNamespace( namespace );
         }
-        else if ( target.getVarType() == 5 )
+        else if ( target.getVarType() == Variable.LIST )
         {
             List list = (List) target.get();
             for ( Iterator localIterator = list.iterator(); localIterator.hasNext(); )
@@ -158,6 +160,7 @@ public class NamespaceAction
                 {
                     Element el = (Element) obj;
                     el.setNamespace( namespace );
+                    JdomUtil.allAdditionNamespace(el, namespace);
                 }
                 else if ( obj instanceof Attribute )
                 {
