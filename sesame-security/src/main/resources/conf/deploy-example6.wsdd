@@ -1,0 +1,63 @@
+<!-- Use this file to deploy some handlers/chains and services      -->
+<!-- Two ways to do this:                                           -->
+<!--   java org.apache.axis.client.AdminClient deploy.wsdd          -->
+<!--      after the axis server is running                          -->
+<!-- or                                                             -->
+<!--   java org.apache.axis.utils.Admin client|server deploy.wsdd   -->
+<!--      from the same directory that the Axis engine runs         -->
+
+<deployment
+    xmlns="http://xml.apache.org/axis/wsdd/"
+    xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+
+  <!-- Services from BrokerageService WSDL service -->
+
+  <service name="example6" provider="java:RPC" style="rpc" use="encoded">
+      <handlerInfoChain>
+        <handlerInfo classname="com.manning.samples.soasecimpl.example6.ServerSideWSSecurityHandler">  
+          <parameter name="isOnRequestSide" value="true"/>
+          <parameter name="keyStoreResourcePath" value="/example4.keystore"/>
+          <parameter name="keyStorePassword" value="goodpass"/>
+          <parameter name="ourKeyAlias" value="tomcat"/>
+          <parameter name="ourKeyPassword" value="goodpass"/>
+        </handlerInfo>
+      </handlerInfoChain>  
+      <parameter name="wsdlTargetNamespace" value="http://manning.com/xmlns/samples/soasecimpl"/>
+      <parameter name="wsdlServiceElement" value="BrokerageService"/>
+      <parameter name="wsdlServicePort" value="example6"/>
+      <parameter name="className" value="com.manning.samples.soasecimpl.example6.Example6SoapBindingImpl"/>
+      <parameter name="wsdlPortType" value="Brokerage"/>
+      <parameter name="typeMappingVersion" value="1.1"/>
+      <operation name="getQuote" qname="operNS:getQuote" xmlns:operNS="http://manning.com/xmlns/samples/soasecimpl" returnQName="quote" returnType="rtns:float" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="symbol" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="createLimitOrder" qname="operNS:createLimitOrder" xmlns:operNS="http://manning.com/xmlns/samples/soasecimpl" returnQName="orderId" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="symbol" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="buy" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="quantity" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="priceLimit" type="tns:float" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <operation name="createMarketOrder" qname="operNS:createMarketOrder" xmlns:operNS="http://manning.com/xmlns/samples/soasecimpl" returnQName="orderId" returnType="rtns:string" xmlns:rtns="http://www.w3.org/2001/XMLSchema" soapAction="" >
+        <parameter qname="symbol" type="tns:string" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="buy" type="tns:boolean" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+        <parameter qname="quantity" type="tns:int" xmlns:tns="http://www.w3.org/2001/XMLSchema"/>
+      </operation>
+      <parameter name="allowedMethods" value="getQuote createMarketOrder createLimitOrder"/>
+      <parameter name="scope" value="Application"/>
+
+  </service>
+  <service name="proxy" style="message">
+    <handlerInfoChain>  
+        <handlerInfo classname="com.manning.samples.soasecimpl.example6.WSSecurityUsernameHandler">
+          <parameter name="usernameTokenMandatory" value="false"/>
+        </handlerInfo>
+        <handlerInfo classname="com.manning.samples.soasecimpl.example6.JAASAuthenticationHandler">
+          <parameter name="jaasAppName" value="soasecimpl"/>
+        </handlerInfo>
+        <handlerInfo classname="com.manning.samples.soasecimpl.example6.SAMLCreationHandler"/>
+        <role soapActorName="http://manning.com/xmlns/samples/soasecimpl/cop"/>
+    </handlerInfoChain>
+    <parameter name="className" value="com.manning.samples.soasecimpl.example6.ProxyService"/>
+    <parameter name="allowedMethods" value="relayInAxis"/>
+  </service>
+</deployment>

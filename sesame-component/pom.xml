@@ -13,5 +13,6 @@
   	<module>xml-bc</module>
   	<module>json-bc</module>
   	<module>raw-bc</module>
+  	<module>soap-sc</module>
   </modules>
 </project>

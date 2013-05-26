@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:sesa="http://www.sanxing.com/ns/sesame" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<component type="binding-component">
+		<identification>
+			<name>soap-sc</name>
+			<description>SOAP服务端绑定组件</description>
+		</identification>
+		<component-class-name>com.sanxing.sesame.binding.soap.SOAPServer</component-class-name>
+		<component-class-path>
+			<path-element></path-element>
+		</component-class-path>
+		<bootstrap-class-name>com.sanxing.sesame.binding.soap.BootstrapImpl</bootstrap-class-name>
+		<bootstrap-class-path>
+			<path-element></path-element>
+		</bootstrap-class-path>
+		<sesa:role>consumer</sesa:role>
+	</component>
+</jbi>

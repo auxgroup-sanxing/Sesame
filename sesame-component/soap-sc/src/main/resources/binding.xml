@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<binding>
+  <allowable>
+    <protocol name="http">超文本传输协议</protocol>
+  </allowable>
+</binding>
+

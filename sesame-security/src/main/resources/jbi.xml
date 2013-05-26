@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:sesa="http://www.sanxing.com/ns/sesame" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0">
+  <shared-library classs-loader-delegation="parent-first" version="1.0">
+    <identification>
+      <name>sesame-security</name>
+      <description>sesame安全库</description>
+    </identification>
+    <shared-library-class-path>
+      <path-element />
+    </shared-library-class-path>
+  </shared-library>
+</jbi>
+

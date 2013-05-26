@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="soap_sample" targetNamespace="http://www.sanxing.com.sesame/demo/soap_sample" xmlns:tns="http://www.sanxing.com.sesame/demo/soap_sample" xmlns:engine_su="http://www.sanxing.com.sesame/demo/engine_sample" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sesa="http://www.sanxing.com/ns/sesame" xmlns="http://schemas.xmlsoap.org/wsdl/">
+<documentation>SOAP 测试</documentation>
+  <types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.sanxing.com.sesame/demo/soap_sample"/>
+  </types>
+  <message name="request">
+    <part name="parameters" element="engine_su:request">
+    </part>
+  </message>
+  <message name="error">
+    <part name="parameters" element="engine_su:error">
+    </part>
+  </message>
+  <message name="fault">
+    <part name="parameters" element="engine_su:fault">
+    </part>
+  </message>
+  <message name="getTemperatureResponse">
+    <part name="parameters" element="engine_su:getTemperatureResponse">
+    </part>
+  </message>
+  <message name="getSupportCityReq">
+    <part name="parameters" element="engine_su:getSupportCityReq">
+    </part>
+  </message>
+  <message name="response">
+    <part name="parameters" element="engine_su:response">
+    </part>
+  </message>
+  <message name="getSupportCityResponse">
+    <part name="parameters" element="engine_su:getSupportCityResponse">
+    </part>
+  </message>
+  <message name="SO001Request">
+    <part name="parameters" element="engine_su:SO001Request">
+    </part>
+  </message>
+  <message name="SO001Response">
+    <part name="parameters" element="engine_su:SO001Response">
+    </part>
+  </message>
+  <message name="getTempRequest">
+    <part name="parameters" element="engine_su:getTempRequest">
+    </part>
+  </message>
+  <portType name="Weather">
+    <operation name="getSupportCity">
+<documentation>获取支持的城市</documentation>
+      <input message="tns:getSupportCityReq">
+    </input>
+      <output message="tns:getSupportCityResponse">
+    </output>
+      <fault name="fault" message="tns:fault">
+    </fault>
+    </operation>
+    <operation name="getTemperature">
+<documentation>获取温度</documentation>
+      <input message="tns:getTemperatureRequest">
+    </input>
+      <output message="tns:getTemperatureResponse">
+    </output>
+      <fault name="error" message="tns:error">
+    </fault>
+    </operation>
+    <operation name="SO001">
+<documentation>操作1</documentation>
+      <input message="tns:SO001Request">
+    </input>
+      <output message="tns:SO001Response">
+    </output>
+    </operation>
+  </portType>
+  <binding name="soap-sc" type="tns:Weather">
+    <sesa:binding/>
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="getSupportCity">
+      <soap:operation soapAction="http://www.webserviceX.NET/getSupportCity" style="document"/>
+    </operation>
+    <operation name="getTemperature">
+    </operation>
+    <operation name="SO001">
+    </operation>
+  </binding>
+  <service name="standard-s">
+    <port name="qwert" binding="tns:soap-sc">
+      <soap:address location="http://localhost/example"/>
+    </port>
+  </service>
+</definitions>

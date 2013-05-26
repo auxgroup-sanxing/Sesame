@@ -1,0 +1,6 @@
+# Password store for FiledBasedAuthenticator
+# Entry Format is:
+# username:base64-encoded-sha1-hash-of-utf8-password:role1:role2:...:roleN
+#
+#chap's password shown below in sha1-hashed form is 'goodpass'
+chap:rLZZfqR9sus8AgDcCPy0R3iXkGw=:author:aalayance
