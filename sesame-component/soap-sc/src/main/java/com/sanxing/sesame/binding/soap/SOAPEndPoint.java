@@ -1,5 +1,6 @@
 package com.sanxing.sesame.binding.soap;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.logging.ErrorRecord;
 import com.sanxing.sesame.logging.FinishRecord;
 import com.sanxing.sesame.logging.Log;
@@ -207,7 +208,7 @@ public class SOAPEndPoint
 
             if ( exchange.getStatus() != ExchangeStatus.ERROR )
             {
-                NormalizedMessage out = exchange.getMessage( "out" );
+                NormalizedMessage out = exchange.getMessage( ExchangeConst.OUT );
                 Source content = out.getContent();
 
                 if ( log.isInfoEnabled() )
@@ -421,11 +422,11 @@ public class SOAPEndPoint
         MessageExchange exchange = this.component.createExchange( operationContext );
         NormalizedMessage msg = exchange.createMessage();
         msg.setContent( source );
-        exchange.setMessage( msg, "in" );
-        exchange.setProperty( "sesame.exchange.platform.serial", Long.valueOf( SerialGenerator.getSerial() ) );
-        exchange.setProperty( "sesame.exchange.consumer", this.component.getContext().getComponentName() );
+        exchange.setMessage( msg, ExchangeConst.IN );
+        exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, Long.valueOf( SerialGenerator.getSerial() ) );
+        exchange.setProperty( ExchangeConst.CONSUMER, this.component.getContext().getComponentName() );
 
-        setSerial( ( (Long) exchange.getProperty( "sesame.exchange.platform.serial" ) ).longValue() );
+        setSerial( ( (Long) exchange.getProperty( ExchangeConst.PLATFORM_SERIAL ) ).longValue() );
 
         if ( log.isInfoEnabled() )
         {

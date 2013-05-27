@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.JbiConstants;
 import com.sanxing.sesame.container.ActivationSpec;
 import com.sanxing.sesame.container.JBIContainer;
 import com.sanxing.sesame.exception.ExchangeTimeoutException;
@@ -379,7 +380,7 @@ public class DeliveryChannelImpl
     {
         checkNotClosed();
 
-        messageExchange.setProperty( "javax.jbi.messaging.sendSync", null );
+        messageExchange.setProperty( JbiConstants.SEND_SYNC, null );
         MessageExchangeImpl me = (MessageExchangeImpl) messageExchange;
         doSend( me, false );
     }
@@ -399,7 +400,7 @@ public class DeliveryChannelImpl
 
         boolean result = false;
 
-        messageExchange.setProperty( "javax.jbi.messaging.sendSync", Boolean.TRUE );
+        messageExchange.setProperty( JbiConstants.SEND_SYNC, Boolean.TRUE );
 
         MessageExchangeImpl me = (MessageExchangeImpl) messageExchange;
         String exchangeKey = me.getKey();

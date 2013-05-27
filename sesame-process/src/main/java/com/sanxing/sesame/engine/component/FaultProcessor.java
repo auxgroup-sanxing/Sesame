@@ -17,6 +17,7 @@ import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.xpath.XPath;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.exceptions.AppException;
 import com.sanxing.sesame.exceptions.SystemException;
 import com.sanxing.sesame.util.JdomUtil;
@@ -96,12 +97,12 @@ public class FaultProcessor
         Source source = sourceFault.getContent();
         Document sourceDoc = JdomUtil.source2JDOMDocument( source );
 
-        XPath status_XPath = (XPath) sourceFault.getProperty( "response.status.xpath" );
+        XPath status_XPath = (XPath) sourceFault.getProperty( ExchangeConst.STATUS_XPATH );
         if ( status_XPath != null )
         {
             status = status_XPath.valueOf( sourceDoc );
         }
-        XPath statusText_XPath = (XPath) sourceFault.getProperty( "response.statustext.xpath" );
+        XPath statusText_XPath = (XPath) sourceFault.getProperty( ExchangeConst.STATUS_TEXT_XPATH );
         if ( statusText_XPath != null )
         {
             statusText = statusText_XPath.valueOf( sourceDoc );

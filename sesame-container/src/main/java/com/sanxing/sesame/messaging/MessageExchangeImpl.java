@@ -21,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
+import com.sanxing.sesame.JbiConstants;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.container.ActivationSpec;
 import com.sanxing.sesame.jaxp.SourceTransformer;
 import com.sanxing.sesame.mbean.ComponentContextImpl;
@@ -29,11 +31,11 @@ import com.sanxing.sesame.mbean.ComponentNameSpace;
 public abstract class MessageExchangeImpl
     implements MessageExchange, Externalizable
 {
-    public static final String IN = "in";
+    public static final String IN = ExchangeConst.IN;
 
-    public static final String OUT = "out";
+    public static final String OUT = ExchangeConst.OUT;
 
-    public static final String FAULT = "fault";
+    public static final String FAULT = ExchangeConst.FAULT;
 
     public static final int MAX_MSG_DISPLAY_SIZE = 1500;
 
@@ -225,7 +227,7 @@ public abstract class MessageExchangeImpl
     public void setFault( Fault fault )
         throws MessagingException
     {
-        setMessage( fault, "fault" );
+        setMessage( fault, FAULT );
     }
 
     @Override
@@ -245,15 +247,15 @@ public abstract class MessageExchangeImpl
     @Override
     public NormalizedMessage getMessage( String name )
     {
-        if ( "in".equals( name ) )
+        if ( IN.equals( name ) )
         {
             return packet.getIn();
         }
-        if ( "out".equals( name ) )
+        if ( OUT.equals( name ) )
         {
             return packet.getOut();
         }
-        if ( "fault".equals( name ) )
+        if ( FAULT.equals( name ) )
         {
             return packet.getFault();
         }
@@ -276,7 +278,7 @@ public abstract class MessageExchangeImpl
         {
             throw new IllegalArgumentException( "name should not be null" );
         }
-        if ( "in".equalsIgnoreCase( name ) )
+        if ( IN.equalsIgnoreCase( name ) )
         {
             if ( !( can( 1 ) ) )
             {
@@ -289,7 +291,7 @@ public abstract class MessageExchangeImpl
             ( (NormalizedMessageImpl) message ).exchange = this;
             packet.setIn( (NormalizedMessageImpl) message );
         }
-        else if ( "out".equalsIgnoreCase( name ) )
+        else if ( OUT.equalsIgnoreCase( name ) )
         {
             if ( !( can( 2 ) ) )
             {
@@ -302,7 +304,7 @@ public abstract class MessageExchangeImpl
             ( (NormalizedMessageImpl) message ).exchange = this;
             packet.setOut( (NormalizedMessageImpl) message );
         }
-        else if ( "fault".equalsIgnoreCase( name ) )
+        else if ( FAULT.equalsIgnoreCase( name ) )
         {
             if ( !( can( 4 ) ) )
             {
@@ -332,7 +334,7 @@ public abstract class MessageExchangeImpl
         {
             return packet.getTransactionContext();
         }
-        if ( "com.sanxing.sesame.persistent".equals( name ) )
+        if ( JbiConstants.PERSISTENT_PROPERTY_NAME.equals( name ) )
         {
             return packet.getPersistent();
         }
@@ -354,7 +356,7 @@ public abstract class MessageExchangeImpl
         {
             packet.setTransactionContext( (Transaction) value );
         }
-        else if ( "com.sanxing.sesame.persistent".equals( name ) )
+        else if ( JbiConstants.PERSISTENT_PROPERTY_NAME.equals( name ) )
         {
             packet.setPersistent( (Boolean) value );
         }
@@ -449,18 +451,18 @@ public abstract class MessageExchangeImpl
     public void setInMessage( NormalizedMessage message )
         throws MessagingException
     {
-        setMessage( message, "in" );
+        setMessage( message, IN );
     }
 
     public NormalizedMessage getOutMessage()
     {
-        return getMessage( "out" );
+        return getMessage( OUT );
     }
 
     public void setOutMessage( NormalizedMessage message )
         throws MessagingException
     {
-        setMessage( message, "out" );
+        setMessage( message, OUT );
     }
 
     public ComponentNameSpace getSourceId()
@@ -691,9 +693,9 @@ public abstract class MessageExchangeImpl
                 sb.append( "  operation: " ).append( getOperation() ).append( '\n' );
             }
             SourceTransformer st = new SourceTransformer();
-            display( "in", sb, st );
-            display( "out", sb, st );
-            display( "fault", sb, st );
+            display( IN, sb, st );
+            display( OUT, sb, st );
+            display( FAULT, sb, st );
             if ( getError() != null )
             {
                 sb.append( "  error: " );

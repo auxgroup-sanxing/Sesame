@@ -15,6 +15,7 @@ import javax.management.ObjectName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.JbiConstants;
 import com.sanxing.sesame.executors.ExecutorFactory;
 import com.sanxing.sesame.management.AttributeInfoHelper;
 import com.sanxing.sesame.management.BaseLifeCycle;
@@ -200,7 +201,7 @@ public abstract class AbstractDispatcher
 
     protected boolean isSynchronous( MessageExchange me )
     {
-        Boolean sync = (Boolean) me.getProperty( "javax.jbi.messaging.sendSync" );
+        Boolean sync = (Boolean) me.getProperty( JbiConstants.SEND_SYNC );
         return ( ( sync != null ) && ( sync.booleanValue() ) );
     }
 

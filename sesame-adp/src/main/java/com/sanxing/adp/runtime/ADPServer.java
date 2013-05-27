@@ -21,6 +21,7 @@ import com.sanxing.adp.parser.PortTypeInfo;
 import com.sanxing.adp.parser.WSDLParser;
 import com.sanxing.adp.util.XJUtil;
 import com.sanxing.sesame.classloader.JarFileClassLoader;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.exceptions.AppException;
 
 public class ADPServer
@@ -135,7 +136,7 @@ public class ADPServer
     {
         if ( e instanceof AppException )
         {
-            Element root = new Element( "fault" );
+            Element root = new Element( ExchangeConst.FAULT );
             List<FaultInfo> faults = oper.getFaults();
             LOG.trace( "exception name [" + e.getClass().getSimpleName() + "]" );
             for ( FaultInfo fault : faults )
@@ -147,9 +148,9 @@ public class ADPServer
                 }
                 try
                 {
-                    root.addContent( new Element( "faultcode" ).setText( ( (AppException) e ).getGlobalErrCode() ) );
-                    root.addContent( new Element( "faultstring" ).setText( e.getMessage() ) );
-                    root.addContent( new Element( "faultactor" ).setText( "adp" ) );
+                    root.addContent( new Element( ExchangeConst.FAULT_CODE ).setText( ( (AppException) e ).getGlobalErrCode() ) );
+                    root.addContent( new Element( ExchangeConst.FAULT_TEXT ).setText( e.getMessage() ) );
+                    root.addContent( new Element( ExchangeConst.FAULT_ACTOR ).setText( "adp" ) );
                     Field[] fields = e.getClass().getDeclaredFields();
                     for ( Field field : fields )
                     {

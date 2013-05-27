@@ -20,7 +20,9 @@ import org.slf4j.MDC;
 import com.sanxing.sesame.classloader.JarFileClassLoader;
 import com.sanxing.sesame.component.params.AppParameters;
 import com.sanxing.sesame.component.params.Parameter;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.core.naming.JNDIUtil;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.component.ProcessEngine;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
@@ -46,20 +48,20 @@ public class EngineDebugger
 
         Object serial = executionCtx.get( SERIAL_NUMBER );
 
-        this.executionCtx.getDataContext().addVariable( "serial",
+        this.executionCtx.getDataContext().addVariable( ExchangeConst.SERIAL,
             new Variable( ( serial != null ) ? serial : Integer.valueOf( 0 ), 8 ) );
 
         this.executionCtx.put( NAMING_CONTEXT, JNDIUtil.getInitialContext() );
 
-        this.executionCtx.put( "ENGINE", ProcessEngine.jbiInstance );
+        this.executionCtx.put( ExchangeConst.ENGINE, ProcessEngine.jbiInstance );
 
         appendBizParameters( executionCtx );
     }
 
     private void appendBizParameters( ExecutionContext executionCtx )
     {
-        String suName = (String) this.executionCtx.get( "service_name" );
-        String operationName = (String) this.executionCtx.get( "operation_name" );
+        String suName = (String) this.executionCtx.get( ExchangeConst.SERVICE_NAME );
+        String operationName = (String) this.executionCtx.get( ExchangeConst.OPERATION_NAME );
 
         LOG.debug( "append biz param : suName [" + suName + "]" );
 
@@ -246,7 +248,7 @@ public class EngineDebugger
                 {
                     Element eleFunc = (Element) fuctionEles.get( i );
                     String prefix = eleFunc.getAttributeValue( "prefix" );
-                    name = eleFunc.getAttributeValue( "name" );
+                    name = eleFunc.getAttributeValue( Constant.ATTR_NAME );
                     namespaceUri = "http://www.sanxing.net.cn/sesame/" + prefix;
                     String className = eleFunc.getAttributeValue( "class-name" );
                     String desc = eleFunc.getAttributeValue( "description" );

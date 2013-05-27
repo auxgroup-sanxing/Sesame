@@ -72,8 +72,8 @@ public String startDebug(HttpServletRequest request, HttpServletResponse respons
 		    if (ec == null) {
 				ec = new ExecutionContext("testFlow");
 				ec.put(ExecutionEnv.SERIAL_NUMBER, DummySequencer.getSerial());
-				ec.put(com.sanxing.sesame.engine.component.Constants.SERVICE_NAME, suName);
-				ec.put(com.sanxing.sesame.engine.component.Constants.OPERATION_NAME, operaName);
+				ec.put(com.sanxing.sesame.constants.ExchangeConst.SERVICE_NAME, suName);
+				ec.put(com.sanxing.sesame.constants.ExchangeConst.OPERATION_NAME, operaName);
 				session.setAttribute("context", ec);
 		    }
 		    ec.getDataContext().addVariable("request", new Variable(requestData, Variable.ELEMENT));

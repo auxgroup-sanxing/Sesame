@@ -23,9 +23,9 @@ public class RenameAction
     @Override
     public void doinit( Element config )
     {
-        varName = config.getAttributeValue( "var" );
-        xpath = config.getAttributeValue( "xpath" );
-        newName = config.getAttributeValue( "new-name" );
+        varName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
+        xpath = config.getAttributeValue( Constant.ELE_XPATH );
+        newName = config.getAttributeValue( Constant.ATTR_NEW_NAME );
     }
 
     @Override

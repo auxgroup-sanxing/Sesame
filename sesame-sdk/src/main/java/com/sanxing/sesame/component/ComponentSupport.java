@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.exception.NoInMessageAvailableException;
 import com.sanxing.sesame.management.ManagementSupport;
 import com.sanxing.sesame.service.ServiceUnit;
@@ -178,7 +179,7 @@ public abstract class ComponentSupport
     protected NormalizedMessage getInMessage( MessageExchange exchange )
         throws NoInMessageAvailableException
     {
-        NormalizedMessage message = exchange.getMessage( "in" );
+        NormalizedMessage message = exchange.getMessage( ExchangeConst.IN );
         if ( message == null )
         {
             throw new NoInMessageAvailableException( exchange );

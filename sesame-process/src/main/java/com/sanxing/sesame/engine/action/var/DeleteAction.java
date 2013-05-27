@@ -23,8 +23,8 @@ public class DeleteAction
     @Override
     public void doinit( Element config )
     {
-        varName = config.getAttributeValue( "var" );
-        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
+        varName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
+        xpath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
     }
 
     @Override

@@ -3,6 +3,8 @@ package com.sanxing.sesame.engine;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sanxing.sesame.constants.ExchangeConst;
+
 public abstract class ExecutionEnv
 {
     public static final String NAMING_CONTEXT = "NAMING_CONTEXT";
@@ -29,9 +31,9 @@ public abstract class ExecutionEnv
 
     static
     {
-        exports.put( "serial", SERIAL_NUMBER );
-        exports.put( "faultcode", PROCESS_FAULTCODE );
-        exports.put( "faultstring", PROCESS_FAULTSTRING );
+        exports.put( ExchangeConst.SERIAL, SERIAL_NUMBER );
+        exports.put( ExchangeConst.FAULT_CODE, PROCESS_FAULTCODE );
+        exports.put( ExchangeConst.FAULT_TEXT, PROCESS_FAULTSTRING );
     }
 
     public static final Map<String, String> export()

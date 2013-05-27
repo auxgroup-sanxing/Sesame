@@ -15,6 +15,7 @@ import javax.jbi.messaging.RobustInOnly;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.xml.namespace.QName;
 
+import com.sanxing.sesame.JbiConstants;
 import com.sanxing.sesame.mbean.ComponentContextImpl;
 import com.sanxing.sesame.uuid.IdGenerator;
 
@@ -215,7 +216,7 @@ public class MessageExchangeFactoryImpl
                 exchange.setMarshaler( marshaler );
             }
         }
-        exchange.setProperty( "com.sanxing.sesame.datestamp", new PrettyCalendar() );
+        exchange.setProperty( JbiConstants.DATESTAMP_PROPERTY_NAME, new PrettyCalendar() );
     }
 
     public static class PrettyCalendar

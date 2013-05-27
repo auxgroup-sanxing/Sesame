@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.component.ClientComponent;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.exception.FaultException;
 import com.sanxing.sesame.jaxp.SourceTransformer;
 import com.sanxing.sesame.jaxp.StringSource;
@@ -192,7 +193,7 @@ public class Endpoint
             ClientComponent client = ClientComponent.getInstance();
             MessageExchange me = client.getExchangeFactory().createExchange( URI.create( mep ) );
             NormalizedMessage nm = me.createMessage();
-            me.setMessage( nm, "in" );
+            me.setMessage( nm, ExchangeConst.IN );
             nm.setContent( new StringSource( content ) );
             me.setEndpoint( endpoint );
             if ( operation != null )
@@ -208,9 +209,9 @@ public class Endpoint
             {
                 throw FaultException.newInstance( me );
             }
-            if ( me.getMessage( "out" ) != null )
+            if ( me.getMessage( ExchangeConst.OUT ) != null )
             {
-                return new SourceTransformer().contentToString( me.getMessage( "out" ) );
+                return new SourceTransformer().contentToString( me.getMessage( ExchangeConst.OUT ) );
             }
 
             return null;

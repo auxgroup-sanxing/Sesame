@@ -4,9 +4,11 @@ public abstract interface Constant
 {
     public static final String VAR_ACTION_NAME = "ACTION_NAME";
 
-    public static final String ATTR_LOGGER_NAME = "name";
+    public static final String ATTR_NAME = "name";
 
-    public static final String ATTR_LOGGER_LEVEL = "level";
+    public static final String ATTR_LEVEL = "level";
+
+    public static final String ATTR_DSN_NAME = "dsn";
 
     public static final String ATTR_VAR_NAME = "var";
 

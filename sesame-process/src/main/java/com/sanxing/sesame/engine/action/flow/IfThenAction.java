@@ -24,9 +24,9 @@ public class IfThenAction
     @Override
     public void doinit( Element config )
     {
-        varName = config.getAttributeValue( "var" );
+        varName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
 
-        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
+        xpath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
 
         this.config = config;
     }
@@ -41,28 +41,28 @@ public class IfThenAction
         Boolean bool = (Boolean) booleanVar.get();
         if ( bool.booleanValue() )
         {
-            Iterator thenActions = config.getChild( "then", config.getNamespace() ).getChildren().iterator();
+            Iterator thenActions = config.getChild( Constant.ELE_THEN, config.getNamespace() ).getChildren().iterator();
             ActionUtil.bachInvoke( ctx, thenActions );
         }
         else
         {
             boolean elseif = false;
 
-            List list = config.getChildren( "else-if" );
+            List list = config.getChildren( Constant.ELE_ELSE_IF );
 
             for ( int i = 0; i < list.size(); ++i )
             {
                 Element elseifthen = (Element) list.get( i );
 
-                varName = elseifthen.getAttributeValue( "var" );
-                String xpath = elseifthen.getChildTextTrim( "xpath", elseifthen.getNamespace() );
+                varName = elseifthen.getAttributeValue( Constant.ATTR_VAR_NAME );
+                String xpath = elseifthen.getChildTextTrim( Constant.ELE_XPATH, elseifthen.getNamespace() );
 
                 var = ctx.getVariable( varName );
                 ele = (Element) var.get();
 
                 booleanVar = select( ele, xpath, ctx );
                 bool = (Boolean) booleanVar.get();
-                Iterator thenActions = elseifthen.getChild( "then", config.getNamespace() ).getChildren().iterator();
+                Iterator thenActions = elseifthen.getChild( Constant.ELE_THEN, config.getNamespace() ).getChildren().iterator();
                 if ( bool.booleanValue() )
                 {
                     elseif = true;
@@ -71,9 +71,9 @@ public class IfThenAction
                 }
             }
 
-            if ( ( !( elseif ) ) && ( config.getChild( "else", config.getNamespace() ) != null ) )
+            if ( ( !( elseif ) ) && ( config.getChild( Constant.ELE_ELSE, config.getNamespace() ) != null ) )
             {
-                Iterator elseActions = config.getChild( "else", config.getNamespace() ).getChildren().iterator();
+                Iterator elseActions = config.getChild( Constant.ELE_ELSE, config.getNamespace() ).getChildren().iterator();
                 ActionUtil.bachInvoke( ctx, elseActions );
             }
         }

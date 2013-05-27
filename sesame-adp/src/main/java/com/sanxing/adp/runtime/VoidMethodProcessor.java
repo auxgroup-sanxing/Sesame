@@ -16,6 +16,7 @@ import com.sanxing.adp.api.ResultHolder;
 import com.sanxing.adp.parser.OperationInfo;
 import com.sanxing.adp.parser.PartInfo;
 import com.sanxing.adp.util.XJUtil;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.util.ReflectUtil;
 
 public class VoidMethodProcessor
@@ -38,7 +39,7 @@ public class VoidMethodProcessor
     private Document invokeMultiResultOperation( OperationInfo oper, Object tx, Object[] paramObjets )
         throws ADPException
     {
-        Element root = new Element( "response" );
+        Element root = new Element( ExchangeConst.RESPONSE );
         Method method = ReflectUtil.getMethodByName( oper.getOperationName(), tx.getClass() );
         if ( method == null )
         {

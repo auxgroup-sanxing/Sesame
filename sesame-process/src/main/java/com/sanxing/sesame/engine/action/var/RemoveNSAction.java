@@ -19,8 +19,8 @@ public class RemoveNSAction
     @Override
     public void doinit( Element config )
     {
-        targetVarName = config.getAttributeValue( "to-var" );
-        sourceVarName = config.getAttributeValue( "var" );
+        targetVarName = config.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
+        sourceVarName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
         if ( targetVarName == null )
         {
             targetVarName = sourceVarName;

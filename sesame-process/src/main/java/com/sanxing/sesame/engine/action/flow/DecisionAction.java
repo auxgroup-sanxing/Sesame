@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.jdom.Element;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionUtil;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 
@@ -21,7 +23,7 @@ public class DecisionAction
     public void doinit( Element actionEl )
     {
         this.actionEl = actionEl;
-        contextEl = new Element( "context" );
+        contextEl = new Element( ExchangeConst.CONTEXT );
     }
 
     @Override
@@ -34,10 +36,10 @@ public class DecisionAction
         {
             Element ifEl = (Element) iter.next();
 
-            String xpath = ifEl.getChildTextTrim( "xpath", ifEl.getNamespace() );
+            String xpath = ifEl.getChildTextTrim( Constant.ELE_XPATH, ifEl.getNamespace() );
             Variable booleanVar = select( contextEl, xpath, ctx );
             Boolean bool = (Boolean) booleanVar.get();
-            Element thenEl = ifEl.getChild( "then", ifEl.getNamespace() );
+            Element thenEl = ifEl.getChild( Constant.ELE_THEN, ifEl.getNamespace() );
             if ( bool.booleanValue() )
             {
                 Iterator actions = thenEl.getChildren().iterator();
@@ -64,7 +66,7 @@ public class DecisionAction
         for ( int i = 0; i < list.size(); ++i )
         {
             Element ifEl = (Element) list.get( i );
-            Element thenEl = ifEl.getChild( "then", ifEl.getNamespace() );
+            Element thenEl = ifEl.getChild( Constant.ELE_THEN, ifEl.getNamespace() );
             Iterator actions = thenEl.getChildren().iterator();
             ActionUtil.bachInvoke( context, actions );
         }

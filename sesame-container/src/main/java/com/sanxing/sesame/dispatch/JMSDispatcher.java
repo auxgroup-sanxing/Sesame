@@ -32,8 +32,6 @@ public class JMSDispatcher
     extends AbstractDispatcher
     implements MessageListener
 {
-    public static final String name = "cluster";
-
     public static final String CEChoosePolicy = SystemProperties.get(
         "com.sanxing.sesame.cluster-endpoint-choose-policy", "random" );
 
@@ -63,7 +61,7 @@ public class JMSDispatcher
     @Override
     public String getName()
     {
-        return "cluster";
+        return DispatcherChooser.CLUSTER_DISPATCHER;
     }
 
     @Override

@@ -37,8 +37,8 @@ public class NamespaceAction
             String uri = config.getAttributeValue( "uri", "" );
             namespace = Namespace.getNamespace( prefix, uri );
 
-            varName = config.getAttributeValue( "var" );
-            xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
+            varName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
+            xpath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
         }
         catch ( Exception e )
         {

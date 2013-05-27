@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.executors.ExecutorFactory;
 import com.sanxing.sesame.messaging.MessageExchangeImpl;
 import com.sanxing.sesame.servicedesc.AbstractEndpoint;
@@ -12,8 +13,6 @@ import com.sanxing.sesame.servicedesc.AbstractEndpoint;
 public class StraightThrough
     extends AbstractDispatcher
 {
-    public static final String name = "straight";
-
     private final Executor executor;
 
     public StraightThrough()
@@ -31,8 +30,8 @@ public class StraightThrough
         }
         if ( me.getRole() == MessageExchange.Role.PROVIDER )
         {
-            if ( ( me.getProperty( "sesame.exchange.thread.switch" ) != null )
-                && ( ( (Boolean) me.getProperty( "sesame.exchange.thread.switch" ) ).booleanValue() ) )
+            if ( ( me.getProperty( ExchangeConst.THREAD_SWITCH ) != null )
+                && ( ( (Boolean) me.getProperty( ExchangeConst.THREAD_SWITCH ) ).booleanValue() ) )
             {
                 executor.execute( new Runnable()
                 {
@@ -64,13 +63,13 @@ public class StraightThrough
     @Override
     public String getName()
     {
-        return "straight";
+        return DispatcherChooser.STRAIGHT_DISPATCHER;
     }
 
     @Override
     public String getDescription()
     {
-        return "Straight throutgh dispatcher";
+        return "Straight through dispatcher";
     }
 
     @Override

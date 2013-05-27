@@ -8,6 +8,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionException;
 import com.sanxing.sesame.engine.action.ActionUtil;
@@ -94,9 +95,9 @@ public class TryCatchAction
                     }
 
                     Variable statusVar = new Variable( exceptionKey, 7 );
-                    dataCtx.addVariable( "faultcode", statusVar );
+                    dataCtx.addVariable( ExchangeConst.FAULT_CODE, statusVar );
                     Variable descVar = new Variable( exceptionMsg, 7 );
-                    dataCtx.addVariable( "faultstring", descVar );
+                    dataCtx.addVariable( ExchangeConst.FAULT_TEXT, descVar );
                     dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, exceptionKey );
                     dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, exceptionMsg );
 

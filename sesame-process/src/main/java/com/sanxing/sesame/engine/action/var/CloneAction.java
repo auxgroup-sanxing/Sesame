@@ -20,9 +20,9 @@ public class CloneAction
     @Override
     public void doinit( Element config )
     {
-        sourceVarName = config.getAttributeValue( "var" );
-        targetVarName = config.getAttributeValue( "to-var" );
-        xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
+        sourceVarName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
+        targetVarName = config.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
+        xPath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
     }
 
     @Override

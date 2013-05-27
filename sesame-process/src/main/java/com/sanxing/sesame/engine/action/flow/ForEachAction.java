@@ -27,11 +27,11 @@ public class ForEachAction
     @Override
     public void doinit( Element config )
     {
-        varName = config.getAttributeValue( "var" );
+        varName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
 
-        xpath = config.getChildTextTrim( "xpath", config.getNamespace() );
+        xpath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
 
-        childVarName = config.getAttributeValue( "as" );
+        childVarName = config.getAttributeValue( Constant.ATTR_AS_VAR );
 
         this.config = config;
     }
@@ -64,7 +64,7 @@ public class ForEachAction
             Element child = (Element) listVar.get();
             Variable childVar = new Variable( child, 0 );
             ctx.addVariable( childVarName, childVar );
-            Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
+            Iterator iterActions = config.getChild( Constant.ELE_ACTIONS, config.getNamespace() ).getChildren().iterator();
             try
             {
                 ActionUtil.bachInvoke( ctx, iterActions );
@@ -83,7 +83,7 @@ public class ForEachAction
                 Element child = (Element) eleIter.next();
                 Variable childVar = new Variable( child, 0 );
                 ctx.addVariable( childVarName, childVar );
-                Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
+                Iterator iterActions = config.getChild( Constant.ELE_ACTIONS, config.getNamespace() ).getChildren().iterator();
                 try
                 {
                     ActionUtil.bachInvoke( ctx, iterActions );
@@ -99,7 +99,7 @@ public class ForEachAction
     @Override
     public void doworkInDehydrateState( DataContext ctx )
     {
-        Iterator iterActions = config.getChild( "actions", config.getNamespace() ).getChildren().iterator();
+        Iterator iterActions = config.getChild( Constant.ELE_ACTIONS, config.getNamespace() ).getChildren().iterator();
         try
         {
             ActionUtil.bachInvoke( ctx, iterActions );

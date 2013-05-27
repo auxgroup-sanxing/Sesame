@@ -38,9 +38,11 @@ import org.w3c.dom.DocumentFragment;
 import com.sanxing.sesame.component.EngineComponent;
 import com.sanxing.sesame.component.params.AppParameters;
 import com.sanxing.sesame.component.params.Parameter;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.Engine;
 import com.sanxing.sesame.engine.FlowInfo;
 import com.sanxing.sesame.engine.action.ActionException;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.action.callout.CalloutException;
 import com.sanxing.sesame.engine.action.var.VarNotFoundException;
 import com.sanxing.sesame.engine.context.DehydrateManager;
@@ -193,7 +195,7 @@ public class ProcessEngine
                 {
                     Element eleFunc = (Element) fuctionEles.get( i );
                     String prefix = eleFunc.getAttributeValue( "prefix" );
-                    name = eleFunc.getAttributeValue( "name" );
+                    name = eleFunc.getAttributeValue( Constant.ATTR_NAME );
                     namespaceUri = "http://www.sanxing.net.cn/sesame/" + prefix;
                     String className = eleFunc.getAttributeValue( "class-name" );
                     String desc = eleFunc.getAttributeValue( "description" );
@@ -230,11 +232,11 @@ public class ProcessEngine
                 + ( ( exchange.getRole() == MessageExchange.Role.PROVIDER ) ? "provider" : "consumer" ) );
         }
 
-        Long platformSerial = (Long) exchange.getProperty( "sesame.exchange.platform.serial" );
-        String action = (String) exchange.getProperty( "sesame.exchange.tx.action" );
-        Object clientType = exchange.getProperty( "sesame.exchange.client.type" );
-        Object clientSerial = exchange.getProperty( "sesame.exchange.client.serial" );
-        Object clientID = exchange.getProperty( "sesame.exchange.client.id" );
+        Long platformSerial = (Long) exchange.getProperty( ExchangeConst.PLATFORM_SERIAL );
+        String action = (String) exchange.getProperty( ExchangeConst.TX_ACTION );
+        Object clientType = exchange.getProperty( ExchangeConst.CLIENT_TYPE );
+        Object clientSerial = exchange.getProperty( ExchangeConst.CLIENT_SERIAL );
+        Object clientID = exchange.getProperty( ExchangeConst.CLIENT_ID );
         if ( platformSerial != null )
         {
             MDC.put( "PLATFORM_SERIAL", "" + platformSerial );
@@ -262,7 +264,7 @@ public class ProcessEngine
         if ( exchange.getRole() == MessageExchange.Role.CONSUMER )
         {
             LOG.debug( exchange.getService().toString() );
-            LOG.debug( exchange.getMessage( "out" ).toString() );
+            LOG.debug( exchange.getMessage( ExchangeConst.OUT ).toString() );
 
             if ( exchange.getProperty( DehydrateManager.DEHYDRATE_CONTEXT_ID ) != null )
             {
@@ -271,27 +273,27 @@ public class ProcessEngine
         }
         else
         {
-            exchange.setProperty( "sesame.exchange.provider", getContext().getComponentName() );
+            exchange.setProperty( ExchangeConst.PROVIDER, getContext().getComponentName() );
             ExecutionContext executionCtx = new ExecutionContext( exchange.getExchangeId() );
             try
             {
                 Variable var = exchange2var( exchange );
-                executionCtx.put( "ENGINE", this );
+                executionCtx.put( ExchangeConst.ENGINE, this );
                 executionCtx.put( NAMING_CONTEXT, getContext().getNamingContext() );
-                executionCtx.getDataContext().addVariable( "request", var );
+                executionCtx.getDataContext().addVariable( ExchangeConst.REQUEST, var );
                 executionCtx.put( CLASSLOADER, getClassLoader() );
                 executionCtx.put( SERIAL_NUMBER, platformSerial );
                 executionCtx.put( ACTION, action );
                 executionCtx.put( PROCESS_NAME, operationName );
                 executionCtx.put( PROCESS_GROUP, endpoint.getEndpointName() );
-                executionCtx.getDataContext().addVariable( "serial", new Variable( platformSerial, 8 ) );
+                executionCtx.getDataContext().addVariable( ExchangeConst.SERIAL, new Variable( platformSerial, 8 ) );
 
                 appendBizParameter( exchange, operationName, executionCtx );
 
                 engine.execute( executionCtx, flowName );
                 try
                 {
-                    Variable responseVar = executionCtx.getDataContext().getVariable( "response" );
+                    Variable responseVar = executionCtx.getDataContext().getVariable( ExchangeConst.RESPONSE );
                     NormalizedMessage normalizedOut = exchange.createMessage();
                     if ( responseVar != null )
                     {
@@ -303,7 +305,7 @@ public class ProcessEngine
                 }
                 catch ( VarNotFoundException e )
                 {
-                    Variable faultVar = executionCtx.getDataContext().getVariable( "fault" );
+                    Variable faultVar = executionCtx.getDataContext().getVariable( ExchangeConst.FAULT );
                     Element responseEl = (Element) faultVar.get();
                     responseEl.detach();
 
@@ -340,8 +342,8 @@ public class ProcessEngine
                     FaultException faultEx = (FaultException) cause;
                     MessageExchange me = faultEx.getExchange();
                     Fault calloutFault = faultEx.getFault();
-                    String sourceId = (String) me.getProperty( "sesame.exchange.provider" );
-                    String targetId = (String) exchange.getProperty( "sesame.exchange.consumer" );
+                    String sourceId = (String) me.getProperty( ExchangeConst.PROVIDER );
+                    String targetId = (String) exchange.getProperty( ExchangeConst.CONSUMER );
                     mappingFault( exchange, calloutFault, sourceId, targetId );
                     send( exchange );
                 }
@@ -353,8 +355,8 @@ public class ProcessEngine
                             + platformSerial + "]", cause );
                     }
                     MessageExchange me = ( (NoFaultAvailableException) cause ).getMessageExchange();
-                    String sourceId = (String) me.getProperty( "sesame.exchange.provider" );
-                    String targetId = (String) exchange.getProperty( "sesame.exchange.consumer" );
+                    String sourceId = (String) me.getProperty( ExchangeConst.PROVIDER );
+                    String targetId = (String) exchange.getProperty( ExchangeConst.CONSUMER );
                     mappingError( exchange, me.getError(), sourceId, targetId );
 
                     send( exchange );
@@ -366,7 +368,7 @@ public class ProcessEngine
                         LOG.debug( "err handling ,in local exception case", cause );
                     }
 
-                    String targetId = (String) exchange.getProperty( "sesame.exchange.consumer" );
+                    String targetId = (String) exchange.getProperty( ExchangeConst.CONSUMER );
                     String sourceId = getContext().getComponentName();
                     if ( sourceId.equals( targetId ) )
                     {
@@ -488,10 +490,10 @@ public class ProcessEngine
 
         Variable var = exchange2var( exchange );
 
-        ec.getDataContext().addVariable( "response", var );
+        ec.getDataContext().addVariable( ExchangeConst.RESPONSE, var );
         String operationName = exchange.getOperation().getLocalPart();
         engine.execute( ec, endpoint.getEndpointName() + "__" + operationName );
-        Variable response = ec.getDataContext().getVariable( "response" );
+        Variable response = ec.getDataContext().getVariable( ExchangeConst.RESPONSE );
 
         Element responseEl = (Element) response.get();
         responseEl.detach();
@@ -569,7 +571,7 @@ public class ProcessEngine
 
     private Variable exchange2var( MessageExchange exchange )
     {
-        NormalizedMessage request = exchange.getMessage( "in" );
+        NormalizedMessage request = exchange.getMessage( ExchangeConst.IN );
         Document requestDoc = JdomUtil.source2JDOMDocument( request.getContent() );
         Element requestEl = (Element) requestDoc.getRootElement().clone();
         return new Variable( requestEl, 0 );

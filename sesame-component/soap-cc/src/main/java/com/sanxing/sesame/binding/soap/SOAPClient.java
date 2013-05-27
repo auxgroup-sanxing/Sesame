@@ -1,5 +1,6 @@
 package com.sanxing.sesame.binding.soap;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.component.BindingComponent;
 import com.sanxing.sesame.management.ManagementSupport;
 import com.sanxing.sesame.service.ServiceUnit;
@@ -105,7 +106,7 @@ public class SOAPClient
     {
         try
         {
-            NormalizedMessage msg = exchange.getMessage( "in" );
+            NormalizedMessage msg = exchange.getMessage( ExchangeConst.IN );
             Source response = null;
             SOAPSender sender = (SOAPSender) this.senderMap.get( exchange.getService() );
             response = sender.sendRequest( msg.getContent(), exchange );
@@ -113,7 +114,7 @@ public class SOAPClient
 
             NormalizedMessage recmsg = exchange.createMessage();
             recmsg.setContent( JdomUtil.JDOMDocument2DOMSource( responseXML ) );
-            exchange.setMessage( recmsg, "out" );
+            exchange.setMessage( recmsg, ExchangeConst.OUT );
         }
         catch ( SoapFaultException e )
         {
@@ -126,7 +127,7 @@ public class SOAPClient
         catch ( Exception e )
         {
             Fault fault = exchange.createFault();
-            Element faultEle = new Element( "fault" );
+            Element faultEle = new Element( ExchangeConst.FAULT );
             faultEle.addContent( e.getMessage() );
             fault.setContent( JdomUtil.JDOMElement2DOMSource( faultEle ) );
             exchange.setFault( fault );

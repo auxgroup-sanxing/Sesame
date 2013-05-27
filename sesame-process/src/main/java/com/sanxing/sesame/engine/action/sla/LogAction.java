@@ -4,6 +4,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionException;
 import com.sanxing.sesame.engine.action.Constant;
@@ -32,11 +33,11 @@ public class LogAction
     @Override
     public void doinit( Element config )
     {
-        loggerName = config.getAttributeValue( "name" );
-        level = config.getAttributeValue( "level", "debug" );
-        varName = config.getAttributeValue( "var", "anonymous" );
-        msg = config.getAttributeValue( "msg", "" ).replace( "*", "" );
-        xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
+        loggerName = config.getAttributeValue( Constant.ATTR_NAME );
+        level = config.getAttributeValue( Constant.ATTR_LEVEL, "debug" );
+        varName = config.getAttributeValue( Constant.ATTR_VAR_NAME, "anonymous" );
+        msg = config.getAttributeValue( Constant.ATTR_LOGGER_MSG, "" ).replace( "*", "" );
+        xPath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
         if ( loggerName != null )
         {
             log = LoggerFactory.getLogger( loggerName );
@@ -58,7 +59,7 @@ public class LogAction
             {
                 if ( ( msg.indexOf( "{" + logMSG[i] + "}", 0 ) > 0 ) || ( msg.startsWith( "{" + logMSG[i] + "}" ) ) )
                 {
-                    toBeDebug = toBeDebug + getVariable( dataContext, "request", logMSG[i] );
+                    toBeDebug = toBeDebug + getVariable( dataContext, ExchangeConst.REQUEST, logMSG[i] );
                 }
                 else
                 {

@@ -37,6 +37,7 @@ import com.sanxing.sesame.binding.codec.FaultHandler;
 import com.sanxing.sesame.binding.transport.Transport;
 import com.sanxing.sesame.binding.transport.TransportFactory;
 import com.sanxing.sesame.component.BindingComponent;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.service.ServiceUnit;
 
 public class AdapterComponent
@@ -72,7 +73,7 @@ public class AdapterComponent
         {
             if ( exchange.getRole() == MessageExchange.Role.PROVIDER )
             {
-                exchange.setProperty( "sesame.exchange.provider", getContext().getComponentName() );
+                exchange.setProperty( ExchangeConst.PROVIDER, getContext().getComponentName() );
 
                 ServiceEndpoint endpoint = exchange.getEndpoint();
                 Binding binding = bindings.get( endpoint );
@@ -88,7 +89,7 @@ public class AdapterComponent
                 return;
             }
 
-            exchange.setProperty( "sesame.exchange.consumer", getContext().getComponentName() );
+            exchange.setProperty( ExchangeConst.CONSUMER, getContext().getComponentName() );
             QName serviceName = (QName) exchange.getProperty( Carrier.BINDING_SERVICE_NAME );
             String endpointName = (String) exchange.getProperty( Carrier.BINDING_ENDPOINT_NAME );
             ServiceEndpoint endpoint = getContext().getEndpoint( serviceName, endpointName );

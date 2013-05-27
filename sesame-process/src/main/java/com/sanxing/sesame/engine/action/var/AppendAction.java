@@ -39,21 +39,21 @@ public class AppendAction
     {
         try
         {
-            targetVarName = config.getAttributeValue( "to-var" );
+            targetVarName = config.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
 
-            sourceVarName = config.getAttributeValue( "var" );
+            sourceVarName = config.getAttributeValue( Constant.ATTR_VAR_NAME );
 
-            targetVarType = config.getAttributeValue( "type", "" );
+            targetVarType = config.getAttributeValue( Constant.ATTR_TYPE, "" );
 
-            xPath = config.getChildTextTrim( "xpath", config.getNamespace() );
+            xPath = config.getChildTextTrim( Constant.ELE_XPATH, config.getNamespace() );
 
-            rawValue = config.getChildTextTrim( "raw-value", config.getNamespace() );
-            if ( ( config.getAttributeValue( "index" ) == null ) || ( config.getAttributeValue( "index" ).equals( "" ) ) )
+            rawValue = config.getChildTextTrim( Constant.ELE_RAW_VALUE, config.getNamespace() );
+            if ( ( config.getAttributeValue( Constant.ATTR_INDEX ) == null ) || ( config.getAttributeValue( Constant.ATTR_INDEX ).equals( "" ) ) )
             {
                 index = -1;
                 return;
             }
-            index = Integer.parseInt( config.getAttributeValue( "index", "-1" ) );
+            index = Integer.parseInt( config.getAttributeValue( Constant.ATTR_INDEX, "-1" ) );
         }
         catch ( Exception e )
         {

@@ -6,6 +6,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionUtil;
 import com.sanxing.sesame.engine.action.Constant;
@@ -28,9 +29,9 @@ public class DoWhileAction
     @Override
     public void doinit( Element actionEl )
     {
-        xpath = actionEl.getChildTextTrim( "xpath", actionEl.getNamespace() );
+        xpath = actionEl.getChildTextTrim( Constant.ELE_XPATH, actionEl.getNamespace() );
         this.actionEl = actionEl;
-        contextEl = new Element( "context" );
+        contextEl = new Element( ExchangeConst.CONTEXT );
     }
 
     @Override
@@ -41,12 +42,12 @@ public class DoWhileAction
         {
             try
             {
-                Iterator iterator = actionEl.getChild( "do", actionEl.getNamespace() ).getChildren().iterator();
+                Iterator iterator = actionEl.getChild( Constant.ELE_DO, actionEl.getNamespace() ).getChildren().iterator();
                 ActionUtil.bachInvoke( ctx, iterator );
 
                 if ( executionContext.isDebugging() )
                 {
-                    Element xpathEl = actionEl.getChild( "xpath", actionEl.getNamespace() );
+                    Element xpathEl = actionEl.getChild( Constant.ELE_XPATH, actionEl.getNamespace() );
                     synchronized ( executionContext )
                     {
                         executionContext.setCurrentAction( xpathEl.getAttributeValue( "id", "" ) );
@@ -76,7 +77,7 @@ public class DoWhileAction
     @Override
     public void doworkInDehydrateState( DataContext ctx )
     {
-        Iterator iterator = actionEl.getChild( "do", actionEl.getNamespace() ).getChildren().iterator();
+        Iterator iterator = actionEl.getChild( Constant.ELE_DO, actionEl.getNamespace() ).getChildren().iterator();
         ActionUtil.bachInvoke( ctx, iterator );
     }
 }

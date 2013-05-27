@@ -16,6 +16,7 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.Action;
 import com.sanxing.sesame.engine.action.ActionFactory;
@@ -70,9 +71,9 @@ public class Reverter
                         DataContext dataCtx = reverse.getSnapshot();
 
                         Variable statusVar = new Variable( exceptionKey, 7 );
-                        dataCtx.addVariable( "faultcode", statusVar );
+                        dataCtx.addVariable( ExchangeConst.FAULT_CODE, statusVar );
                         Variable descVar = new Variable( exceptionMsg, 7 );
-                        dataCtx.addVariable( "faultstring", descVar );
+                        dataCtx.addVariable( ExchangeConst.FAULT_TEXT, descVar );
 
                         dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, e.getKey() );
                         dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, e.getMessage() );
@@ -104,7 +105,7 @@ public class Reverter
 
         ExecutionContext executeCtx = dataCtx.getExecutionContext();
 
-        ProcessEngine engine = (ProcessEngine) executeCtx.get( "ENGINE" );
+        ProcessEngine engine = (ProcessEngine) executeCtx.get( ExchangeConst.ENGINE );
         try
         {
             NamespaceContext namespaceCtx = (NamespaceContext) dataCtx.getExecutionContext().get( NAMESPACE_CONTEXT );
@@ -146,9 +147,9 @@ public class Reverter
                     MessageExchange me = engine.getExchangeFactory().createInOptionalOutExchange();
 
                     Long serial = (Long) executeCtx.get( SERIAL_NUMBER );
-                    me.setProperty( "sesame.exchange.platform.serial", serial );
-                    me.setProperty( "sesame.exchange.consumer", engine.getContext().getComponentName() );
-                    me.setProperty( "com.sanxing.sesame.dispatch", "straight" );
+                    me.setProperty( ExchangeConst.PLATFORM_SERIAL, serial );
+                    me.setProperty( ExchangeConst.CONSUMER, engine.getContext().getComponentName() );
+                    me.setProperty( ExchangeConst.DISPATCHER, ExchangeConst.STRAIGHT );
                     me.setProperty( "original-service", serviceName );
                     me.setProperty( "original-interface", interfaceName );
                     me.setProperty( "original-operation", operationName );
@@ -161,7 +162,7 @@ public class Reverter
                     Element element = (Element) var.get();
                     Source source = JdomUtil.JDOMElement2DOMSource( element );
                     normalizedIn.setContent( source );
-                    me.setMessage( normalizedIn, "in" );
+                    me.setMessage( normalizedIn, ExchangeConst.IN );
                     long timeout = 30L;
                     boolean ret = engine.sendSync( me, timeout * 1000L );
                     if ( !( ret ) )

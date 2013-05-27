@@ -10,6 +10,7 @@ import javax.jbi.messaging.MessagingException;
 import javax.jbi.servicedesc.ServiceEndpoint;
 import javax.wsdl.Service;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.listener.MessageExchangeListener;
 import com.sanxing.sesame.service.OperationContext;
 import com.sanxing.sesame.service.ReferenceEntry;
@@ -118,7 +119,7 @@ public abstract class BindingComponent
             exchange.setOperation( operationContext.getOperationName() );
         }
 
-        exchange.setProperty( "sesame.exchange.consumer", getContext().getComponentName() );
+        exchange.setProperty( ExchangeConst.CONSUMER, getContext().getComponentName() );
 
         return exchange;
     }

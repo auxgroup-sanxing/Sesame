@@ -36,6 +36,7 @@ import com.sanxing.adp.runtime.JAXBHelper;
 import com.sanxing.sesame.classloader.JarFileClassLoader;
 import com.sanxing.sesame.component.EngineComponent;
 import com.sanxing.sesame.component.params.AppParameters;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.management.ManagementSupport;
 import com.sanxing.sesame.service.ServiceUnit;
 import com.sanxing.sesame.util.JdomUtil;
@@ -122,13 +123,13 @@ public class ADPEngine
         {
             MessageExchange exchange = getExchangeFactory().createInOutExchange();
             Long serial = currentSerial.get();
-            exchange.setProperty( "sesame.exchange.platform.serial", serial );
+            exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, serial );
             exchange.setService( serviceName );
             exchange.setInterfaceName( interfaceName );
             exchange.setOperation( operation );
             NormalizedMessage msg = exchange.createMessage();
             msg.setContent( input );
-            exchange.setMessage( msg, "in" );
+            exchange.setMessage( msg, ExchangeConst.IN );
             sendSync( exchange );
             if ( exchange.getError() != null )
             {
@@ -142,7 +143,7 @@ public class ADPEngine
                 transformer.transform( exchange.getFault().getContent(), new StreamResult( buffer ) );
                 throw new RuntimeException( buffer.toString() );
             }
-            return exchange.getMessage( "out" ).getContent();
+            return exchange.getMessage( ExchangeConst.OUT ).getContent();
         }
         catch ( Exception e )
         {
@@ -192,7 +193,7 @@ public class ADPEngine
             LOG.trace( "incoming exchange id is [" + exchangeId + "]" );
             LOG.trace( "operation (method to be invoded) is [" + exchange.getOperation().getLocalPart() + "]" );
         }
-        currentSerial.set( (Long) exchange.getProperty( "sesame.exchange.platform.serial" ) );
+        currentSerial.set( (Long) exchange.getProperty( ExchangeConst.PLATFORM_SERIAL ) );
         String suName = exchange.getEndpoint().getServiceName().toString();
         String operationName = exchange.getOperation().getLocalPart();
         List<String> paramNames = new LinkedList();
@@ -216,11 +217,11 @@ public class ADPEngine
                     LOG.trace( "Incoming msg is [ " + outputter.outputString( msg ) + "]" );
                 }
 
-                Long platformSerial = (Long) exchange.getProperty( "sesame.exchange.platform.serial" );
-                String action = (String) exchange.getProperty( "sesame.exchange.tx.action" );
-                Object clientType = exchange.getProperty( "sesame.exchange.client.type" );
-                Object clientSerial = exchange.getProperty( "sesame.exchange.client.serial" );
-                Object clientID = exchange.getProperty( "sesame.exchange.client.id" );
+                Long platformSerial = (Long) exchange.getProperty( ExchangeConst.PLATFORM_SERIAL );
+                String action = (String) exchange.getProperty( ExchangeConst.TX_ACTION );
+                Object clientType = exchange.getProperty( ExchangeConst.CLIENT_TYPE );
+                Object clientSerial = exchange.getProperty( ExchangeConst.CLIENT_SERIAL );
+                Object clientID = exchange.getProperty( ExchangeConst.CLIENT_ID );
                 if ( platformSerial != null )
                 {
                     MDC.put( "PLATFORM_SERIAL", "" + platformSerial );
@@ -304,13 +305,13 @@ public class ADPEngine
             XMLOutputter outputter = new XMLOutputter();
             LOG.trace( "result from adp server [ " + outputter.outputString( result ) + "]" );
         }
-        if ( result.getRootElement().getName().equals( "fault" ) )
+        if ( result.getRootElement().getName().equals( ExchangeConst.FAULT ) )
         {
             result.getRootElement().setNamespace(
                 Namespace.getNamespace( exchange.getEndpoint().getServiceName().getNamespaceURI() ) );
             Fault fault = exchange.createFault();
-            fault.setProperty( "response.status.xpath", statusXPath );
-            fault.setProperty( "response.statustext.xpath", promptXPath );
+            fault.setProperty( ExchangeConst.STATUS_XPATH, statusXPath );
+            fault.setProperty( ExchangeConst.STATUS_TEXT_XPATH, promptXPath );
             fault.setContent( JdomUtil.JDOMElement2DOMSource( result.getRootElement() ) );
             exchange.setStatus( ExchangeStatus.ERROR );
             fail( exchange, fault );

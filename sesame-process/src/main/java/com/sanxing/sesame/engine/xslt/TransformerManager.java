@@ -27,6 +27,7 @@ import org.jdom.transform.XSLTransformer;
 
 import com.sanxing.sesame.engine.ExecutionEnv;
 import com.sanxing.sesame.engine.action.ActionException;
+import com.sanxing.sesame.engine.action.Constant;
 
 public class TransformerManager
 {
@@ -97,7 +98,7 @@ public class TransformerManager
                 for ( String name : env.keySet() )
                 {
                     Element paramEl = new Element( "param", rootEl.getNamespace() );
-                    paramEl.setAttribute( "name", name );
+                    paramEl.setAttribute( Constant.ATTR_NAME, name );
                     rootEl.addContent( paramEl );
                 }
 

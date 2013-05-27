@@ -22,6 +22,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.xml.sax.SAXException;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.jaxp.SourceTransformer;
 import com.sanxing.sesame.jaxp.StringSource;
 
@@ -57,55 +58,55 @@ public final class MessageUtil
     public static NormalizedMessage copyIn( MessageExchange exchange )
         throws MessagingException
     {
-        return copy( exchange.getMessage( "in" ) );
+        return copy( exchange.getMessage( ExchangeConst.IN ) );
     }
 
     public static NormalizedMessage copyOut( MessageExchange exchange )
         throws MessagingException
     {
-        return copy( exchange.getMessage( "out" ) );
+        return copy( exchange.getMessage( ExchangeConst.OUT ) );
     }
 
     public static Fault copyFault( MessageExchange exchange )
         throws MessagingException
     {
-        return ( (Fault) copy( exchange.getMessage( "fault" ) ) );
+        return ( (Fault) copy( exchange.getMessage( ExchangeConst.FAULT ) ) );
     }
 
     public static void transferInToIn( MessageExchange source, MessageExchange dest )
         throws MessagingException
     {
-        transferToIn( source.getMessage( "in" ), dest );
+        transferToIn( source.getMessage( ExchangeConst.IN ), dest );
     }
 
     public static void transferOutToIn( MessageExchange source, MessageExchange dest )
         throws MessagingException
     {
-        transferToIn( source.getMessage( "out" ), dest );
+        transferToIn( source.getMessage( ExchangeConst.OUT ), dest );
     }
 
     public static void transferToIn( NormalizedMessage sourceMsg, MessageExchange dest )
         throws MessagingException
     {
-        transferTo( sourceMsg, dest, "in" );
+        transferTo( sourceMsg, dest, ExchangeConst.IN );
     }
 
     public static void transferOutToOut( MessageExchange source, MessageExchange dest )
         throws MessagingException
     {
-        transferToOut( source.getMessage( "out" ), dest );
+        transferToOut( source.getMessage( ExchangeConst.OUT ), dest );
     }
 
     public static void transferInToOut( MessageExchange source, MessageExchange dest )
         throws MessagingException
     {
-        transferToOut( source.getMessage( "in" ), dest );
+        transferToOut( source.getMessage( ExchangeConst.IN ), dest );
     }
 
     public static void transferToOut( NormalizedMessage sourceMsg, MessageExchange dest )
         throws MessagingException
     {
-        transferTo( sourceMsg, dest, "out" );
+        transferTo( sourceMsg, dest, ExchangeConst.OUT );
     }
 
     public static void transferFaultToFault( MessageExchange source, MessageExchange dest )
@@ -117,7 +118,7 @@ public final class MessageUtil
     public static void transferToFault( Fault fault, MessageExchange dest )
         throws MessagingException
     {
-        transferTo( fault, dest, "fault" );
+        transferTo( fault, dest, ExchangeConst.FAULT );
     }
 
     public static void transferTo( NormalizedMessage sourceMsg, MessageExchange dest, String name )

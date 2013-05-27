@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.exception.FaultException;
 import com.sanxing.sesame.exception.NotInitialisedYetException;
 import com.sanxing.sesame.management.BaseLifeCycle;
@@ -196,7 +197,7 @@ public abstract class BaseComponent
     public void answer( MessageExchange exchange, NormalizedMessage answer )
         throws MessagingException
     {
-        exchange.setMessage( answer, "out" );
+        exchange.setMessage( answer, ExchangeConst.OUT );
         getDeliveryChannel().send( exchange );
     }
 

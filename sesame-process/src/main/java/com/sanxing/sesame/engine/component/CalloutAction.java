@@ -30,10 +30,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.ExecutionEnv;
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionException;
 import com.sanxing.sesame.engine.action.ActionUtil;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.action.callout.CalloutException;
 import com.sanxing.sesame.engine.action.callout.Reverse;
 import com.sanxing.sesame.engine.action.callout.Reverter;
@@ -73,9 +75,9 @@ public class CalloutAction
 
     private String endpointName;
 
-    private String useVariable = "request";
+    private String useVariable = ExchangeConst.REQUEST;
 
-    private String toVar = "response";
+    private String toVar = ExchangeConst.RESPONSE;
 
     private String mode = "direct";
 
@@ -114,7 +116,7 @@ public class CalloutAction
         mode = actionEl.getAttributeValue( "mode", "direct" );
 
         useVariable = actionEl.getAttributeValue( "use-var" );
-        toVar = actionEl.getAttributeValue( "to-var" );
+        toVar = actionEl.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
 
         Element timeoutEl = actionEl.getChild( "onTimeout", actionEl.getNamespace() );
         if ( timeoutEl != null )
@@ -123,7 +125,7 @@ public class CalloutAction
 
             timeoutEl.setName( "onException" );
             timeoutEl.setAttribute( "exception-key", "call.504" );
-            timeoutEl.setAttribute( "index", "0" );
+            timeoutEl.setAttribute( Constant.ATTR_INDEX, "0" );
         }
 
         catches = actionEl.getChildren( "onException" );
@@ -177,7 +179,7 @@ public class CalloutAction
                     Element catchEl = catches.get( i );
                     String strKeys = catchEl.getAttributeValue( "exception-key", "" );
                     String[] exceptionKeys = ( strKeys.length() > 0 ) ? SPLIT_REGEX.split( strKeys ) : new String[0];
-                    int index = Integer.parseInt( catchEl.getAttributeValue( "index" ) );
+                    int index = Integer.parseInt( catchEl.getAttributeValue( Constant.ATTR_INDEX ) );
                     if ( index < reverse.getIndex() )
                     {
                         reverse.setIndex( index );
@@ -267,9 +269,9 @@ public class CalloutAction
     private void setErrorVar( DataContext dataCtx, CalloutException e )
     {
         Variable statusVar = new Variable( e.getKey(), 7 );
-        dataCtx.addVariable( "faultcode", statusVar );
+        dataCtx.addVariable( ExchangeConst.FAULT_CODE, statusVar );
         Variable descVar = new Variable( e.getMessage(), 7 );
-        dataCtx.addVariable( "faultstring", descVar );
+        dataCtx.addVariable( ExchangeConst.FAULT_TEXT, descVar );
 
         dataCtx.getExecutionContext().put( PROCESS_FAULTCODE, e.getKey() );
         dataCtx.getExecutionContext().put( PROCESS_FAULTSTRING, e.getMessage() );
@@ -298,7 +300,7 @@ public class CalloutAction
                 }
                 return;
             }
-            ProcessEngine engine = (ProcessEngine) ctx.getExecutionContext().get( "ENGINE" );
+            ProcessEngine engine = (ProcessEngine) ctx.getExecutionContext().get( ExchangeConst.ENGINE );
 
             if ( xsltEl != null )
             {
@@ -307,17 +309,17 @@ public class CalloutAction
 
             me = engine.getExchangeFactory().createInOptionalOutExchange();
 
-            me.setProperty( "sesame.exchange.platform.serial", serial );
+            me.setProperty( ExchangeConst.PLATFORM_SERIAL, serial );
 
-            me.setProperty( "sesame.exchange.tx.action", MDC.get( "ACTION" ) );
-            me.setProperty( "sesame.exchange.client.type", MDC.get( "CLIENT_TYPE" ) );
-            me.setProperty( "sesame.exchange.client.serial", MDC.get( "CLIENT_SERIAL" ) );
-            me.setProperty( "sesame.exchange.client.id", MDC.get( "CLIENT_ID" ) );
+            me.setProperty( ExchangeConst.TX_ACTION, MDC.get( "ACTION" ) );
+            me.setProperty( ExchangeConst.CLIENT_TYPE, MDC.get( "CLIENT_TYPE" ) );
+            me.setProperty( ExchangeConst.CLIENT_SERIAL, MDC.get( "CLIENT_SERIAL" ) );
+            me.setProperty( ExchangeConst.CLIENT_ID, MDC.get( "CLIENT_ID" ) );
 
-            me.setProperty( "sesame.exchange.consumer", engine.getContext().getComponentName() );
-            me.setProperty( "sesame.exchange.timeout", Long.valueOf( timeout ) );
+            me.setProperty( ExchangeConst.CONSUMER, engine.getContext().getComponentName() );
+            me.setProperty( ExchangeConst.TIMEOUT, Long.valueOf( timeout ) );
 
-            me.setProperty( "com.sanxing.sesame.dispatch", "straight" );
+            me.setProperty( ExchangeConst.DISPATCHER, ExchangeConst.STRAIGHT );
             me.setService( serviceName );
             me.setInterfaceName( interfaceName );
             me.setOperation( operationName );
@@ -331,18 +333,18 @@ public class CalloutAction
             Element ele = (Element) var.get();
             Source source = JdomUtil.JDOMElement2DOMSource( ele );
             normalizedIn.setContent( source );
-            me.setMessage( normalizedIn, "in" );
+            me.setMessage( normalizedIn, ExchangeConst.IN );
 
             timeMillis = System.currentTimeMillis();
 
             if ( mode.equals( "async" ) )
             {
-                me.setProperty( "sesame.exchange.thread.switch", Boolean.valueOf( true ) );
+                me.setProperty( ExchangeConst.THREAD_SWITCH, Boolean.valueOf( true ) );
                 me.setProperty( SEND_TIME, Long.valueOf( timeMillis ) );
                 engine.send( me );
                 return;
             }
-            me.setProperty( "sesame.exchange.thread.switch", Boolean.valueOf( mode.equals( "wait" ) ) );
+            me.setProperty( ExchangeConst.THREAD_SWITCH, Boolean.valueOf( mode.equals( "wait" ) ) );
             if ( LOG.isDebugEnabled() )
             {
                 LOG.debug( "Before SendSync (mode: " + mode + ", timeout: " + ( timeout * 1000L ) + ")" );
@@ -369,20 +371,20 @@ public class CalloutAction
                 if ( ( toVar != null ) && ( me.getError() != null ) )
                 {
                     Exception error = me.getError();
-                    Element faultEl = new Element( "fault" );
-                    faultEl.addContent( new Element( "faultcode" ).setText( error.getClass().getSimpleName() ) );
+                    Element faultEl = new Element( ExchangeConst.FAULT );
+                    faultEl.addContent( new Element( ExchangeConst.FAULT_CODE ).setText( error.getClass().getSimpleName() ) );
                     String faultstring = ( error.getMessage() != null ) ? error.getMessage() : "";
                     faultstring = ILLEGAL_REGEX.matcher( faultstring ).replaceAll( "" );
-                    faultEl.addContent( new Element( "faultstring" ).setText( faultstring ) );
-                    String faultactor = String.valueOf( me.getProperty( "sesame.exchange.provider" ) );
-                    faultEl.addContent( new Element( "faultactor" ).setText( faultactor ) );
+                    faultEl.addContent( new Element( ExchangeConst.FAULT_TEXT ).setText( faultstring ) );
+                    String faultactor = String.valueOf( me.getProperty( ExchangeConst.PROVIDER ) );
+                    faultEl.addContent( new Element( ExchangeConst.FAULT_ACTOR ).setText( faultactor ) );
                     Variable varResponse = new Variable( faultEl, 0 );
                     ctx.addVariable( toVar, varResponse );
                 }
             }
 
             if (this.toVar != null) {
-              NormalizedMessage response = me.getMessage("out");
+              NormalizedMessage response = me.getMessage(ExchangeConst.OUT);
               Document docResponse = JdomUtil.source2JDOMDocument(response.getContent());
               Element eleResponse = docResponse.getRootElement();
               Variable varResponse = new Variable(eleResponse, 0);
@@ -396,7 +398,7 @@ public class CalloutAction
             LOG.debug( "Fault Exception", e );
             Fault fault = e.getFault();
             Document faultDoc = JdomUtil.source2JDOMDocument( fault.getContent() );
-            XPath xpath = (XPath) fault.getProperty( "response.status.xpath" );
+            XPath xpath = (XPath) fault.getProperty( ExchangeConst.STATUS_XPATH );
             if ( xpath != null )
             {
                 try
@@ -408,7 +410,7 @@ public class CalloutAction
                     message = "获取故障代码失败: " + ex.getMessage();
                 }
             }
-            XPath textPath = (XPath) fault.getProperty( "response.statustext.xpath" );
+            XPath textPath = (XPath) fault.getProperty( ExchangeConst.STATUS_TEXT_XPATH );
             if ( textPath != null )
             {
                 try
@@ -536,7 +538,7 @@ public class CalloutAction
             }
 
             Document document = new Document();
-            Element contextEl = new Element( "context" );
+            Element contextEl = new Element( ExchangeConst.CONTEXT );
             document.setRootElement( contextEl );
             Set<Map.Entry<String, Variable>> variables = ctx.getVariables().entrySet();
             for ( Map.Entry var : variables )

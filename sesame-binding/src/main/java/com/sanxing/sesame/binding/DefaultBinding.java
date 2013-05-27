@@ -46,6 +46,7 @@ import com.sanxing.sesame.binding.codec.XMLSource;
 import com.sanxing.sesame.binding.context.MessageContext;
 import com.sanxing.sesame.binding.transport.Transport;
 import com.sanxing.sesame.binding.transport.TransportFactory;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.logging.BufferRecord;
 import com.sanxing.sesame.logging.ErrorRecord;
 import com.sanxing.sesame.logging.FinishRecord;
@@ -259,8 +260,8 @@ public class DefaultBinding
             OperationContext operaContext = getOperationContext( action );
             if ( operaContext != null )
             {
-                context.setProperty( "sesame.exchange.tx.proxy", operaContext.getServiceUnit().getName() );
-                context.setProperty( "sesame.exchange.tx.action", action );
+                context.setProperty( ExchangeConst.TX_PROXY, operaContext.getServiceUnit().getName() );
+                context.setProperty( ExchangeConst.TX_ACTION, action );
                 MDC.put( "SU", operaContext.getServiceUnit().getName() );
                 schema = operaContext.getSchema();
                 elementName = operaContext.getInputElement();
@@ -409,8 +410,8 @@ public class DefaultBinding
                     if ( context.getResult() instanceof XMLResult )
                     {
                         XMLResult xmlResult = (XMLResult) context.getResult();
-                        xmlResult.setProperty( "response.status.xpath", status_xpath );
-                        xmlResult.setProperty( "response.statustext.xpath", statusText_xpath );
+                        xmlResult.setProperty( ExchangeConst.STATUS_XPATH, status_xpath );
+                        xmlResult.setProperty( ExchangeConst.STATUS_TEXT_XPATH, statusText_xpath );
                     }
                 }
             }
@@ -540,7 +541,7 @@ public class DefaultBinding
         String operationName = null;
         if ( log.isInfoEnabled() )
         {
-            channel = (String) message.getProperty( "sesame.exchange.consumer" );
+            channel = (String) message.getProperty( ExchangeConst.CONSUMER );
             action = message.getAction();
             QName service = (QName) message.getProperty( Carrier.BINDING_SERVICE_NAME );
             if ( service != null )
@@ -968,8 +969,8 @@ public class DefaultBinding
                 source.setEncoding( charset );
 
                 XMLResult result = new XMLResult();
-                result.setProperty( "response.status.xpath", status_xpath );
-                result.setProperty( "response.statustext.xpath", statusText_xpath );
+                result.setProperty( ExchangeConst.STATUS_XPATH, status_xpath );
+                result.setProperty( ExchangeConst.STATUS_TEXT_XPATH, statusText_xpath );
                 if ( codec.getFaultHandler() != null )
                 {
                     codec.getFaultHandler().decode( source, result );

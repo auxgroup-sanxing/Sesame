@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.engine.action.AbstractAction;
 import com.sanxing.sesame.engine.action.ActionException;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.ExecutionContext;
 import com.sanxing.sesame.engine.context.Variable;
@@ -45,9 +46,9 @@ public class DBAction
         Connection conn = null;
         try
         {
-            String dsn = _config.getAttributeValue( "dsn" );
-            String var = _config.getAttributeValue( "var" );
-            String toVar = _config.getAttributeValue( "to-var" );
+            String dsn = _config.getAttributeValue( Constant.ATTR_DSN_NAME );
+            String var = _config.getAttributeValue( Constant.ATTR_VAR_NAME );
+            String toVar = _config.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
             String sql = _config.getTextTrim();
             if ( LOG.isDebugEnabled() )
             {

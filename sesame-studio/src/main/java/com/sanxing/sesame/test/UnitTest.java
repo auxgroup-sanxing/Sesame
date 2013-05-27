@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.component.ClientComponent;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.util.JdomUtil;
 import com.sanxing.studio.utils.SchemaUtil;
 
@@ -165,13 +166,13 @@ public class UnitTest
 
             MessageExchange exchange = test_ac.getExchangeFactory().createInOutExchange();
             Long serial = Long.valueOf( DummySequencer.getSerial() );
-            exchange.setProperty( "sesame.exchange.platform.serial", serial );
+            exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, serial );
             exchange.setService( serviceName );
             exchange.setInterfaceName( interfaceName );
             exchange.setOperation( new QName( operationName ) );
             NormalizedMessage msg = exchange.createMessage();
             msg.setContent( inputSource );
-            exchange.setMessage( msg, "in" );
+            exchange.setMessage( msg, ExchangeConst.IN );
             test_ac.sendSync( exchange );
             if ( exchange.getError() != null )
             {
@@ -186,7 +187,7 @@ public class UnitTest
                 throw new RuntimeException( buffer.toString() );
             }
 
-            Source output = exchange.getMessage( "out" ).getContent();
+            Source output = exchange.getMessage( ExchangeConst.OUT ).getContent();
 
             return JdomUtil.print( output );
         }

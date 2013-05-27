@@ -28,6 +28,7 @@ import com.sanxing.sesame.binding.transport.Acceptor;
 import com.sanxing.sesame.binding.transport.BaseTransport;
 import com.sanxing.sesame.binding.transport.Connector;
 import com.sanxing.sesame.binding.transport.Transport;
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.logging.ErrorRecord;
 import com.sanxing.sesame.logging.Log;
 import com.sanxing.sesame.logging.LogFactory;
@@ -135,10 +136,10 @@ public class Carrier
         {
             exchange.setProperty( name, message.getProperty( name ) );
         }
-        exchange.setProperty( "sesame.exchange.platform.serial", message.getSerial() );
-        exchange.setProperty( "sesame.exchange.tx.proxy", operation.getServiceUnit().getName() );
-        exchange.setProperty( "sesame.exchange.tx.action", StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
-        exchange.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
+        exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, message.getSerial() );
+        exchange.setProperty( ExchangeConst.TX_PROXY, operation.getServiceUnit().getName() );
+        exchange.setProperty( ExchangeConst.TX_ACTION, StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
+        exchange.setProperty( ExchangeConst.CONSUMER, component.getContext().getComponentName() );
 
         NormalizedMessage normalizedIn = exchange.createMessage();
         if ( message.getSource() instanceof XMLSource )
@@ -158,7 +159,7 @@ public class Carrier
         {
             normalizedIn.setContent( message.getSource() );
         }
-        exchange.setMessage( normalizedIn, "in" );
+        exchange.setMessage( normalizedIn, ExchangeConst.IN );
 
         boolean success = component.sendSync( exchange, timeoutMillis );
         if ( !( success ) )
@@ -204,7 +205,7 @@ public class Carrier
                 }
             }
         }
-        NormalizedMessage nm = exchange.getMessage( "out" );
+        NormalizedMessage nm = exchange.getMessage( ExchangeConst.OUT );
         if ( ( nm != null ) && ( message.getResult() instanceof BinaryResult ) )
         {
             BinaryResult result = (BinaryResult) message.getResult();
@@ -234,11 +235,11 @@ public class Carrier
         {
             exchange.setProperty( name, message.getProperty( name ) );
         }
-        exchange.setProperty( "sesame.exchange.platform.serial", message.getSerial() );
-        exchange.setProperty( "sesame.exchange.tx.proxy", operation.getServiceUnit().getName() );
-        exchange.setProperty( "sesame.exchange.tx.action", StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
-        exchange.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
-        message.setProperty( "sesame.exchange.consumer", component.getContext().getComponentName() );
+        exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, message.getSerial() );
+        exchange.setProperty( ExchangeConst.TX_PROXY, operation.getServiceUnit().getName() );
+        exchange.setProperty( ExchangeConst.TX_ACTION, StringUtils.isEmpty( operation.getAction() ) ? operation.getQName().getLocalPart() : operation.getAction() );
+        exchange.setProperty( ExchangeConst.CONSUMER, component.getContext().getComponentName() );
+        message.setProperty( ExchangeConst.CONSUMER, component.getContext().getComponentName() );
 
         NormalizedMessage normalizedIn = exchange.createMessage();
         if ( message.getSource() instanceof XMLSource )
@@ -256,7 +257,7 @@ public class Carrier
             normalizedIn.setContent( message.getSource() );
         }
 
-        exchange.setMessage( normalizedIn, "in" );
+        exchange.setMessage( normalizedIn, ExchangeConst.IN );
         getCache().put( exchange.getExchangeId(), message );
 
         exchange.setProperty( BaseTransport.SEND_TIME, Long.valueOf( System.currentTimeMillis() ) );
@@ -294,7 +295,7 @@ public class Carrier
                 normalizedOut.setContent( xmlResult.getContent() );
             }
 
-            exchange.setMessage( normalizedOut, "out" );
+            exchange.setMessage( normalizedOut, ExchangeConst.OUT );
         }
         else
         {
@@ -332,7 +333,7 @@ public class Carrier
             MessageContext context = new MessageContext( (Connector) binding.getTransport(), result );
             try
             {
-                long serial = ( (Long) exchange.getProperty( "sesame.exchange.platform.serial" ) ).longValue();
+                long serial = ( (Long) exchange.getProperty( ExchangeConst.PLATFORM_SERIAL ) ).longValue();
                 context.setSerial( serial );
                 context.setProperty( Carrier.BINDING_OPERATION_NAME, exchange.getOperation().getLocalPart() );
             }
@@ -348,7 +349,7 @@ public class Carrier
                 context.setProperty( name, exchange.getProperty( name ) );
             }
 
-            NormalizedMessage nm = exchange.getMessage( "in" );
+            NormalizedMessage nm = exchange.getMessage( ExchangeConst.IN );
             Set<String> propertyNames = nm.getPropertyNames();
             for ( String name : propertyNames )
             {
@@ -424,7 +425,7 @@ public class Carrier
             }
             else
             {
-                NormalizedMessage nm = exchange.getMessage( "out" );
+                NormalizedMessage nm = exchange.getMessage( ExchangeConst.OUT );
                 if ( ( nm != null ) && ( context.getResult() instanceof BinaryResult ) )
                 {
                     BinaryResult result = (BinaryResult) context.getResult();

@@ -16,6 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.DocumentFragment;
 
+import com.sanxing.sesame.constants.ExchangeConst;
+
 public class ClientComponent
     extends ComponentSupport
 {
@@ -43,13 +45,13 @@ public class ClientComponent
         try
         {
             MessageExchange exchange = getExchangeFactory().createInOutExchange();
-            exchange.setProperty( "sesame.exchange.platform.serial", serial );
+            exchange.setProperty( ExchangeConst.PLATFORM_SERIAL, serial );
             exchange.setService( serviceName );
             exchange.setInterfaceName( interfaceName );
             exchange.setOperation( operation );
             NormalizedMessage msg = exchange.createMessage();
             msg.setContent( input );
-            exchange.setMessage( msg, "in" );
+            exchange.setMessage( msg, ExchangeConst.IN );
             sendSync( exchange );
             if ( exchange.getError() != null )
             {
@@ -63,7 +65,7 @@ public class ClientComponent
                 transformer.transform( exchange.getFault().getContent(), new StreamResult( buffer ) );
                 throw new RuntimeException( buffer.toString() );
             }
-            return exchange.getMessage( "out" ).getContent();
+            return exchange.getMessage( ExchangeConst.OUT ).getContent();
         }
         catch ( Exception e )
         {

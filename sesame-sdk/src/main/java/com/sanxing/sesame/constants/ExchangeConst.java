@@ -6,6 +6,18 @@ public final class ExchangeConst
 
     public static final String OUT = "out";
 
+    public static final String FAULT = "fault";
+    
+    public static final String CONTEXT = "context";
+
+    public static final String SERIAL = "serial";
+
+    public static final String FAULT_CODE = "faultcode";
+
+    public static final String FAULT_TEXT = "faultstring";
+    
+    public static final String FAULT_ACTOR = "faultactor";
+
     public static final String PLATFORM_SERIAL = "sesame.exchange.platform.serial";
 
     public static final String CLIENT_SERIAL = "sesame.exchange.client.serial";
@@ -31,4 +43,18 @@ public final class ExchangeConst
     public static final String THREAD_SWITCH = "sesame.exchange.thread.switch";
 
     public static final String TIMEOUT = "sesame.exchange.timeout";
+
+    public static final String ENGINE = "ENGINE";
+
+    public static final String REQUEST = "request";
+
+    public static final String RESPONSE = "response";
+
+    public static final String SERVICE_NAME = "service_name";
+
+    public static final String OPERATION_NAME = "operation_name";
+    
+    public static final String CLUSTER = "cluster";
+
+    public static final String STRAIGHT = "straight";
 }

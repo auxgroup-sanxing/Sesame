@@ -16,8 +16,6 @@ public abstract interface JbiConstants
 
     public static final String DATESTAMP_PROPERTY_NAME = "com.sanxing.sesame.datestamp";
 
-    public static final String DISPATCHER_PROPERTY_NAME = "com.sanxing.sesame.dispatch";
-
     public static final String STATELESS_CONSUMER = "com.sanxing.sesame.consumer.stateless";
 
     public static final String STATELESS_PROVIDER = "com.sanxing.sesame.provider.stateless";

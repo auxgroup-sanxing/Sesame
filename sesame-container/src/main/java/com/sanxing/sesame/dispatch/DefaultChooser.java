@@ -6,13 +6,14 @@ import javax.jbi.messaging.MessagingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.core.Platform;
 import com.sanxing.sesame.messaging.MessageExchangeImpl;
 
 public class DefaultChooser
     implements DispatcherChooser
 {
-    public static final String DEFAULT_DISPATCHER_NAME = "cluster";
+    public static final String DEFAULT_DISPATCHER_NAME = DispatcherChooser.CLUSTER_DISPATCHER;
 
     private static Logger LOG = LoggerFactory.getLogger( DefaultChooser.class );
 
@@ -20,7 +21,7 @@ public class DefaultChooser
     public Dispatcher chooseDispatcher( Dispatcher[] dispatchers, MessageExchange exchange )
         throws MessagingException
     {
-        String dispatcher = (String) exchange.getProperty( "com.sanxing.sesame.dispatch" );
+        String dispatcher = (String) exchange.getProperty( ExchangeConst.DISPATCHER );
         LOG.debug( "dispatcher in message exchange :" + dispatcher );
         if ( dispatcher != null )
         {
@@ -52,7 +53,7 @@ public class DefaultChooser
             for ( Dispatcher disp : dispatchers )
             {
                 LOG.debug( "matching dispatcher " + disp.getName() );
-                if ( disp.getName().equals( "cluster" ) )
+                if ( disp.getName().equals( DispatcherChooser.CLUSTER_DISPATCHER ) )
                 {
                     return disp;
                 }
@@ -64,7 +65,7 @@ public class DefaultChooser
             for ( Dispatcher disp : dispatchers )
             {
                 LOG.debug( "matching dispatcher " + disp.getName() );
-                if ( disp.getName().equals( "straight" ) )
+                if ( disp.getName().equals( DispatcherChooser.STRAIGHT_DISPATCHER ) )
                 {
                     return disp;
                 }
@@ -76,7 +77,7 @@ public class DefaultChooser
         {
             if ( dispatchers[i].canHandle( exchange ) )
             {
-                ( (MessageExchangeImpl) exchange ).getPacket().setProperty( "com.sanxing.sesame.dispatch",
+                ( (MessageExchangeImpl) exchange ).getPacket().setProperty( ExchangeConst.DISPATCHER,
                     dispatchers[i].getName() );
                 return dispatchers[i];
             }

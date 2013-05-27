@@ -13,8 +13,10 @@ import org.jdom.Namespace;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 
+import com.sanxing.sesame.constants.ExchangeConst;
 import com.sanxing.sesame.engine.ExecutionEnv;
 import com.sanxing.sesame.engine.action.AbstractAction;
+import com.sanxing.sesame.engine.action.Constant;
 import com.sanxing.sesame.engine.context.DataContext;
 import com.sanxing.sesame.engine.context.Variable;
 import com.sanxing.sesame.engine.xslt.TransformerManager;
@@ -38,7 +40,7 @@ public class XslTransformAction
         namespaces = actionEl.getDocument().getRootElement().getAdditionalNamespaces();
         this.actionEl = actionEl;
         xsltPath = getPath( actionEl );
-        toVarName = actionEl.getAttributeValue( "to-var" );
+        toVarName = actionEl.getAttributeValue( Constant.ATTR_TO_VAR_NAME );
     }
 
     private String getPath( Element configEl )
@@ -75,7 +77,7 @@ public class XslTransformAction
             }
 
             Document document = new Document();
-            Element contextEl = new Element( "context" );
+            Element contextEl = new Element( ExchangeConst.CONTEXT );
             document.setRootElement( contextEl );
             Set<Map.Entry<String, Variable>> variables = ctx.getVariables().entrySet();
             for ( Map.Entry var : variables )
