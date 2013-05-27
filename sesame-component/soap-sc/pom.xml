@@ -60,9 +60,31 @@
   		<groupId>com.sanxing.sesame</groupId>
   		<artifactId>sesame-security</artifactId>
   	</dependency>
-  	<dependency>
-  		<groupId>jaxrpc-api</groupId>
-  		<artifactId>jaxrpc-api</artifactId>
-  	</dependency>
   </dependencies>
+
+	<build>
+		<finalName>soap-sc</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<type>jar</type>
+							<excludeScope>provided</excludeScope>
+							<includeScope>runtime</includeScope>
+							<outputDirectory>${project.build.directory}/classes/lib</outputDirectory>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
 </project>

@@ -46,7 +46,7 @@
   		<scope>provided</scope>
   	</dependency>
   	<dependency>
-  		<groupId>jaxrpc-api</groupId>
+  		<groupId>javax.xml</groupId>
   		<artifactId>jaxrpc-api</artifactId>
   	</dependency>
   </dependencies>
