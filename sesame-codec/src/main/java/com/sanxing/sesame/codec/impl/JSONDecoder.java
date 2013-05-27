@@ -33,7 +33,7 @@ public class JSONDecoder
         {
             String data = new String( source.getBytes(), source.getEncoding() );
             JSONObject json = new JSONObject( data );
-            Element rootEl = new Element( "stream" );
+            Element rootEl = new Element( source.getElementName() );
 
             iterate( json, rootEl );
 

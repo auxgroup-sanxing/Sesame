@@ -46,6 +46,11 @@ public class BinarySource
     {
         this.rootElement = rootElement;
     }
+    
+    public String getElementName()
+    {
+        return elementName;
+    }
 
     public void setElementName( String elementName )
     {
