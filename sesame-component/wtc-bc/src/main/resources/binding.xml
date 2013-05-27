@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<binding>
+	<allowable>
+		<protocol name="wta" impl="com.sanxing.sesame.wtc.transport.WTCAcceptor">WTC服务端绑定组件</protocol>
+		<protocol name="wtc" impl="com.sanxing.sesame.wtc.transport.WTCConnector">WTC客户端绑定组件</protocol>
+	</allowable>
+	<codec>
+		<params>
+			<status>/*/*[7]</status>
+			<tx-end>132</tx-end>
+			<tx-code>local-name(/*)</tx-code>
+			<success-code>AAAAAAA</success-code>
+			<status-text>/*/*[8]/*[4]</status-text>
+			<tx-start>128</tx-start>
+		</params>
+    
+		<raw2xml>
+			<raw-handlers />
+			<decoder>com.sanxing.sesame.wtc.WTCDecoder</decoder>
+			<xml-handlers />
+		</raw2xml>
+		<xml2raw>
+			<xml-handlers />
+			<encoder>com.sanxing.sesame.wtc.WTCEncoder</encoder>
+			<raw-handlers />
+		</xml2raw>
+		<fault-handler>com.sanxing.sesame.wtc.handler.WTCFaultHandler</fault-handler>
+	</codec>
+</binding>
+

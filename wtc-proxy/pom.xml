@@ -5,16 +5,5 @@
     <artifactId>sesame</artifactId>
     <version>1.0</version>
   </parent>
-  <artifactId>sesame-component</artifactId>
-  <packaging>pom</packaging>
-  <modules>
-  	<module>adp-ec</module>
-  	<module>process-ec</module>
-  	<module>xml-bc</module>
-  	<module>json-bc</module>
-  	<module>raw-bc</module>
-  	<module>soap-sc</module>
-  	<module>soap-cc</module>
-  	<module>wtc-bc</module>
-  </modules>
+  <artifactId>wtc-proxy</artifactId>
 </project>

@@ -1,0 +1,118 @@
+<header>
+	<macbranch>9230</macbranch>
+	<channelfrom>230</channelfrom>
+	<channelto>810</channelto>
+	<identifier>230</identifier>
+	<operations>
+		<transaction code="9750" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		<transaction code="3860" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_02</service>
+		</transaction>
+		<transaction code="9760" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		<transaction code="9767" encrypt="0">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		<transaction code="9774" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		<transaction code="9752" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		
+		<transaction code="3001" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		
+		<transaction code="3002" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+		
+		<transaction code="3004" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+    
+		<transaction code="3007" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+
+		<transaction code="3008" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+    
+		<transaction code="3009" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+
+		<transaction code="3800" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+
+		<transaction code="3840" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+
+		<transaction code="3845" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>chuxka_01</service>
+		</transaction>
+
+		<transaction code="7704" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>waiwei_02</service>
+		</transaction>
+		
+		<transaction code="7707" encrypt="0">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>waiwei_01</service>
+		</transaction>
+		
+		<transaction code="7719" encrypt="1">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>ggxinx_01</service>
+		</transaction>
+		
+		<transaction code="9568" encrypt="0">
+			<pinseed>01234567890123456</pinseed>
+			<pinflag>1</pinflag>
+			<service>ggxinx_01</service>
+		</transaction>
+		
+
+	</operations>
+</header>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.sanxing.com/ns/sesame/project/core_card_flow" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.sanxing.com/ns/sesame/project/core_card_flow">
+  <complexType name="O13011">
+    <sequence>
+      <element name="name" type="string">
+        <annotation>
+          <documentation>对象名</documentation>
+          <appinfo>
+            <format kind="V" id="" compress="0">
+              <head align="L" blank="" length="1" radix="2" compress="0"/>
+            </format>
+          </appinfo>
+        </annotation>
+      </element>
+      <element name="KEHHAO" type="string">
+        <annotation>
+          <appinfo>
+            <format kind="V" id="" compress="0">
+              <head align="L" blank="" length="1" radix="2" compress="0"/>
+            </format>
+          </appinfo>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+  <complexType name="OCIP01">
+    <annotation>
+      <documentation>对象单元</documentation>
+    </annotation>
+    <sequence>
+      <element name="name" type="string">
+        <annotation>
+          <documentation>对象名</documentation>
+          <appinfo>
+            <format kind="V" id="" compress="0">
+              <head align="L" blank="" length="1" radix="2" compress="0"/>
+            </format>
+          </appinfo>
+        </annotation>
+      </element>
+      <element name="FCIP01">
+        <annotation>
+          <documentation>表格单元</documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="name" type="string">
+              <annotation>
+                <appinfo>
+                  <format kind="V" id="" compress="0">
+                    <head align="L" blank="" length="1" radix="2" compress="0"/>
+                  </format>
+                </appinfo>
+              </annotation>
+            </element>
+            <element name="rows" type="byte">
+              <annotation>
+                <documentation>行数</documentation>
+                <appinfo>
+                  <format kind="F" id="" compress="0" align="L" blank=" " length="1" endian="big"/>
+                </appinfo>
+              </annotation>
+            </element>
+            <element name="columns" type="byte">
+              <annotation>
+                <documentation>列数</documentation>
+                <appinfo>
+                  <format kind="F" id="" compress="0" align="L" blank=" " length="1" endian="big"/>
+                </appinfo>
+              </annotation>
+            </element>
+            <element name="FRM_FCIP01">
+              <annotation>
+                <documentation>记录列表</documentation>
+                <appinfo>
+                  <occurs ref="rows" style=""/>
+                </appinfo>
+              </annotation>
+              <complexType>
+                <sequence>
+                  <element name="JIOYRQ" type="string">
+                    <annotation>
+                      <appinfo>
+                        <format kind="V" id="" compress="0">
+                          <head align="L" blank="" length="1" radix="2" compress="0"/>
+                        </format>
+                      </appinfo>
+                    </annotation>
+                  </element>
+                  <element name="ZHYODM" type="string">
+                    <annotation>
+                      <appinfo>
+                        <format kind="V" id="" compress="0">
+                          <head align="L" blank="" length="1" radix="2" compress="0"/>
+                        </format>
+                      </appinfo>
+                    </annotation>
+                  </element>
+                </sequence>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+  <element name="transferCard">
+    <complexType>
+      <sequence>
+        <element name="HUOBDH" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="CHUIBZ" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="KHZHLX" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="KEHUZH" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="PNGZHH" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="ZIJNQX" type="string">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+        <element name="JIO1JE" type="double">
+          <annotation>
+            <appinfo>
+              <format kind="V" id="" compress="0">
+                <head align="L" blank="" length="2" radix="10" compress="0"/>
+              </format>
+            </appinfo>
+          </annotation>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+  <element name="transferCardResponse">
+    <complexType>
+      <sequence>
+        <element name="O13011" type="tns:O13011"/>
+        <element name="OCIP01" type="tns:OCIP01"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>

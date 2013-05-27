@@ -119,6 +119,7 @@
   	<module>sesame-component</module>
   	<module>adp-template</module>
   	<module>sesame-security</module>
+  	<module>wtc-proxy</module>
   </modules>
 
   <dependencyManagement>
@@ -951,6 +952,11 @@
       	<version>${sesame.version}</version>
       </dependency>
       <dependency>
+      	<groupId>com.sanxing.sesame</groupId>
+      	<artifactId>wtc-proxy</artifactId>
+      	<version>${sesame.version}</version>
+      </dependency>
+      <dependency>
       	<groupId>com.sanxing.sesame.aggregate</groupId>
       	<artifactId>sesame-all</artifactId>
       	<version>${sesame.version}</version>
@@ -1197,6 +1203,11 @@
       	<groupId>javax.xml</groupId>
       	<artifactId>jaxrpc-api</artifactId>
       	<version>1.1</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.union.HsmAPI</groupId>
+      	<artifactId>unionAPI</artifactId>
+      	<version>1.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
