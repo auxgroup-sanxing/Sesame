@@ -2,75 +2,84 @@ package com.sanxing.sesame.wtc.sop;
 
 public class SOPReqPublic
 {
-  private static final int[] FIELDS_SIZE = { 5, 4, 4, 8 };
+    private static final int[] FIELDS_SIZE = { 5, 4, 4, 8 };
 
-  private static final String[] FIELDS_DESC = { "终端号", "城市代码", "机构代码", "交易柜员" };
-  private String terminal;
-  private String city;
-  private String branch;
-  private String teller;
+    private static final String[] FIELDS_DESC = { "终端号", "城市代码", "机构代码", "交易柜员" };
 
-  public void decode(byte[] bytes)
-  {
-    int pos = 0;
-    int index = 0;
+    private String terminal;
 
-    this.terminal = SOPUtil.getField(bytes, pos, FIELDS_SIZE[index]);
-    pos += FIELDS_SIZE[(index++)];
+    private String city;
 
-    this.city = SOPUtil.getField(bytes, pos, FIELDS_SIZE[index]);
-    pos += FIELDS_SIZE[(index++)];
+    private String branch;
 
-    this.branch = SOPUtil.getField(bytes, pos, FIELDS_SIZE[index]);
-    pos += FIELDS_SIZE[(index++)];
+    private String teller;
 
-    this.teller = SOPUtil.getField(bytes, pos, FIELDS_SIZE[index]);
-  }
+    public void decode( byte[] bytes )
+    {
+        int pos = 0;
+        int index = 0;
 
-  public String getTerminal() {
-    return this.terminal;
-  }
+        this.terminal = SOPUtil.getField( bytes, pos, FIELDS_SIZE[index] );
+        pos += FIELDS_SIZE[( index++ )];
 
-  public void setTerminal(String terminal) {
-    this.terminal = terminal;
-  }
+        this.city = SOPUtil.getField( bytes, pos, FIELDS_SIZE[index] );
+        pos += FIELDS_SIZE[( index++ )];
 
-  public String getCity() {
-    return this.city;
-  }
+        this.branch = SOPUtil.getField( bytes, pos, FIELDS_SIZE[index] );
+        pos += FIELDS_SIZE[( index++ )];
 
-  public void setCity(String city) {
-    this.city = city;
-  }
+        this.teller = SOPUtil.getField( bytes, pos, FIELDS_SIZE[index] );
+    }
 
-  public String getBranch() {
-    return this.branch;
-  }
+    public String getTerminal()
+    {
+        return this.terminal;
+    }
 
-  public void setBranch(String branch) {
-    this.branch = branch;
-  }
+    public void setTerminal( String terminal )
+    {
+        this.terminal = terminal;
+    }
 
-  public String getTeller() {
-    return this.teller;
-  }
+    public String getCity()
+    {
+        return this.city;
+    }
 
-  public void setTeller(String teller) {
-    this.teller = teller;
-  }
+    public void setCity( String city )
+    {
+        this.city = city;
+    }
 
-  public String toString()
-  {
-    StringBuffer sb = new StringBuffer();
-    int index = 0;
-    sb.append("\n#交易公共信息头:\n");
-    sb.append(SOPUtil.format(FIELDS_DESC[(index++)], this.terminal));
-    sb.append(SOPUtil.format(FIELDS_DESC[(index++)], this.city));
-    sb.append(SOPUtil.format(FIELDS_DESC[(index++)], this.branch));
-    sb.append(SOPUtil.format(FIELDS_DESC[(index++)], this.teller));
-    return sb.toString();
-  }
+    public String getBranch()
+    {
+        return this.branch;
+    }
+
+    public void setBranch( String branch )
+    {
+        this.branch = branch;
+    }
+
+    public String getTeller()
+    {
+        return this.teller;
+    }
+
+    public void setTeller( String teller )
+    {
+        this.teller = teller;
+    }
+
+    public String toString()
+    {
+        StringBuffer sb = new StringBuffer();
+        int index = 0;
+        sb.append( "\n#交易公共信息头:\n" );
+        sb.append( SOPUtil.format( FIELDS_DESC[( index++ )], this.terminal ) );
+        sb.append( SOPUtil.format( FIELDS_DESC[( index++ )], this.city ) );
+        sb.append( SOPUtil.format( FIELDS_DESC[( index++ )], this.branch ) );
+        sb.append( SOPUtil.format( FIELDS_DESC[( index++ )], this.teller ) );
+        return sb.toString();
+    }
 }
-
-
-

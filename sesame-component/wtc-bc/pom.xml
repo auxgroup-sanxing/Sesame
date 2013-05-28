@@ -20,5 +20,9 @@
   		<groupId>com.union.HsmAPI</groupId>
   		<artifactId>unionAPI</artifactId>
   	</dependency>
+  	<dependency>
+  		<groupId>com.bea.core</groupId>
+  		<artifactId>jatmi</artifactId>
+  	</dependency>
   </dependencies>
 </project>
