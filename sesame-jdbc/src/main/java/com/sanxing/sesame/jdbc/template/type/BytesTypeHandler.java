@@ -4,6 +4,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.lang.ArrayUtils;
+
 public class BytesTypeHandler
     implements TypeHandler
 {
@@ -23,7 +25,15 @@ public class BytesTypeHandler
     public void setParameter( PreparedStatement ps, int index, Object value )
         throws SQLException
     {
-        byte[] v = (byte[]) value;
+        byte[] v = null;
+        if (value instanceof Byte[])
+        {
+            v = ArrayUtils.toPrimitive( ( Byte[] ) value);
+        }
+        else
+        {
+            v = (byte[]) value;
+        }
         ps.setBytes( index, v );
     }
 }

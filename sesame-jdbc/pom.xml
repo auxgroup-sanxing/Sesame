@@ -20,5 +20,9 @@
 			<groupId>org.codehaus.btm</groupId>
 			<artifactId>btm</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ojdbc</groupId>
+			<artifactId>ojdbc14</artifactId>
+		</dependency>
 	</dependencies>
 </project>

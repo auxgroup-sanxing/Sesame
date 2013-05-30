@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.datatype.XMLGregorianCalendar;
+
 import com.sanxing.sesame.jdbc.DataAccessException;
 
 public class TypeHandlerFactory
@@ -16,14 +18,20 @@ public class TypeHandlerFactory
     static
     {
         typeHandlerMap.put( String.class, new StringTypeHandler() );
+        typeHandlerMap.put( boolean.class, new BooleanTypeHandler() );
         typeHandlerMap.put( Boolean.class, new BooleanTypeHandler() );
+        typeHandlerMap.put( short.class, new ShortTypeHandler() );
         typeHandlerMap.put( Short.class, new ShortTypeHandler() );
+        typeHandlerMap.put( int.class, new IntegerTypeHandler() );
         typeHandlerMap.put( Integer.class, new IntegerTypeHandler() );
+        typeHandlerMap.put( long.class, new LongTypeHandler() );
         typeHandlerMap.put( Long.class, new LongTypeHandler() );
         typeHandlerMap.put( BigDecimal.class, new BigDecimalTypeHandler() );
+        typeHandlerMap.put( byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Date.class, new DateTypeHandler() );
         typeHandlerMap.put( java.util.Date.class, new DateTypeHandler() );
+        typeHandlerMap.put( XMLGregorianCalendar.class, new XMLGregorianCalendarTypeHandler() );
         typeHandlerMap.put( Time.class, new TimeTypeHandler() );
         typeHandlerMap.put( Timestamp.class, new TimestampTypeHandler() );
     }
