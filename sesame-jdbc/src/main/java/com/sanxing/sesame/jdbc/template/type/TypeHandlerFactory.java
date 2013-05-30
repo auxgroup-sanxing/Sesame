@@ -23,6 +23,7 @@ public class TypeHandlerFactory
         typeHandlerMap.put( BigDecimal.class, new BigDecimalTypeHandler() );
         typeHandlerMap.put( Byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Date.class, new DateTypeHandler() );
+        typeHandlerMap.put( java.util.Date.class, new DateTypeHandler() );
         typeHandlerMap.put( Time.class, new TimeTypeHandler() );
         typeHandlerMap.put( Timestamp.class, new TimestampTypeHandler() );
     }
@@ -39,6 +40,10 @@ public class TypeHandlerFactory
             else if ( Date.class.isAssignableFrom( clazz ) )
             {
                 typeHandler = typeHandlerMap.get( Date.class );
+            }
+            else if ( java.util.Date.class.isAssignableFrom( clazz ) )
+            {
+                typeHandler = typeHandlerMap.get( java.util.Date.class );
             }
             else if ( Time.class.isAssignableFrom( clazz ) )
             {

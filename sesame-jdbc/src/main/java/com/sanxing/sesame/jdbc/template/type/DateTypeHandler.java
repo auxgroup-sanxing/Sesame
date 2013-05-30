@@ -24,7 +24,15 @@ public class DateTypeHandler
     public void setParameter( PreparedStatement ps, int index, Object value )
         throws SQLException
     {
-        Date v = (Date) value;
+        Date v = null;
+        if (value instanceof Date)
+        {
+            v = (Date) value;
+        }
+        else
+        {
+            v = new Date( ((java.util.Date) value).getTime() );
+        }
         ps.setDate( index, v );
     }
 }
