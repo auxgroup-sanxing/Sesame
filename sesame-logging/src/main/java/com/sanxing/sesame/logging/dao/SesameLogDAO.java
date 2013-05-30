@@ -183,18 +183,21 @@ public class SesameLogDAO
     @Override
     public LogBean queryForRecord( BaseBean bean )
     {
+        //TODO
         return null;
     }
 
     @Override
     public List<?> queryForRecordSet( BaseBean bean, PageInfo pageInfo )
     {
+        //TODO
         return null;
     }
 
     @Override
     public long queryCount( BaseBean bean )
     {
+        //TODO
         return 0L;
     }
 }

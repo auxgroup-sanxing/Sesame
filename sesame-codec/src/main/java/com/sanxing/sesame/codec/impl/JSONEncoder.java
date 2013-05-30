@@ -56,7 +56,7 @@ public class JSONEncoder
         {
             if ( ( child.getAttributes().isEmpty() ) && ( child.getChildren().isEmpty() ) )
             {
-                object.append( child.getName(), child.getText() );
+                object.put( child.getName(), child.getText() );
             }
             else
             {

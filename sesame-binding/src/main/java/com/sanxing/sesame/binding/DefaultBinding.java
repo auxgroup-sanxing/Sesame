@@ -319,6 +319,19 @@ public class DefaultBinding
             String action = txCode_xpath.valueOf( request );
             context.setAction( action );
             LOG.debug( "Action = " + action );
+            
+            OperationContext operaContext = getOperationContext( action );
+            if ( operaContext != null )
+            {
+                context.setProperty( ExchangeConst.TX_PROXY, operaContext.getServiceUnit().getName() );
+                context.setProperty( ExchangeConst.TX_ACTION, action );
+                MDC.put( "SU", operaContext.getServiceUnit().getName() );
+                request.getRootElement().setName( operaContext.getInputElement().getLocalPart() );
+            }
+            else if ( action != null )
+            {
+                return false;
+            }
         }
         String action = context.getAction();
         if ( action == null )

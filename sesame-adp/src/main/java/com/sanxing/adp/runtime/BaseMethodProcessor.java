@@ -84,7 +84,15 @@ public abstract class BaseMethodProcessor
                             body.setNamespace( ns );
                             for ( Element ele : (List<Element>) body.getChildren() )
                             {
-                                Field field = paramClass.getDeclaredField( ele.getName() );
+                                Field field = null;
+                                try
+                                {
+                                    field = paramClass.getDeclaredField( ele.getName() );
+                                }
+                                catch ( NoSuchFieldException e )
+                                {
+                                    continue;
+                                }
                                 XmlElement xmlEle = field.getAnnotation( XmlElement.class );
                                 if ( "##default".equals( xmlEle.namespace() ) )
                                 {

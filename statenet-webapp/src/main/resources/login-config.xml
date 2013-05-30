@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<Statenet>
+		<module class="com.sanxing.statenet.auth.StatenetLoginModule" flag="required"
+			debug="false"></module>
+	</Statenet>
+</config>
