@@ -292,49 +292,50 @@ public class DefaultBinding
             }
             context.setSource( xmlSource );
         }
-
-        if ( ( context.getAction() == null ) && ( txCode_xpath != null ) )
+        
+        org.jdom.Document request;
+        if ( context.getSource() instanceof XMLSource )
         {
-            org.jdom.Document request;
-            if ( context.getSource() instanceof XMLSource )
+            XMLSource content = (XMLSource) context.getSource();
+            request = content.getJDOMDocument();
+        }
+        else
+        {
+            if ( context.getSource() instanceof JDOMSource )
             {
-                XMLSource content = (XMLSource) context.getSource();
-                request = content.getJDOMDocument();
+                JDOMSource content = (JDOMSource) context.getSource();
+                request = content.getDocument();
             }
             else
             {
-                if ( context.getSource() instanceof JDOMSource )
-                {
-                    JDOMSource content = (JDOMSource) context.getSource();
-                    request = content.getDocument();
-                }
-                else
-                {
-                    JDOMResult result = new JDOMResult();
-                    Transformer transformer = transformerFactory.newTransformer();
-                    transformer.transform( context.getSource(), result );
-                    request = result.getDocument();
-                }
-            }
-            String action = txCode_xpath.valueOf( request );
-            context.setAction( action );
-            LOG.debug( "Action = " + action );
-            
-            OperationContext operaContext = getOperationContext( action );
-            if ( operaContext != null )
-            {
-                context.setProperty( ExchangeConst.TX_PROXY, operaContext.getServiceUnit().getName() );
-                context.setProperty( ExchangeConst.TX_ACTION, action );
-                MDC.put( "SU", operaContext.getServiceUnit().getName() );
-                request.getRootElement().setName( operaContext.getInputElement().getLocalPart() );
-            }
-            else if ( action != null )
-            {
-                return false;
+                JDOMResult result = new JDOMResult();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.transform( context.getSource(), result );
+                request = result.getDocument();
             }
         }
         String action = context.getAction();
+        if ( ( action == null ) && ( txCode_xpath != null ) )
+        {
+            action = txCode_xpath.valueOf( request );
+            context.setAction( action );
+            LOG.debug( "Action = " + action );
+        }
+
         if ( action == null )
+        {
+            return false;
+        }
+        
+        OperationContext operaContext = getOperationContext( action );
+        if ( operaContext != null )
+        {
+            context.setProperty( ExchangeConst.TX_PROXY, operaContext.getServiceUnit().getName() );
+            context.setProperty( ExchangeConst.TX_ACTION, action );
+            MDC.put( "SU", operaContext.getServiceUnit().getName() );
+            request.getRootElement().setName( operaContext.getInputElement().getLocalPart() );
+        }
+        else if ( action != null )
         {
             return false;
         }
