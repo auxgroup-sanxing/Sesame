@@ -9,7 +9,7 @@ package com.sanxing.sesame.jdbc.data;
  */
 public final class IntHolder
 {
-    private int value;
+    public int value;
 
     public IntHolder()
     {
