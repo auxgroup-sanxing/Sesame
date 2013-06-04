@@ -2,9 +2,11 @@ package com.sanxing.sesame.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 public class DateUtils
 {
@@ -258,5 +260,75 @@ public class DateUtils
         Calendar calendar = Calendar.getInstance();
         calendar.setTime( today );
         return calendar.get( 1 );
+    }
+    
+    /**
+     * 获取一天中的24个时间点（整点时间）
+     * @param sDate
+     * @return List<Date>
+     * @throws ParseException
+     */
+    public static List<Date> getTime_24(Date sDate)throws ParseException{
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date endDate = sdFormat.parse(sdFormat.format(sDate));
+        List<Date> li = new ArrayList<Date>();
+        // 设置小时、分、秒 
+        for(int i=00;i<24;i++){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(endDate);
+            calendar.set(Calendar.HOUR_OF_DAY,i);
+            calendar.set(Calendar.MINUTE, 00);
+            calendar.set(Calendar.SECOND, 00);
+            li.add(calendar.getTime());
+        }
+        return li;
+    }
+
+    /**
+     * 获取一天中的48个时间点（每半个时间）
+     * @param sDate
+     * @return List<Date>
+     * @throws ParseException
+     */
+    public static List<Date> getTime_48(Date sDate)throws ParseException{
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date endDate = sdFormat.parse(sdFormat.format(sDate));
+        List<Date> li = new ArrayList<Date>();
+        // 设置小时、分、秒 
+        for(int i=00;i<24;i++){
+            for(int j=00;j<=30;j+=30){
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.set(Calendar.HOUR_OF_DAY,i);
+                calendar.set(Calendar.MINUTE, j);
+                calendar.set(Calendar.SECOND, 00);
+                li.add(calendar.getTime());
+            }
+        }
+        return li;
+    }
+    
+    /**
+     * 获取一天中的96个时间点（每15分钟时间）
+     * @param sDate
+     * @return List<Date>
+     * @throws ParseException
+     */
+    public static List<Date> getTime_96(Date sDate)throws ParseException{
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date endDate = sdFormat.parse(sdFormat.format(sDate));
+        List<Date> li = new ArrayList<Date>();
+        // 设置小时、分、秒 
+        for(int i=00;i<24;i++){
+            for(int j=00;j<=45;j+=15){
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(endDate);
+                calendar.set(Calendar.HOUR_OF_DAY,i);
+                calendar.set(Calendar.MINUTE, j);
+                calendar.set(Calendar.SECOND, 00);
+                li.add(calendar.getTime());
+            }
+        }
+        return li;
     }
 }
