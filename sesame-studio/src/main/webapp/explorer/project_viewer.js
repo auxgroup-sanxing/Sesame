@@ -552,7 +552,7 @@ return {
 						method: 'POST', 
 						url: 'version_ctrl.jsp', 
 						timeout: 90 * 1000,
-						params: {operation:"revert", path: ctxMenu.node.getPath('name').substring(2) },
+						params: {operation:"revert", path: project },
 						callback: function(options, success, response) {
 							if (success) {
 								ctxMenu.node.reload();
