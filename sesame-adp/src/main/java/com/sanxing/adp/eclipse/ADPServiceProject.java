@@ -29,22 +29,25 @@ public class ADPServiceProject
         this.projectName = projectName;
         this.serviceUnitPath = serviceUnitPath;
 
-        File theFile = new File( serviceUnitPath + "/../../../../warehouse/components/adp-ec/ADP_TEMPLATE.zip" );
         File targetDir = new File( serviceUnitPath + "/" + projectName );
-        FileUtil.unpackArchive( theFile, targetDir );
+        if ( !targetDir.exists() )
+        {
+            File theFile = new File( serviceUnitPath + "/../../../../warehouse/components/adp-ec/ADP_TEMPLATE.zip" );
+            FileUtil.unpackArchive( theFile, targetDir );
 
-        String projectFileName = targetDir + "/.project";
-        SAXBuilder builder = new SAXBuilder();
-        Document doc = builder.build( new File( projectFileName ) );
-        Element root = doc.getRootElement();
-        root.getChild( "name" ).setText( projectName );
-        persistence( projectFileName, doc );
+            String projectFileName = targetDir + "/.project";
+            SAXBuilder builder = new SAXBuilder();
+            Document doc = builder.build( new File( projectFileName ) );
+            Element root = doc.getRootElement();
+            root.getChild( "name" ).setText( projectName );
+            persistence( projectFileName, doc );
 
-        projectFileName = targetDir + "/pom.xml";
-        doc = builder.build( new File( projectFileName ) );
-        root = doc.getRootElement();
-        root.getChild( "artifactId", root.getNamespace() ).setText( projectName );
-        persistence( projectFileName, doc );
+            projectFileName = targetDir + "/pom.xml";
+            doc = builder.build( new File( projectFileName ) );
+            root = doc.getRootElement();
+            root.getChild( "artifactId", root.getNamespace() ).setText( projectName );
+            persistence( projectFileName, doc );
+        }
 
         generateCode();
     }
@@ -54,7 +57,7 @@ public class ADPServiceProject
     {
         String srcDir = serviceUnitPath + "/" + projectName + "/src/main/java";
         String wsdlFile = serviceUnitPath + "/unit.wsdl";
-        String[] regexs = { "build\\.xml", "pom\\.xml", ".*?Impl\\.java", "\\.svn" };
+        String[] regexs = { ".*?Impl\\.java", "\\.svn" };
 
         File file = new File( wsdlFile );
         File srcFile = new File( srcDir );
