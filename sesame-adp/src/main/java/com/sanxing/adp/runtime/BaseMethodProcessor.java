@@ -94,7 +94,7 @@ public abstract class BaseMethodProcessor
                                     continue;
                                 }
                                 XmlElement xmlEle = field.getAnnotation( XmlElement.class );
-                                if ( "##default".equals( xmlEle.namespace() ) )
+                                if ( xmlEle == null || "##default".equals( xmlEle.namespace() ) )
                                 {
                                 	ele.setNamespace( ns );
                                 	JdomUtil.allAdditionNamespace( ele, ns);
