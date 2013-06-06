@@ -54,7 +54,7 @@ public class ADPServiceProject
     {
         String srcDir = serviceUnitPath + "/" + projectName + "/src/main/java";
         String wsdlFile = serviceUnitPath + "/unit.wsdl";
-        String[] regexs = { ".*?Impl\\.java", "\\.svn" };
+        String[] regexs = { "build\\.xml", "pom\\.xml", ".*?Impl\\.java", "\\.svn" };
 
         File file = new File( wsdlFile );
         File srcFile = new File( srcDir );
