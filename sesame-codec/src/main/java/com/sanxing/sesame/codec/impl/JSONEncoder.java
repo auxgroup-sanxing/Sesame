@@ -5,6 +5,7 @@ import java.util.List;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,7 +57,15 @@ public class JSONEncoder
         {
             if ( ( child.getAttributes().isEmpty() ) && ( child.getChildren().isEmpty() ) )
             {
-                object.put( child.getName(), child.getText() );
+                if ( "root".equals( child.getName() ) || "rows".equals( child.getName() ) )
+                {
+                    JSONArray array = new JSONArray( "[" + child.getText().replace( "} {", "},{" ) + "]" );
+                    object.put( child.getName(), array );
+                }
+                else
+                {
+                    object.put( child.getName(), child.getText() );
+                }
             }
             else
             {
