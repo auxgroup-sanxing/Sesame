@@ -1,12 +1,10 @@
 package com.sanxing.adp.runtime;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.namespace.QName;
 
 import org.jdom.Document;
@@ -42,19 +40,22 @@ public abstract class BaseMethodProcessor
         throws ADPException
     {
         int i = 0;
-        
+
         Element body = request.getRootElement();
         if ( body == null )
         {
             throw new ADPException( "00006", oper.getCapOperationName() );
         }
-
+        
         if ( LOG.isDebugEnabled() )
         {
             LOG.debug( "prepared to fufill input parameters..............." );
             LOG.debug( "input document is ...........\n " + JdomUtil.print( new JDOMSource( request ) ) );
         }
         
+        Element newBody = new Element("body", body.getNamespace());
+        newBody.addContent((Element)body.clone());
+
         List<PartInfo> params = oper.getParams();
         for ( PartInfo parameterInfo : params )
         {
@@ -66,55 +67,35 @@ public abstract class BaseMethodProcessor
                     LOG.debug( "parsing element [" + elementName + "]" );
                 }
                 String javaType = parameterInfo.getJavaType();
+                Element part = null;
+                if ( elementName != null )
+                {
+                    Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
+                    part = newBody.getChild( elementName.getLocalPart(), ns );
+                    if ( part != null )
+                    {
+                        part.setNamespace( Namespace.getNamespace( "", elementName.getNamespaceURI() ) );
+                    }
+                    else
+                        throw new ADPException( "00007", elementName.getLocalPart() );
+                }
+                else
+                {
+                    part = newBody.getChild( parameterInfo.getName() );
+                }
                 if ( XJUtil.isPrimitive( javaType ) )
                 {
-                    String param = body.getText();
+                    String param = part.getText();
                     Object paramObj =
                         XJUtil.xmlPrimitiv2Java( parameterInfo.getJavaType(), parameterInfo.getXsType(), param );
                     paramObjets[i] = paramObj;
                 }
                 else
                 {
-                    Class paramClass = server.jarFileClassLoader.loadClass( javaType );
-                    if ( elementName != null )
-                    {
-                        if ( elementName.getLocalPart().equals( body.getName() ) )
-                        {
-                        	Namespace ns = Namespace.getNamespace( elementName.getPrefix(), elementName.getNamespaceURI() );
-                            body.setNamespace( ns );
-                            for ( Element ele : (List<Element>) body.getChildren() )
-                            {
-                                Field field = null;
-                                try
-                                {
-                                    field = paramClass.getDeclaredField( ele.getName() );
-                                }
-                                catch ( NoSuchFieldException e )
-                                {
-                                    continue;
-                                }
-                                XmlElement xmlEle = field.getAnnotation( XmlElement.class );
-                                if ( xmlEle == null || "##default".equals( xmlEle.namespace() ) )
-                                {
-                                	ele.setNamespace( ns );
-                                	JdomUtil.allAdditionNamespace( ele, ns);
-                                }
-                                else
-                                {
-                                	ele.setNamespace( Namespace.getNamespace( xmlEle.namespace() ) );
-                                	JdomUtil.allAdditionNamespace( ele, Namespace.getNamespace( xmlEle.namespace() ));
-                                }                              	
-                            }
-                        }
-                        else
-                        {
-                            throw new ADPException( "00007", elementName.getLocalPart() );
-                        }
-                    }
-                    
-                    Unmarshaller unmarshaller = JAXBHelper.getUnMarshallerByClazz( paramClass );
+                    Unmarshaller unmarshaller =
+                        JAXBHelper.getUnMarshallerByClazz( this.server.jarFileClassLoader.loadClass( javaType ) );
 
-                    Object paramObject = unmarshaller.unmarshal( new JDOMSource( body ) );
+                    Object paramObject = unmarshaller.unmarshal( new JDOMSource( part ) );
                     paramObjets[i] = paramObject;
                 }
 
@@ -146,7 +127,7 @@ public abstract class BaseMethodProcessor
             ++i;
         }
     }
-    
+
     void formatResponse( OperationInfo oper, Document response )
     {
         Element body = response.getRootElement();
@@ -175,14 +156,14 @@ public abstract class BaseMethodProcessor
                     LOG.debug( "parsing element [" + elementName + "]" );
                 }
                 String javaType = resultInfo.getJavaType();
-                if ( ! XJUtil.isPrimitive( javaType ) )
+                if ( !XJUtil.isPrimitive( javaType ) )
                 {
                     if ( elementName != null )
                     {
                         if ( elementName.getLocalPart().equals( body.getName() ) )
                         {
                             body.setNamespace( Namespace.NO_NAMESPACE );
-                            JdomUtil.allAdditionNamespace( body, Namespace.NO_NAMESPACE);
+                            JdomUtil.allAdditionNamespace( body, Namespace.NO_NAMESPACE );
                         }
                         else
                         {
