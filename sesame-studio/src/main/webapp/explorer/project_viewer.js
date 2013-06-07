@@ -555,7 +555,7 @@ return {
 						params: {operation:"revert", path: project },
 						callback: function(options, success, response) {
 							if (success) {
-								ctxMenu.node.reload();
+								this.location.reload();
 								Ext.getBody().mask(response.responseText);
 								Ext.getBody().unmask.defer(3000, Ext.getBody());
 							}
