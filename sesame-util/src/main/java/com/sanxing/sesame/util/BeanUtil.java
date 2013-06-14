@@ -119,7 +119,8 @@ public class BeanUtil
         }
         catch ( IllegalArgumentException iage )
         {
-            throw new RuntimeException( iage );
+            if (propValue != null)
+                throw new RuntimeException( iage );
         }
         catch ( IllegalAccessException iae )
         {
