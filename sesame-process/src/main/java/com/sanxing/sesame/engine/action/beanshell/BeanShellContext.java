@@ -141,10 +141,5 @@ public class BeanShellContext
     public void close()
         throws EvalError
     {
-        String str;
-        for ( Iterator localIterator = vars.iterator(); localIterator.hasNext(); str = (String) localIterator.next() )
-        {
-            ;
-        }
     }
 }
