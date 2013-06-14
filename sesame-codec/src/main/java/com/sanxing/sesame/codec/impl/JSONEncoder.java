@@ -38,7 +38,7 @@ public class JSONEncoder
 
             result.write( object.toString().getBytes( result.getEncoding() ) );
             
-            if ( rootEl.getText() != null )
+            if ( rootEl.getText() != null && rootEl.getText().trim().length() > 0)
             {
                 if ( rootEl.getText().startsWith( "{" ) && rootEl.getText().endsWith( "}" ) )
                 {
