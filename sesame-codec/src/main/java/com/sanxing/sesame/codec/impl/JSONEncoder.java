@@ -31,12 +31,6 @@ public class JSONEncoder
         {
             Document document = source.getJDOMDocument();
             Element rootEl = document.getRootElement();
-
-            JSONObject object = new JSONObject();
-
-            iterate( rootEl, object );
-
-            result.write( object.toString().getBytes( result.getEncoding() ) );
             
             if ( rootEl.getText() != null && rootEl.getText().trim().length() > 0)
             {
@@ -48,6 +42,14 @@ public class JSONEncoder
                 {
                     result.write( rootEl.getText().getBytes( result.getEncoding() ) );
                 }
+            }
+            else
+            {
+                JSONObject object = new JSONObject();
+
+                iterate( rootEl, object );
+
+                result.write( object.toString().getBytes( result.getEncoding() ) );
             }
         }
         catch ( Exception e )
