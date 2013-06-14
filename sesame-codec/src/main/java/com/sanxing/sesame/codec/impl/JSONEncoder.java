@@ -13,6 +13,7 @@ import com.sanxing.sesame.binding.codec.BinaryResult;
 import com.sanxing.sesame.binding.codec.Encoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLSource;
+import com.sanxing.sesame.util.StringUtil;
 
 public class JSONEncoder
     implements Encoder
@@ -36,6 +37,18 @@ public class JSONEncoder
             iterate( rootEl, object );
 
             result.write( object.toString().getBytes( result.getEncoding() ) );
+            
+            if ( rootEl.getText() != null )
+            {
+                if ( rootEl.getText().startsWith( "{" ) && rootEl.getText().endsWith( "}" ) )
+                {
+                    result.write( ( "[" + rootEl.getText().replace( "} {", "},{" ) + "]" ).getBytes( result.getEncoding() ) );
+                }
+                else
+                {
+                    result.write( rootEl.getText().getBytes( result.getEncoding() ) );
+                }
+            }
         }
         catch ( Exception e )
         {
