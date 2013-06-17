@@ -47,7 +47,7 @@ public class SocketConnector
 
     private Thread sendThread;
 
-    private int buffer_size = 4096;
+    private int buffer_size = DEFAULT_BUFFER_CAPACITY;
 
     private final ThreadLocal<byte[]> cache = new ThreadLocal();
 

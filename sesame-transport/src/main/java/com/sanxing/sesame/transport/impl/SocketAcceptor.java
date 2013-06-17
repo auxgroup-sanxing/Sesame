@@ -416,7 +416,7 @@ public class SocketAcceptor
             return buf;
         }
 
-        if ( ( length < 0 ) || ( length > 8388608 ) )
+        if ( ( length < 0 ) || ( length > BUFFER_LIMIT ) )
         {
             throw new IllegalArgumentException( "Buffer limit is 8388608B, can not allocate " + length + " bytes" );
         }
