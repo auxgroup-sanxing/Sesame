@@ -139,12 +139,13 @@ public class UnitTest
                 XMLOutputter outter = new XMLOutputter( format );
                 xml = outter.outputString( xmlEl );
             }
+            LOG.debug( xml );
         }
         catch ( Exception e )
         {
-            xml = e.getMessage();
+            LOG.error( e.getMessage() );
+            xml = "<request/>";
         }
-        LOG.debug( xml );
         return xml;
     }
 
