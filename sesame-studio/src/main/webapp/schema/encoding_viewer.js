@@ -999,10 +999,10 @@ return {
 					else {
 						var a = nodes[i].attributes;
 						if (a.iconCls == 'xsd-icon-ref') {
-							elNode = _this.createElRefNode(a);
+							elNode = _this.createElRefNode({ref:a.ref, maxOccurs:a.maxOccurs, minOccurs:a.minOccurs, documentation:a.documentation});
 						}
 						else {
-							elNode = _this.createElementNode(a);
+							elNode = _this.createElementNode({name:a.name, type:a.type, maxOccurs:a.maxOccurs, minOccurs:a.minOccurs, nillable:a.nillable, documentation:a.documentation });
 						}
 					}
 					node.insertBefore(elNode, ref);
