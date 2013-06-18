@@ -962,6 +962,60 @@ return {
 			//elNode.ensureVisible();
 			elNode.select();
 		};
+		var copyElement_Handler = function(){
+			Application.selectedNodes = selModel.getSelectedNodes();
+			Application.canPaste = true;
+			Application.isCut = false;
+		};
+		var cutElement_Handler = function(){
+			Application.selectedNodes =  selModel.getSelectedNodes();
+			Application.canPaste = true;
+			Application.isCut = true;
+		};
+		var pasteElement_Handler = function(){
+			var node = selModel.getSelectedNodes()[0];
+			var ref=null, a=node.attributes;
+			if (a.tag=='complexType'){
+				node = node.firstChild ? node.firstChild : node.appendChild(_this.createStyleNode({tag: 'sequence'}));
+			}
+			else if (a.tag=='element' || a.tag=='any'){
+				if (a.allowExpand) {
+					node = node.firstChild ? node.firstChild : node.appendChild(_this.createStyleNode({
+						tag: 'sequence'
+					}));
+				}
+				else {
+					ref = node;
+					node = node.parentNode;
+				}
+			}
+			if (Application.selectedNodes) {
+				var nodes = Application.selectedNodes;
+				for (var i=nodes.length-1; i>=0; i--) {
+					var elNode = null;
+					if (Application.isCut) {
+						elNode = nodes[i];
+					}
+					else {
+						var a = nodes[i].attributes;
+						if (a.iconCls == 'xsd-icon-ref') {
+							elNode = _this.createElRefNode(a);
+						}
+						else {
+							elNode = _this.createElementNode(a);
+						}
+					}
+					node.insertBefore(elNode, ref);
+					node.expand(false, false);
+					ref = elNode;
+				}
+				if (Application.isCut) {
+					Application.selectedNodes = null;
+					Application.canPaste = false;
+					Application.isCut = false;
+				}
+			}
+		};
 		var addElRef_Handler = function(){
 			var node = selModel.getSelectedNodes()[0];
 			var ref=null, a=node.attributes;
@@ -1178,6 +1232,23 @@ return {
 					handler: addElement_Handler
 				},
 				{
+					id: 'copyElement',
+					text: '复制元素',
+					handler: copyElement_Handler
+				},
+				{
+					id: 'cutElement',
+					text: '剪切元素',
+					disabled: true,
+					handler: cutElement_Handler
+				},
+				{
+					id: 'pasteElement',
+					text: '粘帖元素',
+					disabled: true,
+					handler: pasteElement_Handler
+				},
+				{
 					id: 'addElRef',
 					text: '添加元素引用',
 					hidden: true,
@@ -1348,6 +1419,8 @@ return {
 				item.hide();
 			}
 			items.get('addElement').setDisabled(!allowElement || !lock);
+			items.get('cutElement').setDisabled(!lock);
+			items.get('pasteElement').setDisabled(!allowElement || !lock || !Application.canPaste);
 			items.get('addElRef').setDisabled(!allowElement || !lock);
 			items.get('addAny').setVisible((nodes.length<2 && (a.tag=='sequence' || a.tag=='choice')) && lock);
 			items.get('addSeq').setVisible((nodes.length<2 && (a.tag=='complexType' || a.tag=='sequence' || a.tag=='choice')) && lock);
