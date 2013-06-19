@@ -1685,7 +1685,7 @@ return {
 			}
 			return rs;
 		}
-		var startTest = function(){
+		var startTest = (!!inputData) ? function(){
 			outputForm.getForm().findField('outputArea').setValue("");
 			var inputPanel = Ext.getCmp("input");
 			if(!!inputForm.getForm().isValid()){
@@ -1717,7 +1717,28 @@ return {
 					}
 				});
 			}
-		}
+		} :  function(){
+			outputForm.getForm().findField('outputArea').setValue("");
+			outputForm.getTopToolbar().findById('start').disable();
+			
+			Ext.Ajax.request({
+				method: 'POST',
+				url:'encoding_ctrl.jsp',
+				params:{
+					operation:'startTest',
+					xml: '<request/>',
+					unit:unit,
+					schema:schema
+				},
+				callback:function(options,success,response){
+					outputForm.getTopToolbar().findById('start').enable();
+					if(success){
+						var result = response.responseText;
+						outputForm.getForm().findField('outputArea').setValue(result);
+					}
+				}
+			});
+		};
 		var inputForm = new Ext.FormPanel({
 			region:'north',
 			id:'input',
@@ -1742,7 +1763,6 @@ return {
             }],
             items:[{
             	xtype:'textarea',
-            	//TODO
             	value: (!!inputData) ? inputData : '',
             	id:'inputArea',
             	name:'inputArea',
@@ -1757,7 +1777,7 @@ return {
 			
 		});
 		
-		var outputForm = new Ext.FormPanel({
+		var outputForm = (!!inputData) ? new Ext.FormPanel({
 			region:'center',
 			id:'output',
 			resiable:false,
@@ -1769,6 +1789,35 @@ return {
 			border: true,
 			bodyStyle : {'border': 'none'},
             split: true,
+            items:[{
+            	xtype:'textarea',
+            	id:'outputArea',
+            	name:'outputArea',
+            	anchor: '100%, 100%',
+		        style: {'width':'100%', 'height':'100%', 'border':'1 1 1 1px'},
+				preventScrollbars: false
+            	
+            }]
+			
+		}) : new Ext.FormPanel({
+			region:'center',
+			id:'output',
+			resiable:false,
+			stateful: false,
+			modal: true,
+			hideLabels: true,
+			monitorValid: true,
+			frame: false,
+			border: true,
+			bodyStyle : {'border': 'none'},
+            tbar:[{
+            	id: 'start',
+            	text: '开始',
+            	icon: '../images/tool16/launch_run.gif',
+				cls: 'x-btn-text-icon',
+            	handler:startTest
+            		
+            }],
             items:[{
             	xtype:'textarea',
             	id:'outputArea',
@@ -1793,7 +1842,7 @@ return {
 			pageX: 100,
 			pageY: 100,
 			iconCls: 'settings',
-			items:[inputForm,outputForm]
+			items:(!!inputData) ? [inputForm,outputForm] : [outputForm]
 		});
 		
 		win.show();

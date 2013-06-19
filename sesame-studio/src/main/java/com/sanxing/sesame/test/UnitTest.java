@@ -144,7 +144,6 @@ public class UnitTest
         catch ( Exception e )
         {
             LOG.error( e.getMessage() );
-            xml = "<request/>";
         }
         return xml;
     }
