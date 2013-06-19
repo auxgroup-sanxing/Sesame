@@ -120,7 +120,6 @@
   	<module>adp-template</module>
   	<module>sesame-security</module>
   	<module>wtc-proxy</module>
-  	<module>statenet-webapp</module>
   </modules>
 
   <dependencyManagement>
