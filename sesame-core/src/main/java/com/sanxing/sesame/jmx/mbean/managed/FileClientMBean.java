@@ -1,8 +1,8 @@
 package com.sanxing.sesame.jmx.mbean.managed;
 
-public abstract interface FileClientMBean
+public interface FileClientMBean
 {
-    public abstract String fetchFile( String paramString );
+    public abstract String fetchFile( String fileName );
 
     public abstract String getDescription();
 }

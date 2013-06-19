@@ -1,6 +1,6 @@
 package com.sanxing.sesame.wtc;
 
-public abstract interface SOPConstants
+public interface SOPConstants
 {
     public static final int SOP_UNIT_MAX = 250;
 

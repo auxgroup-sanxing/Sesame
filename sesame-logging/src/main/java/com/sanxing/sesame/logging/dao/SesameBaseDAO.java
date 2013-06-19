@@ -4,21 +4,21 @@ import java.util.List;
 
 import com.sanxing.sesame.jdbc.data.PageInfo;
 
-public abstract interface SesameBaseDAO
+public interface SesameBaseDAO
 {
-    public abstract boolean updateOnDuplicate( BaseBean paramBaseBean );
+    public abstract boolean updateOnDuplicate( BaseBean bean );
 
-    public abstract boolean updateStateOnDuplicate( BaseBean paramBaseBean );
+    public abstract boolean updateStateOnDuplicate( BaseBean bean );
 
-    public abstract int updateState( BaseBean paramBaseBean );
+    public abstract int updateState( BaseBean bean );
 
-    public abstract void insert( BaseBean paramBaseBean );
+    public abstract void insert( BaseBean bean );
 
-    public abstract int update( BaseBean paramBaseBean );
+    public abstract int update( BaseBean bean );
 
-    public abstract LogBean queryForRecord( BaseBean paramBaseBean );
+    public abstract LogBean queryForRecord( BaseBean bean );
 
-    public abstract List<?> queryForRecordSet( BaseBean paramBaseBean, PageInfo paramPageInfo );
+    public abstract List<?> queryForRecordSet( BaseBean bean, PageInfo pageInfo );
 
-    public abstract long queryCount( BaseBean paramBaseBean );
+    public abstract long queryCount( BaseBean bean );
 }

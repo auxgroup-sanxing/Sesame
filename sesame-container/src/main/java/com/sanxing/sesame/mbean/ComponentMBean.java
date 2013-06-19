@@ -2,7 +2,7 @@ package com.sanxing.sesame.mbean;
 
 import javax.jbi.management.ComponentLifeCycleMBean;
 
-public abstract interface ComponentMBean
+public interface ComponentMBean
     extends ComponentLifeCycleMBean
 {
     public static final String TYPE_SERVICE_ENGINE = "service-engine";
@@ -15,15 +15,15 @@ public abstract interface ComponentMBean
 
     public abstract boolean isExchangeThrottling();
 
-    public abstract void setExchangeThrottling( boolean paramBoolean );
+    public abstract void setExchangeThrottling( boolean value );
 
     public abstract long getThrottlingTimeout();
 
-    public abstract void setThrottlingTimeout( long paramLong );
+    public abstract void setThrottlingTimeout( long value );
 
     public abstract int getThrottlingInterval();
 
-    public abstract void setThrottlingInterval( int paramInt );
+    public abstract void setThrottlingInterval( int value );
 
     public abstract String getComponentType();
 }

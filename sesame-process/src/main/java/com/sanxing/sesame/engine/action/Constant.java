@@ -1,6 +1,6 @@
 package com.sanxing.sesame.engine.action;
 
-public abstract interface Constant
+public interface Constant
 {
     public static final String VAR_ACTION_NAME = "ACTION_NAME";
 

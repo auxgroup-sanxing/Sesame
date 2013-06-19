@@ -3,6 +3,7 @@ package com.sanxing.sesame.logging.processer;
 import java.util.Date;
 
 import com.sanxing.sesame.logging.ErrorRecord;
+import com.sanxing.sesame.logging.constants.LogState;
 import com.sanxing.sesame.logging.dao.LogBean;
 import com.sanxing.sesame.logging.handlers.DataBaseHandler;
 import com.sanxing.sesame.logging.handlers.LuceneHandler;
@@ -23,7 +24,7 @@ public class ErrorRecordProcessor
             log.setSerialNumber( Long.valueOf( record.getSerial() ) );
             log.setStartTime( Utils.dateToTimeStamp( date ) );
             log.setUpdateTime( Utils.dateToTimeStamp( date ) );
-            log.setState( "1" );
+            log.setState( LogState.STATE_FAIL );
             log.setStage( record.getStage() );
             Exception exception = record.getException();
             if ( exception != null )

@@ -1,6 +1,6 @@
 package com.sanxing.sesame.logging;
 
-public abstract interface Log
+public interface Log
 {
     public abstract boolean isDebugEnabled();
 
@@ -8,27 +8,27 @@ public abstract interface Log
 
     public abstract boolean isTraceEnabled();
 
-    public abstract void trace( Object paramObject );
+    public abstract void trace( Object message );
 
-    public abstract void trace( Object paramObject, LogRecord paramLogRecord );
+    public abstract void trace( Object message, LogRecord lr );
 
-    public abstract void debug( Object paramObject );
+    public abstract void debug( Object message );
 
-    public abstract void debug( Object paramObject, LogRecord paramLogRecord );
+    public abstract void debug( Object message, LogRecord lr );
 
-    public abstract void info( Object paramObject );
+    public abstract void info( Object message );
 
-    public abstract void info( Object paramObject, LogRecord paramLogRecord );
+    public abstract void info( Object message, LogRecord lr );
 
-    public abstract void warn( Object paramObject );
+    public abstract void warn( Object message );
 
-    public abstract void warn( Object paramObject, LogRecord paramLogRecord );
+    public abstract void warn( Object message, LogRecord lr );
 
-    public abstract void error( Object paramObject );
+    public abstract void error( Object message );
 
-    public abstract void error( Object paramObject, LogRecord paramLogRecord );
+    public abstract void error( Object message, LogRecord lr );
 
-    public abstract void fatal( Object paramObject );
+    public abstract void fatal( Object message );
 
-    public abstract void fatal( Object paramObject, LogRecord paramLogRecord );
+    public abstract void fatal( Object message, LogRecord lr );
 }

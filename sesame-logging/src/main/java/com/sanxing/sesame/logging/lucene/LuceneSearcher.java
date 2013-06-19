@@ -27,6 +27,7 @@ import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.logging.constants.LogConfig;
 import com.sanxing.sesame.logging.dao.LogBean;
 
 public class LuceneSearcher
@@ -82,7 +83,7 @@ public class LuceneSearcher
                 {
                     String dir =
                         System.getProperty( "SESAME_HOME" ) + "/"
-                            + System.getProperty( "sesame.logging.monitor.lucene.name", "logs/index" );
+                            + System.getProperty( LogConfig.SESAME_MONITOR_LUCENEDIRECTORY_PROPERTY_NAME, LogConfig.SESAME_MONITOR_LUCENEDIRECTORY_DEFAULT );
                     luceneSearcher = new LuceneSearcher( dir );
                     luceneSearcher.createIndex();
                 }

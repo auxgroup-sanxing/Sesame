@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sanxing.sesame.logging.constants.LogConfig;
 import com.sanxing.sesame.logging.dao.BaseBean;
 
 public class StoppableMessageQueue
@@ -54,7 +55,7 @@ public class StoppableMessageQueue
                 LOG.debug( "Queue is stopped!" );
                 return false;
             }
-            if ( messageQueue.size() >= 10000 )
+            if ( messageQueue.size() >= LogConfig.SESAME_MAXIMUM_MESSESGES )
             {
                 trash = messageQueue.poll();
                 LOG.debug( "Discard message: " + trash );

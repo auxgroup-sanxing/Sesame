@@ -4,11 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public abstract interface TypeHandler
+public interface TypeHandler
 {
-    public abstract void setParameter( PreparedStatement paramPreparedStatement, int paramInt, Object paramObject )
+    public abstract void setParameter( PreparedStatement ps, int index, Object value )
         throws SQLException;
 
-    public abstract Object getField( ResultSet paramResultSet, int paramInt )
+    public abstract Object getField( ResultSet rs, int index )
         throws SQLException;
 }

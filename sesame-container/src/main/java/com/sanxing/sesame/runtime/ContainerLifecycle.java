@@ -1,6 +1,6 @@
 package com.sanxing.sesame.runtime;
 
-public abstract interface ContainerLifecycle
+public interface ContainerLifecycle
 {
     public abstract void onStartup();
 

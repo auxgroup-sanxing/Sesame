@@ -1,6 +1,6 @@
 package com.sanxing.sesame.jmx.mbean;
 
-public abstract interface MBeanNames
+public interface MBeanNames
 {
     public static final String SERVER_MANAGER = "server-manager";
 

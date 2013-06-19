@@ -1,6 +1,6 @@
 package com.sanxing.sesame.mbean;
 
-public abstract interface ServiceUnitMBean
+public interface ServiceUnitMBean
 {
     public static final String STARTED = "Started";
 

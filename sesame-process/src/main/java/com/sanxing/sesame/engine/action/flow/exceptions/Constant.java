@@ -1,6 +1,6 @@
 package com.sanxing.sesame.engine.action.flow.exceptions;
 
-public abstract interface Constant
+public interface Constant
 {
     public static final String THROWS_ONLY_HERE = "JAVA-LIKE";
 

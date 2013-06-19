@@ -1,6 +1,6 @@
 package com.sanxing.sesame.jmx.mbean;
 
-public abstract interface PlatformManagerMBean
+public interface PlatformManagerMBean
 {
     public abstract void shutdown();
 

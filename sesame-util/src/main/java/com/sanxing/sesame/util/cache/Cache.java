@@ -1,15 +1,15 @@
 package com.sanxing.sesame.util.cache;
 
-public abstract interface Cache
+public interface Cache
 {
-    public abstract Object get( String paramString )
+    public abstract Object get( String key )
         throws NoSuchObjectException;
 
-    public abstract void flush( String paramString );
+    public abstract void flush( String key );
 
     public abstract void flushAll();
 
-    public abstract void put( String paramString, Object paramObject );
+    public abstract void put( String key, Object obj );
 
     public abstract PeristenceBackend getBackend();
 }

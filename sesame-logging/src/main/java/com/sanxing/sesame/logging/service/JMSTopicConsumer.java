@@ -26,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sanxing.sesame.executors.ExecutorFactory;
+import com.sanxing.sesame.logging.constants.LogConfig;
 import com.sanxing.sesame.logging.util.JNDIUtil;
 
 public class JMSTopicConsumer
@@ -107,13 +108,13 @@ public class JMSTopicConsumer
             String clientID = "client-receiver";
             jmsConnection.setClientID( clientID );
             jmsSession = jmsConnection.createSession( false, 1 );
-            String topicName = System.getProperty( "sesame.logging.monitor.jms.name", "LOGTOPIC" );
+            String topicName = System.getProperty( LogConfig.SESAME_MONITOR_JMS_PROPERTY_NAME, LogConfig.SESAME_MONITOR_JMS_DEFAULT );
             Topic topic = jmsSession.createTopic( topicName );
 
             topicConsumer = jmsSession.createConsumer( topic );
             setConsumer( topicConsumer );
 
-            String consumers = System.getProperty( "sesame.logging.monitor.consumers", "5" );
+            String consumers = System.getProperty( LogConfig.SESAME_QUEUE_CONSUMERS_PROPERTY_NAME, LogConfig.SESAME_QUEUE_CONSUMERS_DEFAULT );
             queueConsumerNum = Integer.parseInt( consumers );
 
             Queue queue = jmsSession.createQueue( "INNERQUEUE" );

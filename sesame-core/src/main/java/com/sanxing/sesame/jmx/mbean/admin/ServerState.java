@@ -1,6 +1,6 @@
 package com.sanxing.sesame.jmx.mbean.admin;
 
-public abstract interface ServerState
+public interface ServerState
 {
     public static final int STARTING = 1;
 

@@ -1,8 +1,8 @@
 package com.sanxing.sesame.jdbc.template;
 
-public abstract interface IndexedUpdateTemplate
+public interface IndexedUpdateTemplate
 {
-    public abstract int update( String paramString, Object[] paramArrayOfObject, int[] paramArrayOfInt );
+    public abstract int update( String sql, Object[] parameters, int[] paramTypes );
 
-    public abstract int update( String paramString, Object[] paramArrayOfObject );
+    public abstract int update( String sql, Object[] parameters );
 }

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.jar.Manifest;
 
-public abstract interface ResourceLocation
+public interface ResourceLocation
 {
     public abstract URL getCodeSource();
 
-    public abstract ResourceHandle getResourceHandle( String paramString );
+    public abstract ResourceHandle getResourceHandle( String resourceName );
 
     public abstract Manifest getManifest()
         throws IOException;

@@ -2,13 +2,13 @@ package com.sanxing.sesame.jmx.mbean;
 
 import com.sanxing.sesame.jmx.mbean.admin.ClusterEvent;
 
-public abstract interface ServerManagerMBean
+public interface ServerManagerMBean
 {
     public abstract void start();
 
     public abstract void stop();
 
-    public abstract void listen( ClusterEvent paramClusterEvent );
+    public abstract void listen( ClusterEvent event );
 
     public abstract String getName();
 

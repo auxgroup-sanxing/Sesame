@@ -4,55 +4,55 @@ import java.util.Properties;
 
 import javax.jbi.management.LifeCycleMBean;
 
-public abstract interface CommandsServiceMBean
+public interface CommandsServiceMBean
     extends LifeCycleMBean
 {
-    public abstract String installComponent( String paramString, Properties paramProperties, boolean paramBoolean )
+    public abstract String installComponent( String file, Properties props, boolean deferException )
         throws Exception;
 
-    public abstract String uninstallComponent( String paramString )
+    public abstract String uninstallComponent( String name )
         throws Exception;
 
-    public abstract String installSharedLibrary( String paramString, boolean paramBoolean )
+    public abstract String installSharedLibrary( String file, boolean deferException )
         throws Exception;
 
-    public abstract String uninstallSharedLibrary( String paramString )
+    public abstract String uninstallSharedLibrary( String name )
         throws Exception;
 
-    public abstract String startComponent( String paramString )
+    public abstract String startComponent( String name )
         throws Exception;
 
-    public abstract String stopComponent( String paramString )
+    public abstract String stopComponent( String name )
         throws Exception;
 
-    public abstract String shutdownComponent( String paramString )
+    public abstract String shutdownComponent( String name )
         throws Exception;
 
-    public abstract String deployServiceAssembly( String paramString, boolean paramBoolean )
+    public abstract String deployServiceAssembly( String file, boolean deferException )
         throws Exception;
 
-    public abstract String undeployServiceAssembly( String paramString )
+    public abstract String undeployServiceAssembly( String name )
         throws Exception;
 
-    public abstract String startServiceAssembly( String paramString )
+    public abstract String startServiceAssembly( String name )
         throws Exception;
 
-    public abstract String stopServiceAssembly( String paramString )
+    public abstract String stopServiceAssembly( String name )
         throws Exception;
 
-    public abstract String shutdownServiceAssembly( String paramString )
+    public abstract String shutdownServiceAssembly( String name )
         throws Exception;
 
-    public abstract String installArchive( String paramString )
+    public abstract String installArchive( String location )
         throws Exception;
 
-    public abstract String listComponents( boolean paramBoolean1, boolean paramBoolean2, boolean paramBoolean3,
-                                           String paramString1, String paramString2, String paramString3 )
+    public abstract String listComponents( boolean excludeSEs, boolean excludeBCs, boolean excludePojos, String requiredState,
+                                           String sharedLibraryName, String serviceAssemblyName )
         throws Exception;
 
-    public abstract String listSharedLibraries( String paramString1, String paramString2 )
+    public abstract String listSharedLibraries( String componentName, String sharedLibraryName )
         throws Exception;
 
-    public abstract String listServiceAssemblies( String paramString1, String paramString2, String paramString3 )
+    public abstract String listServiceAssemblies( String state, String componentName, String serviceAssemblyName )
         throws Exception;
 }

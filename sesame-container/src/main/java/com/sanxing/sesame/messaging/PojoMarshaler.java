@@ -4,14 +4,13 @@ import javax.jbi.messaging.MessageExchange;
 import javax.jbi.messaging.MessagingException;
 import javax.jbi.messaging.NormalizedMessage;
 
-public abstract interface PojoMarshaler
+public interface PojoMarshaler
 {
     public static final String BODY = "com.sanxing.sesame.body";
 
-    public abstract void marshal( MessageExchange paramMessageExchange, NormalizedMessage paramNormalizedMessage,
-                                  Object paramObject )
+    public abstract void marshal( MessageExchange exchange, NormalizedMessage message, Object body )
         throws MessagingException;
 
-    public abstract Object unmarshal( MessageExchange paramMessageExchange, NormalizedMessage paramNormalizedMessage )
+    public abstract Object unmarshal( MessageExchange exchange, NormalizedMessage message )
         throws MessagingException;
 }

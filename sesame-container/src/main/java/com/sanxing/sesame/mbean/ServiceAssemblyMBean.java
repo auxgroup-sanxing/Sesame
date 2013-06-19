@@ -2,7 +2,7 @@ package com.sanxing.sesame.mbean;
 
 import javax.management.ObjectName;
 
-public abstract interface ServiceAssemblyMBean
+public interface ServiceAssemblyMBean
 {
     public static final String STARTED = "Started";
 

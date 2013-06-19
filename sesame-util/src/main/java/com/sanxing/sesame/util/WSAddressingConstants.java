@@ -1,6 +1,6 @@
 package com.sanxing.sesame.util;
 
-public abstract interface WSAddressingConstants
+public interface WSAddressingConstants
 {
     public static final String WSA_NAMESPACE_200303 = "http://schemas.xmlsoap.org/ws/2003/03/addressing";
 

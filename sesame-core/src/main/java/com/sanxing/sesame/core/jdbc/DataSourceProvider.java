@@ -2,9 +2,9 @@ package com.sanxing.sesame.core.jdbc;
 
 import com.sanxing.sesame.core.BaseServer;
 
-public abstract interface DataSourceProvider
+public interface DataSourceProvider
 {
-    public abstract void provide( BaseServer paramBaseServer, DataSourceInfo paramDataSourceInfo );
+    public abstract void provide( BaseServer server, DataSourceInfo dsInfo );
 
     public abstract void release();
 }

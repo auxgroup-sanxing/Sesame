@@ -3,28 +3,24 @@ package com.sanxing.sesame.jdbc.template;
 import java.util.List;
 import java.util.Map;
 
-public abstract interface NamedQueryTemplate
+public interface NamedQueryTemplate
 {
-    public abstract Map<String, Object> queryRow( String paramString, Map<String, Object> paramMap,
-                                                  Map<String, Integer> paramMap1 );
+    public abstract Map<String, Object> queryRow( String sql, Map<String, Object> parameters, Map<String, Integer> paramTypes );
 
-    public abstract List<Map<String, Object>> query( String paramString, Map<String, Object> paramMap,
-                                                     Map<String, Integer> paramMap1 );
+    public abstract List<Map<String, Object>> query( String sql, Map<String, Object> parameters, Map<String, Integer> paramTypes );
 
-    public abstract List<Map<String, Object>> query( String paramString, Map<String, Object> paramMap,
-                                                     Map<String, Integer> paramMap1, int paramInt1, int paramInt2 );
+    public abstract List<Map<String, Object>> query( String sql, Map<String, Object> parameters,
+                                                     Map<String, Integer> paramTypes, int pageNo, int pageSize );
 
-    public abstract Map<String, Object> queryRow( String paramString, Map<String, Object> paramMap );
+    public abstract Map<String, Object> queryRow( String sql, Map<String, Object> parameters );
 
-    public abstract List<Map<String, Object>> query( String paramString, Map<String, Object> paramMap );
+    public abstract List<Map<String, Object>> query( String sql, Map<String, Object> parameters );
 
-    public abstract List<Map<String, Object>> query( String paramString, Map<String, Object> paramMap, int paramInt1,
-                                                     int paramInt2 );
+    public abstract List<Map<String, Object>> query( String sql, Map<String, Object> parameters, int pageNo, int pageSize );
 
-    public abstract <T> T queryRow( String paramString, Object paramObject, Class<T> paramClass );
+    public abstract <T> T queryRow( String sql, Object parameters, Class<T> rowClazz );
 
-    public abstract <T> List<T> query( String paramString, Object paramObject, Class<T> paramClass );
+    public abstract <T> List<T> query( String sql, Object parameters, Class<T> rowClazz );
 
-    public abstract <T> List<T> query( String paramString, Object paramObject, Class<T> paramClass, int paramInt1,
-                                       int paramInt2 );
+    public abstract <T> List<T> query( String sql, Object parameters, Class<T> rowClazz, int pageNo, int pageSize );
 }

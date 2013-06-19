@@ -2,7 +2,7 @@ package com.sanxing.sesame.wssecurity.commons;
 
 import javax.xml.namespace.QName;
 
-public abstract interface Constants
+public interface Constants
 {
     public static final QName SOAP_CLIENT_FAULT_CODE =
         new QName( "http://schemas.xmlsoap.org/soap/envelope/", "Client" );

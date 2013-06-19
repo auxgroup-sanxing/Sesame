@@ -4,9 +4,9 @@ import java.io.IOException;
 
 import org.jdom.Element;
 
-public abstract interface Client
+public interface Client
     extends Runnable
 {
-    public abstract Element send( String paramString, Element paramElement, int paramInt )
+    public abstract Element send( String code, Element data, int timeout )
         throws IOException;
 }

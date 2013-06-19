@@ -1,6 +1,6 @@
 package com.sanxing.studio.search;
 
-public abstract interface SearcherName
+public interface SearcherName
 {
     public abstract String getSearcherName();
 }

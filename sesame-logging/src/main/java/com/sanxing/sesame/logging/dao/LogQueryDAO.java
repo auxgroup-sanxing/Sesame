@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import com.sanxing.sesame.jdbc.data.PageInfo;
 import com.sanxing.sesame.jdbc.template.NamedQueryTemplate;
 import com.sanxing.sesame.jdbc.template.TemplateManager;
+import com.sanxing.sesame.logging.constants.LogConfig;
 
 public class LogQueryDAO
     implements SesameBaseDAO
@@ -91,7 +92,7 @@ public class LogQueryDAO
 
     public String getDataSourceName()
     {
-        return System.getProperty( "sesame.logging.monitor.datasource.name", "STM_DATASOURCE" );
+        return System.getProperty( LogConfig.SESAME_MONITOR_DATASOURCE_PROPERTY_NAME, "STM_DATASOURCE" );
     }
 
     @Override

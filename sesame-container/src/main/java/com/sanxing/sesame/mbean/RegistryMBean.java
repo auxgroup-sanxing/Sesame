@@ -3,7 +3,7 @@ package com.sanxing.sesame.mbean;
 import javax.jbi.management.LifeCycleMBean;
 import javax.management.ObjectName;
 
-public abstract interface RegistryMBean
+public interface RegistryMBean
     extends LifeCycleMBean
 {
     public abstract ObjectName[] getComponentNames();

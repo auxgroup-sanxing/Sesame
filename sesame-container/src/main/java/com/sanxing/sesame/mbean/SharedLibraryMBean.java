@@ -1,6 +1,6 @@
 package com.sanxing.sesame.mbean;
 
-public abstract interface SharedLibraryMBean
+public interface SharedLibraryMBean
 {
     public abstract String getName();
 

@@ -22,7 +22,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.dom4j.io.DOMWriter;
@@ -56,6 +55,8 @@ import com.sanxing.sesame.logging.LogRecord;
 import com.sanxing.sesame.logging.XObjectRecord;
 import com.sanxing.sesame.service.OperationContext;
 import com.sanxing.sesame.service.ServiceUnit;
+
+import static com.sanxing.sesame.logging.constants.LogStage.*;
 
 public class DefaultBinding
     implements Binding
@@ -575,7 +576,7 @@ public class DefaultBinding
                 if ( log.isInfoEnabled() )
                 {
                     LogRecord t = new XObjectRecord( message.getSerial().longValue(), content );
-                    t.setStage( "接入组件编码前" );
+                    t.setStage( STAGE_ACCEPTOR_BEFORE_ASSEMBLE );
                     t.setChannel( channel );
                     t.setAction( action );
                     t.setServiceName( serviceName );
@@ -602,11 +603,11 @@ public class DefaultBinding
                     BinaryResult result = (BinaryResult) message.getResult();
                     BufferRecord rec = new BufferRecord( message.getSerial().longValue(), result.getBytes() );
 
-                    rec.setStage( "接入组件编码后" );
+                    rec.setStage( STAGE_ACCEPTOR_AFTER_ASSEMBLE );
                     log.info( "[REPLY][BINARY]-------------------------------------------------", rec );
 
                     FinishRecord finish = new FinishRecord( message.getSerial().longValue() );
-                    finish.setStage( "交易结束" );
+                    finish.setStage( STAGE_END );
                     finish.setChannel( channel );
                     finish.setAction( action );
                     finish.setServiceName( serviceName );
@@ -620,7 +621,7 @@ public class DefaultBinding
                 {
                     XObjectRecord record = new XObjectRecord( message.getSerial().longValue(), content );
                     record.setCallout( true );
-                    record.setStage( "callout编码前" );
+                    record.setStage( STAGE_CONNECTOR_BEFORE_ASSEMBLE );
                     log.info( "[SEND][XML]------------------------------------------------------", record );
                 }
 
@@ -645,7 +646,7 @@ public class DefaultBinding
                     rec.setEncoding( source.getEncoding() );
 
                     rec.setCallout( true );
-                    rec.setStage( "callout编码后" );
+                    rec.setStage( STAGE_CONNECTOR_AFTER_ASSEMBLE );
                     log.info( "[SEND][BINARY]--------------------------------------------------", rec );
                 }
             }
@@ -759,7 +760,7 @@ public class DefaultBinding
                     BufferRecord record = new BufferRecord( message.getSerial().longValue(), source.getBytes() );
                     record.setEncoding( source.getEncoding() );
 
-                    record.setStage( "接入组件解码前" );
+                    record.setStage( STAGE_ACCEPTOR_BEFORE_PARSE );
                     record.setAction( message.getAction() );
                     log.info( "[REQ][BINARY]------------------------------------", record );
                     message.setProperty( "buffer-logged", Boolean.valueOf( true ) );
@@ -780,7 +781,7 @@ public class DefaultBinding
                 {
                     OperationContext operation = getOperationContext( message.getAction() );
                     XObjectRecord trace = new XObjectRecord( message.getSerial().longValue(), source );
-                    trace.setStage( "接入组件解码后" );
+                    trace.setStage( STAGE_ACCEPTOR_AFTER_PARSE );
                     log.info( "[REQ][XML]----------------------------------------------", trace );
                 }
 
@@ -793,7 +794,7 @@ public class DefaultBinding
                 BufferRecord record = new BufferRecord( message.getSerial().longValue(), result.getBytes() );
                 record.setCallout( true );
 
-                record.setStage( "callout解码前" );
+                record.setStage( STAGE_CONNECTOR_BEFORE_PARSE );
                 log.info( "[RECV][BINARY]-------------------------------------------", record );
             }
 
@@ -805,7 +806,7 @@ public class DefaultBinding
             {
                 XObjectRecord trace = new XObjectRecord( message.getSerial().longValue(), source );
                 trace.setCallout( true );
-                trace.setStage( "callout解码后" );
+                trace.setStage( STAGE_CONNECTOR_AFTER_PARSE );
                 log.info( "[RECV][XML]------------------------------------------------", trace );
             }
             return result;
@@ -881,11 +882,11 @@ public class DefaultBinding
                     BinaryResult result = (BinaryResult) context.getResult();
                     BufferRecord rec = new BufferRecord( context.getSerial().longValue(), result.getBytes() );
 
-                    rec.setStage( "接入组件编码后" );
+                    rec.setStage( STAGE_ACCEPTOR_AFTER_ASSEMBLE );
                     log.info( "[FAULT][BUFFER]", rec );
 
                     ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
-                    err.setStage( "交易结束" );
+                    err.setStage( STAGE_END );
                     log.info( err );
                 }
 
@@ -915,11 +916,11 @@ public class DefaultBinding
 
                 BufferRecord rec = new BufferRecord( context.getSerial().longValue(), result.getBytes() );
 
-                rec.setStage( "接入组件编码后" );
+                rec.setStage( STAGE_ACCEPTOR_AFTER_ASSEMBLE );
                 log.info( "[FAULT][BINARY]---------------------------------------", rec );
 
                 ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
-                err.setStage( "交易结束" );
+                err.setStage( STAGE_END );
                 log.info( err );
             }
             else
@@ -957,7 +958,7 @@ public class DefaultBinding
                 {
                     BufferRecord rec = new BufferRecord( context.getSerial().longValue(), binResult.getBytes() );
 
-                    rec.setStage( "接入组件编码后" );
+                    rec.setStage( STAGE_ACCEPTOR_AFTER_ASSEMBLE );
                     log.info( "[FAULT][BINARY]---------------------------------------", rec );
                 }
 
@@ -1002,7 +1003,7 @@ public class DefaultBinding
                 }
 
                 ErrorRecord err = new ErrorRecord( context.getSerial().longValue(), context.getException() );
-                err.setStage( "交易结束" );
+                err.setStage( STAGE_END );
                 log.info( err );
             }
             return true;

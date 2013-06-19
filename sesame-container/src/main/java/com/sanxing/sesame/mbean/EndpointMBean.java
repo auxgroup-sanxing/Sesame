@@ -2,7 +2,7 @@ package com.sanxing.sesame.mbean;
 
 import javax.xml.namespace.QName;
 
-public abstract interface EndpointMBean
+public interface EndpointMBean
 {
     public abstract String getEndpointName();
 

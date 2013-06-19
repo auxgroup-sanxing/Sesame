@@ -2,9 +2,9 @@ package com.sanxing.sesame.sharelib;
 
 import java.io.File;
 
-public abstract interface ShareLibCallback
+public interface ShareLibCallback
 {
-    public abstract void onInstall( File paramFile );
+    public abstract void onInstall( File installationDir );
 
-    public abstract void onDispose( File paramFile );
+    public abstract void onDispose( File installationDir );
 }

@@ -3,15 +3,15 @@ package com.sanxing.sesame.mbean;
 import javax.jbi.JBIException;
 import javax.jbi.management.AdminServiceMBean;
 
-public abstract interface ManagementContextMBean
+public interface ManagementContextMBean
     extends AdminServiceMBean
 {
-    public abstract String startComponent( String paramString )
+    public abstract String startComponent( String componentName )
         throws JBIException;
 
-    public abstract String stopComponent( String paramString )
+    public abstract String stopComponent( String componentName )
         throws JBIException;
 
-    public abstract String shutDownComponent( String paramString )
+    public abstract String shutDownComponent( String componentName )
         throws JBIException;
 }

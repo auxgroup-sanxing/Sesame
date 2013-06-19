@@ -1,6 +1,6 @@
 package com.sanxing.sesame.executors.impl;
 
-public abstract interface SesameExecutorMBean
+public interface SesameExecutorMBean
 {
     public abstract int getActiveCount();
 

@@ -1,6 +1,6 @@
 package com.sanxing.sesame.jdbc.template.tx;
 
-public abstract interface TXTemplate
+public interface TXTemplate
 {
-    public abstract Object handle( DataAccessProcessor paramDataAccessProcessor );
+    public abstract Object handle( DataAccessProcessor processor );
 }

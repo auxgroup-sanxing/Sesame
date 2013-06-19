@@ -25,6 +25,7 @@ import com.sanxing.sesame.core.api.Container;
 import com.sanxing.sesame.core.api.ContainerContext;
 import com.sanxing.sesame.executors.ExecutorFactory;
 import com.sanxing.sesame.jmx.mbean.admin.ServerInfo;
+import com.sanxing.sesame.logging.constants.LogConfig;
 import com.sanxing.sesame.logging.lucene.LuceneTask;
 import com.sanxing.sesame.logging.service.JMSTopicConsumer;
 import com.sanxing.sesame.mbean.ComponentContextImpl;
@@ -87,7 +88,7 @@ public class RuntimeContainer
 
     private boolean isLogServiceOn()
     {
-        String start = System.getProperty( "sesame.logging.monitor", "no" );
+        String start = System.getProperty( LogConfig.SESAME_MONITOR_ON_PROPERTY_NAME, "no" );
 
         return ( ( start != null ) && ( start.equalsIgnoreCase( "yes" ) ) );
     }

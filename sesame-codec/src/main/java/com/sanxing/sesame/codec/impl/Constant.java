@@ -1,6 +1,6 @@
 package com.sanxing.sesame.codec.impl;
 
-public abstract interface Constant
+public interface Constant
 {
     public static final int int_ = 4;
 

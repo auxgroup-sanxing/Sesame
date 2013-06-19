@@ -1,6 +1,6 @@
 package com.sanxing.sesame.util;
 
-public abstract interface Namespaces
+public interface Namespaces
 {
     public static final String SESAME = "http://www.sanxing.com/ns/sesame";
 

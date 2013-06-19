@@ -2,6 +2,8 @@ package com.sanxing.sesame.logging.dao;
 
 import java.sql.Timestamp;
 
+import com.sanxing.sesame.logging.constants.LogState;
+
 public class LogBean
     extends BaseBean
 {
@@ -13,7 +15,7 @@ public class LogBean
 
     private Timestamp updateTime;
 
-    private String state = "9";
+    private String state = LogState.STATE_ONGOING;
 
     private String exceptionMessage;
 

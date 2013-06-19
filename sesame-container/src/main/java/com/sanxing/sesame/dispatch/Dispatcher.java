@@ -6,17 +6,17 @@ import javax.jbi.messaging.MessageExchange;
 
 import com.sanxing.sesame.router.Router;
 
-public abstract interface Dispatcher
+public interface Dispatcher
     extends LifeCycleMBean
 {
-    public abstract void init( Router paramRouter )
+    public abstract void init( Router router )
         throws JBIException;
 
     public abstract String getDescription();
 
     public abstract String getName();
 
-    public abstract void send( MessageExchange paramMessageExchange )
+    public abstract void send( MessageExchange me )
         throws JBIException;
 
     public abstract void suspend();
@@ -25,5 +25,5 @@ public abstract interface Dispatcher
 
     public abstract Router getRouter();
 
-    public abstract boolean canHandle( MessageExchange paramMessageExchange );
+    public abstract boolean canHandle( MessageExchange me );
 }

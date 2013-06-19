@@ -1,6 +1,6 @@
 package com.sanxing.sesame.logging.constants;
 
-public abstract interface LogStage
+public interface LogStage
 {
     public static final String STAGE_ACCEPTOR_BEFORE_PARSE = "接入组件解码前";
 

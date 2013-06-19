@@ -1,6 +1,6 @@
 package com.sanxing.sesame.logging.constants;
 
-public abstract interface LogConfig
+public interface LogConfig
 {
     public static final String SESAME_MONITOR_ON_PROPERTY_NAME = "sesame.logging.monitor";
 

@@ -4,9 +4,8 @@ import java.security.GeneralSecurityException;
 
 import javax.security.auth.Subject;
 
-public abstract interface AuthenticationService
+public interface AuthenticationService
 {
-    public abstract void authenticate( Subject paramSubject, String paramString1, String paramString2,
-                                       Object paramObject )
+    public abstract void authenticate( Subject subject, String domain, final String user, final Object credentials )
         throws GeneralSecurityException;
 }

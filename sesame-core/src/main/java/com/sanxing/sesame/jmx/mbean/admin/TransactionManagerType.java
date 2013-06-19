@@ -1,6 +1,6 @@
 package com.sanxing.sesame.jmx.mbean.admin;
 
-public abstract interface TransactionManagerType
+public interface TransactionManagerType
 {
     public static final int STM = 1;
 

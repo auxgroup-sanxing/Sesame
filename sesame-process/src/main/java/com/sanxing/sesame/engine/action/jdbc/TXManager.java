@@ -2,7 +2,7 @@ package com.sanxing.sesame.engine.action.jdbc;
 
 import java.sql.Connection;
 
-public abstract interface TXManager
+public interface TXManager
 {
     public static final int BEGIN = 0;
 

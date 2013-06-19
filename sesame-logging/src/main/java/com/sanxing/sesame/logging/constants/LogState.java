@@ -1,6 +1,6 @@
 package com.sanxing.sesame.logging.constants;
 
-public abstract interface LogState
+public interface LogState
 {
     public static final String STATE_SUCCESS = "0";
 

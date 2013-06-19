@@ -1,6 +1,6 @@
 package com.sanxing.sesame;
 
-public abstract interface JbiConstants
+public interface JbiConstants
 {
     public static final String SEND_SYNC = "javax.jbi.messaging.sendSync";
 

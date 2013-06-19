@@ -12,9 +12,9 @@ import com.sanxing.sesame.binding.transport.Transport;
 import com.sanxing.sesame.service.OperationContext;
 import com.sanxing.sesame.service.ServiceUnit;
 
-public abstract interface Binding
+public interface Binding
 {
-    public abstract void init( Codec paramCodec, ServiceUnit paramServiceUnit, Service paramService, Port paramPort );
+    public abstract void init( Codec codec, ServiceUnit serviceUnit, Service service, Port port );
 
     public abstract URI bind()
         throws BindingException;
@@ -24,18 +24,18 @@ public abstract interface Binding
 
     public abstract URI getAddress();
 
-    public abstract OperationContext getOperationContext( String paramString );
+    public abstract OperationContext getOperationContext( String action );
 
     public abstract Transport getTransport();
 
     public abstract ServiceUnit getServiceUnit();
 
-    public abstract boolean parse( MessageContext paramMessageContext, Map<String, Object> paramMap )
+    public abstract boolean parse( MessageContext message, Map<String, Object> params )
         throws BindingException;
 
-    public abstract boolean assemble( Source paramSource, MessageContext paramMessageContext )
+    public abstract boolean assemble( Source content, MessageContext message )
         throws BindingException;
 
-    public abstract boolean handle( Source paramSource, MessageContext paramMessageContext )
+    public abstract boolean handle( Source fault, MessageContext context )
         throws BindingException;
 }

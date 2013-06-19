@@ -1,10 +1,10 @@
 package com.sanxing.sesame.executors;
 
-public abstract interface Callback
+public interface Callback
 {
-    public abstract void beforeExecute( Thread paramThread );
+    public abstract void beforeExecute( Thread thead );
 
-    public abstract void afterExecute( Throwable paramThrowable );
+    public abstract void afterExecute( Throwable t );
 
     public abstract void terminated();
 }

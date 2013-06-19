@@ -1,6 +1,6 @@
 package com.sanxing.studio.emu;
 
-public abstract interface Server
+public interface Server
     extends Runnable
 {
 }

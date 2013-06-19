@@ -2,11 +2,11 @@ package com.sanxing.sesame.jdbc.template;
 
 import java.util.Map;
 
-public abstract interface NamedUpdateTemplate
+public interface NamedUpdateTemplate
 {
-    public abstract int update( String paramString, Map<String, Object> paramMap, Map<String, Integer> paramMap1 );
+    public abstract int update( String sql, Map<String, Object> parameters, Map<String, Integer> paramTypes );
 
-    public abstract int update( String paramString, Map<String, Object> paramMap );
+    public abstract int update( String sql, Map<String, Object> parameters );
 
-    public abstract int update( String paramString, Object paramObject );
+    public abstract int update( String sql, Object parameters );
 }

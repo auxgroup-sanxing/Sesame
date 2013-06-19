@@ -1,8 +1,8 @@
 package com.sanxing.sesame.core.api;
 
-public abstract interface Container
+public interface Container
 {
-    public abstract void init( ContainerContext paramContainerContext )
+    public abstract void init( ContainerContext context )
         throws Exception;
 
     public abstract void start()

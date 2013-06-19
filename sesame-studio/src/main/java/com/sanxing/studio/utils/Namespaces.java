@@ -1,6 +1,6 @@
 package com.sanxing.studio.utils;
 
-public abstract interface Namespaces
+public interface Namespaces
 {
     public static final String WSDL1_NAMESPACE = "http://schemas.xmlsoap.org/wsdl/";
 

@@ -5,13 +5,13 @@ import org.jdom.Element;
 import com.sanxing.sesame.engine.action.Action;
 import com.sanxing.sesame.engine.context.DataContext;
 
-public abstract interface ActionCutpoint
+public interface ActionCutpoint
 {
-    public abstract void beforeInit( Element paramElement );
+    public abstract void beforeInit( Element config );
 
-    public abstract void afterInit( Element paramElement );
+    public abstract void afterInit( Element config );
 
-    public abstract void beforWork( DataContext paramDataContext, Action paramAction );
+    public abstract void beforWork( DataContext ctx, Action action );
 
-    public abstract void afterWork( DataContext paramDataContext, Action paramAction );
+    public abstract void afterWork( DataContext ctx, Action action );
 }

@@ -7,7 +7,7 @@ import java.security.cert.Certificate;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-public abstract interface ResourceHandle
+public interface ResourceHandle
 {
     public abstract String getName();
 
