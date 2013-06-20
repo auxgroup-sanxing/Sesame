@@ -2,6 +2,7 @@ package com.sanxing.sesame.codec.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -13,7 +14,6 @@ import com.sanxing.sesame.binding.codec.BinaryResult;
 import com.sanxing.sesame.binding.codec.Encoder;
 import com.sanxing.sesame.binding.codec.FormatException;
 import com.sanxing.sesame.binding.codec.XMLSource;
-import com.sanxing.sesame.util.StringUtil;
 
 public class JSONEncoder
     implements Encoder
@@ -64,7 +64,7 @@ public class JSONEncoder
         List<Attribute> attributes = element.getAttributes();
         for ( Attribute attribute : attributes )
         {
-            object.put( attribute.getName(), attribute.getValue() );
+            object.put( attribute.getName(), convert( attribute.getValue() ) );
         }
 
         List<Element> children = element.getChildren();
@@ -79,7 +79,7 @@ public class JSONEncoder
                 }
                 else
                 {
-                    object.put( child.getName(), child.getText() );
+                    object.put( child.getName(), convert ( child.getText() ) );
                 }
             }
             else
@@ -89,6 +89,40 @@ public class JSONEncoder
                 iterate( child, json );
             }
         }
+    }
+
+    private Object convert( String value )
+    {
+        if ( value == null )
+        {
+            return null;
+        }
+        if ( value.length() == 0 )
+        {
+            return "";
+        }
+        if ( "true".equalsIgnoreCase( value ) || "false".equalsIgnoreCase( value ) )
+        {
+            return Boolean.parseBoolean( value );
+        }
+        if ( value.charAt( 0 ) != '0' && NumberUtils.isNumber( value ))
+        {
+            try
+            {
+                return Long.parseLong( value );
+            }
+            catch ( NumberFormatException e )
+            {
+                try
+                {
+                    return Double.parseDouble( value );
+                }
+                catch ( NumberFormatException ex )
+                {
+                }
+            }
+        }
+        return value;
     }
 
     @Override
