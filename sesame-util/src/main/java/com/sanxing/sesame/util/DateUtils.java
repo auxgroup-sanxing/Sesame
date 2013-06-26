@@ -262,6 +262,15 @@ public class DateUtils
         return calendar.get( 1 );
     }
     
+
+    public static Date addMonth(Date date, int step)
+    {
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, step);
+        return c.getTime();
+    }
+    
     /**
      * 获取一天中的24个时间点（整点时间）
      * @param sDate
