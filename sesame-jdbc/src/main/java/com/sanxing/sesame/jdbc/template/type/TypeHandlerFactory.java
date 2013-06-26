@@ -26,6 +26,10 @@ public class TypeHandlerFactory
         typeHandlerMap.put( Integer.class, new IntegerTypeHandler() );
         typeHandlerMap.put( long.class, new LongTypeHandler() );
         typeHandlerMap.put( Long.class, new LongTypeHandler() );
+        typeHandlerMap.put( float.class, new FloatTypeHandler() );
+        typeHandlerMap.put( Float.class, new FloatTypeHandler() );
+        typeHandlerMap.put( double.class, new DoubleTypeHandler() );
+        typeHandlerMap.put( Double.class, new DoubleTypeHandler() );
         typeHandlerMap.put( BigDecimal.class, new BigDecimalTypeHandler() );
         typeHandlerMap.put( byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Byte[].class, new BytesTypeHandler() );

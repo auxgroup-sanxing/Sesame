@@ -5,6 +5,8 @@ import java.sql.SQLException;
 
 import com.sanxing.sesame.jdbc.DataAccessException;
 import com.sanxing.sesame.jdbc.template.ParametersMapping;
+import com.sanxing.sesame.jdbc.template.type.TypeHandler;
+import com.sanxing.sesame.jdbc.template.type.TypeHandlerFactory;
 
 public class ArrayParametersMapping
     implements ParametersMapping
@@ -40,7 +42,16 @@ public class ArrayParametersMapping
                     {
                         if ( paramTypes == null )
                         {
-                            ps.setObject( parameterIndex, parameters[i] );
+                            if ( parameters[i] == null )
+                            {
+                                ps.setObject( parameterIndex, parameters[i] );
+                            }
+                            else
+                            {
+                                TypeHandler typeHandler = TypeHandlerFactory.getTypeHandler( parameters[i].getClass() );
+                                typeHandler.setParameter( ps, parameterIndex, parameters[i] );
+                                
+                            }
                         }
                         else
                         {

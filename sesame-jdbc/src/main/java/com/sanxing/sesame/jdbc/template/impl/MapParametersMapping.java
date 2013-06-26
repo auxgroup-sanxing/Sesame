@@ -6,6 +6,8 @@ import java.util.Map;
 
 import com.sanxing.sesame.jdbc.DataAccessException;
 import com.sanxing.sesame.jdbc.template.ParametersMapping;
+import com.sanxing.sesame.jdbc.template.type.TypeHandler;
+import com.sanxing.sesame.jdbc.template.type.TypeHandlerFactory;
 
 public class MapParametersMapping
     implements ParametersMapping
@@ -47,7 +49,16 @@ public class MapParametersMapping
                         Object paramValue = parameters.get( paramName );
                         if ( paramTypes == null )
                         {
-                            ps.setObject( parameterIndex, paramValue );
+                            if ( paramValue == null )
+                            {
+                                ps.setObject( parameterIndex, paramValue );
+                            }
+                            else
+                            {
+                                TypeHandler typeHandler = TypeHandlerFactory.getTypeHandler( paramValue.getClass() );
+                                typeHandler.setParameter( ps, parameterIndex, paramValue );
+                                
+                            }
                         }
                         else
                         {
