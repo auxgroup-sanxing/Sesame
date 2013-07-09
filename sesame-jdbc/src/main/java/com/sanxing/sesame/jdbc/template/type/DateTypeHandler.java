@@ -15,9 +15,9 @@ public class DateTypeHandler
         Date value = rs.getDate( index );
         if ( rs.wasNull() )
         {
-            value = null;
+            return null;
         }
-        return value;
+        return new java.util.Date( value.getTime() );
     }
 
     @Override
