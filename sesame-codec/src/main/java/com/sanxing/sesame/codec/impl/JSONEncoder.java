@@ -34,7 +34,7 @@ public class JSONEncoder
             
             if ( rootEl.getText() != null && rootEl.getText().trim().length() > 0)
             {
-                if ( rootEl.getText().startsWith( "{" ) && rootEl.getText().endsWith( "}" ) )
+                if ( rootEl.getText().startsWith( "{" ) && rootEl.getText().endsWith( "}" ) && rootEl.getText().contains( "} {" ) )
                 {
                     result.write( ( "[" + rootEl.getText().replace( "} {", "},{" ) + "]" ).getBytes( result.getEncoding() ) );
                 }
