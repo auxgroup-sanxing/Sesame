@@ -609,6 +609,7 @@ UnitBase.prototype = {
 		Ext.Ajax.request({
 				method: 'POST',                                 
 				url: 'unit_ctrl.jsp',
+				timeout: 180 * 1000,
 				params: {
 					operation: operation,
 					unit: unit
