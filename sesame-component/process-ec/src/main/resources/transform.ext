@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extensions>
+  <class id="11" prefix="env" class-name="com.sanxing.sesame.ext.xslt.Environment" description="系统环境函数" collapsed="false">
+    <function name="getSystemTime" description="获取系统时间(yyyyMMddHHmmss)" />
+  </class>
   <class id="12" prefix="math" class-name="java.lang.Math" description="数学函数" collapsed="false">
     <function name="abs" description="取绝对值" />
     <function name="max" description="取最大值" />
     <function name="min" description="取最小值" />
     <function name="random" description="取随机数" />
     <function name="round" description="取整, 四舍五入" />
+  </class>
+  <class id="13" prefix="curr" class-name="com.sanxing.sesame.ext.xslt.Currency" description="货币函数" collapsed="false">
+    <function name="movePoint" description="移动小数点, 左移n位(-n)右移n位(+n)" />
+  </class>
+  <class id="14" prefix="str" class-name="com.sanxing.sesame.ext.xslt.StringUtil" description="实用函数" collapsed="false">
+    <function name="div100" description="分变为元" />
+    <function name="format" description="格式化函数" />
+    <function name="replace" description="字符串替换" />
+    <function name="fromJson" description="从JSON字符串中取指定变量的值" />
   </class>
 </extensions>
 

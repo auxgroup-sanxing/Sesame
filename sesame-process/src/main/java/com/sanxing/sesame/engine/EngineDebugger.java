@@ -239,14 +239,14 @@ public class EngineDebugger
         {
             SAXBuilder builder = new SAXBuilder();
             Document doc = builder.build( functionFile );
-            List fuctionEles = doc.getRootElement().getChildren();
-            for ( int i = 0; i < fuctionEles.size(); ++i )
+            List functionEles = doc.getRootElement().getChildren();
+            for ( int i = 0; i < functionEles.size(); ++i )
             {
                 String name = null;
                 String namespaceUri = null;
                 try
                 {
-                    Element eleFunc = (Element) fuctionEles.get( i );
+                    Element eleFunc = (Element) functionEles.get( i );
                     String prefix = eleFunc.getAttributeValue( "prefix" );
                     name = eleFunc.getAttributeValue( Constant.ATTR_NAME );
                     namespaceUri = "http://www.sanxing.net.cn/sesame/" + prefix;
@@ -265,7 +265,7 @@ public class EngineDebugger
         }
         catch ( JDOMException e )
         {
-            throw new RuntimeException( "please check function.xml", e );
+            throw new RuntimeException( "please check xpath.ext", e );
         }
         catch ( IOException e )
         {

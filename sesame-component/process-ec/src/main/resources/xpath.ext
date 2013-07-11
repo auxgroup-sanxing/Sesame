@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <functions>
-  <function prefix="pf" name="getSystemTime" class-name="com.sanxing.sesame.ext.xpath.GetSystemTime" description="获取系统时间(HHmmss)" />
+  <function prefix="pf" name="getSystemTime" class-name="com.sanxing.sesame.ext.xpath.GetSystemTime" description="获取系统时间(yyyyMMddHHmmss)" />
+  <function prefix="pf" name="fromJson" class-name="com.sanxing.sesame.ext.xpath.FromJson" description="从JSON字符串中取指定变量的值" />
 </functions>
 

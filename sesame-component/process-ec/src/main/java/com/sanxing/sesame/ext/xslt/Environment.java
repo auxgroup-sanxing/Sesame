@@ -13,7 +13,7 @@ import java.util.GregorianCalendar;
  */
 public class Environment
 {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "HHmmss" );
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat( "yyyyMMddHHmmss" );
 
     public static String getSystemTime()
     {

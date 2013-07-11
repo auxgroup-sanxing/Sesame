@@ -6,9 +6,9 @@ import org.jaxen.Context;
 import org.jaxen.Function;
 import org.jaxen.FunctionCallException;
 
-import com.sanxing.sesame.ext.xslt.Environment;
+import com.sanxing.sesame.ext.xslt.StringUtil;
 
-public class GetSystemTime implements Function {
+public class FromJson implements Function {
 
     /*(non-Javadoc)
      * @see org.jaxen.Function#call(org.jaxen.Context, java.util.List)
@@ -17,7 +17,9 @@ public class GetSystemTime implements Function {
     public Object call( Context context, List args )
         throws FunctionCallException
     {
-        return Environment.getSystemTime();
+        if ( args.size() < 2 )
+            return "";
+        return StringUtil.fromJson( args.get( 0 ).toString(), args.get( 1 ).toString() );
     }
 
 }
