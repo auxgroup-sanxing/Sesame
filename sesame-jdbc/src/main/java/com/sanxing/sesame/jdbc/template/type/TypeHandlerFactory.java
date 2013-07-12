@@ -1,13 +1,11 @@
 package com.sanxing.sesame.jdbc.template.type;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.sanxing.sesame.jdbc.DataAccessException;
 
@@ -34,8 +32,6 @@ public class TypeHandlerFactory
         typeHandlerMap.put( byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Byte[].class, new BytesTypeHandler() );
         typeHandlerMap.put( Date.class, new DateTypeHandler() );
-        typeHandlerMap.put( java.util.Date.class, new DateTypeHandler() );
-        typeHandlerMap.put( XMLGregorianCalendar.class, new XMLGregorianCalendarTypeHandler() );
         typeHandlerMap.put( Time.class, new TimeTypeHandler() );
         typeHandlerMap.put( Timestamp.class, new TimestampTypeHandler() );
     }
@@ -52,10 +48,6 @@ public class TypeHandlerFactory
             else if ( Date.class.isAssignableFrom( clazz ) )
             {
                 typeHandler = typeHandlerMap.get( Date.class );
-            }
-            else if ( java.util.Date.class.isAssignableFrom( clazz ) )
-            {
-                typeHandler = typeHandlerMap.get( java.util.Date.class );
             }
             else if ( Time.class.isAssignableFrom( clazz ) )
             {
