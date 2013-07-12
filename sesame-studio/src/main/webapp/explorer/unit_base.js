@@ -1181,7 +1181,7 @@ UnitBase.prototype = {
 			return str;
 		};
 
-		var btnColumnCfg = {
+		var btnColumnCfg = [{
 			header: false,
 			dataIndex: 'lock',
 			menuDisabled: true,
@@ -1190,10 +1190,10 @@ UnitBase.prototype = {
 			fixed: true,
 			align: 'center',
 			renderer: renderOpera
-		};
+		}];
 
 		if(this.operaGridConfig.columns.length < 5 && isVersioned == 'true') {
-			this.operaGridConfig.columns.push(btnColumnCfg);
+			this.operaGridConfig.columns = btnColumnCfg.concat(this.operaGridConfig.columns);
 		}
 		
 		// 操作列表表格
