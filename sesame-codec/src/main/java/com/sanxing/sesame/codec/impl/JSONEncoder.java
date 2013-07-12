@@ -34,14 +34,7 @@ public class JSONEncoder
             
             if ( rootEl.getText() != null && rootEl.getText().trim().length() > 0)
             {
-                if ( rootEl.getText().startsWith( "{" ) && rootEl.getText().endsWith( "}" ) && rootEl.getText().contains( "} {" ) )
-                {
-                    result.write( ( "[" + rootEl.getText().replace( "} {", "},{" ) + "]" ).getBytes( result.getEncoding() ) );
-                }
-                else
-                {
-                    result.write( rootEl.getText().getBytes( result.getEncoding() ) );
-                }
+                result.write( rootEl.getText().getBytes( result.getEncoding() ) );
             }
             else
             {
@@ -72,10 +65,15 @@ public class JSONEncoder
         {
             if ( ( child.getAttributes().isEmpty() ) && ( child.getChildren().isEmpty() ) )
             {
-                if ( "root".equals( child.getName() ) || "rows".equals( child.getName() ) )
+                if ( child.getText() != null && child.getText().startsWith( "[" ) && child.getText().endsWith( "]" ) )
                 {
-                    JSONArray array = new JSONArray( "[" + child.getText().replace( "} {", "},{" ) + "]" );
+                    JSONArray array = new JSONArray( child.getText() );
                     object.put( child.getName(), array );
+                }
+                else if ( child.getText() != null && child.getText().startsWith( "{" ) && child.getText().endsWith( "}" ) )
+                {
+                    JSONObject json = new JSONObject( child.getText() );
+                    object.put( child.getName(), json );
                 }
                 else
                 {
