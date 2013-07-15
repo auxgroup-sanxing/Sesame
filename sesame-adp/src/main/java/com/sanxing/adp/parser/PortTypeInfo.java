@@ -74,7 +74,11 @@ public class PortTypeInfo
     {
         if ( className == null )
         {
-            className = XJUtil.ns2ClassName( getName() ) + "Impl";
+            StringBuilder name = new StringBuilder();
+            name.append( XJUtil.ns2ClassName( getName() ) );
+            name.insert( name.lastIndexOf( "." ), ".impl" );
+            name.append( "Impl" );
+            className =  name.toString();
         }
         return className;
     }

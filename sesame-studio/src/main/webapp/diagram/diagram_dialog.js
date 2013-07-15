@@ -1073,12 +1073,11 @@ getInvokeDialog : function(node){
 				else {
 					textNode.setAttribute("ext:qtip", node.attributes['namespace']);
 				}
-				if (typeof(XML)=='function') {
-					var xsltPanel = dlg.getComponent('tabs').getComponent('xslt');
-					var xsltField = xsltPanel.getForm().findField('xslt_text');
-					var xsl = new XML(xsltField.getValue());
-					_this.reappearXSLT(node, xsl);
-				}
+				var xsltPanel = dlg.getComponent('tabs').getComponent('xslt');
+				var xsltField = xsltPanel.getForm().findField('xslt_text');
+				var xsl = XDom.parseXml(xsltField.getValue());
+				_this.reappearXSLT(node, xsl);
+				
 				node.getOwnerTree().modified = false;
 			},
 			loadexception: function(loader, node, response){
@@ -3009,12 +3008,11 @@ getTransfDialog : function(node){
 					node.attributes['namespace'] = response.getResponseHeader('namespace');
 					node.setText(response.getResponseHeader('elementName'));
 					
-					if (typeof(XML)=='function') {
-						var xsltPanel = dlg.getComponent('tabs').getComponent("xslt");
-						var xsltField = xsltPanel.getForm().findField('xslt_text');
-						var xsl = new XML(xsltField.getValue());
-						_this.reappearXSLT(node, xsl);
-					}
+					var xsltPanel = dlg.getComponent('tabs').getComponent("xslt");
+					var xsltField = xsltPanel.getForm().findField('xslt_text');
+					var xsl = XDom.parseXml(xsltField.getValue());
+					_this.reappearXSLT(node, xsl);
+					
 					node.getOwnerTree().modified = false;
 				},
 				loadexception: function(loader, node, response){
@@ -3338,9 +3336,6 @@ generateXSLT: function(root, match){
 		Saver.saveNodes(root, docuEl);
 		
 		var xmltext = XDom.innerXML(xmldoc);
-		if (typeof(XML)=='function') {
-			xmltext = "" + new XML(xmltext.replace(/^<\?xml\s+version\s*=\s*(["'])[^\1]+\1[^?]*\?>/, "")).toXMLString();
-		}
 		if (typeof(console)=='object') {
 			console.debug(xmltext);
 		}
@@ -3357,50 +3352,42 @@ generateXSLT: function(root, match){
  * @param XML xsl
  */
 reappearXSLT: function(root, xsl){
-	var xslns = new Namespace("xsl", "http://www.w3.org/1999/XSL/Transform");
-	var tarns = new Namespace("tns", root.attributes['namespace']);
-	var templateEl = xsl.child(new QName(xslns, 'template'));
-	if (templateEl) {
-		var rootEl = templateEl.child(new QName(tarns, root.attributes['name']))
-		if (rootEl == null) {
+	var templateEl = xsl.getElementsByTagName('xsl:template');
+	if (templateEl.length > 0) {
+		var rootEl = templateEl[0].getElementsByTagName(root.attributes['name']);
+		if (rootEl.length == 0) {
 			return;
 		}
 		
 		var reappear = function(node, element) {
-			var list = element.children();
-			if (list.length() > 0) {
-				for (var i in list) {
-					var child = list[i];
-					if (child.nodeKind()=='comment' || child.nodeKind()=='processing-instruction') {
-						
-					}
-					else if (child.nodeKind()=='text') {
-						var paramNode = new Ext.tree.AsyncTreeNode({
-							text: child.toString(),
-							leaf: true,
-							uiProvider: Ext.ux.ParamNodeUI
-						});
-						node.appendChild(paramNode);
-					}
-					else if (child.namespace()==xslns.uri && child.localName()=='value-of') {
-						var paramNode = new Ext.tree.AsyncTreeNode({
-							text: child.attribute('select'),
-							leaf: true,
-							//iconCls: a.iconCls,
-							uiProvider: Ext.ux.ParamNodeUI
-						});
-						node.appendChild(paramNode);
-					}
-					
-					var childNode = node.findChild('name', child.localName());
-					if (childNode != null) {
-						reappear(childNode, child);
-					}
+			var list = element.childNodes;
+			for (var i in list) {
+				var child = list[i];
+				if (child.nodeType==3) {
+					var paramNode = new Ext.tree.AsyncTreeNode({
+						text: child.nodeValue,
+						leaf: true,
+						uiProvider: Ext.ux.ParamNodeUI
+					});
+					node.appendChild(paramNode);
+				}
+				else if (child.nodeType==1 && child.localName=='value-of') {
+					var paramNode = new Ext.tree.AsyncTreeNode({
+						text: child.attributes['select'].value,
+						leaf: true,
+						uiProvider: Ext.ux.ParamNodeUI
+					});
+					node.appendChild(paramNode);
+				}
+				
+				var childNode = node.findChild('name', child.localName);
+				if (childNode != null) {
+					reappear(childNode, child);
 				}
 			}
 		};
 		
-		reappear(root, rootEl);
+		reappear(root, rootEl[0]);
 	}
 }
 
