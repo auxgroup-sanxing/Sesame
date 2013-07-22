@@ -211,6 +211,8 @@ public class HTTPConnector
                 out.setEncoding( getCharacterEncoding() );
 
                 postMessage( context );
+                
+                return;
             }
 
             throw new IOException( "http error: " + status );
