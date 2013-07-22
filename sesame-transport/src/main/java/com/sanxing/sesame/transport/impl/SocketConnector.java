@@ -45,8 +45,6 @@ public class SocketConnector
 
     private static final int DEFAULT_BUFFER_CAPACITY = 4096;
 
-    private Thread sendThread;
-
     private int buffer_size = DEFAULT_BUFFER_CAPACITY;
 
     private final ThreadLocal<byte[]> cache = new ThreadLocal();
@@ -106,10 +104,6 @@ public class SocketConnector
     public synchronized void close()
         throws IOException
     {
-        if ( sendThread != null )
-        {
-            sendThread.interrupt();
-        }
         active = false;
         LOG.info( "Transport closed: " + getURI() );
     }

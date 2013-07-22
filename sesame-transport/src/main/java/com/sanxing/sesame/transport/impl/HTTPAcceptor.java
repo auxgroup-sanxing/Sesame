@@ -2,7 +2,6 @@ package com.sanxing.sesame.transport.impl;
 
 import java.io.IOException;
 import java.net.URI;
-import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,17 +15,17 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import com.sanxing.sesame.binding.annotation.Description;
+import com.sanxing.sesame.binding.codec.BinaryResult;
 import com.sanxing.sesame.binding.codec.BinarySource;
 import com.sanxing.sesame.binding.context.MessageContext;
 import com.sanxing.sesame.binding.transport.Acceptor;
@@ -48,22 +47,6 @@ public class HTTPAcceptor
     private URI uri;
 
     private Map<?, ?> properties = new HashMap();
-
-    private ByteOrder byteOrder;
-
-    private String headEncoding;
-
-    private boolean lengthIncludeHead;
-
-    private int recvOffset;
-
-    private int sendOffset;
-
-    private int recvHeadLen;
-
-    private int sendHeadLen;
-
-    private int timeout = 30;
 
     @Override
     public void reply( MessageContext context )
@@ -135,8 +118,7 @@ public class HTTPAcceptor
 
         ServletContextHandler appContext = new ServletContextHandler( 1 );
         appContext.setContextPath( "/" );
-        appContext.setHandler( new InnerHandler() );
-
+        appContext.addServlet( new ServletHolder( new InnerServlet() ), "/*" );
         webServer.setHandler( appContext );
 
         int portNumber = ( uri.getPort() == -1 ) ? 80 : uri.getPort();
@@ -210,24 +192,36 @@ public class HTTPAcceptor
         throws IllegalArgumentException
     {
         this.properties = properties;
-        timeout = getProperty( "timeout", 10 );
-        String endian = getProperty( "endian" );
-        byteOrder =
-            ( ( ( endian == null ) || ( endian.equals( "big" ) ) ) ? ByteOrder.BIG_ENDIAN : ByteOrder.LITTLE_ENDIAN );
     }
 
     private void received( HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {
-        BinarySource input = new BinarySource();
+        BinarySource source = new BinarySource();
+        BinaryResult result = new BinaryResult();
 
-        MessageContext ctx = new MessageContext( this, input );
-        ctx.setPath( request.getContextPath() );
+        MessageContext ctx = new MessageContext( this, source );
+        ctx.setPath( request.getContextPath().length() > 0 ? request.getContextPath() : "/" );
+        String action = request.getHeader( "HTTPAction" );
+        if ( action == null)
+        {
+            action = request.getRequestURI().substring( request.getContextPath().length() + 1 );
+        }
+        ctx.setAction( action );
         try
         {
-            input.setInputStream( request.getInputStream() );
             String encoding = request.getCharacterEncoding();
-            input.setEncoding( ( encoding != null ) ? encoding : getCharacterEncoding() );
+            encoding = ( encoding != null ) ? encoding : getCharacterEncoding();
+
+            source.setInputStream( request.getInputStream() );
+            source.setEncoding( encoding );
+            
+            result.setOutputStream( response.getOutputStream() );
+            result.setEncoding( encoding );
+            
+            ctx.setResult( result );
+            
+            postMessage( ctx );
         }
         catch ( Throwable t )
         {
@@ -242,18 +236,6 @@ public class HTTPAcceptor
         return "{ name:'" + super.getClass().getSimpleName() + "', url: '" + getURI() + "' }";
     }
 
-    private class InnerHandler
-        extends AbstractHandler
-    {
-        @Override
-        public void handle( String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response )
-            throws IOException, ServletException
-        {
-            HTTPAcceptor.LOG.debug( "Request: " + request.getMethod() + " " + request.getRequestURI() );
-            received( request, response );
-        }
-    }
-
     private class InnerServlet
         extends HttpServlet
     {
@@ -263,7 +245,7 @@ public class HTTPAcceptor
         protected void doGet( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException
         {
-            HTTPAcceptor.LOG.debug( "doGet " + request.getRequestURI() );
+            LOG.debug( "doGet " + request.getRequestURI() );
             received( request, response );
         }
 
@@ -271,7 +253,7 @@ public class HTTPAcceptor
         protected void doPost( HttpServletRequest request, HttpServletResponse response )
             throws ServletException, IOException
         {
-            HTTPAcceptor.LOG.debug( "doPost " + request.getRequestURI() );
+            LOG.debug( "doPost " + request.getRequestURI() );
             received( request, response );
         }
     }

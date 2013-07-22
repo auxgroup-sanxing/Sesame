@@ -64,7 +64,7 @@ public class SesameExecutor
         super.beforeExecute( t, r );
         if ( monitor.get() )
         {
-            LOG.debug( String.format( "%s start %s", new Object[] { t, r } ) );
+            //LOG.debug( String.format( "%s start %s", new Object[] { t, r } ) );
             startTime.set( Long.valueOf( System.nanoTime() ) );
             numTasks.incrementAndGet();
         }
@@ -104,11 +104,11 @@ public class SesameExecutor
                 long taskTime = endTime - startTime.get().longValue();
                 totalTime.addAndGet( taskTime );
                 lastWorkTime.set( taskTime );
-                if ( LOG.isDebugEnabled() )
+                /*if ( LOG.isDebugEnabled() )
                 {
                     LOG.debug( String.format( "%s end %s, time=%dns",
                         new Object[] { Thread.currentThread(), r, Long.valueOf( taskTime ) } ) );
-                }
+                }*/
             }
             for ( Callback callback : callbacks )
             {
