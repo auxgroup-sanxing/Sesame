@@ -25,6 +25,7 @@ import com.sanxing.sesame.core.api.Container;
 import com.sanxing.sesame.core.api.ContainerContext;
 import com.sanxing.sesame.executors.ExecutorFactory;
 import com.sanxing.sesame.jmx.mbean.admin.ServerInfo;
+import com.sanxing.sesame.logging.SesameJMSAppender;
 import com.sanxing.sesame.logging.constants.LogConfig;
 import com.sanxing.sesame.logging.lucene.LuceneTask;
 import com.sanxing.sesame.logging.service.JMSTopicConsumer;
@@ -73,6 +74,14 @@ public class RuntimeContainer
 
         init();
 
+        if ( isLogServiceOn() ) 
+        {
+          String serverName = this.containerContext.getServer().getName();
+          ch.qos.logback.classic.Logger log = 
+            (ch.qos.logback.classic.Logger)LoggerFactory.getLogger("sesame.binding");
+          log.addAppender(new SesameJMSAppender(serverName + "-QC", 
+            "LOGQUEUE"));
+        }
         containerContext.getServer().addListener( new ContainerJoinListener( this ) );
         if ( !( Platform.getEnv().isAdmin() ) )
         {

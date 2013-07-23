@@ -32,5 +32,9 @@
 			<groupId>com.sanxing.sesame</groupId>
 			<artifactId>sesame-transport</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 	</dependencies>
 </project>
