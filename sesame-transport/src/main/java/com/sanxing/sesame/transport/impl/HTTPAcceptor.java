@@ -116,7 +116,7 @@ public class HTTPAcceptor
         webServer = new Server();
         webServer.setThreadPool( pool );
 
-        ServletContextHandler appContext = new ServletContextHandler( 1 );
+        ServletContextHandler appContext = new ServletContextHandler( 0 );
         appContext.setContextPath( "/" );
         appContext.addServlet( new ServletHolder( new InnerServlet() ), "/*" );
         webServer.setHandler( appContext );

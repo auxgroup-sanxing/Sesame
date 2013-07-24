@@ -38,6 +38,12 @@ public class HTTPConnector
 {
     private static Logger LOG = LoggerFactory.getLogger( HTTPConnector.class );
 
+    private static final int DEFAULT_BUFFER_CAPACITY = 4096;
+
+    private int buffer_size = DEFAULT_BUFFER_CAPACITY;
+
+    private final ThreadLocal<byte[]> cache = new ThreadLocal();
+
     private Map<?, ?> properties = new HashMap();
 
     private int timeout;
@@ -199,15 +205,21 @@ public class HTTPConnector
             int status = client.executeMethod( post );
 
             LOG.debug( "status: " + status );
-            if ( LOG.isTraceEnabled() )
+            if ( LOG.isDebugEnabled() )
             {
-                LOG.trace( new String( post.getResponseBody(), getCharacterEncoding() ) );
+                LOG.debug( new String( post.getResponseBody(), getCharacterEncoding() ) );
             }
             if ( status == 200 )
             {
                 LOG.debug( "post success" );
 
-                out.write( post.getResponseBody(), 0, (int) post.getResponseContentLength() );
+                InputStream input = post.getResponseBodyAsStream();
+                byte[] recvBuf = allocate( buffer_size );
+                int len;
+                while ( ( len = input.read( recvBuf ) ) != -1 )
+                {
+                    out.write( recvBuf, 0, len );
+                }
                 out.setEncoding( getCharacterEncoding() );
 
                 postMessage( context );
@@ -248,5 +260,18 @@ public class HTTPConnector
     public void setURI( URI uri )
     {
         this.uri = uri;
+    }
+
+    private byte[] allocate( int length )
+    {
+        byte[] buf = cache.get();
+        if ( ( buf != null ) && ( length <= buf.length ) )
+        {
+            LOG.info( "Use cached buffer, length: " + buf.length );
+            return buf;
+        }
+
+        cache.set( buf = new byte[length] );
+        return buf;
     }
 }

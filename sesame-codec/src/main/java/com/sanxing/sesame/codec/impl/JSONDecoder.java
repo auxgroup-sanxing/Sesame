@@ -32,10 +32,13 @@ public class JSONDecoder
         try
         {
             String data = new String( source.getBytes(), source.getEncoding() );
-            JSONObject json = new JSONObject( data );
             Element rootEl = new Element( source.getElementName() );
 
-            iterate( json, rootEl );
+            if ( data.length() > 0)
+            {
+                JSONObject json = new JSONObject( data );
+                iterate( json, rootEl );
+            }
 
             Source content = new JDOMSource( new Document( rootEl ) );
 
