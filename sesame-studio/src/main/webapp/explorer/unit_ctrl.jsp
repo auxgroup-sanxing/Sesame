@@ -1760,7 +1760,11 @@ public String javaToHtml(HttpServletRequest request, HttpServletResponse respons
 	    
 	    String[] javaSources = new String[] {projectFolder.getAbsolutePath()};
 	    java2HTML.setJavaDirectorySource(javaSources);
-	    java2HTML.buildJava2HTML();
+	    try {
+		    java2HTML.buildJava2HTML();
+	    } catch (IOException e ) {
+	        //e.printStackTrace();
+	    }
 	}
 	
 	File styleFille = new File(projectFolder, "bin/src/stylesheet.css");

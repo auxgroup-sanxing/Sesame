@@ -1,6 +1,7 @@
 package com.sanxing.sesame.codec.impl;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Iterator;
 
 import javax.xml.transform.Source;
@@ -36,7 +37,21 @@ public class JSONDecoder
 
             if ( data.length() > 0)
             {
-                JSONObject json = new JSONObject( data );
+                JSONObject json = null;
+                if ( data.startsWith( "{" ) ) 
+                {
+                    json = new JSONObject( data );
+                }
+                else
+                {
+                    json = new JSONObject();
+                    String[] params = data.split( "&" );
+                    for ( String param : params)
+                    {
+                        int index = param.indexOf( "=" );
+                        json.put( param.substring( 0, index ), URLDecoder.decode( param.substring( index + 1 ), source.getEncoding() ) );
+                    }
+                }
                 iterate( json, rootEl );
             }
 
@@ -49,6 +64,10 @@ public class JSONDecoder
             throw new FormatException( e.getMessage(), e );
         }
         catch ( JSONException e )
+        {
+            throw new FormatException( e.getMessage(), e );
+        }
+        catch (IndexOutOfBoundsException e)
         {
             throw new FormatException( e.getMessage(), e );
         }
