@@ -44,11 +44,6 @@ public class Configuration
         return servletContext.getRealPath( path );
     }
 
-    public static File getWorkfile( String path )
-    {
-        return new File( servletContext.getRealPath( "workarea/" + path ) );
-    }
-
     public static File getWorkspaceRoot()
     {
         return Application.getWorkspaceRoot();

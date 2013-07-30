@@ -21,7 +21,7 @@ public class PrefsUtil
     public static String getDescription( String project )
         throws IOException, JDOMException
     {
-        File file = Configuration.getWorkfile( project + "jbi.xml" );
+        File file = Configuration.getWorkspaceFile( project + "/jbi.xml" );
         if ( file.exists() )
         {
             SAXBuilder builder = new SAXBuilder();
@@ -39,7 +39,7 @@ public class PrefsUtil
     public static String getNamespaceUri( String project )
         throws IOException, JDOMException
     {
-        File file = Configuration.getWorkfile( project + "jbi.xml" );
+        File file = Configuration.getWorkspaceFile( project + "/jbi.xml" );
         if ( file.exists() )
         {
             SAXBuilder builder = new SAXBuilder();
@@ -54,7 +54,7 @@ public class PrefsUtil
         throws IOException, JDOMException
     {
         Properties properties = new Properties();
-        File userFolder = Configuration.getWorkfile( project + "/team/" + userId );
+        File userFolder = Configuration.getWorkspaceFile( project + "/team/" + userId );
         if ( userFolder.exists() )
         {
             File file = new File( userFolder, catalog );
@@ -78,7 +78,7 @@ public class PrefsUtil
         throws IOException, JDOMException
     {
         Properties properties = new Properties();
-        File userFolder = Configuration.getWorkfile( project + "/team/" + userId );
+        File userFolder = Configuration.getWorkspaceFile( project + "/team/" + userId );
         if ( userFolder.exists() )
         {
             File file = new File( userFolder, catalog );
