@@ -224,7 +224,7 @@ var Viewer = function(){
 				var porjectName = record.data['projectName'];
 				var unitName = record.data['unitName'];
 				var unitDesc = record.data['serviceDesc'];
-				unitDesc = encodeURIComponent(unitDesc);
+				unitDesc = escape(encodeURIComponent(unitDesc));
 				
 				var impLocation = record.data['impLocation'];
 				var operaName = record.data['operaName'];
@@ -232,7 +232,7 @@ var Viewer = function(){
 				var component = record.data['component'];
 				var importComp = record.data['importComp'];
 				var projectDesc = record.data['projectDesc'];
-				projectDesc = encodeURIComponent(projectDesc);
+				projectDesc = escape(encodeURIComponent(projectDesc));
 				var path, viewer;
 				
 				Ext.each(unitCatalog, function(unit) {

@@ -866,7 +866,7 @@ ProjectsMenu : Ext.extend(Ext.app.Module, {
 			        tag: 'iframe',
 			        style: 'overflow:auto; display:none;',
 			        frameBorder: 0,
-			        src: '../explorer/project_viewer.jsp?project='+src.id + '&projectDesc=' + encodeURIComponent(src.text)
+			        src: '../explorer/project_viewer.jsp?project='+src.id + '&projectDesc=' + escape(encodeURIComponent(src.text))
 				}
             });
         }

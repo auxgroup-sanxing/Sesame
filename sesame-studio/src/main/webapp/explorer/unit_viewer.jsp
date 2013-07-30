@@ -15,6 +15,7 @@
 <%
 request = new WebServletRequest(request);
 String unit = request.getParameter("unit");
+String project = unit.substring(0, unit.indexOf('/'));
 String component = null;
 String compName = null;
 String componentDesc = null;
@@ -40,6 +41,9 @@ try {
 	String userName = user.optString("userid");
 	
 	File unitFolder = Configuration.getWorkspaceFile(unit);
+	
+	if ( projectDesc.length() == 0 )
+	    projectDesc = PrefsUtil.getDescription(project);
 	
 	//判断WSDL是否在版本库中 
 	File wsdl = new File(unitFolder, "unit.wsdl");

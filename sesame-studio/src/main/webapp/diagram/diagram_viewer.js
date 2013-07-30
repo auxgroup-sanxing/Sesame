@@ -1344,7 +1344,7 @@ return {
 						else {
 							top.Application.openWindow(
 								ref,
-								opera + '-' + desc,
+								desc,
 								'../schema/encoding_viewer.jsp?schema='+ ref , 
 								'settings');
 						}

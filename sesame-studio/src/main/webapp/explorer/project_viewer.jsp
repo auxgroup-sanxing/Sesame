@@ -1,3 +1,4 @@
+<%@page import="java.net.URLDecoder"%>
 <%@page language="java" contentType="text/html; charset=utf-8"%>
 <%@page import="com.sanxing.studio.*,com.sanxing.studio.utils.*"%>
 <%@page import="com.sanxing.studio.team.*"%>
@@ -9,9 +10,10 @@
 request = new WebServletRequest(request);
 
 String project = request.getParameter("project");
-String projectDesc = request.getParameter("projectDesc");
+String projectDesc = request.getParameter("projectDesc") == null ? "" : request.getParameter("projectDesc");
 String namespace = PrefsUtil.getNamespaceUri(project);
-
+if ( projectDesc.length() == 0 )
+    projectDesc = PrefsUtil.getDescription(project);
 File location = Application.getWorkspaceFile(project);
 
 boolean isVersioned = SCM.isVersioned(location);
@@ -214,7 +216,7 @@ html {
 	<script type="text/javascript">
 	document.oncontextmenu = function(e) { return false; };
 	var project = "<%=project%>";
-	var projectDesc = "<%=projectDesc%>";
+	var projectDesc = "<%=URLDecoder.decode(projectDesc, "UTF-8")%>";
 	var targetNamespace = "<%=namespace%>";
 	var isVersioned = <%=isVersioned%>;
 

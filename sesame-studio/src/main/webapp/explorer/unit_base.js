@@ -691,7 +691,7 @@ UnitBase.prototype = {
 		if (!win)
 			win = desktop.createWindow({
                 id: 'project_'+ name,
-                title: decodeURIComponent(projectDesc),
+                title: projectDesc,
                 width: 950,
 				height: 500,
 				iconCls: 'bogus',
@@ -2108,7 +2108,7 @@ Ext.extend(UnitServerGuide, UnitBase, {
 		if (!win)
 			win = desktop.createWindow({
                 id: 'project_'+ name,
-                title: decodeURIComponent(projectDesc),
+                title: projectDesc,
                 width: 950,
 				height: 500,
 				iconCls: 'bogus',

@@ -1,3 +1,7 @@
+<%@page import="javax.wsdl.xml.WSDLReader"%>
+<%@page import="javax.wsdl.factory.WSDLFactory"%>
+<%@page import="javax.wsdl.WSDLException"%>
+<%@page import="javax.wsdl.Definition"%>
 <%@page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <%@page import="java.util.*,  java.io.*"%>
@@ -7,7 +11,35 @@
 <%@page import="java.net.URLDecoder"%>
 <%@page import="org.json.*"%>
 <%!
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+private String getTextContent(org.w3c.dom.Element element)
+{
+	org.w3c.dom.NodeList  list = element.getChildNodes();
+	if (list.getLength() > 0) {
+		StringBuffer buf = new StringBuffer();
+		for (int i=0, len=list.getLength(); i<len; i++) {
+			org.w3c.dom.Node node = list.item(i);
+			buf.append(node.getNodeValue()!=null ? node.getNodeValue() : "");
+		}
+		return buf.toString();
+	}
+	else {
+		return "";
+	}
+}
+
+private Definition getWSDLReader(File wsdlFile) throws WSDLException {
+	if (wsdlFile == null || !wsdlFile.exists())
+		return null;
+	
+	WSDLFactory factory = WSDLFactory.newInstance();
+	WSDLReader reader = factory.newWSDLReader();
+	reader.setFeature("javax.wsdl.verbose", false);
+	reader.setFeature("javax.wsdl.importDocuments", false);
+	Definition wsdlDef = reader.readWSDL(new WSDLLocatorImpl(wsdlFile, true));
+	return wsdlDef;
+}
 %>
 <%
 request = new WebServletRequest(request);
@@ -24,8 +56,18 @@ try
 {
 	File xsdFile = Configuration.getWorkspaceFile(schema);
 	File unitFolder = xsdFile.getParentFile();
+	File wsdlFile = new File(unitFolder, "unit.wsdl");
 	
 	unitId = unitFolder.getName();
+	
+	if ( unitDesc.length() == 0 ) {
+	    Definition definition = getWSDLReader(wsdlFile);
+	    unitDesc = getTextContent(definition.getDocumentationElement());
+	}
+	
+	if ( projectDesc.length() == 0 ) {
+	    projectDesc = PrefsUtil.getDescription(project);
+	}
 	
 	JSONObject user = Authentication.getCurrentUser();
 	String userName = user.optString("userid");
@@ -34,7 +76,6 @@ try
 	if(null == sync || (!sync.isVersioned(xsdFile))){
 		isVersioned = "false";
 	} else {
-		File wsdlFile = new File(unitFolder, "unit.wsdl");
 		if (sync != null && sync.isVersioned(wsdlFile) && sync.isVersioned(xsdFile)) {
 			Map<String, ?> props = sync.info(wsdlFile);
 			String lock = (String)props.get("lock");

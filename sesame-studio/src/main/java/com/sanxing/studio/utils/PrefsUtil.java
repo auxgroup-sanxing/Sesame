@@ -18,6 +18,24 @@ import com.sanxing.studio.Configuration;
 
 public class PrefsUtil
 {
+    public static String getDescription( String project )
+        throws IOException, JDOMException
+    {
+        File file = Configuration.getWorkfile( project + "jbi.xml" );
+        if ( file.exists() )
+        {
+            SAXBuilder builder = new SAXBuilder();
+            Element rootEl = builder.build( file ).getRootElement();
+            Element saEl = rootEl.getChild("service-assembly", rootEl.getNamespace());
+            if (saEl != null) {
+                Element indenEl = saEl.getChild("identification", rootEl.getNamespace());
+                String desc = indenEl.getChildText("description", rootEl.getNamespace());
+                return ( ( desc != null ) ? desc : project );
+            }
+        }
+        return project;
+    }
+
     public static String getNamespaceUri( String project )
         throws IOException, JDOMException
     {

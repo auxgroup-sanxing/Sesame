@@ -587,7 +587,7 @@ var Viewer = function(){
 			if (!win) 
 				win = desktop.createWindow({
 					id: 'project_' + name,
-					title: decodeURIComponent(projectDesc),
+					title: projectDesc,
 					width: 950,
 					height: 500,
 					iconCls: 'bogus',
@@ -608,7 +608,7 @@ var Viewer = function(){
 						tag: 'iframe',
 						style: 'overflow:auto; display:none;',
 						frameBorder: 0,
-						src: '../explorer/project_viewer.jsp?project=' + name + '&projectDesc=' + encodeURIComponent(projectDesc)
+						src: '../explorer/project_viewer.jsp?project=' + name + '&projectDesc=' + escape(encodeURIComponent(projectDesc))
 					}
 				});
 			win.show();
