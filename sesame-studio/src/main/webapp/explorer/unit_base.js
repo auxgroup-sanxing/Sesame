@@ -2372,7 +2372,7 @@ Ext.extend(UnitServerGuide, UnitBase, {
 			return str;
 		};
 			
-		var btnColumnCfg = {
+		var btnColumnCfg = [{
 			header: false,
 			dataIndex: 'lock',
 			menuDisabled: true,
@@ -2381,7 +2381,7 @@ Ext.extend(UnitServerGuide, UnitBase, {
 			fixed: true,
 			align: 'center',
 			renderer: renderOpera
-		};
+		}];
 
 		var config = {
 			title: '操作列表',
@@ -2406,7 +2406,7 @@ Ext.extend(UnitServerGuide, UnitBase, {
 		var reader = _this.operaGridReaderConfig;
 		
 		if(config.columns.length < 4 && isVersioned == 'true') {
-			config.columns.push(btnColumnCfg);
+			config.columns = btnColumnCfg.concat(config.columns);
 		}
 		
 		// 操作列表表格
@@ -3313,7 +3313,7 @@ Ext.extend(UnitClient, UnitServerGuide, {
 			return str;
 		};
 
-		var btnColumnCfg = {
+		var btnColumnCfg = [{
 			header: false,
 			dataIndex: 'lock',
 			menuDisabled: true,
@@ -3322,10 +3322,10 @@ Ext.extend(UnitClient, UnitServerGuide, {
 			fixed: true,
 			align: 'center',
 			renderer: renderOpera
-		};
+		}];
 
 		if(this.operaGridConfig.columns.length < 5 && isVersioned == 'true') {
-			this.operaGridConfig.columns.push(btnColumnCfg);
+			this.operaGridConfig.columns = btnColumnCfg.concat(this.operaGridConfig.columns);
 		}
 		
 		// 操作列表表格
