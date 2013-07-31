@@ -3,6 +3,7 @@ package com.sanxing.sesame.util;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -69,6 +70,39 @@ public class ZipUtil
             {
                 zin.close();
                 output.close();
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static void unzipBytes( byte[] src, OutputStream output )
+    {
+        ByteArrayInputStream input = new ByteArrayInputStream( src );
+        ZipInputStream zin = new ZipInputStream( input );
+        try
+        {
+            zin.getNextEntry();
+            byte[] temp = new byte[10240];
+            int i = 0;
+            while ( ( i = zin.read( temp ) ) != -1 )
+            {
+                output.write( temp, 0, i );
+                output.flush();
+            }
+            zin.closeEntry();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                zin.close();
             }
             catch ( IOException e )
             {
