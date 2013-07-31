@@ -2,7 +2,11 @@ package com.sanxing.sesame.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -42,6 +46,29 @@ public class ZipUtil
         }
     }
 
+    public static byte[] zipBytes( File file )
+    {
+        byte[] content = new byte[(int)file.length()];
+        InputStream in;
+        try
+        {
+            in = new FileInputStream( file );
+            in.read( content );
+            in.close();
+            return zipBytes( content );
+        }
+        catch ( FileNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
+        
+        return content;
+    }
+    
     public static byte[] unzipBytes( byte[] src )
     {
         ByteArrayInputStream input = new ByteArrayInputStream( src );
