@@ -516,6 +516,7 @@ UnitBase.prototype = {
 	unitDeploy : function(button) {
 		var operation = "deployserviceunit";
 		var _this = this;
+		Ext.getBody().mask('正在部署服务单元...', 'x-mask-loading');
 		Ext.Ajax.request({
 			method : 'POST',
 			url : 'unit_client_ctrl.jsp',
@@ -525,6 +526,7 @@ UnitBase.prototype = {
 				unit : unit
 			},
 			callback : function(options, success, response) {
+				Ext.getBody().unmask();
 				if (!success) {
 					_this.showException(response);
 				} else {
