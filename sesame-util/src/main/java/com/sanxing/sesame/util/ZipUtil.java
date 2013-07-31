@@ -9,25 +9,24 @@ import java.util.zip.ZipOutputStream;
 
 public class ZipUtil
 {
-    public static byte[] zipObject( byte[] textObj )
+    public static byte[] zipBytes( byte[] bytes )
     {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         ZipOutputStream zout = new ZipOutputStream( output );
-        byte[] arrayOfByte;
         try
         {
             ZipEntry temp = new ZipEntry( "" + Randomizer.getInstance().nextLong() );
             zout.putNextEntry( temp );
-            zout.write( textObj );
+            zout.write( bytes );
             zout.closeEntry();
             zout.flush();
-            textObj = output.toByteArray();
-            return textObj;
+            bytes = output.toByteArray();
+            return bytes;
         }
         catch ( IOException e )
         {
             e.printStackTrace();
-            return textObj;
+            return bytes;
         }
         finally
         {
@@ -42,15 +41,14 @@ public class ZipUtil
         }
     }
 
-    public static byte[] unzipTextObj( byte[] src )
+    public static byte[] unzipBytes( byte[] src )
     {
         ByteArrayInputStream input = new ByteArrayInputStream( src );
         ZipInputStream zin = new ZipInputStream( input );
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        byte[] arrayOfByte1;
         try
         {
-            ZipEntry entry = zin.getNextEntry();
+            zin.getNextEntry();
             byte[] temp = new byte[10240];
             int i = 0;
             while ( ( i = zin.read( temp ) ) != -1 )
